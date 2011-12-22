@@ -23,7 +23,7 @@ if (!defined('IN_IDEAS'))
 */
 class Ideas
 {
-	public function get_ideas($number = 10, $sortby = 'idea_date ASC', $where = 'idea_category != 5')
+	public function get_ideas($number = 10, $sortby = 'idea_date DESC', $where = 'idea_category != 5')
 	{
 		global $db;
 		$sql = 'SELECT idea_id, idea_author, idea_title, idea_date, idea_rating, idea_votes, idea_category
@@ -33,10 +33,10 @@ class Ideas
 		$result = $db->sql_query_limit($sql, $number);
 		$rows = $db->sql_fetchrowset($result);
 		$db->sql_freeresult($result);
-		
+
 		return $rows;
 	}
-	
+
 	public function get_idea($id)
 	{
 		global $db;
@@ -46,7 +46,7 @@ class Ideas
 		$result = $db->sql_query_limit($sql, 1);
 		$row = $db->sql_fetchrow($result);
 		$db->sql_freeresult($result);
-		
+
 		return $row;
 	}
 }

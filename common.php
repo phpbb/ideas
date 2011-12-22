@@ -22,8 +22,9 @@ include($phpbb_root_path . 'common.' . $phpEx);
 $user->session_begin();
 $auth->acl($user->data);
 $user->setup();
+include($ideas_root_path . 'lang/en/common.php');
+
 
 define('IDEAS_TABLE', $table_prefix . 'ideas_ideas');
-
 include($ideas_root_path . '/includes/ideas.php');
 $ideas = new Ideas();
