@@ -25,6 +25,7 @@ foreach ($rows as $row)
 {
 	$template->assign_block_vars('latest_ideas', array(
 		'ID'				=> $row['idea_id'],
+		'LINK'			=> append_sid('./idea.php?id=' . $row['idea_id']),
 		'TITLE'			=> $row['idea_title'],
 		'AUTHOR'		=> get_user_link($row['idea_author']),
 		'DATE'			=> $user->format_date($row['idea_date']),
@@ -38,6 +39,7 @@ foreach ($rows as $row)
 {
 	$template->assign_block_vars('top_ideas', array(
 		'ID'				=> $row['idea_id'],
+		'LINK'			=> append_sid('./idea.php?id=' . $row['idea_id']),
 		'TITLE'			=> $row['idea_title'],
 		'AUTHOR'		=> get_user_link($row['idea_author']),
 		'DATE'			=> $user->format_date($row['idea_date']),
@@ -45,6 +47,11 @@ foreach ($rows as $row)
 		'VOTES'			=> $row['idea_votes']
 	));
 }
+
+$template->assign_vars(array(
+	'U_VIEW_TOP'		=> append_sid('./list.php'),
+	'U_VIEW_LATEST'	=> append_sid('./list.php?sort=date'),
+));
 
 $template->set_filenames(array(
     'body' => 'index_body.html'
