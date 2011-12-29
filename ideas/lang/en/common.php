@@ -39,6 +39,7 @@ $user->lang = array_merge($user->lang, array(
 	'LATEST_IDEAS'			=> 'Latest Ideas',
 	'RATING'					=> 'Rating',
 	'SCORE'						=> 'Score',
+	'STATUS'					=> 'Status',
 	'TOP_IDEAS'				=> 'Top Idea',
 	'VIEW_ALL'					=> 'View All',
 	'VIEW_IDEA'				=> 'View Idea',

@@ -31,7 +31,9 @@ $template->assign_vars(array(
 	'IDEA_AUTHOR'		=> get_user_link($idea['idea_author']),
 	'IDEA_DATE'			=> $user->format_date($idea['idea_date']),
 	'IDEA_RATING'		=> $idea['idea_rating'],
-	'IDEA_VOTES'			=> $idea['idea_votes']
+	'IDEA_VOTES'			=> $idea['idea_votes'],
+	'IDEA_STATUS'		=> $ideas->get_status_from_id($idea['idea_status']),
+	'IDEA_STATUS_ID'	=> $idea['idea_status'],
 ));
 
 $template->set_filenames(array(

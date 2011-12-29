@@ -1,6 +1,6 @@
-CREATE TABLE  phpbb_ideas_categories (
-category_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
-category_name VARCHAR( 200 ) NOT NULL
+CREATE TABLE  phpbb_ideas_statuses (
+status_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+status_name VARCHAR( 200 ) NOT NULL
 ) ENGINE = MYISAM ;
 
 CREATE TABLE  phpbb_ideas_ideas (
@@ -11,7 +11,7 @@ idea_desc TEXT NOT NULL ,
 idea_date INT NOT NULL ,
 idea_rating FLOAT NOT NULL ,
 idea_votes INT NOT NULL ,
-idea_category INT NOT NULL
+idea_status INT NOT NULL
 ) ENGINE = MYISAM ;
 
 CREATE TABLE  phpbb_ideas_votes (

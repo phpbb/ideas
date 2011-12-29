@@ -23,10 +23,10 @@ if (!defined('IN_IDEAS'))
 */
 class Ideas
 {
-	public function get_ideas($number = 10, $sortby = 'idea_date DESC', $where = 'idea_category != 5')
+	public function get_ideas($number = 10, $sortby = 'idea_date DESC', $where = 'idea_status != 5')
 	{
 		global $db;
-		$sql = 'SELECT idea_id, idea_author, idea_title, idea_date, idea_rating, idea_votes, idea_category
+		$sql = 'SELECT idea_id, idea_author, idea_title, idea_date, idea_rating, idea_votes, idea_status
 			FROM ' . IDEAS_TABLE . "
 			WHERE $where
 			ORDER BY $sortby";
@@ -48,5 +48,18 @@ class Ideas
 		$db->sql_freeresult($result);
 
 		return $row;
+	}
+
+	public function get_status_from_id($id)
+	{
+		global $db;
+		$sql = 'SELECT status_name
+			FROM ' . IDEA_STATUS_TABLE . "
+			WHERE status_id = $id";
+		$result = $db->sql_query_limit($sql, 1);
+		$row = $db->sql_fetchrow($result);
+		$db->sql_freeresult($result);
+
+		return $row['status_name'];
 	}
 }

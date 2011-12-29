@@ -29,6 +29,7 @@ $template->set_custom_template($ideas_root_path . 'style/template', 'default');
 
 // We are not modifying constants.php - define IDEAS_TABLE here.
 define('IDEAS_TABLE', $table_prefix . 'ideas_ideas');
+define('IDEA_STATUS_TABLE', $table_prefix . 'ideas_statuses');
 include($ideas_root_path . '/includes/ideas.php');
 $ideas = new Ideas();
 
