@@ -1,0 +1,45 @@
+<!-- INCLUDE overall_header.html -->
+
+<!-- BEGIN ideas -->
+	<!-- IF ideas.S_FIRST_ROW  -->
+		<div class="forabg">
+			<div class="inner"><span class="corners-top"><span></span></span>
+			<ul class="topiclist">
+				<li class="header">
+					<dl class="icon">
+						<dt><span class="wrap-content">{L_IDEAS}</span></dt>
+						<dd class="posts">{L_SCORE} ({L_VOTES})</dd>
+					</dl>
+				</li>
+			</ul>
+			<ul class="topiclist forums">
+	<!-- ENDIF -->
+
+				<li class="row">
+					<dl class="icon forum_read">
+						<dt><span class="wrap-content">
+							<a href="./idea.php?id={ideas.ID}" class="forumtitle">{ideas.TITLE}</a><br />
+							by <strong>{ideas.AUTHOR}</strong> &raquo; {ideas.DATE}
+						</span></dt>
+
+						<dd class="topics">{ideas.RATING} / 5 &nbsp; ({ideas.VOTES})</dd>
+					</dl>
+				</li>
+
+	<!-- IF ideas.S_LAST_ROW -->
+			</ul>
+
+			<span class="corners-bottom"><span></span></span></div>
+		</div>
+	<!-- ENDIF -->
+
+<!-- BEGINELSE -->
+	<div class="panel">
+		<div class="inner"><span class="corners-top"><span></span></span>
+		<strong>{L_NO_IDEAS}</strong>
+		<span class="corners-bottom"><span></span></span></div>
+	</div>
+<!-- END forumrow -->
+
+
+<!-- INCLUDE overall_footer.html -->
