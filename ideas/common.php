@@ -24,7 +24,10 @@ $auth->acl($user->data);
 $user->setup();
 include($ideas_root_path . 'lang/en/common.php');
 
+// Set up custom template
+$template->set_custom_template($ideas_root_path . 'style/template', 'default');
 
+// We are not modifying constants.php - define IDEAS_TABLE here.
 define('IDEAS_TABLE', $table_prefix . 'ideas_ideas');
 include($ideas_root_path . '/includes/ideas.php');
 $ideas = new Ideas();

@@ -16,14 +16,14 @@ define('IN_IDEAS', true);
 $ideas_root_path = (defined('IDEAS_ROOT_PATH')) ? IDEAS_ROOT_PATH : __DIR__ . '/';
 include($ideas_root_path . 'common.php');
 
-$template->set_custom_template($ideas_root_path . 'style/template', 'default');
-
 $id = request_var('id', (int) 0);
 $idea = $ideas->get_idea($id);
 if (!$idea)
 {
 	trigger_error('IDEA_NOT_FOUND');
 }
+
+page_header($user->lang['VIEW_IDEA'] . ' - ' . $idea['idea_title'], false);
 
 $template->assign_vars(array(
 	'IDEA_TITLE'			=> $idea['idea_title'],
