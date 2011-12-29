@@ -33,5 +33,9 @@ if (!defined('IN_IDEAS'))
 //
 
 $user->lang = array_merge($user->lang, array(
-	'TEST'	=> 'hellO!!',
+	'LATEST_IDEAS'	=> 'Latest Ideas',
+	'SCORE'				=> 'Score',
+	'TOP_IDEAS'		=> 'Top Idea',
+	'VIEW_ALL'			=> 'View All',
+	'VOTES'				=> 'votes',
 ));
