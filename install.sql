@@ -11,7 +11,10 @@ idea_desc TEXT NOT NULL ,
 idea_date INT NOT NULL ,
 idea_rating FLOAT NOT NULL ,
 idea_votes INT NOT NULL ,
-idea_status INT NOT NULL
+idea_status INT NOT NULL ,
+bbcode_bitfield VARCHAR( 255 ) NOT NULL DEFAULT '' ,
+bbcode_uid VARCHAR( 8 ) NOT NULL DEFAULT '' ,
+bbcode_options INT( 11 ) NOT NULL
 ) ENGINE = MYISAM ;
 
 CREATE TABLE  phpbb_ideas_votes (
