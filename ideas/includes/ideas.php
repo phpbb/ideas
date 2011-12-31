@@ -23,7 +23,7 @@ if (!defined('IN_IDEAS'))
 */
 class Ideas
 {
-	public function get_ideas($number = 10, $sortby = 'idea_date DESC', $where = 'idea_status != 5')
+	public function get_ideas($number = 10, $sortby = 'idea_date DESC', $where = 'idea_status != 5 && idea_status != 4')
 	{
 		global $db;
 		$sql = 'SELECT idea_id, idea_author, idea_title, idea_date, idea_rating, idea_votes, idea_status

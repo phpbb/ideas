@@ -32,7 +32,7 @@ foreach ($rows as $row)
 	));
 }
 
-$rows = $ideas->get_ideas(10, 'idea_rating DESC, idea_votes DESC', 'idea_status != 5 && idea_status != 3');
+$rows = $ideas->get_ideas(10, 'idea_rating DESC, idea_votes DESC', 'idea_status != 5 && idea_status != 3 && idea_status != 4');
 foreach ($rows as $row)
 {
 	$template->assign_block_vars('top_ideas', array(
