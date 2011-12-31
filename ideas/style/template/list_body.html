@@ -2,4 +2,19 @@
 
 <!-- INCLUDE idealist_body.html -->
 
+<form action="{U_POST_ACTION}" method="get">
+	<fieldset class="display-options">
+		<label>
+			Sort by <select name="sort" id="sk"><!-- BEGIN sortby --><option value="{sortby.VALUE}"<!-- IF sortby.SELECTED --> selected="selected"<!-- ENDIF -->>{sortby.TEXT}</option><!-- END sortby --></select>
+		</label>
+		<label>
+			<select name="sd" id="sd">
+				<option value="a"<!-- IF SORT_DIRECTION === 'ASC' --> selected="selected"<!-- ENDIF -->>{L_ASCENDING}</option>
+				<option value="d"<!-- IF SORT_DIRECTION === 'DESC' --> selected="selected"<!-- ENDIF -->>{L_DESCENDING}</option>
+			</select>
+			<input type="submit" value="Go" class="button2" />
+		</label>
+	</fieldset>
+</form>
+
 <!-- INCLUDE overall_footer.html -->

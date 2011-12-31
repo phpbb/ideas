@@ -17,7 +17,7 @@ $ideas_root_path = (defined('IDEAS_ROOT_PATH')) ? IDEAS_ROOT_PATH : __DIR__ . '/
 include($ideas_root_path . 'common.php');
 
 $sort = request_var('sort', '');
-$sort_direction = request_var('sd', false) ? 'ASC' : 'DESC';
+$sort_direction = request_var('sd', 'd') === 'd' ? 'DESC' : 'ASC';
 $status = request_var('status', 0);
 $author = request_var('author', 0);
 
@@ -72,6 +72,22 @@ foreach ($ideas as $idea)
 }
 
 page_header($user->lang['IDEA_LIST'], false);
+
+$sorts = array('author', 'date', 'id', 'title', 'votes', 'rating');
+foreach($sorts as $sort)
+{
+	$sorted = request_var('sort', '');
+	$template->assign_block_vars('sortby', array(
+		'VALUE'		=> $sort,
+		'TEXT'			=> $user->lang[strtoupper($sort)],
+		'SELECTED'	=> $sort == $sorted,
+	));
+}
+
+$template->assign_vars(array(
+	'U_POST_ACTION'	=> append_sid('./list.php'),
+	'SORT_DIRECTION'	=> $sort_direction,
+));
 
 $template->set_filenames(array(
     'body' => 'list_body.html'
