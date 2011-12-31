@@ -27,49 +27,8 @@ if (!$idea)
 
 if ($mode === 'vote' && $user->data['user_id'] !== ANONYMOUS)
 {
-	// Validate $vote - must be a whole number between 1 and 5.
-	if (!is_int($vote) || $vote > 5 || $vote < 1)
-	{
-		trigger_error('INVALID_VOTE');
-	}
-
-	// Check whether user has already voted - error if they have
-	// @todo: Should it update vote instead?
-	$sql = 'SELECT idea_id, value
-		FROM ' . IDEA_VOTES_TABLE . "
-		WHERE idea_id = $id
-			AND user_id = " . $user->data['user_id'];
-	$result = $db->sql_query_limit($sql, 1);
-	if ($db->sql_fetchrow())
-	{
-		trigger_error('ALREADY_VOTED');
-	}
-
-	// Insert vote into votes table.
-	$sql_ary = array(
-		'idea_id'		=> $id,
-		'user_id'		=> $user->data['user_id'],
-		'value'			=> $vote,
-	);
-
-	$sql = 'INSERT INTO ' . IDEA_VOTES_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary);
-	$db->sql_query($sql);
-
-
-	// Update rating in IDEAS_TABLE and $idea
-	$idea['idea_rating'] = ($idea['idea_rating'] * $idea['idea_votes'] + $vote) / ++$idea['idea_votes'];
-
-	$sql_ary = array(
-		'idea_rating'	=> $idea['idea_rating'],
-		'idea_votes'	=> $idea['idea_votes'],
-	);
-
-	$sql = 'UPDATE ' . IDEAS_TABLE . '
-		SET ' . $db->sql_build_array('UPDATE', $sql_ary) . '
-		WHERE idea_id = ' . $id;
-	$db->sql_query($sql);
-
-	trigger_error('VOTE_SUCCESS');
+	$message = $ideas->vote($idea, $user->data['user_id'], $vote);
+	trigger_error($message);
 }
 
 page_header($user->lang['VIEW_IDEA'] . ' - ' . $idea['idea_title'], false);
