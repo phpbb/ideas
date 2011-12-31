@@ -79,7 +79,7 @@ $template->assign_vars(array(
 	'IDEA_DESC'				=> generate_text_for_display($idea['idea_desc'], $idea['bbcode_uid'], $idea['bbcode_bitfield'], $idea['bbcode_options']),
 	'IDEA_AUTHOR'		=> get_user_link($idea['idea_author']),
 	'IDEA_DATE'				=> $user->format_date($idea['idea_date']),
-	'IDEA_RATING'			=> $idea['idea_rating'],
+	'IDEA_RATING'			=> round($idea['idea_rating'] * 2, 0) / 2,
 	'IDEA_VOTES'			=> $idea['idea_votes'],
 	'IDEA_STATUS'			=> $ideas->get_status_from_id($idea['idea_status']),
 	'IDEA_STATUS_LINK'=> append_sid('./list.php?status=' . $idea['idea_status']),
