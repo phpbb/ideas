@@ -38,7 +38,6 @@ if ($mode === 'submit')
 	{
 		$template->assign_vars(array(
 			'ERROR'	=> implode('<br />', $submit),
-			'TITLE'		=> $title,
 			'DESC'		=> $desc,
 		));
 	}
