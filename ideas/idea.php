@@ -25,7 +25,7 @@ if (!$idea)
 	trigger_error('IDEA_NOT_FOUND');
 }
 
-if ($mode === 'vote')
+if ($mode === 'vote' && $user->data['user_id'] !== ANONYMOUS)
 {
 	// Validate $vote - must be a whole number between 1 and 5.
 	if (!is_int($vote) || $vote > 5 || $vote < 1)
