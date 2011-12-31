@@ -89,6 +89,7 @@ generate_smilies('inline', 0);
 
 $template->assign_vars(array(
 	'S_POST_ACTION'		=> append_sid('posting.php?mode=submit'),
+	'TITLE'						=> $title,
 ));
 
 $template->set_filenames(array(

@@ -33,6 +33,7 @@ if (!defined('IN_IDEAS'))
 //
 
 $user->lang = array_merge($user->lang, array(
+	'CREATE_IDEA'			=> 'Create new idea',
 	'DESC'						=> 'Description',
 	'DESC_TOO_LONG'	=> 'Description must be under 10,000 characters long.',
 	'DESC_TOO_SHORT'	=> 'Description must be at least 5 characters long.',

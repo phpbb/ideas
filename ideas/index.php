@@ -49,6 +49,7 @@ foreach ($rows as $row)
 $template->assign_vars(array(
 	'U_VIEW_TOP'		=> append_sid('./list.php'),
 	'U_VIEW_LATEST'	=> append_sid('./list.php?sort=date'),
+	'S_POST_ACTION'	=> append_sid('./posting.php'),
 ));
 
 $template->set_filenames(array(
