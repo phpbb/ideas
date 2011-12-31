@@ -74,9 +74,9 @@ foreach ($ideas as $idea)
 page_header($user->lang['IDEA_LIST'], false);
 
 $sorts = array('author', 'date', 'id', 'title', 'votes', 'rating');
+$sorted = request_var('sort', '');
 foreach($sorts as $sort)
 {
-	$sorted = request_var('sort', '');
 	$template->assign_block_vars('sortby', array(
 		'VALUE'		=> $sort,
 		'TEXT'			=> $user->lang[strtoupper($sort)],
