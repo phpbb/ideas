@@ -36,34 +36,45 @@ $user->lang = array_merge($user->lang, array(
 	'ACCEPTED'				=> 'Accepted',
 	'ALL_IDEAS'				=> 'All ideas',
 	'ALREADY_VOTED'	=> 'You have already voted on this idea.',
+
 	'CREATE_IDEA'			=> 'Create new idea',
+
 	'DATE'						=> 'Date',
 	'DESC'						=> 'Description',
 	'DESC_TOO_LONG'	=> 'Description must be under 10,000 characters long.',
 	'DESC_TOO_SHORT'	=> 'Description must be at least 5 characters long.',
 	'DUPLICATE'				=> 'Duplicate',
-	'SHOW_W_STATUS'	=> 'Display ideas with status:',
+
 	'ID'							=> 'ID',
 	'IDEAS'						=> 'Ideas',
 	'IDEA_LIST'				=> 'Idea List',
 	'IDEA_NOT_FOUND'	=> 'Idea not found',
 	'IDEAS_HOME'			=> 'Ideas Home',
 	'INVALID_VOTE'		=> 'Invalid vote; the number you entered was invalid.',
+
 	'LATEST_IDEAS'		=> 'Latest Ideas',
 	'LOGGED_OUT'			=> 'You must be logged in to post ideas',
+
 	'MERGED'					=> 'Merged',
+
 	'NEW'						=> 'New',
 	'NEW_IDEA'				=> 'New Idea',
 	'NO_IDEAS'				=> 'No ideas',
+
 	'POST_IDEA'				=> 'Post idea',
+
 	'RATING'					=> 'Rating',
 	'REJECTED'				=> 'Rejected',
+
 	'SCORE'					=> 'Score',
+	'SHOW_W_STATUS'	=> 'Display ideas with status:',
 	'STATUS'					=> 'Status',
+
 	'TITLE'						=> 'Title',
 	'TITLE_TOO_LONG'	=> 'Title must be under 64 characters long.',
 	'TITLE_TOO_SHORT'	=> 'Title must be 6 characters long.',
 	'TOP_IDEAS'				=> 'Top Ideas',
+
 	'VIEW_ALL'				=> 'View All',
 	'VIEW_IDEA'				=> 'View Idea',
 	'VIEWING_IDEA'		=> 'Viewing Idea',
