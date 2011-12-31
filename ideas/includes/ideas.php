@@ -23,6 +23,14 @@ if (!defined('IN_IDEAS'))
 */
 class Ideas
 {
+	/**
+	 * Returns an array of ideas. Defaults to ten ideas ordered by date excluding
+	 * duplicate or rejected ideas.
+	 *
+	 * @param int $number The number of ideas to return.
+	 * @param string $sortby SQL ORDER BY query.
+	 * @param string $where SQL WHERE query.
+	 */
 	public function get_ideas($number = 10, $sortby = 'idea_date DESC', $where = 'idea_status != 5 && idea_status != 4')
 	{
 		global $db;
@@ -37,6 +45,11 @@ class Ideas
 		return $rows;
 	}
 
+	/**
+	 * Returns the specified idea.
+	 *
+	 * @param int $id The ID of the idea to return.
+	 */
 	public function get_idea($id)
 	{
 		global $db;
@@ -50,6 +63,12 @@ class Ideas
 		return $row;
 	}
 
+	/**
+	 * Returns the status name from the status ID specified.
+	 *
+	 * @param int $id ID of the status.
+	 * @returns string The status name.
+	 */
 	public function get_status_from_id($id)
 	{
 		global $db;
@@ -63,6 +82,14 @@ class Ideas
 		return $row['status_name'];
 	}
 
+	/**
+	 * Submits a vote on an idea.
+	 *
+	 * @param array $idea The idea returned by get_idea().
+	 * @param int $user_id The ID of the user voting.
+	 * @param int $value The value to vote for (int, 1-5).
+	 * @returns string Error / success message. Use trigger_error.
+	 */
 	public function vote($idea, $user_id, $value)
 	{
 		global $db;
@@ -112,6 +139,13 @@ class Ideas
 		return 'VOTE_SUCCESS';
 	}
 
+	/**
+	 * Submits a new idea.
+	 *
+	 * @param string $title The title of the idea.
+	 * @param string $desc The description of the idea.
+	 * @param int $user_id The ID of the author.
+	 */
 	public function submit($title, $desc, $user_id)
 	{
 		global $db, $user;
