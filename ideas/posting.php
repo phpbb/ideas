@@ -32,51 +32,19 @@ $desc = utf8_normalize_nfc(request_var('desc', '', true));
 
 if ($mode === 'submit')
 {
-	$error = array();
-	if (strlen($title) < 6)
-	{
-		$error[] = $user->lang['TITLE_TOO_SHORT'];
-	}
-	if (strlen($desc) < 5)
-	{
-		$error[] = $user->lang['DESC_TOO_SHORT'];
-	}
-	if (strlen($title) > 64)
-	{
-		$error[] = $user->lang['TITLE_TOO_LONG'];
-	}
-	if (strlen($desc) > 10000)
-	{
-		$error[] = $user->lang['DESC_TOO_LONG'];
-	}
+	$submit = $ideas->submit($title, $desc, $user->data['user_id']);
 
-	if (count($error))
+	if (is_array($submit))
 	{
 		$template->assign_vars(array(
-			'ERROR'	=> implode('<br />', $error),
+			'ERROR'	=> implode('<br />', $submit),
 			'TITLE'		=> $title,
 			'DESC'		=> $desc,
 		));
 	}
 	else
 	{
-		$uid = $bitfield = $options = '';
-		generate_text_for_storage($desc, $uid, $bitfield, $options, true, true, true);
-
-		$sql_ary = array(
-			'idea_title'			=> $db->sql_escape($title),
-			'idea_desc'			=> $desc,
-			'idea_author'		=> $user->data['user_id'],
-			'idea_date'			=> time(),
-			'bbcode_uid'		=> $uid,
-			'bbcode_bitfield'	=> $bitfield,
-			'bbcode_options'	=> $options,
-		);
-
-		$sql = 'INSERT INTO ' . IDEAS_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary);
-		$db->sql_query($sql);
-		$id = $db->sql_nextid();
-		header('Location: ' . append_sid('./idea.php?id=' . $id));
+		header('Location: ' . append_sid('./idea.php?id=' . $submit));
 		garbage_collection();
 		exit_handler();
 	}
