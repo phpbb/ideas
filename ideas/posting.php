@@ -49,7 +49,7 @@ if ($mode === 'submit')
 	{
 		$error[] = $user->lang['DESC_TOO_LONG'];
 	}
-	
+
 	if (count($error))
 	{
 		$template->assign_vars(array(
@@ -62,7 +62,7 @@ if ($mode === 'submit')
 	{
 		$uid = $bitfield = $options = '';
 		generate_text_for_storage($desc, $uid, $bitfield, $options, true, true, true);
-		
+
 		$sql_ary = array(
 			'idea_title'			=> $db->sql_escape($title),
 			'idea_desc'			=> $desc,
@@ -72,7 +72,7 @@ if ($mode === 'submit')
 			'bbcode_bitfield'	=> $bitfield,
 			'bbcode_options'	=> $options,
 		);
-		
+
 		$sql = 'INSERT INTO ' . IDEAS_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary);
 		$db->sql_query($sql);
 		$id = $db->sql_nextid();

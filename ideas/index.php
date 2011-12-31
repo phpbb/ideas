@@ -28,7 +28,7 @@ foreach ($rows as $row)
 		'AUTHOR'		=> get_user_link($row['idea_author']),
 		'DATE'			=> $user->format_date($row['idea_date']),
 		'RATING'		=> $row['idea_rating'],
-		'VOTES'			=> $row['idea_votes']
+		'VOTES'		=> $row['idea_votes']
 	));
 }
 
@@ -42,7 +42,7 @@ foreach ($rows as $row)
 		'AUTHOR'		=> get_user_link($row['idea_author']),
 		'DATE'			=> $user->format_date($row['idea_date']),
 		'RATING'		=> $row['idea_rating'],
-		'VOTES'			=> $row['idea_votes']
+		'VOTES'		=> $row['idea_votes']
 	));
 }
 
