@@ -27,7 +27,7 @@ page_header($user->lang['VIEW_IDEA'] . ' - ' . $idea['idea_title'], false);
 
 $template->assign_vars(array(
 	'IDEA_TITLE'			=> $idea['idea_title'],
-	'IDEA_DESC'			=> generate_text_for_display($idea['idea_desc'], $idea['idea_author'], '', false),
+	'IDEA_DESC'			=> generate_text_for_display($idea['idea_desc'], $idea['bbcode_uid'], $idea['bbcode_bitfield'], $idea['bbcode_options']),
 	'IDEA_AUTHOR'		=> get_user_link($idea['idea_author']),
 	'IDEA_DATE'			=> $user->format_date($idea['idea_date']),
 	'IDEA_RATING'		=> $idea['idea_rating'],

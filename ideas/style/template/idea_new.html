@@ -1,0 +1,23 @@
+<!-- INCLUDE overall_header.html -->
+
+<h2>{L_NEW_IDEA}</h2>
+
+<form id="postform" method="post" action="{S_POST_ACTION}"{S_FORM_ENCTYPE}>
+
+<!-- IF S_POST_REVIEW --><!-- INCLUDE posting_review.html --><!-- ENDIF -->
+
+<!-- IF S_DISPLAY_PREVIEW --><!-- INCLUDE posting_preview.html --><!-- ENDIF -->
+
+<div class="panel" id="postingbox">
+	<div class="inner"><span class="corners-top"><span></span></span>
+	
+	<h3>{L_POST_IDEA}</h3>
+
+	<!-- INCLUDE posting_editor.html -->
+	{S_FORM_TOKEN}
+	<span class="corners-bottom"><span></span></span></div>
+</div>
+
+</form>
+
+<!-- INCLUDE overall_footer.html -->
