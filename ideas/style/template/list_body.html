@@ -4,8 +4,12 @@
 
 <form action="{U_POST_ACTION}" method="get">
 	<fieldset class="display-options">
+		<label>{L_SHOW_W_STATUS} <select name="status" id="st">
+		<option value="0">{L_ALL_IDEAS}</option>
+		<!-- BEGIN status --><option value="{status.VALUE}"<!-- IF status.SELECTED --> selected="selected"<!-- ENDIF -->>{status.TEXT}</option><!-- END status -->
+		</select></label>
 		<label>
-			Sort by <select name="sort" id="sk"><!-- BEGIN sortby --><option value="{sortby.VALUE}"<!-- IF sortby.SELECTED --> selected="selected"<!-- ENDIF -->>{sortby.TEXT}</option><!-- END sortby --></select>
+			{L_SORT_BY} <select name="sort" id="sk"><!-- BEGIN sortby --><option value="{sortby.VALUE}"<!-- IF sortby.SELECTED --> selected="selected"<!-- ENDIF -->>{sortby.TEXT}</option><!-- END sortby --></select>
 		</label>
 		<label>
 			<select name="sd" id="sd">

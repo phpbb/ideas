@@ -73,6 +73,17 @@ foreach ($ideas as $idea)
 
 page_header($user->lang['IDEA_LIST'], false);
 
+$statuses = array('new', 'accepted', 'rejected', 'merged', 'duplicate');
+$prevstatus = request_var('status', '');
+foreach($statuses as $key => $status)
+{
+	$template->assign_block_vars('status', array(
+		'VALUE'		=> $key + 1,
+		'TEXT'			=> $user->lang[strtoupper($status)],
+		'SELECTED'	=> $prevstatus == $key + 1,
+	));
+}
+
 $sorts = array('author', 'date', 'id', 'title', 'votes', 'rating');
 $sorted = request_var('sort', '');
 foreach($sorts as $sort)
