@@ -21,7 +21,7 @@ include($phpbb_root_path . 'includes/message_parser.' . $phpEx);
 
 $user->add_lang('posting');
 
-if ($user->data['user_id'] === ANONYMOUS)
+if ($user->data['user_id'] == ANONYMOUS)
 {
 	trigger_error('LOGGED_OUT');
 }

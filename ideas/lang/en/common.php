@@ -42,6 +42,7 @@ $user->lang = array_merge($user->lang, array(
 	'IDEA_NOT_FOUND'	=> 'Idea not found',
 	'IDEAS_HOME'			=> 'Ideas Home',
 	'LATEST_IDEAS'			=> 'Latest Ideas',
+	'LOGGED_OUT'			=> 'You must be logged in to post ideas',
 	'NEW_IDEA'				=> 'New Idea',
 	'NO_IDEAS'				=> 'No ideas',
 	'POST_IDEA'				=> 'Post idea',
