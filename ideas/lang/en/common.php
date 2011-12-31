@@ -33,6 +33,7 @@ if (!defined('IN_IDEAS'))
 //
 
 $user->lang = array_merge($user->lang, array(
+	'ALREADY_VOTED'	=> 'You have already voted on this idea.',
 	'CREATE_IDEA'			=> 'Create new idea',
 	'DESC'						=> 'Description',
 	'DESC_TOO_LONG'	=> 'Description must be under 10,000 characters long.',
@@ -41,6 +42,7 @@ $user->lang = array_merge($user->lang, array(
 	'IDEA_LIST'				=> 'Idea List',
 	'IDEA_NOT_FOUND'	=> 'Idea not found',
 	'IDEAS_HOME'			=> 'Ideas Home',
+	'INVALID_VOTE'		=> 'Invalid vote; the number you entered was invalid.',
 	'LATEST_IDEAS'		=> 'Latest Ideas',
 	'LOGGED_OUT'			=> 'You must be logged in to post ideas',
 	'NEW_IDEA'				=> 'New Idea',
@@ -55,5 +57,7 @@ $user->lang = array_merge($user->lang, array(
 	'VIEW_ALL'				=> 'View All',
 	'VIEW_IDEA'				=> 'View Idea',
 	'VIEWING_IDEA'		=> 'Viewing Idea',
+	'VOTE'						=> 'Vote',
+	'VOTE_SUCCESS'		=> 'Successfully voted on this idea.',
 	'VOTES'					=> 'votes',
 ));
