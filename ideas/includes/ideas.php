@@ -90,7 +90,7 @@ class Ideas
 	 * @param int $value The value to vote for (int, 1-5).
 	 * @returns string Error / success message. Use trigger_error.
 	 */
-	public function vote($idea, $user_id, $value)
+	public function vote(&$idea, $user_id, $value)
 	{
 		global $db;
 

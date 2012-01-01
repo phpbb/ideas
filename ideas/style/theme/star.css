@@ -1,0 +1,90 @@
+.star-rating {
+	list-style: none;
+	margin-left: 5px !important;
+	padding: 0px;
+	width: 125px;
+	height: 25px;
+	position: relative;
+	background: url(images/alt_star.gif) top left repeat-x;
+}
+
+.star-rating li {
+	padding: 0px;
+	margin: 0px;
+	float: left;
+}
+
+.star-rating li a {
+	display: block;
+	width: 25px;
+	height: 25px;
+	text-decoration: none;
+	text-indent: -9000px;
+	z-index: 20;
+	position: absolute;
+	padding: 0px;
+	cursor: default;
+}
+
+.star-rating.active li a:hover {
+	background: url(images/alt_star.gif) left bottom;
+	z-index: 2;
+	left: 0px;
+	cursor: pointer;
+}
+
+.star-rating a:focus,
+.star-rating a:active {
+	border: 0;
+	-moz-outline-style: none;
+	outline: none;
+}
+
+.star-rating a.one-star {
+	left: 0px;
+}
+
+.star-rating a.one-star:hover {
+	width: 25px;
+}
+
+.star-rating a.two-stars {
+	left: 25px;
+}
+
+.star-rating a.two-stars:hover {
+	width: 50px;
+}
+
+.star-rating a.three-stars {
+	left: 50px;
+}
+
+.star-rating a.three-stars:hover {
+	width: 75px;
+}
+
+.star-rating a.four-stars {
+	left: 75px;
+}
+
+.star-rating a.four-stars:hover {
+	width: 100px;
+}
+
+.star-rating a.five-stars {
+	left: 100px;
+}
+
+.star-rating a.five-stars:hover {
+	width: 125px;
+}
+
+.star-rating li.current-rating {
+	background: url(images/alt_star.gif) left center;
+	position: absolute;
+	height: 25px;
+	display: block;
+	text-indent: -9000px;
+	z-index: 1;
+}

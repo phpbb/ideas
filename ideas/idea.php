@@ -28,7 +28,18 @@ if (!$idea)
 if ($mode === 'vote' && $user->data['user_id'] !== ANONYMOUS)
 {
 	$message = $ideas->vote($idea, $user->data['user_id'], $vote);
-	trigger_error($message);
+
+	if ($request->is_ajax())
+	{
+		header('Content-Type: application/json');
+		echo json_encode($user->lang[$message]);
+		garbage_collection();
+		exit_handler();
+	}
+	else
+	{
+		trigger_error($message);
+	}
 }
 
 page_header($user->lang['VIEW_IDEA'] . ' - ' . $idea['idea_title'], false);
@@ -43,11 +54,7 @@ $template->assign_vars(array(
 	'IDEA_STATUS'			=> $ideas->get_status_from_id($idea['idea_status']),
 	'IDEA_STATUS_LINK'=> append_sid('./list.php?status=' . $idea['idea_status']),
 
-	'U_VOTE_1'				=> append_sid("./idea.php?mode=vote&id=$id&v=1"),
-	'U_VOTE_2'				=> append_sid("./idea.php?mode=vote&id=$id&v=2"),
-	'U_VOTE_3'				=> append_sid("./idea.php?mode=vote&id=$id&v=3"),
-	'U_VOTE_4'				=> append_sid("./idea.php?mode=vote&id=$id&v=4"),
-	'U_VOTE_5'				=> append_sid("./idea.php?mode=vote&id=$id&v=5"),
+	'U_IDEA_VOTE'			=> append_sid('./idea.php?mode=vote&id=' . $id),
 ));
 
 $template->set_filenames(array(

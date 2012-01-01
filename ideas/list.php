@@ -85,7 +85,7 @@ foreach($statuses as $key => $status)
 }
 
 $sorts = array('author', 'date', 'id', 'title', 'votes', 'rating');
-$sorted = request_var('sort', '');
+$sorted = request_var('sort', 'rating');
 foreach($sorts as $sort)
 {
 	$template->assign_block_vars('sortby', array(
