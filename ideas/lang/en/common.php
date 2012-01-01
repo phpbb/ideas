@@ -66,7 +66,6 @@ $user->lang = array_merge($user->lang, array(
 	'RATING'					=> 'Rating',
 	'REJECTED'				=> 'Rejected',
 
-	'SCORE'					=> 'Score',
 	'SHOW_W_STATUS'	=> 'Display ideas with status:',
 	'STATUS'					=> 'Status',
 

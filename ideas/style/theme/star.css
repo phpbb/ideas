@@ -1,6 +1,6 @@
 .star-rating {
+	display: inline-block;
 	list-style: none;
-	margin-left: 5px !important;
 	padding: 0px;
 	width: 125px;
 	height: 25px;
@@ -87,4 +87,10 @@
 	display: block;
 	text-indent: -9000px;
 	z-index: 1;
+}
+
+dd.topics {
+	width: 30%;
+	height: 25px;
+	vertical-align: top;
 }
