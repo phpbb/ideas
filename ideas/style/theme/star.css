@@ -5,7 +5,7 @@
 	width: 125px;
 	height: 25px;
 	position: relative;
-	background: url(images/alt_star.gif) top left repeat-x;
+	background: url(images/stars.png) top left repeat-x;
 }
 
 .star-rating li {
@@ -27,7 +27,7 @@
 }
 
 .star-rating.active li a:hover {
-	background: url(images/alt_star.gif) left bottom;
+	background: url(images/stars.png) left bottom;
 	z-index: 2;
 	left: 0px;
 	cursor: pointer;
@@ -81,7 +81,7 @@
 }
 
 .star-rating li.current-rating {
-	background: url(images/alt_star.gif) left center;
+	background: url(images/stars.png) left center;
 	position: absolute;
 	height: 25px;
 	display: block;
