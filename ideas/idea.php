@@ -36,10 +36,8 @@ if ($mode === 'vote' && $user->data['user_id'] != ANONYMOUS)
 		garbage_collection();
 		exit_handler();
 	}
-	else
-	{
-		trigger_error($message);
-	}
+
+	trigger_error($message);
 }
 else if ($mode === 'delete' && $auth->acl_get('m_mod_ideas'))
 {

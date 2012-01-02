@@ -172,25 +172,23 @@ class Ideas
 		{
 			return $error;
 		}
-		else
-		{
-			$uid = $bitfield = $options = '';
-			generate_text_for_storage($desc, $uid, $bitfield, $options, true, true, true);
 
-			$sql_ary = array(
-				'idea_title'			=> $db->sql_escape($title),
-				'idea_desc'			=> $desc,
-				'idea_author'		=> $user_id,
-				'idea_date'			=> time(),
-				'bbcode_uid'		=> $uid,
-				'bbcode_bitfield'	=> $bitfield,
-				'bbcode_options'	=> $options,
-			);
+		$uid = $bitfield = $options = '';
+		generate_text_for_storage($desc, $uid, $bitfield, $options, true, true, true);
 
-			$sql = 'INSERT INTO ' . IDEAS_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary);
-			$db->sql_query($sql);
-			return $db->sql_nextid();
-		}
+		$sql_ary = array(
+			'idea_title'			=> $db->sql_escape($title),
+			'idea_desc'			=> $desc,
+			'idea_author'		=> $user_id,
+			'idea_date'			=> time(),
+			'bbcode_uid'		=> $uid,
+			'bbcode_bitfield'	=> $bitfield,
+			'bbcode_options'	=> $options,
+		);
+
+		$sql = 'INSERT INTO ' . IDEAS_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary);
+		$db->sql_query($sql);
+		return $db->sql_nextid();
 	}
 
 	public function delete($id)
