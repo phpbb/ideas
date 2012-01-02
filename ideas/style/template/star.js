@@ -7,7 +7,7 @@ $('.rating').each(function() {
 	$this.find('a').click(function(e) {
 		if (url)
 		{
-			var vote = parseInt($(this).text());
+			var vote = $(this).text();
 			$.get(url + '&v=' + vote, function(message) {
 				alert(message); // phpBB 3.1 please! :O
 			});
