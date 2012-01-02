@@ -1,7 +1,6 @@
 <?php
 
 define('IN_IDEAS', true);
-$ideas_root_path = '../';
 include($ideas_root_path . 'common.php');
 
 $sample = request_var('sample', false);
@@ -88,4 +87,4 @@ EOT
 	$db->sql_query('INSERT INTO ' . $table_prefix . '_ideas_votes (idea_id, user_id, value) VALUES (1,1,5),(1,2,5),(2,1,5),(2,2,3),(3,1,5),(3,2,5),(3,3,5),(3,4,5);');
 }
 
-echo 'Successfully set up permissions and database. To complete installation, please copy permissions_ideas.php (found in the files directory in this directory) into language/en/mods, and delete this directory.';
+echo 'Successfully set up permissions and database. To complete installation, please copy permissions_ideas.php (found in the files directory) into language/en/mods, and delete this file.';
