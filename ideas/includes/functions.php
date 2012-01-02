@@ -35,5 +35,5 @@ function get_user_link($id)
 	$author = $db->sql_fetchrow($result);
 	$db->sql_freeresult($result);
 
-	return get_username_string('full', 2, $author['username'], $author['user_colour']);
+	return get_username_string('full', $id, $author['username'], $author['user_colour']);
 }
