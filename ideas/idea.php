@@ -41,6 +41,13 @@ if ($mode === 'vote' && $user->data['user_id'] != ANONYMOUS)
 		trigger_error($message);
 	}
 }
+else if ($mode === 'delete' && $auth->acl_get('m_mod_ideas'))
+{
+	$ideas->delete($id);
+	$message = $user->lang['IDEA_DELETED'] . '<br /><br />';
+	$message .= sprintf($user->lang['RETURN_INDEX'], '<a href="' . append_sid('./index.php') . '">', '</a>');
+	trigger_error($message);
+}
 
 if ($request->is_ajax())
 {
@@ -53,6 +60,7 @@ if ($request->is_ajax())
 page_header($user->lang['VIEW_IDEA'] . ' - ' . $idea['idea_title'], false);
 
 $template->assign_vars(array(
+	'IDEA_ID'					=> $idea['idea_id'],
 	'IDEA_TITLE'				=> $idea['idea_title'],
 	'IDEA_DESC'				=> generate_text_for_display($idea['idea_desc'], $idea['bbcode_uid'], $idea['bbcode_bitfield'], $idea['bbcode_options']),
 	'IDEA_AUTHOR'		=> get_user_link($idea['idea_author']),
@@ -62,7 +70,9 @@ $template->assign_vars(array(
 	'IDEA_STATUS'			=> $ideas->get_status_from_id($idea['idea_status']),
 	'IDEA_STATUS_LINK'=> append_sid('./list.php?status=' . $idea['idea_status']),
 
+	'U_DELETE_IDEA'		=> $auth->acl_get('m_mod_ideas'),
 	'U_IDEA_VOTE'			=> append_sid('./idea.php?mode=vote&id=' . $id),
+	'U_IDEA_MOD'			=> append_sid('./idea.php'),
 ));
 
 $template->set_filenames(array(

@@ -47,6 +47,7 @@ $user->lang = array_merge($user->lang, array(
 
 	'ID'							=> 'ID',
 	'IDEAS'						=> 'Ideas',
+	'IDEA_DELETED'		=> 'Idea successfully deleted.',
 	'IDEA_LIST'				=> 'Idea List',
 	'IDEA_NOT_FOUND'	=> 'Idea not found',
 	'IDEAS_HOME'			=> 'Ideas Home',
@@ -56,6 +57,7 @@ $user->lang = array_merge($user->lang, array(
 	'LOGGED_OUT'			=> 'You must be logged in to do this.',
 
 	'MERGED'					=> 'Merged',
+	'MOD_IDEA'				=> 'Moderate idea',
 
 	'NEW'						=> 'New',
 	'NEW_IDEA'				=> 'New Idea',

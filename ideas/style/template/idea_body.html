@@ -9,6 +9,15 @@
 		<dt style="width: 15%">{L_RATING}:</dt> <dd><span class="rating"<!-- IF S_USER_LOGGED_IN and not S_IS_BOT --> data-vote="{U_IDEA_VOTE}"<!-- ENDIF -->>{IDEA_RATING}</span> ({IDEA_VOTES} {L_VOTES})</dd>
 		<dt style="width: 15%">{L_STATUS}:</dt> <dd><a href="{IDEA_STATUS_LINK}">{IDEA_STATUS}</a></dd>
 		<dt style="width: 15%">{L_DESC}:</dt> <dd style="width: 84%">{IDEA_DESC}</dd>
+		<!-- IF U_DELETE_IDEA -->
+		<dt style="width: 15%">{L_MOD_IDEA}:</dt>
+		<dd>
+			<form action="{U_IDEA_MOD}" method="get" id="mod"><select name="mode" onchange="this.value != '0' && this.parentNode.submit()">
+				<option value="0">{L_SELECT}</option>
+				<!-- IF U_DELETE_IDEA --><option value="delete">{L_DELETE}</option><!-- ENDIF -->
+			</select><input type="hidden" name="id" value="{IDEA_ID}" /></form>
+		</dd>
+		<!-- ENDIF -->
 	</dl>
 
 	<span class="corners-bottom"><span></span></span></div>

@@ -192,4 +192,14 @@ class Ideas
 			return $db->sql_nextid();
 		}
 	}
+
+	public function delete($id)
+	{
+		global $db;
+
+		$sql = 'DELETE FROM ' . IDEAS_TABLE . '
+			WHERE idea_id = ' . (int) $id;
+		$db->sql_query($sql);
+		return $db->sql_affectedrows();
+	}
 }
