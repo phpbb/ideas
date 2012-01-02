@@ -9,6 +9,7 @@ idea_author INT NOT NULL ,
 idea_title VARCHAR( 200 ) NOT NULL ,
 idea_desc TEXT NOT NULL ,
 idea_date INT NOT NULL ,
+idea_comments INT NOT NULL DEFAULT 0 ,
 idea_rating FLOAT NOT NULL DEFAULT 0 ,
 idea_votes INT NOT NULL DEFAULT 0 ,
 idea_status INT NOT NULL DEFAULT 1 ,
@@ -26,8 +27,17 @@ idea_id , user_id
 )
 ) ENGINE = MYISAM ;
 
-
--- Sample data.
+CREATE TABLE  phpbb_ideas_comments (
+comment_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+idea_id INT NOT NULL ,
+comment_author INT NOT NULL ,
+comment_text TEXT NOT NULL ,
+comment_date INT NOT NULL ,
+comment_ip VARCHAR( 255 ) NOT NULL ,
+bbcode_bitfield VARCHAR( 255 ) NOT NULL DEFAULT '' ,
+bbcode_uid VARCHAR( 8 ) NOT NULL DEFAULT '' ,
+bbcode_options INT( 11 ) NOT NULL
+) ENGINE = MYISAM ;
 
 INSERT INTO phpbb_ideas_statuses (status_id, status_name) VALUES
 (1, 'New'),
@@ -35,6 +45,10 @@ INSERT INTO phpbb_ideas_statuses (status_id, status_name) VALUES
 (3, 'Rejected'),
 (4, 'Merged'),
 (5, 'Duplicate');
+
+
+
+-- Sample data.
 
 INSERT INTO phpbb_ideas_ideas (idea_id, idea_author, idea_title, idea_desc, idea_date, idea_rating, idea_votes, idea_status) VALUES
 (1, 2, 'Contact Page', 'At the moment, phpBB installations provide no way for a non-registered user to contact the administrators of the board. In fact, depending on permissions, even a registered user may not be able to PM administrators. There are many cases where getting in touch with an administrator is very important (DMCA notices, problems with registration, etc.). In fact, some countries require contact information to be readily available on websites.\r\n\r\nOn a personal note, this results in tons of complaints in my inbox. People follow the link from "powered by phpBB" to our contact page and give me an earful about things we have nothing to do with.\r\n\r\nAdditionally, we currently list the administrator''s email address in plaintext on the registration page. I usually end up forwarding complaints to this email address. Needless to say, listing the email address in plaintext is less than ideal.\r\n\r\n[b]Suggestion:[/b]\r\n1) Create a default contact page and link to it in the footer of each board.\r\n2) The existing email template may be re-used or at least adapted for this page.\r\n3) Add a new configuration option to the ACP to allow administrators to add a custom message above the textbox\r\n4) The header to the email message should make it clear where the email came from\r\n5) Replace the message on the registration page with a link to the contact page\r\n\r\n[b]Notes:[/b]\r\n1) A CAPTCHA cannot be used on this page due to accessibility issues.', 1324495738, 5, 2, 1),
