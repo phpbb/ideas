@@ -25,7 +25,7 @@ if (!$idea)
 	trigger_error('IDEA_NOT_FOUND');
 }
 
-if ($mode === 'vote' && $user->data['user_id'] !== ANONYMOUS)
+if ($mode === 'vote' && $user->data['user_id'] != ANONYMOUS)
 {
 	$message = $ideas->vote($idea, $user->data['user_id'], $vote);
 
@@ -40,6 +40,14 @@ if ($mode === 'vote' && $user->data['user_id'] !== ANONYMOUS)
 	{
 		trigger_error($message);
 	}
+}
+
+if ($request->is_ajax())
+{
+	header('Content-Type: application/json');
+	echo json_encode($user->lang['LOGGED_OUT']);
+	garbage_collection();
+	exit_handler();
 }
 
 page_header($user->lang['VIEW_IDEA'] . ' - ' . $idea['idea_title'], false);

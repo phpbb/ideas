@@ -53,7 +53,7 @@ $user->lang = array_merge($user->lang, array(
 	'INVALID_VOTE'		=> 'Invalid vote; the number you entered was invalid.',
 
 	'LATEST_IDEAS'		=> 'Latest Ideas',
-	'LOGGED_OUT'			=> 'You must be logged in to post ideas',
+	'LOGGED_OUT'			=> 'You must be logged in to do this.',
 
 	'MERGED'					=> 'Merged',
 
