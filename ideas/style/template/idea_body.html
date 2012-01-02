@@ -6,7 +6,7 @@
 	<dl class="left-box details" style="width: 95%;">
 		<dt style="width: 15%">{L_AUTHOR}:</dt> <dd><strong>{IDEA_AUTHOR}</strong></dd>
 		<dt style="width: 15%">{L_POSTED}:</dt> <dd>{IDEA_DATE}</dd>
-		<dt style="width: 15%">{L_RATING}:</dt> <dd><span class="rating"<!-- IF S_USER_LOGGED_IN --> data-vote="{U_IDEA_VOTE}"<!-- ENDIF -->>{IDEA_RATING}</span> ({IDEA_VOTES} {L_VOTES})</dd>
+		<dt style="width: 15%">{L_RATING}:</dt> <dd><span class="rating"<!-- IF S_USER_LOGGED_IN and not S_IS_BOT --> data-vote="{U_IDEA_VOTE}"<!-- ENDIF -->>{IDEA_RATING}</span> ({IDEA_VOTES} {L_VOTES})</dd>
 		<dt style="width: 15%">{L_STATUS}:</dt> <dd><a href="{IDEA_STATUS_LINK}">{IDEA_STATUS}</a></dd>
 		<dt style="width: 15%">{L_DESC}:</dt> <dd style="width: 84%">{IDEA_DESC}</dd>
 	</dl>
