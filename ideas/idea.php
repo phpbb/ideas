@@ -4,8 +4,7 @@
 *
 * @package phpBB3 Ideas
 * @author Callum Macrae (callumacrae) <callum@lynxphp.com>
-* @author Mark Barnes (MarkTheDaemon)
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
 */
 
@@ -69,6 +68,7 @@ $template->assign_vars(array(
 	'IDEA_STATUS_LINK'=> append_sid('./list.php?status=' . $idea['idea_status']),
 
 	'U_DELETE_IDEA'		=> $auth->acl_get('m_mod_ideas'),
+	'U_EDIT_IDEA'			=> $auth->acl_get('m_mod_ideas') || ($idea['idea_author'] === $user->data['user_id']),
 	'U_IDEA_VOTE'			=> append_sid('./idea.php?mode=vote&id=' . $id),
 	'U_IDEA_MOD'			=> append_sid('./idea.php'),
 ));
