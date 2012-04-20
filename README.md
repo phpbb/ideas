@@ -6,11 +6,11 @@ phpBB Ideas is an ideas centre for phpBB. It is based on [WordPress ideas](http:
 
 To install, copy `config.sample.php` to `config.php` and change the configuration. The current configuration settings:
 
-- *PHPBB_ROOT_PATH* - The path to phpBB. For example, if you put `ideas/` in the phpBB directory itself, this should be set to `../`
+- **PHPBB_ROOT_PATH** - The path to phpBB. For example, if you put `ideas/` in the phpBB directory itself, this should be set to `../`
 
 Then run install.php. It'll tell you to copy a couple files over, and then installation is complete.
 
-*Remember to delete install.php once you are done!*
+**Remember to delete install.php once you are done!**
 
 ## Known bugs ##
 
