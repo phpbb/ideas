@@ -1,6 +1,7 @@
 <?php
 
 define('IN_IDEAS', true);
+$ideas_root_path = (defined('IDEAS_ROOT_PATH')) ? IDEAS_ROOT_PATH : __DIR__ . '/';
 include($ideas_root_path . 'common.php');
 
 $sample = request_var('sample', false);
