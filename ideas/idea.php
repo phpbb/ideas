@@ -28,7 +28,7 @@ if ($mode === 'vote' && $user->data['user_id'] != ANONYMOUS)
 {
 	$message = $ideas->vote($idea, $user->data['user_id'], $vote);
 
-	if ($request->is_ajax())
+	if (is_ajax())
 	{
 		header('Content-Type: application/json');
 		echo json_encode($user->lang[$message]);
@@ -46,7 +46,7 @@ else if ($mode === 'delete' && $auth->acl_get('m_mod_ideas'))
 	trigger_error($message);
 }
 
-if ($request->is_ajax())
+if (is_ajax())
 {
 	header('Content-Type: application/json');
 	echo json_encode($user->lang['LOGGED_OUT']);

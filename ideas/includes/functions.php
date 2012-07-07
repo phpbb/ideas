@@ -36,3 +36,14 @@ function get_user_link($id)
 
 	return get_username_string('full', $id, $author['username'], $author['user_colour']);
 }
+
+/**
+ * Returns whether a request was requested using XMLHttpRequest or not.
+ *
+ * @return bool True if request is AJAX.
+ */
+function is_ajax()
+{
+	return !empty($_SERVER['HTTP_X_REQUESTED_WITH']) &&
+		strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest';
+}
