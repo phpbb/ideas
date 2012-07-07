@@ -2,4 +2,4 @@
 
 // phpBB Ideas configuration file
 
-define('PHPBB_ROOT_PATH', '');
+define('PHPBB_ROOT_PATH', '../phpBB3/');
