@@ -59,13 +59,13 @@ $ideas = $ideas->get_ideas(0, $sort, $where);
 foreach ($ideas as $idea)
 {
 	$template->assign_block_vars('ideas', array(
-		'ID'				=> $idea['idea_id'],
+		'ID'			=> $idea['idea_id'],
 		'LINK'			=> append_sid('./idea.php?id=' . $idea['idea_id']),
 		'TITLE'			=> $idea['idea_title'],
 		'AUTHOR'		=> get_user_link($idea['idea_author']),
 		'DATE'			=> $user->format_date($idea['idea_date']),
 		'RATING'		=> round($idea['idea_rating'] * 10, 0) / 10,
-		'VOTES'		=> $idea['idea_votes'],
+		'VOTES'			=> $idea['idea_votes'],
 		'STATUS'		=> $idea['idea_status'], // For icons
 	));
 }
@@ -78,7 +78,7 @@ foreach($statuses as $key => $status)
 {
 	$template->assign_block_vars('status', array(
 		'VALUE'		=> $key + 1,
-		'TEXT'			=> $user->lang[strtoupper($status)],
+		'TEXT'		=> $user->lang[strtoupper($status)],
 		'SELECTED'	=> $prevstatus == $key + 1,
 	));
 }
@@ -89,13 +89,13 @@ foreach($sorts as $sort)
 {
 	$template->assign_block_vars('sortby', array(
 		'VALUE'		=> $sort,
-		'TEXT'			=> $user->lang[strtoupper($sort)],
+		'TEXT'		=> $user->lang[strtoupper($sort)],
 		'SELECTED'	=> $sort == $sorted,
 	));
 }
 
 $template->assign_vars(array(
-	'U_POST_ACTION'	=> append_sid('./list.php'),
+	'U_POST_ACTION'		=> append_sid('./list.php'),
 	'SORT_DIRECTION'	=> $sort_direction,
 ));
 

@@ -176,7 +176,7 @@ class Ideas
 		generate_text_for_storage($desc, $uid, $bitfield, $options, true, true, true);
 
 		$sql_ary = array(
-			'idea_title'			=> $db->sql_escape($title),
+			'idea_title'		=> $db->sql_escape($title),
 			'idea_desc'			=> $desc,
 			'idea_author'		=> $user_id,
 			'idea_date'			=> time(),

@@ -35,28 +35,28 @@ if (!defined('IN_IDEAS'))
 $user->lang = array_merge($user->lang, array(
 	'ACCEPTED'				=> 'Accepted',
 	'ALL_IDEAS'				=> 'All ideas',
-	'ALREADY_VOTED'	=> 'You have already voted on this idea.',
+	'ALREADY_VOTED'			=> 'You have already voted on this idea.',
 
 	'CREATE_IDEA'			=> 'Create new idea',
 
-	'DATE'						=> 'Date',
-	'DESC'						=> 'Description',
-	'DESC_TOO_LONG'	=> 'Description must be under 10,000 characters long.',
-	'DESC_TOO_SHORT'	=> 'Description must be at least 5 characters long.',
+	'DATE'					=> 'Date',
+	'DESC'					=> 'Description',
+	'DESC_TOO_LONG'			=> 'Description must be under 10,000 characters long.',
+	'DESC_TOO_SHORT'		=> 'Description must be at least 5 characters long.',
 	'DUPLICATE'				=> 'Duplicate',
 
-	'ID'							=> 'ID',
-	'IDEAS'						=> 'Ideas',
-	'IDEA_DELETED'		=> 'Idea successfully deleted.',
+	'ID'					=> 'ID',
+	'IDEAS'					=> 'Ideas',
+	'IDEA_DELETED'			=> 'Idea successfully deleted.',
 	'IDEA_LIST'				=> 'Idea List',
-	'IDEA_NOT_FOUND'	=> 'Idea not found',
+	'IDEA_NOT_FOUND'		=> 'Idea not found',
 	'IDEAS_HOME'			=> 'Ideas Home',
-	'INVALID_VOTE'		=> 'Invalid vote; the number you entered was invalid.',
+	'INVALID_VOTE'			=> 'Invalid vote; the number you entered was invalid.',
 
-	'LATEST_IDEAS'		=> 'Latest Ideas',
+	'LATEST_IDEAS'			=> 'Latest Ideas',
 	'LOGGED_OUT'			=> 'You must be logged in to do this.',
 
-	'MERGED'					=> 'Merged',
+	'MERGED'				=> 'Merged',
 	'MOD_IDEA'				=> 'Moderate idea',
 
 	'NEW'						=> 'New',
@@ -65,21 +65,21 @@ $user->lang = array_merge($user->lang, array(
 
 	'POST_IDEA'				=> 'Post idea',
 
-	'RATING'					=> 'Rating',
+	'RATING'				=> 'Rating',
 	'REJECTED'				=> 'Rejected',
 
-	'SHOW_W_STATUS'	=> 'Display ideas with status:',
-	'STATUS'					=> 'Status',
+	'SHOW_W_STATUS'			=> 'Display ideas with status:',
+	'STATUS'				=> 'Status',
 
-	'TITLE'						=> 'Title',
-	'TITLE_TOO_LONG'	=> 'Title must be under 64 characters long.',
-	'TITLE_TOO_SHORT'	=> 'Title must be 6 characters long.',
+	'TITLE'					=> 'Title',
+	'TITLE_TOO_LONG'		=> 'Title must be under 64 characters long.',
+	'TITLE_TOO_SHORT'		=> 'Title must be 6 characters long.',
 	'TOP_IDEAS'				=> 'Top Ideas',
 
 	'VIEW_ALL'				=> 'View All',
 	'VIEW_IDEA'				=> 'View Idea',
-	'VIEWING_IDEA'		=> 'Viewing Idea',
-	'VOTE'						=> 'Vote',
-	'VOTE_SUCCESS'		=> 'Successfully voted on this idea.',
+	'VIEWING_IDEA'			=> 'Viewing Idea',
+	'VOTE'					=> 'Vote',
+	'VOTE_SUCCESS'			=> 'Successfully voted on this idea.',
 	'VOTES'					=> 'votes',
 ));

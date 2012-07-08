@@ -36,7 +36,7 @@ if ($mode === 'submit')
 	if (is_array($submit))
 	{
 		$template->assign_vars(array(
-			'ERROR'	=> implode('<br />', $submit),
+			'ERROR'		=> implode('<br />', $submit),
 			'DESC'		=> $desc,
 		));
 	}
@@ -55,7 +55,7 @@ generate_smilies('inline', 0);
 
 $template->assign_vars(array(
 	'S_POST_ACTION'		=> append_sid('posting.php?mode=submit'),
-	'TITLE'						=> $title,
+	'TITLE'				=> $title,
 ));
 
 $template->set_filenames(array(
