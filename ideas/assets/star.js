@@ -17,3 +17,9 @@ $('.rating').each(function() {
 		}
 	});
 });
+
+$('.confirm').click(function () {
+	"use strict";
+
+	return confirm('Really delete idea?'); // EVERYTHING IS BLEEDING
+});

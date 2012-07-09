@@ -11,10 +11,7 @@
 		<!-- IF U_DELETE_IDEA -->
 		<dt style="width: 15%">{L_MOD_IDEA}:</dt>
 		<dd>
-			<form action="{U_IDEA_MOD}" method="get" id="mod"><select name="mode" onchange="this.value != '0' && this.parentNode.submit()">
-				<option value="0">{L_SELECT}</option>
-				<!-- IF U_DELETE_IDEA --><option value="delete">{L_DELETE}</option><!-- ENDIF -->
-			</select><input type="hidden" name="id" value="{IDEA_ID}" /></form>
+			<!-- IF U_DELETE_IDEA --><a href="{U_DELETE_IDEA}" class="confirm">{L_DELETE}</a><!-- ENDIF -->
 		</dd>
 		<!-- ENDIF -->
 	</dl>

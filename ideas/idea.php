@@ -40,7 +40,7 @@ if ($mode === 'vote' && $auth->acl_get('f_vote', IDEAS_FORUM_ID))
 
 	trigger_error($message);
 }
-else if ($mode === 'delete' && ($mod || $auth->acl_get('f_delete', IDEAS_FORUM_ID)))
+else if ($mode === 'delete' && ($mod || ($idea['idea_author'] === $user->data['user_id'] && $auth->acl_get('f_delete', IDEAS_FORUM_ID))))
 {
 	include($phpbb_root_path . 'includes/functions_admin.' . $phpEx);
 	$ideas->delete($id, $idea['topic_id']);
@@ -61,6 +61,9 @@ if (is_ajax())
 include($phpbb_root_path . 'includes/functions_display.' . $phpEx);
 include($phpbb_root_path . 'includes/bbcode.' . $phpEx);
 
+$delete_posts = $auth->acl_get('f_', IDEAS_FORUM_ID) ||
+	($idea['idea_author'] === $user->data['user_id'] && $auth->acl_get('f_delete', IDEAS_FORUM_ID));
+
 $template->assign_vars(array(
 	'IDEA_ID'			=> $idea['idea_id'],
 	'IDEA_TITLE'		=> $idea['idea_title'],
@@ -71,8 +74,8 @@ $template->assign_vars(array(
 	'IDEA_STATUS'		=> $ideas->get_status_from_id($idea['idea_status']),
 	'IDEA_STATUS_LINK'	=> append_sid('./list.php?status=' . $idea['idea_status']),
 
-	'U_DELETE_IDEA'		=> $auth->acl_get('m_mod_ideas'),
-	'U_EDIT_IDEA'		=> $auth->acl_get('m_mod_ideas') || ($idea['idea_author'] === $user->data['user_id']),
+	'U_DELETE_IDEA'		=> $delete_posts ? append_sid('./idea.php?mode=delete&id=' . $id) : false,
+
 	'U_IDEA_VOTE'		=> append_sid('./idea.php?mode=vote&id=' . $id),
 	'U_IDEA_MOD'		=> append_sid('./idea.php'),
 ));
