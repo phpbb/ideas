@@ -33,7 +33,7 @@ class Ideas
 	public function get_ideas($number = 10, $sortby = 'idea_date DESC', $where = 'idea_status != 5 && idea_status != 4')
 	{
 		global $db;
-		$sql = 'SELECT idea_id, idea_author, idea_title, idea_date, idea_rating, idea_votes, idea_status
+		$sql = 'SELECT *
 			FROM ' . IDEAS_TABLE . "
 			WHERE $where
 			ORDER BY $sortby";
@@ -175,14 +175,44 @@ class Ideas
 		$uid = $bitfield = $options = '';
 		generate_text_for_storage($desc, $uid, $bitfield, $options, true, true, true);
 
+		$data = array(
+			'forum_id'			=> IDEAS_FORUM_ID,
+			'topic_id'			=> 0,
+			'icon_id'			=> false,
+			'poster_id'			=> IDEAS_POSTER_ID,
+
+			'enable_bbcode'		=> true,
+			'enable_smilies'	=> true,
+			'enable_urls'		=> true,
+			'enable_sig'		=> true,
+
+			'message'			=> $desc,
+			'message_md5'		=> md5($desc),
+
+			'bbcode_bitfield'	=> $bitfield,
+			'bbcode_uid'		=> $uid,
+
+			'post_edit_locked'	=> 0,
+			'topic_title'		=> $title,
+
+			'notify_set'		=> false,
+			'notify'			=> false,
+			'post_time'			=> 0,
+			'forum_name'		=> 'Ideas forum',
+
+			'enable_indexing'	=> true,
+
+			'force_approved_state'	=> true
+		);
+		$poll = array();
+
+		submit_post('post', $title, '', POST_NORMAL, $poll, $data);
+
 		$sql_ary = array(
 			'idea_title'		=> $db->sql_escape($title),
-			'idea_desc'			=> $desc,
 			'idea_author'		=> $user_id,
 			'idea_date'			=> time(),
-			'bbcode_uid'		=> $uid,
-			'bbcode_bitfield'	=> $bitfield,
-			'bbcode_options'	=> $options,
+			'topic_id'			=> $data['topic_id']
 		);
 
 		$sql = 'INSERT INTO ' . IDEAS_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary);
@@ -190,13 +220,28 @@ class Ideas
 		return $db->sql_nextid();
 	}
 
-	public function delete($id)
+	/**
+	 * Deletes an idea and the topic to go with it.
+	 *
+	 * @param int $id The ID of the idea to be deleted.
+	 * @param int $topic_id The ID of the idea topic. Optional, but preferred.
+	 *
+	 * @return boolean Whether the idea was deleted or not.
+	 */
+	public function delete($id, $topic_id = 0)
 	{
 		global $db;
+
+		if (!$topic_id) {
+			$idea = $this->get_idea($id);
+			$topic_id = $idea['topic_id'];
+		}
+
+		delete_posts('topic_id', $topic_id);
 
 		$sql = 'DELETE FROM ' . IDEAS_TABLE . '
 			WHERE idea_id = ' . (int) $id;
 		$db->sql_query($sql);
-		return $db->sql_affectedrows();
+		return (bool) $db->sql_affectedrows();
 	}
 }
