@@ -12,7 +12,8 @@ $('.rating').each(function() {
 		if (url) {
 			var vote = $(this).text();
 			$.get(url, {v: vote}, function (message) {
-				alert(message);
+				$this.find('.current-rating').css('width', message.rating * 25);
+				alert(message.message);
 			});
 		}
 	});

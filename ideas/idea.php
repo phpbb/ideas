@@ -26,19 +26,13 @@ if (!$idea)
 
 $mod = $auth->acl_get('f_', IDEAS_FORUM_ID);
 
-if ($mode === 'vote' && $auth->acl_get('f_vote', IDEAS_FORUM_ID))
+if (is_ajax() && $mode === 'vote' && $auth->acl_get('f_vote', IDEAS_FORUM_ID))
 {
-	$message = $ideas->vote($idea, $user->data['user_id'], $vote);
+	header('Content-Type: application/json');
+	echo json_encode($ideas->vote($idea, $user->data['user_id'], $vote));
 
-	if (is_ajax())
-	{
-		header('Content-Type: application/json');
-		echo json_encode($user->lang[$message]);
-		garbage_collection();
-		exit_handler();
-	}
-
-	trigger_error($message);
+	garbage_collection();
+	exit_handler();
 }
 else if ($mode === 'delete' && ($mod || ($idea['idea_author'] === $user->data['user_id'] && $auth->acl_get('f_delete', IDEAS_FORUM_ID))))
 {

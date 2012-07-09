@@ -76,6 +76,8 @@ $user->lang = array_merge($user->lang, array(
 	'TITLE_TOO_SHORT'		=> 'Title must be 6 characters long.',
 	'TOP_IDEAS'				=> 'Top Ideas',
 
+	'UPDATED_VOTE'			=> 'Successfully updated vote',
+
 	'VIEW_ALL'				=> 'View All',
 	'VIEW_IDEA'				=> 'View Idea',
 	'VIEWING_IDEA'			=> 'Viewing Idea',

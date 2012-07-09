@@ -87,11 +87,12 @@ class Ideas
 	 * @param array $idea The idea returned by get_idea().
 	 * @param int $user_id The ID of the user voting.
 	 * @param int $value The value to vote for (int, 1-5).
-	 * @returns string Error / success message. Use trigger_error.
+	 *
+	 * @returns array Array of information.
 	 */
 	public function vote(&$idea, $user_id, $value)
 	{
-		global $db;
+		global $db, $user;
 
 		// Validate $vote - must be a whole number between 1 and 5.
 		if (!is_int($value) || $value > 5 || $value < 1)
@@ -99,8 +100,7 @@ class Ideas
 			return 'INVALID_VOTE';
 		}
 
-		// Check whether user has already voted - error if they have
-		// @todo: Should it update vote instead?
+		// Check whether user has already voted - update if they have
 		$sql = 'SELECT idea_id, value
 			FROM ' . IDEA_VOTES_TABLE . "
 			WHERE idea_id = {$idea['idea_id']}
@@ -108,7 +108,31 @@ class Ideas
 		$result = $db->sql_query_limit($sql, 1);
 		if ($db->sql_fetchrow())
 		{
-			return 'ALREADY_VOTED';
+			// Get old vote so that we can be mathematical
+			$sql = 'SELECT value FROM ' . IDEA_VOTES_TABLE . '
+				WHERE user_id = ' . (int) $user_id . '
+					AND idea_id = ' . (int) $idea['idea_id'];
+			$db->sql_query($sql);
+			$old_value = $db->sql_fetchfield('value');
+
+			$sql = 'UPDATE ' . IDEA_VOTES_TABLE . '
+				SET value = ' . $value . '
+				WHERE user_id = ' . (int) $user_id . '
+					AND idea_id = ' . (int) $idea['idea_id'];
+			$db->sql_query($sql);
+
+			$idea['idea_rating'] = ($idea['idea_rating'] * $idea['idea_votes'] - $old_value + $value) / $idea['idea_votes'];
+
+			$sql = 'UPDATE ' . IDEAS_TABLE . '
+				SET idea_rating = ' . $idea['idea_rating'] . '
+				WHERE idea_id = ' . $idea['idea_id'];
+			$db->sql_query($sql);
+
+			return array(
+				'message'	=> $user->lang('UPDATED_VOTE'),
+				'rating'	=> $idea['idea_rating'],
+				'votes'		=> $idea['idea_votes'],
+			);
 		}
 
 		// Insert vote into votes table.
@@ -135,7 +159,11 @@ class Ideas
 			WHERE idea_id = ' . $idea['idea_id'];
 		$db->sql_query($sql);
 
-		return 'VOTE_SUCCESS';
+		return array(
+			'message'	=> $user->lang('VOTE_SUCCESS'),
+			'rating'	=> $idea['idea_rating'],
+			'votes'		=> $idea['idea_votes'],
+		);
 	}
 
 	/**
