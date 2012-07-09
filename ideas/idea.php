@@ -24,7 +24,9 @@ if (!$idea)
 	trigger_error('IDEA_NOT_FOUND');
 }
 
-if ($mode === 'vote' && $user->data['user_id'] != ANONYMOUS)
+$mod = $auth->acl_get('f_', IDEAS_FORUM_ID);
+
+if ($mode === 'vote' && $auth->acl_get('f_vote', IDEAS_FORUM_ID))
 {
 	$message = $ideas->vote($idea, $user->data['user_id'], $vote);
 
@@ -38,10 +40,11 @@ if ($mode === 'vote' && $user->data['user_id'] != ANONYMOUS)
 
 	trigger_error($message);
 }
-else if ($mode === 'delete' && $auth->acl_get('m_mod_ideas'))
+else if ($mode === 'delete' && ($mod || $auth->acl_get('f_delete', IDEAS_FORUM_ID)))
 {
 	include($phpbb_root_path . 'includes/functions_admin.' . $phpEx);
 	$ideas->delete($id, $idea['topic_id']);
+
 	$message = $user->lang['IDEA_DELETED'] . '<br /><br />';
 	$message .= sprintf($user->lang['RETURN_INDEX'], '<a href="' . append_sid('./index.php') . '">', '</a>');
 	trigger_error($message);

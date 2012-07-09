@@ -4,25 +4,6 @@ define('IN_IDEAS', true);
 $ideas_root_path = (defined('IDEAS_ROOT_PATH')) ? IDEAS_ROOT_PATH : __DIR__ . '/';
 include($ideas_root_path . 'common.php');
 
-
-// Add permissions (we use SQL to insert so that we can get the row ID without another query.)
-
-$sql = 'INSERT INTO ' . ACL_OPTIONS_TABLE . ' (auth_option, is_global, is_local, founder_only) VALUES (\'m_mod_ideas\', 1, 0, 0)';
-$db->sql_query($sql);
-
-$sql_ary = array(
-	'group_id'			=> 4,
-	'auth_option_id'	=> $db->sql_nextid(),
-	'auth_setting'		=> ACL_YES,
-);
-
-$sql = 'INSERT INTO ' . ACL_GROUPS_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary);
-$db->sql_query($sql);
-
-$cache->destroy('acl_options');
-$auth->acl_clear_prefetch();
-
-
 // Create and populate database tables
 
 $db->sql_query('CREATE TABLE  ' . $table_prefix . 'ideas_statuses (
@@ -58,4 +39,4 @@ $db->sql_query("INSERT INTO {$table_prefix}ideas_statuses (status_id, status_nam
 (4, 'Merged'),
 (5, 'Duplicate');");
 
-echo 'Successfully set up permissions and database. To complete installation, please copy permissions_ideas.php (found in the files directory) into language/en/mods, and delete this file.';
+echo 'Successfully set up database. Modify config.php.';
