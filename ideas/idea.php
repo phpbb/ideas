@@ -14,10 +14,6 @@ define('IN_IDEAS', true);
 $ideas_root_path = (defined('IDEAS_ROOT_PATH')) ? IDEAS_ROOT_PATH : __DIR__ . '/';
 include($ideas_root_path . 'common.php');
 
-// Start session management
-$user->session_begin();
-$auth->acl($user->data);
-
 
 $mode = request_var('mode', '');
 $id = request_var('id', 0);
