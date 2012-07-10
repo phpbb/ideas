@@ -9,14 +9,6 @@
 */
 
 /**
-* @ignore
-*/
-if (!defined('IN_IDEAS'))
-{
-	exit;
-}
-
-/**
 * phpBB Ideas class
 * @package phpBB Ideas
 */

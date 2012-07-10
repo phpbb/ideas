@@ -9,14 +9,6 @@
 */
 
 /**
-* @ignore
-*/
-if (!defined('IN_IDEAS'))
-{
-	exit;
-}
-
-/**
  * Returns a link to the users profile, complete with colour.
  *
  * Is there a function that already does this? This seems fairly database heavy.
