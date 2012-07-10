@@ -104,7 +104,7 @@ if ($idea['idea_votes'])
 
 	foreach ($votes as $vote)
 	{
-		$template->assign_block_vars('stars_' . $vote['value'], array(
+		$template->assign_block_vars('stars_' . $vote['vote_value'], array(
 			'USER'	=> get_user_link($vote['user_id']),
 		));
 	}

@@ -20,6 +20,6 @@ CREATE TABLE phpbb_ideas_statuses (
 CREATE TABLE phpbb_ideas_votes (
   idea_id int(11) NOT NULL,
   user_id int(11) NOT NULL,
-  `value` int(11) NOT NULL,
+  vote_value int(11) NOT NULL,
   UNIQUE KEY idea_id (idea_id,user_id)
 );

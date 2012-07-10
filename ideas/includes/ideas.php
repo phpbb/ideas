@@ -126,7 +126,7 @@ class Ideas
 		}
 
 		// Check whether user has already voted - update if they have
-		$sql = 'SELECT idea_id, value
+		$sql = 'SELECT idea_id, vote_value
 			FROM ' . IDEA_VOTES_TABLE . "
 			WHERE idea_id = {$idea['idea_id']}
 				AND user_id = $user_id";
@@ -134,14 +134,14 @@ class Ideas
 		if ($db->sql_fetchrow())
 		{
 			// Get old vote so that we can be mathematical
-			$sql = 'SELECT value FROM ' . IDEA_VOTES_TABLE . '
+			$sql = 'SELECT vote_value FROM ' . IDEA_VOTES_TABLE . '
 				WHERE user_id = ' . (int) $user_id . '
 					AND idea_id = ' . (int) $idea['idea_id'];
 			$db->sql_query($sql);
-			$old_value = $db->sql_fetchfield('value');
+			$old_value = $db->sql_fetchfield('vote_value');
 
 			$sql = 'UPDATE ' . IDEA_VOTES_TABLE . '
-				SET value = ' . $value . '
+				SET vote_value = ' . $value . '
 				WHERE user_id = ' . (int) $user_id . '
 					AND idea_id = ' . (int) $idea['idea_id'];
 			$db->sql_query($sql);
@@ -164,7 +164,7 @@ class Ideas
 		$sql_ary = array(
 			'idea_id'		=> $idea['idea_id'],
 			'user_id'		=> $user_id,
-			'value'			=> $value,
+			'vote_value'	=> $value,
 		);
 
 		$sql = 'INSERT INTO ' . IDEA_VOTES_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary);
@@ -200,10 +200,10 @@ class Ideas
 	{
 		global $db;
 
-		$sql = 'SELECT user_id, value
+		$sql = 'SELECT user_id, vote_value
 			FROM ' . IDEA_VOTES_TABLE . '
 			WHERE idea_id = ' . (int) $id . '
-			ORDER BY value DESC';
+			ORDER BY vote_value DESC';
 		$result = $db->sql_query($sql);
 		$rows = $db->sql_fetchrowset($result);
 		$db->sql_freeresult($result);
