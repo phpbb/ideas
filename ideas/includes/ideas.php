@@ -66,7 +66,7 @@ class Ideas
 	 * Returns the status name from the status ID specified.
 	 *
 	 * @param int $id ID of the status.
-	 * @returns string The status name.
+	 * @return string The status name.
 	 */
 	public function get_status_from_id($id)
 	{
@@ -84,7 +84,7 @@ class Ideas
 	/**
 	 * Returns all statuses.
 	 *
-	 * @returns Array of statuses.
+	 * @return Array of statuses.
 	 */
 	public function get_statuses()
 	{
@@ -121,7 +121,7 @@ class Ideas
 	 * @param int $user_id The ID of the user voting.
 	 * @param int $value The value to vote for (int, 1-5).
 	 *
-	 * @returns array Array of information.
+	 * @return array Array of information.
 	 */
 	public function vote(&$idea, $user_id, $value)
 	{
