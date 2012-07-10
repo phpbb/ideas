@@ -10,9 +10,7 @@ To install, copy `config.sample.php` to `config.php` and change the configuratio
 - **IDEAS_FORUM_ID** - The ID of the forum that ideas will be posted to.
 - **IDEA_POSTER_ID** - The user ID of the bot that will post ideas in the forums.
 
-Then run install.php, which will set up the database.
-
-**Remember to delete install.php once you are done!**
+Then run schema.sql, which will set up the database.
 
 ## Work In Progress ##
 
