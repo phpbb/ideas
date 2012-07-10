@@ -166,6 +166,11 @@ class Ideas
 		);
 	}
 
+	/**
+	 * Returns voter info on an idea.
+	 *
+	 * @param int $id ID of the idea.
+	 */
 	public function get_voters($id)
 	{
 		global $db;
