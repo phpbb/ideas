@@ -75,6 +75,19 @@ $template->assign_vars(array(
 ));
 
 
+if ($idea['idea_votes'])
+{
+	$votes = $ideas->get_voters($idea['idea_id']);
+
+	foreach ($votes as $vote)
+	{
+		$template->assign_block_vars('stars_' . $vote['value'], array(
+			'USER'	=> get_user_link($vote['user_id']),
+		));
+	}
+}
+
+
 $forum_id = IDEAS_FORUM_ID;
 $topic_id = $idea['topic_id'];
 $post_id  = request_var('p', 0);

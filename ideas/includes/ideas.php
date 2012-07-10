@@ -166,6 +166,21 @@ class Ideas
 		);
 	}
 
+	public function get_voters($id)
+	{
+		global $db;
+
+		$sql = 'SELECT user_id, value
+			FROM ' . IDEA_VOTES_TABLE . '
+			WHERE idea_id = ' . (int) $id . '
+			ORDER BY value DESC';
+		$result = $db->sql_query($sql);
+		$rows = $db->sql_fetchrowset($result);
+		$db->sql_freeresult($result);
+
+		return $rows;
+	}
+
 	/**
 	 * Submits a new idea.
 	 *

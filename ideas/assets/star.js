@@ -19,6 +19,12 @@ $('.rating').each(function() {
 	});
 });
 
+$('.votes').click(function (e) {
+	e.preventDefault();
+
+	$('.voteslist').slideToggle();
+});
+
 $('.confirm').click(function () {
 	"use strict";
 

@@ -1,12 +1,23 @@
 <!-- INCLUDE overall_header.html -->
 
-<h2>{L_VIEWING_IDEA} - {IDEA_TITLE}</h2>
+<h2 xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">{L_VIEWING_IDEA} - {IDEA_TITLE}</h2>
 <div class="panel bg1">
 	<div class="inner"><span class="corners-top"><span></span></span>
-	<dl class="left-box details" style="width: 95%;">
+	<dl class="left-box details" style="width: 95%">
 		<dt style="width: 15%">{L_AUTHOR}:</dt> <dd><strong>{IDEA_AUTHOR}</strong></dd>
 		<dt style="width: 15%">{L_POSTED}:</dt> <dd>{IDEA_DATE}</dd>
-		<dt style="width: 15%">{L_RATING}:</dt> <dd><span class="rating"<!-- IF S_USER_LOGGED_IN and not S_IS_BOT --> data-vote="{U_IDEA_VOTE}"<!-- ENDIF -->>{IDEA_RATING}</span> ({IDEA_VOTES} {L_VOTES})</dd>
+		<dt style="width: 15%">{L_RATING}:</dt>
+		<dd>
+			<span class="rating"<!-- IF S_USER_LOGGED_IN and not S_IS_BOT --> data-vote="{U_IDEA_VOTE}"<!-- ENDIF -->>{IDEA_RATING}</span>
+			<a href="#" class="votes">({IDEA_VOTES} {L_VOTES})</a>
+			<ul class="voteslist">
+				<!-- IF .stars_5 --><li><strong>5 stars:</strong> <!-- BEGIN stars_5 -->{stars_5.USER}<!-- IF not stars_5.S_LAST_ROW -->, <!-- ENDIF --><!-- END stars_5 --></li><!-- ENDIF -->
+				<!-- IF .stars_4 --><li><strong>4 stars:</strong> <!-- BEGIN stars_4 -->{stars_4.USER}<!-- IF not stars_4.S_LAST_ROW -->, <!-- ENDIF --><!-- END stars_4 --></li><!-- ENDIF -->
+				<!-- IF .stars_3 --><li><strong>3 stars:</strong> <!-- BEGIN stars_3 -->{stars_3.USER}<!-- IF not stars_3.S_LAST_ROW -->, <!-- ENDIF --><!-- END stars_3 --></li><!-- ENDIF -->
+				<!-- IF .stars_2 --><li><strong>2 stars:</strong> <!-- BEGIN stars_2 -->{stars_2.USER}<!-- IF not stars_2.S_LAST_ROW -->, <!-- ENDIF --><!-- END stars_2 --></li><!-- ENDIF -->
+				<!-- IF .stars_1 --><li><strong>1 stars:</strong> <!-- BEGIN stars_1 -->{stars_1.USER}<!-- IF not stars_1.S_LAST_ROW -->, <!-- ENDIF --><!-- END stars_1 --></li><!-- ENDIF -->
+			</ul>
+		</dd>
 		<dt style="width: 15%">{L_STATUS}:</dt> <dd><a href="{IDEA_STATUS_LINK}">{IDEA_STATUS}</a></dd>
 		<!-- IF U_DELETE_IDEA -->
 		<dt style="width: 15%">{L_MOD_IDEA}:</dt>
