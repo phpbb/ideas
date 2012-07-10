@@ -46,9 +46,11 @@ $('#status').change(function () {
 	}
 
 	$.get($this.attr('data-url'), data, function (res) {
-		var link = $this.prev('a');
+		var link = $this.prev('a'),
+			newhref = link.attr('href')
+				.replace(/status=\d/, 'status=' + data.status);
 
-		link.attr('href', link.attr('href').slice(0, -1) + data.status)
+		link.attr('href', newhref)
 			.text($this.find(':selected').text());
 	});
 });
