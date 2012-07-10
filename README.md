@@ -7,14 +7,12 @@ phpBB Ideas is an ideas centre for phpBB. It is based on [WordPress ideas](http:
 To install, copy `config.sample.php` to `config.php` and change the configuration. The current configuration settings:
 
 - **PHPBB_ROOT_PATH** - The path to phpBB. Eg, if you put `ideas/` in the phpBB directory itself, this should be set to `../`
+- **IDEAS_FORUM_ID** - The ID of the forum that ideas will be posted to.
+- **IDEA_POSTER_ID** - The user ID of the bot that will post ideas in the forums.
 
-Then run install.php. It'll tell you to copy a couple files over, and then installation is complete.
+Then run install.php, which will set up the database.
 
 **Remember to delete install.php once you are done!**
-
-## Known bugs ##
-
-phpBB Ideas was built on 3.1, and doesn't currently work in 3.0 due to usage of the request class.
 
 ## Work In Progress ##
 
