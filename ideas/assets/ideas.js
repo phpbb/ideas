@@ -30,3 +30,25 @@ $('.confirm').click(function () {
 
 	return confirm('Really delete idea?'); // EVERYTHING IS BLEEDING
 });
+
+$('#status').change(function () {
+	"use strict";
+
+	var $this = $(this),
+		data = {
+			mode: 'status',
+			status: $this.val()
+		}
+
+	if (data.status === '-')
+	{
+		return;
+	}
+
+	$.get($this.attr('data-url'), data, function (res) {
+		var link = $this.prev('a');
+
+		link.attr('href', link.attr('href').slice(0, -1) + data.status)
+			.text($this.find(':selected').text());
+	});
+});

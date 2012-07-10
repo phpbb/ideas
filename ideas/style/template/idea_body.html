@@ -18,7 +18,14 @@
 				<!-- IF .stars_1 --><li><strong>1 stars:</strong> <!-- BEGIN stars_1 -->{stars_1.USER}<!-- IF not stars_1.S_LAST_ROW -->, <!-- ENDIF --><!-- END stars_1 --></li><!-- ENDIF -->
 			</ul>
 		</dd>
-		<dt style="width: 15%">{L_STATUS}:</dt> <dd><a href="{IDEA_STATUS_LINK}">{IDEA_STATUS}</a></dd>
+		<dt style="width: 15%">{L_STATUS}:</dt>
+		<dd>
+			<a href="{IDEA_STATUS_LINK}">{IDEA_STATUS}</a>
+			<!-- IF .statuses -->&nbsp; Change to: <select id="status" data-url="{U_CHANGE_STATUS}">
+				<option value="-">---</option>
+				<!-- BEGIN statuses --><option value="{statuses.ID}">{statuses.NAME}</option><!-- END statuses -->
+			</select><!-- ENDIF -->
+		</dd>
 		<!-- IF U_DELETE_IDEA -->
 		<dt style="width: 15%">{L_MOD_IDEA}:</dt>
 		<dd>

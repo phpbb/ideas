@@ -18,6 +18,7 @@ include($ideas_root_path . 'common.php');
 $mode = request_var('mode', '');
 $id = request_var('id', 0);
 $vote = request_var('v', 0);
+$status = request_var('status', 0);
 $idea = $ideas->get_idea($id);
 if (!$idea)
 {
@@ -43,6 +44,16 @@ else if ($mode === 'delete' && ($mod || ($idea['idea_author'] === $user->data['u
 	$message .= sprintf($user->lang['RETURN_INDEX'], '<a href="' . append_sid('./index.php') . '">', '</a>');
 	trigger_error($message);
 }
+else if (is_ajax() && $status && $mode === 'status' && $mod)
+{
+	$ideas->change_status($idea['idea_id'], $status);
+
+	header('Content-Type: application/json');
+	echo json_encode(true);
+
+	garbage_collection();
+	exit_handler();
+}
 
 if (is_ajax())
 {
@@ -58,6 +69,18 @@ include($phpbb_root_path . 'includes/bbcode.' . $phpEx);
 $delete_posts = $auth->acl_get('f_', IDEAS_FORUM_ID) ||
 	($idea['idea_author'] === $user->data['user_id'] && $auth->acl_get('f_delete', IDEAS_FORUM_ID));
 
+if ($mod)
+{
+	$statuses = $ideas->get_statuses();
+	foreach ($statuses as $status)
+	{
+		$template->assign_block_vars('statuses', array(
+			'ID'	=> $status['status_id'],
+			'NAME'	=> $status['status_name']
+		));
+	}
+}
+
 $template->assign_vars(array(
 	'IDEA_ID'			=> $idea['idea_id'],
 	'IDEA_TITLE'		=> $idea['idea_title'],
@@ -69,9 +92,9 @@ $template->assign_vars(array(
 	'IDEA_STATUS_LINK'	=> append_sid('./list.php?status=' . $idea['idea_status']),
 
 	'U_DELETE_IDEA'		=> $delete_posts ? append_sid('./idea.php?mode=delete&id=' . $id) : false,
+	'U_CHANGE_STATUS'	=> append_sid('./idea.php?mode=status&id=' . $id),
 
 	'U_IDEA_VOTE'		=> append_sid('./idea.php?mode=vote&id=' . $id),
-	'U_IDEA_MOD'		=> append_sid('./idea.php'),
 ));
 
 

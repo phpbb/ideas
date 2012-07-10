@@ -82,6 +82,39 @@ class Ideas
 	}
 
 	/**
+	 * Returns all statuses.
+	 *
+	 * @returns Array of statuses.
+	 */
+	public function get_statuses()
+	{
+		global $db;
+
+		$sql = 'SELECT * FROM ' . IDEA_STATUS_TABLE;
+		$result = $db->sql_query($sql);
+		$rows = $db->sql_fetchrowset($result);
+		$db->sql_freeresult($result);
+
+		return $rows;
+	}
+
+	/**
+	 * Updates the status of an idea.
+	 *
+	 * @param int $idea_id The ID of the idea.
+	 * @param int $status The ID of the status.
+	 */
+	public function change_status($idea_id, $status)
+	{
+		global $db;
+
+		$sql = 'UPDATE ' . IDEAS_TABLE . '
+			SET idea_status = ' . (int) $status . '
+			WHERE idea_id = ' . (int) $idea_id;
+		$db->sql_query($sql);
+	}
+
+	/**
 	 * Submits a vote on an idea.
 	 *
 	 * @param array $idea The idea returned by get_idea().
