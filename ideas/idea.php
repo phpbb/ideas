@@ -27,15 +27,49 @@ if (!$idea)
 
 $mod = $auth->acl_get('f_', IDEAS_FORUM_ID);
 
-if (is_ajax() && $mode === 'vote' && $auth->acl_get('f_vote', IDEAS_FORUM_ID))
+if (is_ajax())
 {
 	header('Content-Type: application/json');
-	echo json_encode($ideas->vote($idea, $user->data['user_id'], $vote));
+
+	switch ($mode)
+	{
+		case 'rfc':
+			$rfc = request_var('rfc', '');
+			$ideas->set_rfc($idea['idea_id'], $rfc);
+			echo 'true';
+			break;
+
+		case 'status':
+			if ($status && $mod)
+			{
+				$ideas->change_status($idea['idea_id'], $status);
+				echo 'true';
+			}
+			break;
+
+		case 'ticket':
+			$ticket = request_var('ticket', 0);
+			$ideas->set_ticket($idea['idea_id'], $ticket);
+			echo 'true';
+			break;
+
+		case 'vote':
+			if ($auth->acl_get('f_vote', IDEAS_FORUM_ID))
+			{
+				echo json_encode($ideas->vote($idea, $user->data['user_id'], $vote));
+			}
+			break;
+
+		default:
+			echo '"?"';
+			break;
+	}
 
 	garbage_collection();
 	exit_handler();
 }
-else if ($mode === 'delete' && ($mod || ($idea['idea_author'] === $user->data['user_id'] && $auth->acl_get('f_delete', IDEAS_FORUM_ID))))
+
+if ($mode === 'delete' && ($mod || ($idea['idea_author'] === $user->data['user_id'] && $auth->acl_get('f_delete', IDEAS_FORUM_ID))))
 {
 	include($phpbb_root_path . 'includes/functions_admin.' . $phpEx);
 	$ideas->delete($id, $idea['topic_id']);
@@ -43,46 +77,6 @@ else if ($mode === 'delete' && ($mod || ($idea['idea_author'] === $user->data['u
 	$message = $user->lang['IDEA_DELETED'] . '<br /><br />';
 	$message .= sprintf($user->lang['RETURN_INDEX'], '<a href="' . append_sid('./index.php') . '">', '</a>');
 	trigger_error($message);
-}
-else if (is_ajax() && $status && $mode === 'status' && $mod)
-{
-	$ideas->change_status($idea['idea_id'], $status);
-
-	header('Content-Type: application/json');
-	echo json_encode(true);
-
-	garbage_collection();
-	exit_handler();
-}
-else if (is_ajax() && $mode === 'rfc')
-{
-	$rfc = request_var('rfc', '');
-	$ideas->set_rfc($idea['idea_id'], $rfc);
-
-	header('Content-type: application/json');
-	echo json_encode(true);
-
-	garbage_collection();
-	exit_handler();
-}
-else if (is_ajax() && $mode === 'ticket')
-{
-	$ticket = request_var('ticket', 0);
-	$ideas->set_ticket($idea['idea_id'], $ticket);
-
-	header('Content-type: application/json');
-	echo json_encode(true);
-
-	garbage_collection();
-	exit_handler();
-}
-
-if (is_ajax())
-{
-	header('Content-Type: application/json');
-	echo json_encode($user->lang['LOGGED_OUT']);
-	garbage_collection();
-	exit_handler();
 }
 
 include($phpbb_root_path . 'includes/functions_display.' . $phpEx);
