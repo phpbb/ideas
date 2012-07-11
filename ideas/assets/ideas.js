@@ -24,6 +24,8 @@ $('.rating').each(function() {
 });
 
 $('.votes').click(function (e) {
+	"use strict";
+
 	e.preventDefault();
 
 	$('.voteslist').slideToggle();
