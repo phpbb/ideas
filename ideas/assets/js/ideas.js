@@ -9,23 +9,23 @@ $('.rating').each(function() {
 	$this.find('a').click(function (e) {
 		e.preventDefault();
 
-		if (url) {
-			var vote = $(this).text();
-			$.get(url, {v: vote}, function (message) {
-				if (typeof message === 'string') {
-					alert(message); // Error
-				} else {
-					$this.find('.current-rating').css('width', message.rating * 25);
-					alert(message.message);
-				}
-			});
+		if (!url) {
+			return
 		}
+
+		$.get(url, {v: $(this).text()}, function (message) {
+			if (typeof message === 'string') {
+				alert(message); // Error
+			} else {
+				$this.find('.current-rating').css('width', message.rating * 25);
+				alert(message.message);
+			}
+		});
 	});
 });
 
 $('.votes').click(function (e) {
 	"use strict";
-
 	e.preventDefault();
 
 	$('.voteslist').slideToggle();
@@ -51,72 +51,68 @@ $('#status').change(function () {
 	}
 
 	$.get($this.attr('data-url'), data, function (res) {
-		var link = $this.prev('a'),
-			newhref = link.attr('href')
-				.replace(/status=\d/, 'status=' + data.status);
+		var anchor = $this.prev('a'),
+			href = anchor.attr('href');
 
-		link.attr('href', newhref)
+		href = href.replace(/status=\d/, 'status=' + data.status);
+
+		anchor.attr('href', href)
 			.text($this.find(':selected').text());
 	});
 });
 
 $('#rfcedit').click(function (e) {
 	"use strict";
-
 	e.preventDefault();
 
-	$(this).hide();
-	$('#rfclink').hide();
+	$('#rfcedit, #rfclink').hide();
 	$('#rfceditinput').show().focus();
 });
 
 $('#rfceditinput').keydown(function (e) {
 	"use strict";
 
-	var $this = $(this),
-		url = $('#rfcedit').attr('href'),
-		value = $this.val();
-
 	if (e.keyCode === 13) {
+		e.preventDefault();
+
+		var $this = $(this),
+			url = $('#rfcedit').attr('href'),
+			value = $this.val();
+
 		if (value && !/^https?:\/\/area51\.phpbb\.com\/phpBB\/viewtopic\.php/.exec(value)) {
 			alert('Error: RFC must be a topic on Area51.');
 			return;
 		}
 
 		$.get(url, {rfc: value}, function (res) {
-			$('#rfclink')
+			$('#rfclink').text(value)
 				.attr('href', value)
-				.text(value)
 				.show();
 
 			$this.hide();
 
 			$('#rfcedit').text(value ? 'Edit' : 'Add').show();
 		});
-
-		e.preventDefault();
 	}
 });
 
 $('#ticketedit').click(function (e) {
 	"use strict";
-
 	e.preventDefault();
 
-	$(this).hide();
-	$('#ticketlink').hide();
+	$('#ticketedit, #ticketlink').hide();
 	$('#ticketeditinput').show().focus();
 });
 
 $('#ticketeditinput').keydown(function (e) {
 	"use strict";
 
-	var $this = $(this),
-		url = $('#ticketedit').attr('href'),
-		value = $this.val(),
-		info;
-
 	if (e.keyCode === 13) {
+		var $this = $(this),
+			url = $('#ticketedit').attr('href'),
+			value = $this.val(),
+			info;
+
 		if (value && !(info = /PHPBB3\-(\d{1,6})$/.exec(value))) {
 			alert('Error: Ticket ID must be of the format "PHPBB3-#####".');
 			return;
@@ -127,9 +123,8 @@ $('#ticketeditinput').keydown(function (e) {
 		}
 
 		$.get(url, {ticket: value && info[1]}, function (res) {
-			$('#ticketlink')
+			$('#ticketlink').text(value)
 				.attr('href', 'http://tracker.phpbb.com/browse/' + value)
-				.text(value)
 				.show();
 
 			$this.hide();
