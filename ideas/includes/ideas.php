@@ -107,6 +107,48 @@ class Ideas
 	}
 
 	/**
+	 * Sets the RFC link of an idea.
+	 *
+	 * @param int $idea_id ID of the idea to be updated.
+	 * @param string $rfc Link to the RFC.
+	 */
+	public function set_rfc($idea_id, $rfc)
+	{
+		global $db;
+
+		if ($rfc && !filter_var($rfc, FILTER_VALIDATE_URL))
+		{
+			return; // Don't bother informing user, probably an attempted hacker
+		}
+
+		$sql = 'UPDATE ' . IDEAS_TABLE . '
+			SET rfc_link = \'' . $db->sql_escape($rfc) . '\'
+			WHERE idea_id = ' . (int) $idea_id;
+		$db->sql_query($sql);
+	}
+
+	/**
+	 * Sets the ticket ID of an idea.
+	 *
+	 * @param int $idea_id ID of the idea to be updated.
+	 * @param string $ticket Ticket ID.
+	 */
+	public function set_ticket($idea_id, $ticket)
+	{
+		global $db;
+
+		if ($ticket && !is_numeric($ticket))
+		{
+			return; // Don't bother informing user, probably an attempted hacker
+		}
+
+		$sql = 'UPDATE ' . IDEAS_TABLE . '
+			SET ticket_id = ' . (int) $ticket . '
+			WHERE idea_id = ' . (int) $idea_id;
+		$db->sql_query($sql);
+	}
+
+	/**
 	 * Submits a vote on an idea.
 	 *
 	 * @param array $idea The idea returned by get_idea().

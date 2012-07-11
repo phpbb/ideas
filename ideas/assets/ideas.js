@@ -40,8 +40,7 @@ $('#status').change(function () {
 			status: $this.val()
 		}
 
-	if (data.status === '-')
-	{
+	if (data.status === '-') {
 		return;
 	}
 
@@ -54,3 +53,81 @@ $('#status').change(function () {
 			.text($this.find(':selected').text());
 	});
 });
+
+$('#rfcedit').click(function () {
+	"use strict";
+
+	$(this).hide();
+	$('#rfclink').hide();
+	$('#rfceditinput').show().focus();
+
+	return false;
+});
+
+$('#rfceditinput').keydown(function (e) {
+	"use strict";
+
+	var $this = $(this),
+		url = $('#rfcedit').attr('href'),
+		value = $this.val();
+
+	if (e.keyCode === 13) {
+		if (value && !/^https?:\/\/area51\.phpbb\.com\/phpBB\/viewtopic\.php/.exec(value)) {
+			alert('Error: RFC must be a topic on Area51.');
+			return;
+		}
+
+		$.get(url, {rfc: value}, function (res) {
+			$('#rfclink')
+				.attr('href', value)
+				.text(value)
+				.show();
+
+			$this.hide();
+
+			$('#rfcedit').text(value ? 'Edit' : 'Add').show();
+		});
+
+		e.preventDefault();
+	}
+});
+
+$('#ticketedit').click(function () {
+	"use strict";
+
+	$(this).hide();
+	$('#ticketlink').hide();
+	$('#ticketeditinput').show().focus();
+
+	return false;
+});
+
+$('#ticketeditinput').keydown(function (e) {
+	"use strict";
+
+	var $this = $(this),
+		url = $('#ticketedit').attr('href'),
+		value = $this.val(),
+		info;
+
+	if (e.keyCode === 13) {
+		if (value && !(info = /^PHPBB3\-(\d{1,6})$/.exec(value))) {
+			alert('Error: Ticket ID must be of the format "PHPBB3-#####".');
+			return;
+		}
+
+		$.get(url, {ticket: value && info[1]}, function (res) {
+			$('#ticketlink')
+				.attr('href', 'http://tracker.phpbb.com/browse/' + value)
+				.text(value)
+				.show();
+
+			$this.hide();
+
+			$('#ticketedit').text(value ? 'Edit' : 'Add').show();
+		});
+
+		e.preventDefault();
+	}
+});
+

@@ -34,6 +34,7 @@ if (!defined('IN_IDEAS'))
 
 $user->lang = array_merge($user->lang, array(
 	'ACCEPTED'				=> 'Accepted',
+	'ADD'					=> 'Add',
 	'ALL_IDEAS'				=> 'All ideas',
 	'ALREADY_VOTED'			=> 'You have already voted on this idea.',
 
@@ -44,6 +45,8 @@ $user->lang = array_merge($user->lang, array(
 	'DESC_TOO_LONG'			=> 'Description must be under 10,000 characters long.',
 	'DESC_TOO_SHORT'		=> 'Description must be at least 5 characters long.',
 	'DUPLICATE'				=> 'Duplicate',
+
+	'EDIT'					=> 'Edit',
 
 	'ID'					=> 'ID',
 	'IDEAS'					=> 'Ideas',
@@ -67,10 +70,12 @@ $user->lang = array_merge($user->lang, array(
 
 	'RATING'				=> 'Rating',
 	'REJECTED'				=> 'Rejected',
+	'RFC'					=> 'RFC',
 
 	'SHOW_W_STATUS'			=> 'Display ideas with status:',
 	'STATUS'				=> 'Status',
 
+	'TICKET'				=> 'Ticket',
 	'TITLE'					=> 'Title',
 	'TITLE_TOO_LONG'		=> 'Title must be under 64 characters long.',
 	'TITLE_TOO_SHORT'		=> 'Title must be 6 characters long.',

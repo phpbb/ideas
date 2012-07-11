@@ -26,6 +26,28 @@
 				<!-- BEGIN statuses --><option value="{statuses.ID}">{statuses.NAME}</option><!-- END statuses -->
 			</select><!-- ENDIF -->
 		</dd>
+		<!-- IF IDEA_RFC or CAN_EDIT -->
+		<dt style="width: 15%">{L_RFC}:</dt>
+		<dd>
+			<a id="rfclink" href="{IDEA_RFC}"<!-- IF not IDEA_RFC --> style="display:none"<!-- ENDIF -->>{IDEA_RFC}</a>
+
+			<!-- IF CAN_EDIT -->
+			<a href="{U_EDIT_RFC}" id="rfcedit"><!-- IF IDEA_RFC -->{L_EDIT}<!-- ELSE -->{L_ADD}<!-- ENDIF --></a>
+			<input type="text" id="rfceditinput" value="{IDEA_RFC}" />
+			<!-- ENDIF -->
+		</dd>
+		<!-- ENDIF -->
+		<!-- IF IDEA_TICKET or CAN_EDIT -->
+		<dt style="width: 15%">{L_TICKET}:</dt>
+		<dd>
+			<a id="ticketlink" href="http://tracker.phpbb.com/browse/PHPBB3-{IDEA_TICKET}"<!-- IF not IDEA_TICKET --> style="display:none"<!-- ENDIF -->>PHPBB3-{IDEA_TICKET}</a>
+
+			<!-- IF CAN_EDIT -->
+			<a href="{U_EDIT_TICKET}" id="ticketedit"><!-- IF IDEA_TICKET -->{L_EDIT}<!-- ELSE -->{L_ADD}<!-- ENDIF --></a>
+			<input type="text" id="ticketeditinput" value="PHPBB3-{IDEA_TICKET}" placeholder="PHPBB3-#####" />
+			<!-- ENDIF -->
+		</dd>
+		<!-- ENDIF -->
 		<!-- IF U_DELETE_IDEA -->
 		<dt style="width: 15%">{L_MOD_IDEA}:</dt>
 		<dd>

@@ -54,6 +54,28 @@ else if (is_ajax() && $status && $mode === 'status' && $mod)
 	garbage_collection();
 	exit_handler();
 }
+else if (is_ajax() && $mode === 'rfc')
+{
+	$rfc = request_var('rfc', '');
+	$ideas->set_rfc($idea['idea_id'], $rfc);
+
+	header('Content-type: application/json');
+	echo json_encode(true);
+
+	garbage_collection();
+	exit_handler();
+}
+else if (is_ajax() && $mode === 'ticket')
+{
+	$ticket = request_var('ticket', 0);
+	$ideas->set_ticket($idea['idea_id'], $ticket);
+
+	header('Content-type: application/json');
+	echo json_encode(true);
+
+	garbage_collection();
+	exit_handler();
+}
 
 if (is_ajax())
 {
@@ -91,8 +113,15 @@ $template->assign_vars(array(
 	'IDEA_STATUS'		=> $ideas->get_status_from_id($idea['idea_status']),
 	'IDEA_STATUS_LINK'	=> append_sid('./list.php?status=' . $idea['idea_status']),
 
+	'IDEA_RFC'			=> $idea['rfc_link'],
+	'IDEA_TICKET'		=> $idea['ticket_id'],
+
+	'CAN_EDIT'			=> $mod || $idea['idea_author'] === $user->data['user_id'],
+
 	'U_DELETE_IDEA'		=> $delete_posts ? append_sid('./idea.php?mode=delete&id=' . $id) : false,
 	'U_CHANGE_STATUS'	=> append_sid('./idea.php?mode=status&id=' . $id),
+	'U_EDIT_RFC'		=> append_sid('./idea.php?mode=rfc&id=' . $id),
+	'U_EDIT_TICKET'		=> append_sid('./idea.php?mode=ticket&id=' . $id),
 
 	'U_IDEA_VOTE'		=> append_sid('./idea.php?mode=vote&id=' . $id),
 ));

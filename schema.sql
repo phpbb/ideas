@@ -8,6 +8,8 @@ CREATE TABLE phpbb_ideas_ideas (
   idea_votes int(11) NOT NULL DEFAULT '0',
   idea_status int(11) NOT NULL DEFAULT '1',
   topic_id int(11) NOT NULL,
+  rfc_link varchar(100) NOT NULL,
+  ticket_id int(11) NOT NULL,
   PRIMARY KEY (idea_id)
 );
 

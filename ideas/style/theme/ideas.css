@@ -99,3 +99,13 @@ dd.topics {
 	display: none;
 	list-style-type: none;
 }
+
+#rfceditinput {
+	display: none;
+	width: 360px;
+}
+
+#ticketeditinput {
+	display: none;
+	width: 160px;
+}
