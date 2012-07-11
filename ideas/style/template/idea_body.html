@@ -44,7 +44,7 @@
 
 			<!-- IF CAN_EDIT -->
 			<a href="{U_EDIT_TICKET}" id="ticketedit"><!-- IF IDEA_TICKET -->{L_EDIT}<!-- ELSE -->{L_ADD}<!-- ENDIF --></a>
-			<input type="text" id="ticketeditinput" value="PHPBB3-{IDEA_TICKET}" placeholder="PHPBB3-#####" />
+			<input type="text" id="ticketeditinput"<!-- IF IDEA_TICKET --> value="PHPBB3-{IDEA_TICKET}"<!-- ENDIF --> placeholder="PHPBB3-#####" />
 			<!-- ENDIF -->
 		</dd>
 		<!-- ENDIF -->
