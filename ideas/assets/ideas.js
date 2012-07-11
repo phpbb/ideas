@@ -60,14 +60,14 @@ $('#status').change(function () {
 	});
 });
 
-$('#rfcedit').click(function () {
+$('#rfcedit').click(function (e) {
 	"use strict";
+
+	e.preventDefault();
 
 	$(this).hide();
 	$('#rfclink').hide();
 	$('#rfceditinput').show().focus();
-
-	return false;
 });
 
 $('#rfceditinput').keydown(function (e) {
@@ -98,14 +98,14 @@ $('#rfceditinput').keydown(function (e) {
 	}
 });
 
-$('#ticketedit').click(function () {
+$('#ticketedit').click(function (e) {
 	"use strict";
+
+	e.preventDefault();
 
 	$(this).hide();
 	$('#ticketlink').hide();
 	$('#ticketeditinput').show().focus();
-
-	return false;
 });
 
 $('#ticketeditinput').keydown(function (e) {
