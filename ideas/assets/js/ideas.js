@@ -117,9 +117,13 @@ $('#ticketeditinput').keydown(function (e) {
 		info;
 
 	if (e.keyCode === 13) {
-		if (value && !(info = /^PHPBB3\-(\d{1,6})$/.exec(value))) {
+		if (value && !(info = /PHPBB3\-(\d{1,6})$/.exec(value))) {
 			alert('Error: Ticket ID must be of the format "PHPBB3-#####".');
 			return;
+		}
+
+		if (value) {
+			value = 'PHPBB3-' + info[1];
 		}
 
 		$.get(url, {ticket: value && info[1]}, function (res) {
