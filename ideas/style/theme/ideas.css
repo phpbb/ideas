@@ -1,3 +1,8 @@
+.rating {
+	display: inline-block;
+	overflow: auto;
+}
+
 .star-rating {
 	display: inline-block;
 	list-style: none;
@@ -87,6 +92,12 @@
 	display: block;
 	text-indent: -9000px;
 	z-index: 1;
+}
+
+.votes {
+	position: absolute;
+	margin-top: 5px;
+	margin-left: 5px;
 }
 
 dd.topics {
