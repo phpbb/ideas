@@ -24,7 +24,7 @@ $user->setup();
 include($ideas_root_path . 'lang/en/common.php');
 
 // Set up custom template
-$template->set_custom_template($ideas_root_path . 'style/template', 'default');
+$template->set_custom_template($ideas_root_path . 'template', 'default');
 $template->assign_var('U_IDEAS_HOME', append_sid('./index.php'));
 
 // We are not modifying constants.php - define IDEAS_TABLE here.

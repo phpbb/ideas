@@ -1613,7 +1613,7 @@ if (empty($_REQUEST['t']) && !empty($topic_id))
 }
 
 // Not sure why I need to do this...
-$template->set_custom_template($ideas_root_path . 'style/template', 'default');
+$template->set_custom_template($ideas_root_path . 'template', 'default');
 
 // Output the page
 page_header($user->lang['VIEW_IDEA'] . ' - ' . $idea['idea_title'], false);
