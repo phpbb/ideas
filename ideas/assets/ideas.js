@@ -12,8 +12,12 @@ $('.rating').each(function() {
 		if (url) {
 			var vote = $(this).text();
 			$.get(url, {v: vote}, function (message) {
-				$this.find('.current-rating').css('width', message.rating * 25);
-				alert(message.message);
+				if (typeof message === 'string') {
+					alert(message); // Error
+				} else {
+					$this.find('.current-rating').css('width', message.rating * 25);
+					alert(message.message);
+				}
 			});
 		}
 	});

@@ -58,6 +58,10 @@ if (is_ajax())
 			{
 				echo json_encode($ideas->vote($idea, $user->data['user_id'], $vote));
 			}
+			else
+			{
+				echo json_encode($user->lang('NO_AUTH_OPERATION'));
+			}
 			break;
 
 		default:
