@@ -319,9 +319,8 @@ class Ideas
 
 			'force_approved_state'	=> true
 		);
-		$poll = array();
 
-		submit_post('post', $title, '', POST_NORMAL, $poll, $data);
+		ideas_submit_post($title, '', POST_NORMAL, $data);
 
 		$sql_ary = array(
 			'idea_title'		=> $db->sql_escape($title),

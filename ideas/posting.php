@@ -25,11 +25,6 @@ if ($user->data['user_id'] == ANONYMOUS)
 	trigger_error('LOGGED_OUT');
 }
 
-if (!$auth->acl_get('f_post', IDEAS_FORUM_ID))
-{
-	trigger_error('NO_AUTH_OPERATION');
-}
-
 $mode = request_var('mode', '');
 $title = utf8_normalize_nfc(request_var('title', ''));
 $desc = utf8_normalize_nfc(request_var('desc', '', true));
