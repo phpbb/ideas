@@ -209,12 +209,14 @@ class Ideas
 			'vote_value'	=> $value,
 		);
 
-		$sql = 'INSERT INTO ' . IDEA_VOTES_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary);
+		$sql = 'INSERT INTO ' . IDEA_VOTES_TABLE . ' ' .
+			$db->sql_build_array('INSERT', $sql_ary);
 		$db->sql_query($sql);
 
 
 		// Update rating in IDEAS_TABLE and $idea
-		$idea['idea_rating'] = ($idea['idea_rating'] * $idea['idea_votes'] + $value) / ++$idea['idea_votes'];
+		$idea['idea_rating'] = ($idea['idea_rating'] * $idea['idea_votes'] + $value)
+			/ ++$idea['idea_votes'];
 
 		$sql_ary = array(
 			'idea_rating'	=> $idea['idea_rating'],
@@ -320,7 +322,7 @@ class Ideas
 			'force_approved_state'	=> true
 		);
 
-		ideas_submit_post($title, '', POST_NORMAL, $data);
+		ideas_submit_post($title, POST_NORMAL, $data);
 
 		$sql_ary = array(
 			'idea_title'		=> $db->sql_escape($title),
@@ -329,7 +331,8 @@ class Ideas
 			'topic_id'			=> $data['topic_id']
 		);
 
-		$sql = 'INSERT INTO ' . IDEAS_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary);
+		$sql = 'INSERT INTO ' . IDEAS_TABLE . ' ' .
+			$db->sql_build_array('INSERT', $sql_ary);
 		$db->sql_query($sql);
 		return $db->sql_nextid();
 	}

@@ -43,7 +43,7 @@ function is_ajax()
 /**
  * Submit post from a specified user ID. Modified version of submit_post function
  */
-function ideas_submit_post($subject, $username, $topic_type, &$data, $update_search_index = true)
+function ideas_submit_post($subject, $topic_type, &$data, $update_search_index = true)
 {
 	global $db, $auth, $user, $config, $phpEx, $phpbb_root_path;
 

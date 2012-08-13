@@ -8,14 +8,11 @@
 *
 */
 
-/**
-* @ignore
-*/
 define('IN_PHPBB', true);
 include($ideas_root_path . '/config.php');
-$phpbb_root_path = (defined('PHPBB_ROOT_PATH')) ? PHPBB_ROOT_PATH : './';
-$phpEx = substr(strrchr(__FILE__, '.'), 1);
-include($phpbb_root_path . 'common.' . $phpEx);
+$phpbb_root_path = PHPBB_ROOT_PATH;
+$phpEx = 'php';
+include($phpbb_root_path . 'common.php');
 
 // Start session management
 $user->session_begin();
@@ -27,10 +24,7 @@ include($ideas_root_path . 'lang/en/common.php');
 $template->set_custom_template($ideas_root_path . 'template', 'default');
 $template->assign_var('U_IDEAS_HOME', append_sid('./index.php'));
 
-// We are not modifying constants.php - define IDEAS_TABLE here.
-define('IDEAS_TABLE', $table_prefix . 'ideas_ideas');
-define('IDEA_STATUS_TABLE', $table_prefix . 'ideas_statuses');
-define('IDEA_VOTES_TABLE', $table_prefix . 'ideas_votes');
+include($ideas_root_path . '/includes/constants.php');
 include($ideas_root_path . '/includes/ideas.php');
 $ideas = new Ideas();
 
