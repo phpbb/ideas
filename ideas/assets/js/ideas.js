@@ -10,7 +10,7 @@ $('.rating').each(function() {
 		e.preventDefault();
 
 		if (!url) {
-			return
+			return;
 		}
 
 		$.get(url, {v: $(this).text()}, function (message) {
@@ -44,13 +44,13 @@ $('#status').change(function () {
 		data = {
 			mode: 'status',
 			status: $this.val()
-		}
+		};
 
 	if (data.status === '-') {
 		return;
 	}
 
-	$.get($this.attr('data-url'), data, function (res) {
+	$.get($this.attr('data-url'), data, function () {
 		var anchor = $this.prev('a'),
 			href = anchor.attr('href');
 
@@ -84,7 +84,7 @@ $('#rfceditinput').keydown(function (e) {
 			return;
 		}
 
-		$.get(url, {rfc: value}, function (res) {
+		$.get(url, {rfc: value}, function () {
 			$('#rfclink').text(value)
 				.attr('href', value)
 				.show();
@@ -93,6 +93,11 @@ $('#rfceditinput').keydown(function (e) {
 
 			$('#rfcedit').text(value ? 'Edit' : 'Add').show();
 		});
+	} else if (e.keyCode === 27) {
+		e.preventDefault();
+
+		$(this).hide();
+		$('#rfcedit, #rfclink').show();
 	}
 });
 
@@ -108,6 +113,8 @@ $('#ticketeditinput').keydown(function (e) {
 	"use strict";
 
 	if (e.keyCode === 13) {
+		e.preventDefault();
+
 		var $this = $(this),
 			url = $('#ticketedit').attr('href'),
 			value = $this.val(),
@@ -122,7 +129,7 @@ $('#ticketeditinput').keydown(function (e) {
 			value = 'PHPBB3-' + info[1];
 		}
 
-		$.get(url, {ticket: value && info[1]}, function (res) {
+		$.get(url, {ticket: value && info[1]}, function () {
 			$('#ticketlink').text(value)
 				.attr('href', 'http://tracker.phpbb.com/browse/' + value)
 				.show();
@@ -131,8 +138,11 @@ $('#ticketeditinput').keydown(function (e) {
 
 			$('#ticketedit').text(value ? 'Edit' : 'Add').show();
 		});
-
+	} else if (e.keyCode === 27) {
 		e.preventDefault();
+
+		$(this).hide();
+		$('#ticketedit, #ticketlink').show();
 	}
 });
 

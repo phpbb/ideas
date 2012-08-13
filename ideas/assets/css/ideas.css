@@ -6,7 +6,7 @@
 .star-rating {
 	display: inline-block;
 	list-style: none;
-	padding: 0px;
+	padding: 0;
 	width: 125px;
 	height: 25px;
 	position: relative;
@@ -14,8 +14,8 @@
 }
 
 .star-rating li {
-	padding: 0px;
-	margin: 0px;
+	padding: 0;
+	margin: 0;
 	float: left;
 }
 
@@ -27,14 +27,14 @@
 	text-indent: -9000px;
 	z-index: 20;
 	position: absolute;
-	padding: 0px;
+	padding: 0;
 	cursor: default;
 }
 
 .star-rating.active li a:hover {
 	background: url(images/stars.png) left bottom;
 	z-index: 2;
-	left: 0px;
+	left: 0;
 	cursor: pointer;
 }
 
@@ -46,7 +46,7 @@
 }
 
 .star-rating a.one-star {
-	left: 0px;
+	left: 0;
 }
 
 .star-rating a.one-star:hover {
