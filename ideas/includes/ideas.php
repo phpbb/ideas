@@ -172,7 +172,7 @@ class Ideas
 			FROM ' . IDEA_VOTES_TABLE . "
 			WHERE idea_id = {$idea['idea_id']}
 				AND user_id = $user_id";
-		$result = $db->sql_query_limit($sql, 1);
+		$db->sql_query_limit($sql, 1);
 		if ($db->sql_fetchrow())
 		{
 			// Get old vote so that we can be mathematical
@@ -319,7 +319,7 @@ class Ideas
 
 			'enable_indexing'	=> true,
 
-			'force_approved_state'	=> true
+			'force_approved_state'	=> true,
 		);
 
 		ideas_submit_post($title, POST_NORMAL, $data);

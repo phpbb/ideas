@@ -13,11 +13,11 @@ $ideas_root_path = __DIR__ . '/';
 include($ideas_root_path . 'common.php');
 
 $sort = request_var('sort', '');
-$sort_direction = request_var('sd', 'd') === 'd' ? 'DESC' : 'ASC';
+$sort_direction = (request_var('sd', 'd')) === 'd' ? 'DESC' : 'ASC';
 $status = request_var('status', 0);
 $author = request_var('author', 0);
 
-$where = ($status) ? "idea_status = $status" : 'idea_status != 5';
+$where = $status ? "idea_status = $status" : 'idea_status != 5';
 if ($author)
 {
 	$where .= " && idea_author = $author";
@@ -69,9 +69,9 @@ foreach ($ideas as $idea)
 
 page_header($user->lang['IDEA_LIST'], false);
 
-$statuses = array('new', 'accepted', 'rejected', 'merged', 'duplicate');
+$statuses = array('new', 'accepted', 'rejected', 'duplicate', 'merged');
 $prevstatus = request_var('status', '');
-foreach($statuses as $key => $status)
+foreach ($statuses as $key => $status)
 {
 	$template->assign_block_vars('status', array(
 		'VALUE'		=> $key + 1,
@@ -82,7 +82,7 @@ foreach($statuses as $key => $status)
 
 $sorts = array('author', 'date', 'id', 'title', 'votes', 'rating');
 $sorted = request_var('sort', 'rating');
-foreach($sorts as $sort)
+foreach ($sorts as $sort)
 {
 	$template->assign_block_vars('sortby', array(
 		'VALUE'		=> $sort,

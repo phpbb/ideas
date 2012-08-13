@@ -42,6 +42,10 @@ if (is_ajax())
 				$ideas->change_status($idea['idea_id'], $status);
 				echo 'true';
 			}
+			else
+			{
+				echo 'false';
+			}
 			break;
 
 		case 'ticket':
@@ -93,7 +97,7 @@ if ($mod)
 	{
 		$template->assign_block_vars('statuses', array(
 			'ID'	=> $status['status_id'],
-			'NAME'	=> $status['status_name']
+			'NAME'	=> $status['status_name'],
 		));
 	}
 }
