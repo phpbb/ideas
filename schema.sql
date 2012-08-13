@@ -19,6 +19,13 @@ CREATE TABLE phpbb_ideas_statuses (
   PRIMARY KEY (status_id)
 );
 
+INSERT INTO phpbb_ideas_statuses (status_id, status_name) VALUES
+(1, 'New'),
+(2, 'Accepted'),
+(3, 'Rejected'),
+(4, 'Duplicate'),
+(5, 'Merged');
+
 CREATE TABLE phpbb_ideas_votes (
   idea_id int(11) NOT NULL,
   user_id int(11) NOT NULL,
