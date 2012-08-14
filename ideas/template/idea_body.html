@@ -8,7 +8,7 @@
 		<dt style="width: 15%">{L_POSTED}:</dt> <dd>{IDEA_DATE}</dd>
 		<dt style="width: 15%">{L_RATING}:</dt>
 		<dd>
-			<span class="rating"<!-- IF S_USER_LOGGED_IN and not S_IS_BOT --> data-vote="{U_IDEA_VOTE}"<!-- ENDIF -->>{IDEA_RATING}</span>
+			<span class="rating"<!-- IF CAN_VOTE --> data-vote="{U_IDEA_VOTE}"<!-- ENDIF -->>{IDEA_RATING}</span>
 			<a href="#" class="votes">({IDEA_VOTES} {L_VOTES})</a>
 			<ul class="voteslist">
 				<!-- IF .stars_5 --><li><strong>5 stars:</strong> <!-- BEGIN stars_5 -->{stars_5.USER}<!-- IF not stars_5.S_LAST_ROW -->, <!-- ENDIF --><!-- END stars_5 --></li><!-- ENDIF -->
@@ -60,12 +60,13 @@
 </div>
 
 <div class="topic-actions">
-
+	<!-- IF S_LOGGED_IN and not S_IS_BOT -->
 	<div class="buttons">
-		<!-- IF not S_IS_BOT and S_DISPLAY_REPLY_INFO -->
+		<!-- IF S_DISPLAY_REPLY_INFO -->
 		<div class="<!-- IF S_IS_LOCKED -->locked-icon<!-- ELSE -->reply-icon<!-- ENDIF -->"><a href="{U_POST_REPLY_TOPIC}" title="<!-- IF S_IS_LOCKED -->{L_TOPIC_LOCKED}<!-- ELSE -->{L_POST_REPLY}<!-- ENDIF -->"><span></span><!-- IF S_IS_LOCKED -->{L_TOPIC_LOCKED_SHORT}<!-- ELSE -->{L_POST_REPLY}<!-- ENDIF --></a></div>
 		<!-- ENDIF -->
 	</div>
+	<!-- ENDIF -->
 
 	<!-- IF PAGINATION or TOTAL_POSTS -->
 	<div class="pagination">
@@ -207,11 +208,13 @@
 <!-- ENDIF -->
 
 <div class="topic-actions">
+	<!-- IF S_LOGGED_IN and not S_IS_BOT -->
 	<div class="buttons">
-		<!-- IF not S_IS_BOT and S_DISPLAY_REPLY_INFO -->
+		<!-- IF S_DISPLAY_REPLY_INFO -->
 		<div class="<!-- IF S_IS_LOCKED -->locked-icon<!-- ELSE -->reply-icon<!-- ENDIF -->"><a href="{U_POST_REPLY_TOPIC}" title="<!-- IF S_IS_LOCKED -->{L_TOPIC_LOCKED}<!-- ELSE -->{L_POST_REPLY}<!-- ENDIF -->"><span></span><!-- IF S_IS_LOCKED -->{L_TOPIC_LOCKED_SHORT}<!-- ELSE -->{L_POST_REPLY}<!-- ENDIF --></a></div>
 		<!-- ENDIF -->
 	</div>
+	<!-- ENDIF -->
 
 	<!-- IF PAGINATION or TOTAL_POSTS -->
 	<div class="pagination">

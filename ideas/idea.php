@@ -22,7 +22,7 @@ if (!$idea)
 	trigger_error('IDEA_NOT_FOUND');
 }
 
-$mod = $auth->acl_get('f_', IDEAS_FORUM_ID);
+$mod = $auth->acl_get('m_', IDEAS_FORUM_ID);
 
 if (is_ajax())
 {
@@ -31,9 +31,16 @@ if (is_ajax())
 	switch ($mode)
 	{
 		case 'rfc':
-			$rfc = request_var('rfc', '');
-			$ideas->set_rfc($idea['idea_id'], $rfc);
-			echo 'true';
+			if ($idea['idea_author'] === $user->data['user_id'] || $mod)
+			{
+				$rfc = request_var('rfc', '');
+				$ideas->set_rfc($idea['idea_id'], $rfc);
+				echo 'true';
+			}
+			else
+			{
+				echo 'false';
+			}
 			break;
 
 		case 'status':
@@ -49,9 +56,16 @@ if (is_ajax())
 			break;
 
 		case 'ticket':
-			$ticket = request_var('ticket', 0);
-			$ideas->set_ticket($idea['idea_id'], $ticket);
-			echo 'true';
+			if ($idea['idea_author'] === $user->data['user_id'] || $mod)
+			{
+				$ticket = request_var('ticket', 0);
+				$ideas->set_ticket($idea['idea_id'], $ticket);
+				echo 'true';
+			}
+			else
+			{
+				echo 'false';
+			}
 			break;
 
 		case 'vote':
@@ -87,7 +101,7 @@ if ($mode === 'delete' && ($mod || ($idea['idea_author'] === $user->data['user_i
 include($phpbb_root_path . 'includes/functions_display.' . $phpEx);
 include($phpbb_root_path . 'includes/bbcode.' . $phpEx);
 
-$delete_posts = $auth->acl_get('f_', IDEAS_FORUM_ID) ||
+$delete_posts = $mod ||
 	($idea['idea_author'] === $user->data['user_id'] && $auth->acl_get('f_delete', IDEAS_FORUM_ID));
 
 if ($mod)
@@ -116,6 +130,7 @@ $template->assign_vars(array(
 	'IDEA_TICKET'		=> $idea['ticket_id'],
 
 	'CAN_EDIT'			=> $mod || $idea['idea_author'] === $user->data['user_id'],
+	'CAN_VOTE'          => $auth->acl_get('f_vote', IDEAS_FORUM_ID),
 
 	'U_DELETE_IDEA'		=> $delete_posts ? append_sid('./idea.php?mode=delete&id=' . $id) : false,
 	'U_CHANGE_STATUS'	=> append_sid('./idea.php?mode=status&id=' . $id),

@@ -38,8 +38,8 @@
 	cursor: pointer;
 }
 
-.star-rating a:focus,
-.star-rating a:active {
+.star-rating.active a:focus,
+.star-rating.active a:active {
 	border: 0;
 	-moz-outline-style: none;
 	outline: none;
@@ -49,7 +49,7 @@
 	left: 0;
 }
 
-.star-rating a.one-star:hover {
+.star-rating.active a.one-star:hover {
 	width: 25px;
 }
 
@@ -57,7 +57,7 @@
 	left: 25px;
 }
 
-.star-rating a.two-stars:hover {
+.star-rating.active a.two-stars:hover {
 	width: 50px;
 }
 
@@ -65,7 +65,7 @@
 	left: 50px;
 }
 
-.star-rating a.three-stars:hover {
+.star-rating.active a.three-stars:hover {
 	width: 75px;
 }
 
@@ -73,7 +73,7 @@
 	left: 75px;
 }
 
-.star-rating a.four-stars:hover {
+.star-rating.active a.four-stars:hover {
 	width: 100px;
 }
 
@@ -81,7 +81,7 @@
 	left: 100px;
 }
 
-.star-rating a.five-stars:hover {
+.star-rating.active a.five-stars:hover {
 	width: 125px;
 }
 
