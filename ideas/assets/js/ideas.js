@@ -79,7 +79,7 @@ $('#rfceditinput').keydown(function (e) {
 			url = $('#rfcedit').attr('href'),
 			value = $this.val();
 
-		if (value && !/^https?:\/\/area51\.phpbb\.com\/phpBB\/viewtopic\.php/.exec(value)) {
+		if (value && !/^https?:\/\/area51\.phpbb\.com\/phpBB\/viewtopic\.php/.test(value)) {
 			alert('Error: RFC must be a topic on Area51.');
 			return;
 		}
@@ -120,7 +120,7 @@ $('#ticketeditinput').keydown(function (e) {
 			value = $this.val(),
 			info;
 
-		if (value && !(info = /PHPBB3\-(\d{1,6})$/.exec(value))) {
+		if (value && !(info = /^PHPBB3\-(\d{1,6})$/.exec(value))) {
 			alert('Error: Ticket ID must be of the format "PHPBB3-#####".');
 			return;
 		}
