@@ -47,6 +47,7 @@ $user->lang = array_merge($user->lang, array(
 	'DUPLICATE'				=> 'Duplicate',
 
 	'EDIT'					=> 'Edit',
+	'ENABLE_JS'             => 'Please enable JavaScript to use phpBB Ideas correctly',
 
 	'ID'					=> 'ID',
 	'IDEAS'					=> 'Ideas',
@@ -55,6 +56,8 @@ $user->lang = array_merge($user->lang, array(
 	'IDEA_NOT_FOUND'		=> 'Idea not found',
 	'IDEAS_HOME'			=> 'Ideas Home',
 	'INVALID_VOTE'			=> 'Invalid vote; the number you entered was invalid.',
+
+	'JS_DISABLED'           => 'JavaScript is disabled',
 
 	'LATEST_IDEAS'			=> 'Latest Ideas',
 	'LOGGED_OUT'			=> 'You must be logged in to do this.',
