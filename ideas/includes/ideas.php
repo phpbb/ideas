@@ -350,7 +350,8 @@ class Ideas
 	{
 		global $db;
 
-		if (!$topic_id) {
+		if (!$topic_id)
+		{
 			$idea = $this->get_idea($id);
 			$topic_id = $idea['topic_id'];
 		}
