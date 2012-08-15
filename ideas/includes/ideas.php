@@ -116,7 +116,8 @@ class Ideas
 	{
 		global $db;
 
-		if ($rfc && !filter_var($rfc, FILTER_VALIDATE_URL))
+		$match = '/^https?:\/\/area51\.phpbb\.com\/phpBB\/viewtopic\.php/';
+		if ($rfc && !preg_match($match, $rfc))
 		{
 			return; // Don't bother informing user, probably an attempted hacker
 		}
