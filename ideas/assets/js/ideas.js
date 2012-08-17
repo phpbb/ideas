@@ -98,8 +98,14 @@ $('#rfceditinput').keydown(function (e) {
 	} else if (e.keyCode === 27) {
 		e.preventDefault();
 
+		var $link = $('#rfclink');
+
 		$(this).hide();
-		$('#rfcedit, #rfclink').show();
+		$('#rfcedit').show();
+
+		if ($link.html()) {
+			$link.show();
+		}
 	}
 });
 
@@ -143,8 +149,14 @@ $('#ticketeditinput').keydown(function (e) {
 	} else if (e.keyCode === 27) {
 		e.preventDefault();
 
+		var $link = $('#ticketlink');
+
 		$(this).hide();
-		$('#ticketedit, #ticketlink').show();
+		$('#ticketedit').show();
+
+		if ($link.html()) {
+			$link.show();
+		}
 	}
 });
 
