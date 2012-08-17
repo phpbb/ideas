@@ -28,7 +28,9 @@ $('.votes').click(function (e) {
 	"use strict";
 	e.preventDefault();
 
-	$('.voteslist').slideToggle();
+	if ($(this).html().indexOf('(0 ') === -1) {
+		$('.voteslist').slideToggle();
+	}
 });
 
 $('.confirm').click(function () {
