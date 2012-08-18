@@ -78,10 +78,11 @@ $('#rfceditinput').keydown(function (e) {
 		e.preventDefault();
 
 		var $this = $(this),
+			find = /^https?:\/\/area51\.phpbb\.com\/phpBB\/viewtopic\.php/,
 			url = $('#rfcedit').attr('href'),
 			value = $this.val();
 
-		if (value && !/^https?:\/\/area51\.phpbb\.com\/phpBB\/viewtopic\.php/.test(value)) {
+		if (value && !find.test(value)) {
 			alert('Error: RFC must be a topic on Area51.');
 			return;
 		}
