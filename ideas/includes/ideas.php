@@ -15,8 +15,8 @@
 class Ideas
 {
 	/**
-	 * Returns an array of ideas. Defaults to ten ideas ordered by date excluding
-	 * duplicate or rejected ideas.
+	 * Returns an array of ideas. Defaults to ten ideas ordered by date
+	 * excluding duplicate or rejected ideas.
 	 *
 	 * @param int $number The number of ideas to return.
 	 * @param string $sortby SQL ORDER BY query.
@@ -217,7 +217,8 @@ class Ideas
 
 		// Update rating in IDEAS_TABLE and $idea
 		$idea['idea_rating'] = ($idea['idea_rating'] * $idea['idea_votes'] + $value)
-			/ ++$idea['idea_votes'];
+			/ ($idea['idea_votes'] + 1);
+		$idea['idea_votes']++;
 
 		$sql_ary = array(
 			'idea_rating'	=> $idea['idea_rating'],
