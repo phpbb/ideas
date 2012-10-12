@@ -51,6 +51,18 @@ class Ideas
 		$row = $db->sql_fetchrow($result);
 		$db->sql_freeresult($result);
 
+		$sql = 'SELECT ticket_id
+			FROM ' . IDEA_TICKETS_TABLE . "
+			WHERE idea_id = $id";
+		$result = $db->sql_query_limit($sql, 1);
+		$row['ticket_id'] = $db->sql_fetchfield('ticket_id');
+
+		$sql = 'SELECT rfc_link
+			FROM ' . IDEA_RFCS_TABLE . "
+			WHERE idea_id = $id";
+		$result = $db->sql_query_limit($sql, 1);
+		$row['rfc_link'] = $db->sql_fetchfield('rfc_link');
+
 		return $row;
 	}
 
@@ -122,9 +134,12 @@ class Ideas
 			return; // Don't bother informing user, probably an attempted hacker
 		}
 
-		$sql = 'UPDATE ' . IDEAS_TABLE . '
-			SET rfc_link = \'' . $db->sql_escape($rfc) . '\'
+		$sql = 'DELETE FROM ' . IDEA_RFCS_TABLE . '
 			WHERE idea_id = ' . (int) $idea_id;
+		$db->sql_query($sql);
+
+		$sql = 'INSERT INTO ' . IDEA_RFCS_TABLE . ' (idea_id, rfc_link)
+			VALUES (' . (int) $idea_id . ', \'' . $db->sql_escape($rfc) . '\')';
 		$db->sql_query($sql);
 	}
 
@@ -143,9 +158,12 @@ class Ideas
 			return; // Don't bother informing user, probably an attempted hacker
 		}
 
-		$sql = 'UPDATE ' . IDEAS_TABLE . '
-			SET ticket_id = ' . (int) $ticket . '
+		$sql = 'DELETE FROM ' . IDEA_TICKETS_TABLE . '
 			WHERE idea_id = ' . (int) $idea_id;
+		$db->sql_query($sql);
+
+		$sql = 'INSERT INTO ' . IDEA_TICKETS_TABLE . ' (idea_id, ticket_id)
+			VALUES (' . (int) $idea_id . ', ' . (int) $ticket . ')';
 		$db->sql_query($sql);
 	}
 
@@ -357,11 +375,30 @@ class Ideas
 			$topic_id = $idea['topic_id'];
 		}
 
+		// Delete topic
 		delete_posts('topic_id', $topic_id);
 
+		// Delete idea
 		$sql = 'DELETE FROM ' . IDEAS_TABLE . '
 			WHERE idea_id = ' . (int) $id;
 		$db->sql_query($sql);
-		return (bool) $db->sql_affectedrows();
+		$deleted = (bool) $db->sql_affectedrows();
+
+		// Delete votes
+		$sql = 'DELETE FROM ' . IDEA_VOTES_TABLE . '
+			WHERE idea_id = ' . (int) $id;
+		$db->sql_query($sql);
+
+		// Delete RFCS
+		$sql = 'DELETE FROM ' . IDEA_RFCS_TABLE . '
+			WHERE idea_id = ' . (int) $id;
+		$db->sql_query($sql);
+
+		// Delete tickets
+		$sql = 'DELETE FROM ' . IDEA_TICKETS_TABLE . '
+			WHERE idea_id = ' . (int) $id;
+		$db->sql_query($sql);
+
+		return $deleted;
 	}
 }

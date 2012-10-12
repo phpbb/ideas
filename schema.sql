@@ -7,9 +7,7 @@ CREATE TABLE phpbb_ideas_ideas (
   idea_rating float NOT NULL DEFAULT '0',
   idea_votes int(11) NOT NULL DEFAULT '0',
   idea_status int(11) NOT NULL DEFAULT '1',
-  topic_id int(11) NOT NULL,
-  rfc_link varchar(100) NULL,
-  ticket_id int(11) NULL,
+  topic_id int(11) NULL,
   PRIMARY KEY (idea_id)
 );
 
@@ -17,6 +15,18 @@ CREATE TABLE phpbb_ideas_statuses (
   status_id int(11) NOT NULL AUTO_INCREMENT,
   status_name varchar(200) NOT NULL,
   PRIMARY KEY (status_id)
+);
+
+CREATE TABLE  phpbb_ideas_tickets (
+  idea_id INT NOT NULL ,
+  ticket_id INT NOT NULL ,
+  PRIMARY KEY (idea_id, ticket_id)
+);
+
+CREATE TABLE  phpbb_ideas_rfcs (
+  idea_id INT NOT NULL ,
+  rfc_link varchar(100) NOT NULL ,
+  PRIMARY KEY (idea_id, rfc_link)
 );
 
 INSERT INTO phpbb_ideas_statuses (status_id, status_name) VALUES
