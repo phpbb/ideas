@@ -1,9 +1,8 @@
 <?php
 /**
  *
+ * @package phpBB3 Ideas
  * @author callumacrae (Callum Macrae) callum@phpbb.com
- * @version $Id$
- * @copyright (c) 2012 Callum Macrae
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License
  *
  */
