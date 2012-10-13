@@ -25,7 +25,7 @@ if (!$idea)
 $mod = $auth->acl_get('m_', IDEAS_FORUM_ID);
 $own = $idea['idea_author'] === $user->data['user_id'];
 
-if (is_ajax())
+if (ideas_is_ajax())
 {
 	header('Content-Type: application/json');
 
@@ -120,7 +120,7 @@ if ($mod)
 $template->assign_vars(array(
 	'IDEA_ID'			=> $idea['idea_id'],
 	'IDEA_TITLE'		=> $idea['idea_title'],
-	'IDEA_AUTHOR'		=> get_user_link($idea['idea_author']),
+	'IDEA_AUTHOR'		=> ideas_get_user_link($idea['idea_author']),
 	'IDEA_DATE'			=> $user->format_date($idea['idea_date']),
 	'IDEA_RATING'		=> round($idea['idea_rating'] * 10, 0) / 10,
 	'IDEA_VOTES'		=> $idea['idea_votes'],
@@ -149,7 +149,7 @@ if ($idea['idea_votes'])
 	foreach ($votes as $vote)
 	{
 		$template->assign_block_vars('stars_' . $vote['vote_value'], array(
-			'USER'	=> get_user_link($vote['user_id']),
+			'USER'	=> ideas_get_user_link($vote['user_id']),
 		));
 	}
 }

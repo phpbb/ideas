@@ -16,7 +16,7 @@
  * @param int $id The ID of the user.
  * @return string An HTML link to the users profile.
  */
-function get_user_link($id)
+function ideas_get_user_link($id)
 {
 	global $db;
 	$sql = 'SELECT username, user_colour
@@ -34,7 +34,7 @@ function get_user_link($id)
  *
  * @return bool True if request is AJAX.
  */
-function is_ajax()
+function ideas_is_ajax()
 {
 	return !empty($_SERVER['HTTP_X_REQUESTED_WITH']) &&
 		strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest';

@@ -59,7 +59,7 @@ foreach ($ideas as $idea)
 		'ID'			=> $idea['idea_id'],
 		'LINK'			=> append_sid('./idea.php?id=' . $idea['idea_id']),
 		'TITLE'			=> $idea['idea_title'],
-		'AUTHOR'		=> get_user_link($idea['idea_author']),
+		'AUTHOR'		=> ideas_get_user_link($idea['idea_author']),
 		'DATE'			=> $user->format_date($idea['idea_date']),
 		'RATING'		=> round($idea['idea_rating'] * 10, 0) / 10,
 		'VOTES'			=> $idea['idea_votes'],
