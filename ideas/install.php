@@ -57,7 +57,7 @@ $versions = array(
 	'1.0.0-RC1' => array(
 
 		'table_add' => array(
-			array('phpbb_ideas_ideas', array(
+			array($table_prefix . 'ideas_ideas', array(
 				'COLUMNS' => array(
 					'idea_id' => array('UINT', NULL, 'auto_increment'),
 					'idea_author' => array('UINT', 0),
@@ -76,7 +76,7 @@ $versions = array(
 				),
 			)),
 
-			array('phpbb_ideas_statuses', array(
+			array($table_prefix . 'ideas_statuses', array(
 				'COLUMNS' => array(
 					'status_id' => array('UINT', 0),
 					'status_name' => array('VCHAR', ''),
@@ -89,7 +89,7 @@ $versions = array(
 				),
 			)),
 
-			array('phpbb_ideas_tickets', array(
+			array($table_prefix . 'ideas_tickets', array(
 				'COLUMNS' => array(
 					'idea_id' => array('UINT', 0),
 					'ticket_id' => array('UINT', 0),
@@ -100,7 +100,7 @@ $versions = array(
 				),
 			)),
 
-			array('phpbb_ideas_rfcs', array(
+			array($table_prefix . 'ideas_rfcs', array(
 				'COLUMNS' => array(
 					'idea_id' => array('UINT', 0),
 					'rfc_link' => array('VCHAR', ''),
@@ -111,7 +111,7 @@ $versions = array(
 				),
 			)),
 
-			array('phpbb_ideas_votes', array(
+			array($table_prefix . 'ideas_votes', array(
 				'COLUMNS' => array(
 					'idea_id' => array('UINT', 0),
 					'user_id' => array('UINT', 0),
@@ -126,7 +126,7 @@ $versions = array(
 		),
 
 		'table_row_insert'	=> array(
-			array('phpbb_ideas_statuses', array(
+			array($table_prefix . 'ideas_statuses', array(
 				array(
 					'status_id'		=> 1,
 					'status_name'	=> 'New'
