@@ -1,6 +1,6 @@
 # phpBB Ideas #
 
-phpBB Ideas is an ideas centre for phpBB. It is based on [WordPress ideas](http://wordpress.org/extend/ideas/), and allows users to suggest and vote on "ideas" - for example, features to add to phpBB or improvements.
+phpBB Ideas is an ideas centre for phpBB. It is based on [WordPress ideas](http://wordpress.org/extend/ideas/), and allows users to suggest and vote on "ideas" that would help improve and enhance phpBB.
 
 ## Installation ##
 
@@ -12,6 +12,6 @@ To install, copy `config.sample.php` to `config.php` and change the configuratio
 
 Then run install.php (make sure that you have UMIL in your root phpBB directory), which will set up the database.
 
-## Work In Progress ##
+## Unstable
 
-This project is still very much a work in progress - unless you're testing it out or plan on contributing, it isn't recommended that you use this (and definitely not on a live board).
+Please don't use this on a live board, a stable release has still not been made.
