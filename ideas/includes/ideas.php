@@ -345,7 +345,7 @@ class Ideas
 		ideas_submit_post($title, POST_NORMAL, $data);
 
 		$sql_ary = array(
-			'idea_title'		=> $db->sql_escape($title),
+			'idea_title'		=> $title,
 			'idea_author'		=> $user_id,
 			'idea_date'			=> time(),
 			'topic_id'			=> $data['topic_id']
