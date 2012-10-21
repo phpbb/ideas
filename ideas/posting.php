@@ -39,7 +39,7 @@ if ($mode === 'submit')
 	}
 	else
 	{
-		header('Location: ' . append_sid('./idea.php?id=' . $submit));
+		header('Location: ' . append_sid('./idea.php', 'id=' . $submit));
 		garbage_collection();
 		exit_handler();
 	}
@@ -51,7 +51,7 @@ display_custom_bbcodes();
 generate_smilies('inline', 0);
 
 $template->assign_vars(array(
-	'S_POST_ACTION'		=> append_sid('posting.php?mode=submit'),
+	'S_POST_ACTION'		=> append_sid('posting.php', 'mode=submit'),
 	'TITLE'				=> $title,
 ));
 

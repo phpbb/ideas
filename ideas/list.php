@@ -57,7 +57,7 @@ foreach ($ideas as $idea)
 {
 	$template->assign_block_vars('ideas', array(
 		'ID'			=> $idea['idea_id'],
-		'LINK'			=> append_sid('./idea.php?id=' . $idea['idea_id']),
+		'LINK'			=> append_sid('./idea.php', 'id=' . $idea['idea_id']),
 		'TITLE'			=> $idea['idea_title'],
 		'AUTHOR'		=> ideas_get_user_link($idea['idea_author']),
 		'DATE'			=> $user->format_date($idea['idea_date']),

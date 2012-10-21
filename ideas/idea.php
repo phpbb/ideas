@@ -125,7 +125,7 @@ $template->assign_vars(array(
 	'IDEA_RATING'		=> round($idea['idea_rating'] * 10, 0) / 10,
 	'IDEA_VOTES'		=> $idea['idea_votes'],
 	'IDEA_STATUS'		=> $ideas->get_status_from_id($idea['idea_status']),
-	'IDEA_STATUS_LINK'	=> append_sid('./list.php?status=' . $idea['idea_status']),
+	'IDEA_STATUS_LINK'	=> append_sid('./list.php', 'status=' . $idea['idea_status']),
 
 	'IDEA_RFC'			=> $idea['rfc_link'],
 	'IDEA_TICKET'		=> $idea['ticket_id'],
@@ -133,12 +133,12 @@ $template->assign_vars(array(
 	'CAN_EDIT'			=> $mod || $own,
 	'CAN_VOTE'          => $auth->acl_get('f_vote', IDEAS_FORUM_ID),
 
-	'U_DELETE_IDEA'		=> $delete_posts ? append_sid('./idea.php?mode=delete&id=' . $id) : false,
-	'U_CHANGE_STATUS'	=> append_sid('./idea.php?mode=status&id=' . $id),
-	'U_EDIT_RFC'		=> append_sid('./idea.php?mode=rfc&id=' . $id),
-	'U_EDIT_TICKET'		=> append_sid('./idea.php?mode=ticket&id=' . $id),
+	'U_DELETE_IDEA'		=> $delete_posts ? append_sid('./idea.php', 'mode=delete&id=' . $id) : false,
+	'U_CHANGE_STATUS'	=> append_sid('./idea.php', 'mode=status&id=' . $id),
+	'U_EDIT_RFC'		=> append_sid('./idea.php', 'mode=rfc&id=' . $id),
+	'U_EDIT_TICKET'		=> append_sid('./idea.php', 'mode=ticket&id=' . $id),
 
-	'U_IDEA_VOTE'		=> append_sid('./idea.php?mode=vote&id=' . $id),
+	'U_IDEA_VOTE'		=> append_sid('./idea.php', 'mode=vote&id=' . $id),
 ));
 
 
