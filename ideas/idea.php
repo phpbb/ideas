@@ -133,12 +133,12 @@ $template->assign_vars(array(
 	'CAN_EDIT'			=> $mod || $own,
 	'CAN_VOTE'          => $auth->acl_get('f_vote', IDEAS_FORUM_ID),
 
-	'U_DELETE_IDEA'		=> $delete_posts ? append_sid('./idea.php', 'mode=delete&id=' . $id) : false,
-	'U_CHANGE_STATUS'	=> append_sid('./idea.php', 'mode=status&id=' . $id),
-	'U_EDIT_RFC'		=> append_sid('./idea.php', 'mode=rfc&id=' . $id),
-	'U_EDIT_TICKET'		=> append_sid('./idea.php', 'mode=ticket&id=' . $id),
+	'U_DELETE_IDEA'		=> $delete_posts ? append_sid('./idea.php', 'mode=delete&amp;id=' . $id) : false,
+	'U_CHANGE_STATUS'	=> append_sid('./idea.php', 'mode=status&amp;id=' . $id),
+	'U_EDIT_RFC'		=> append_sid('./idea.php', 'mode=rfc&amp;id=' . $id),
+	'U_EDIT_TICKET'		=> append_sid('./idea.php', 'mode=ticket&amp;id=' . $id),
 
-	'U_IDEA_VOTE'		=> append_sid('./idea.php', 'mode=vote&id=' . $id),
+	'U_IDEA_VOTE'		=> append_sid('./idea.php', 'mode=vote&amp;id=' . $id),
 ));
 
 
