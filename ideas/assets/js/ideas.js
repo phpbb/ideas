@@ -17,8 +17,8 @@ $('.rating').each(function() {
 			if (typeof message === 'string') {
 				alert(message); // Error
 			} else {
-				$this.find('.current-rating').css('width', message.rating * 25);
 				alert(message.message);
+				$this.find('.current-rating').css('width', message.rating * 25);
 			}
 		});
 	});
