@@ -15,7 +15,7 @@ $('.rating').each(function() {
 
 		$.get(url, {v: $(this).text()}, function (message) {
 			if (typeof message === 'string') {
-				alert(message); // Error
+				alert('An error occured: ' + message); // Error
 			} else {
 				alert(message.message);
 				$this.find('.current-rating').css('width', message.rating * 25);
