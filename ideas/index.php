@@ -30,10 +30,26 @@ foreach ($rows as $row)
 	));
 }
 
-$rows = $ideas->get_ideas(10, 'top', 'DESC', 'idea_status != 3 && idea_status != 4');
+$rows = $ideas->get_ideas(10, 'top', 'DESC');
 foreach ($rows as $row)
 {
 	$template->assign_block_vars('top_ideas', array(
+		'ID'		=> $row['idea_id'],
+		'LINK'		=> append_sid('./idea.php', 'id=' . $row['idea_id']),
+		'TITLE'		=> $row['idea_title'],
+		'AUTHOR'	=> ideas_get_user_link($row['idea_author']),
+		'DATE'		=> $user->format_date($row['idea_date']),
+		'READ'      => $row['read'],
+		'VOTES_UP'	=> $row['idea_votes_up'],
+		'VOTES_DOWN'=> $row['idea_votes_down'],
+		'POINTS'    => $row['idea_votes_up'] - $row['idea_votes_down'],
+	));
+}
+
+$rows = $ideas->get_ideas(10, 'date', 'DESC', 'idea_status = 3');
+foreach ($rows as $row)
+{
+	$template->assign_block_vars('implemented_ideas', array(
 		'ID'		=> $row['idea_id'],
 		'LINK'		=> append_sid('./idea.php', 'id=' . $row['idea_id']),
 		'TITLE'		=> $row['idea_title'],
