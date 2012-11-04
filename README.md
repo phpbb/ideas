@@ -10,7 +10,7 @@ To install, copy `config.sample.php` to `config.php` and change the configuratio
 - **IDEAS_FORUM_ID** - The ID of the forum that ideas topics will be posted to.
 - **IDEA_POSTER_ID** - The ID of the user that will post idea topics into the forums.
 
-Then run install.php (make sure that you have UMIL in your root phpBB directory), which will set up the database.
+Then run `install.php` (make sure that you have UMIL in your root phpBB directory), which will set up the database.
 
 ## Unstable
 
