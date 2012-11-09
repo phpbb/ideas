@@ -196,12 +196,12 @@ function update_statuses($action)
 	$sql = 'UPDATE ' . $table_prefix . 'ideas_ideas
 		SET status_id = 1
 		WHERE status_id = 3';
-	$result = phpbb::$db->query($sql);
-	phpbb::$db->sql_freeresult($result);
+	$result = $db->sql_query($sql);
+	$db->sql_freeresult($result);
 
 	$sql = 'UPDATE ' . $table_prefix . 'ideas_ideas
 		SET status_id = 3
 		WHERE status_id = 5';
-	$result = phpbb::$db->query($sql);
-	phpbb::$db->sql_freeresult($result);
+	$result = $db->_sqlquery($sql);
+	$db->sql_freeresult($result);
 }
