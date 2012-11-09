@@ -150,7 +150,58 @@ $versions = array(
 		),
 
 	),
+
+	'1.0.0-RC2' => array(
+		'table_row_remove'  => array(
+			array($table_prefix . 'ideas_statuses', array(
+				'status_id' => 2
+			)),
+			array($table_prefix . 'ideas_statuses', array(
+				'status_id' => 3
+			)),
+			array($table_prefix . 'ideas_statuses', array(
+				'status_id' => 5
+			)),
+		),
+		'table_row_insert'	=> array(
+			array($table_prefix . 'ideas_statuses', array(
+				array(
+					'status_id'		=> 2,
+					'status_name'	=> 'In Progress'
+				),
+				array(
+					'status_id'		=> 3,
+					'status_name'	=> 'Implemented'
+				),
+			)),
+		),
+		'custom'    => array(
+			'update_statuses'
+		),
+	),
 );
 
 // Include the UMIL Auto file, it handles the rest
 include($phpbb_root_path . 'umil/umil_auto.' . $phpEx);
+
+function update_statuses($action)
+{
+	global $table_prefix;
+
+	if ($action !== 'update')
+	{
+		return;
+	}
+
+	$sql = 'UPDATE ' . $table_prefix . 'ideas_ideas
+		SET status_id = 1
+		WHERE status_id = 3';
+	$result = phpbb::$db->query($sql);
+	phpbb::$db->sql_freeresult($result);
+
+	$sql = 'UPDATE ' . $table_prefix . 'ideas_ideas
+		SET status_id = 3
+		WHERE status_id = 5';
+	$result = phpbb::$db->query($sql);
+	phpbb::$db->sql_freeresult($result);
+}
