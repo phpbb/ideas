@@ -24,7 +24,8 @@ class Ideas
 	 */
 	public function get_ideas($number = 10, $sortby = 'idea_date DESC', $where = 'idea_status != 5 && idea_status != 4')
 	{
-		global $db;
+		global $db, $user;
+
 		$sql = 'SELECT *
 			FROM ' . IDEAS_TABLE . "
 			WHERE $where
@@ -32,6 +33,30 @@ class Ideas
 		$result = $db->sql_query_limit($sql, $number);
 		$rows = $db->sql_fetchrowset($result);
 		$db->sql_freeresult($result);
+
+		$topic_ids = array();
+		foreach ($rows as $row)
+		{
+			$topic_ids[] = $row['topic_id'];
+		}
+		$topic_tracking_info = get_complete_topic_tracking(IDEAS_FORUM_ID, $topic_ids);
+
+		$last_times = array();
+		$sql = 'SELECT topic_id, topic_last_post_time
+			FROM ' . TOPICS_TABLE . '
+			WHERE ' . $db->sql_in_set('topic_id', $topic_ids);
+		$result = $db->sql_query($sql);
+		while (($last_time = $db->sql_fetchrow($result)))
+		{
+			$last_times[$last_time['topic_id']] = $last_time['topic_last_post_time'];
+		}
+		$db->sql_freeresult($result);
+
+		foreach ($rows as &$row)
+		{
+			$topic_id = $row['topic_id'];
+			$row['read'] = !(isset($topic_tracking_info[$topic_id]) && $last_times[$topic_id] > $topic_tracking_info[$topic_id]);
+		}
 
 		return $rows;
 	}
