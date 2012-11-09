@@ -124,3 +124,16 @@ dd.topics {
 .js {
 	display: none;
 }
+
+.newidea span {
+	margin-top: 10px;
+	display: inline-block;
+	width: 88px;
+	height: 25px;
+	background-image: url(images/newidea.gif);
+	background-position: 0 0;
+}
+
+.newidea:hover span {
+	background-position: 0 25px;
+}

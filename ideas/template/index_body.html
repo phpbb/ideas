@@ -1,75 +1,71 @@
 <!-- INCLUDE overall_header.html -->
 
-<div style="width: 49%; float: left;">
-	<div class="forabg">
-		<div class="inner"><span class="corners-top"><span></span></span>
-		<ul class="topiclist">
-			<li class="header">
-				<dl class="icon">
-					<dt><span class="wrap-content">{L_LATEST_IDEAS}</span></dt>
-					<dd class="posts">{L_RATING}</dd>
-				</dl>
-			</li>
-		</ul>
-		<ul class="topiclist forums">
-			<!-- BEGIN latest_ideas -->
-			<li class="row">
-				<dl class="icon" style="background-image: url({T_IMAGESET_PATH}/forum_read.gif); background-repeat: no-repeat;">
-					<dt title="Read posts">
-						<a href="{latest_ideas.LINK}" class="forumtitle">{latest_ideas.TITLE}</a><br />
-						by <strong>{latest_ideas.AUTHOR}</strong> &raquo; {latest_ideas.DATE}
-					</dt>
+<div style="overflow: auto">
+	<div style="width: 49%; float: left;">
+		<div class="forabg">
+			<div class="inner"><span class="corners-top"><span></span></span>
+			<ul class="topiclist">
+				<li class="header">
+					<dl class="icon">
+						<dt><span class="wrap-content">{L_LATEST_IDEAS}</span></dt>
+						<dd class="posts">{L_RATING}</dd>
+					</dl>
+				</li>
+			</ul>
+			<ul class="topiclist forums">
+				<!-- BEGIN latest_ideas -->
+				<li class="row">
+					<dl class="icon" style="background-image: url({T_IMAGESET_PATH}/forum_read.gif); background-repeat: no-repeat;">
+						<dt title="Read posts">
+							<a href="{latest_ideas.LINK}" class="forumtitle">{latest_ideas.TITLE}</a><br />
+							by <strong>{latest_ideas.AUTHOR}</strong> &raquo; {latest_ideas.DATE}
+						</dt>
 
-					<dd class="topics"><span class="rating">{latest_ideas.RATING}</span> ({latest_ideas.VOTES})</dd>
-				</dl>
-			</li>
-			<!-- END latest_ideas -->
-		</ul>
+						<dd class="topics"><span class="rating">{latest_ideas.RATING}</span> ({latest_ideas.VOTES})</dd>
+					</dl>
+				</li>
+				<!-- END latest_ideas -->
+			</ul>
 
-		<span class="corners-bottom"><span></span></span></div>
+			<span class="corners-bottom"><span></span></span></div>
+		</div>
+		<a href="{U_VIEW_LATEST}">{L_VIEW_ALL}</a>
 	</div>
-	<a href="{U_VIEW_LATEST}">{L_VIEW_ALL}</a>
-</div>
 
-<div style="width: 49%; float: right;">
-	<div class="forabg">
-		<div class="inner"><span class="corners-top"><span></span></span>
-		<ul class="topiclist">
-			<li class="header">
-				<dl class="icon">
-					<dt><span class="wrap-content">{L_TOP_IDEAS}</span></dt>
-					<dd class="posts">{L_RATING}</dd>
-				</dl>
-			</li>
-		</ul>
-		<ul class="topiclist forums">
-			<!-- BEGIN top_ideas -->
-			<li class="row">
-				<dl class="icon" style="background-image: url({T_IMAGESET_PATH}/forum_read.gif); background-repeat: no-repeat;">
-					<dt title="Read posts">
-						<a href="{top_ideas.LINK}" class="forumtitle">{top_ideas.TITLE}</a><br />
-						by <strong>{top_ideas.AUTHOR}</strong> &raquo; {top_ideas.DATE}
-					</dt>
+	<div style="width: 49%; float: right;">
+		<div class="forabg">
+			<div class="inner"><span class="corners-top"><span></span></span>
+			<ul class="topiclist">
+				<li class="header">
+					<dl class="icon">
+						<dt><span class="wrap-content">{L_TOP_IDEAS}</span></dt>
+						<dd class="posts">{L_RATING}</dd>
+					</dl>
+				</li>
+			</ul>
+			<ul class="topiclist forums">
+				<!-- BEGIN top_ideas -->
+				<li class="row">
+					<dl class="icon" style="background-image: url({T_IMAGESET_PATH}/forum_read.gif); background-repeat: no-repeat;">
+						<dt title="Read posts">
+							<a href="{top_ideas.LINK}" class="forumtitle">{top_ideas.TITLE}</a><br />
+							by <strong>{top_ideas.AUTHOR}</strong> &raquo; {top_ideas.DATE}
+						</dt>
 
-					<dd class="topics"><span class="rating">{top_ideas.RATING}</span> ({top_ideas.VOTES})</dd>
-				</dl>
-			</li>
-			<!-- END top_ideas -->
-		</ul>
+						<dd class="topics"><span class="rating">{top_ideas.RATING}</span> ({top_ideas.VOTES})</dd>
+					</dl>
+				</li>
+				<!-- END top_ideas -->
+			</ul>
 
-		<span class="corners-bottom"><span></span></span></div>
+			<span class="corners-bottom"><span></span></span></div>
+		</div>
+		<a href="{U_VIEW_TOP}">{L_VIEW_ALL}</a>
 	</div>
-	<a href="{U_VIEW_TOP}">{L_VIEW_ALL}</a>
 </div>
 
 <!-- IF S_USER_LOGGED_IN -->
-<div style="text-align: right;">
-	<h2>{L_CREATE_IDEA}</h2>
-	<form method="post" action="{S_POST_ACTION}">
-		<input type="text" name="title" size="45" maxlength="64" tabindex="2" value="{TITLE}" class="inputbox autowidth" />
-		<input class="button2" type="submit" value="{L_CREATE_IDEA}" /><br /><br />
-	</form>
-</div>
+<a href="posting.php" class="newidea"><span></span></a>
 <!-- ENDIF -->
 
 <!-- INCLUDE overall_footer.html -->
