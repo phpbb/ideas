@@ -15,10 +15,14 @@ $('.rating').each(function() {
 
 		$.get(url, {v: $(this).text()}, function (message) {
 			if (typeof message === 'string') {
-				alert('An error occured: ' + message); // Error
+				alert('An error occurred: ' + message); // Error
 			} else {
-				alert(message.message);
 				$this.find('.current-rating').css('width', message.rating * 25);
+				$('.votes').text('(' + message.votes + ' votes)');
+
+				setTimeout(function () {
+					alert(message.message);
+				}, 1);
 			}
 		});
 	});
