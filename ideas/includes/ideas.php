@@ -22,7 +22,7 @@ class Ideas
 	 * @param string $sortby SQL ORDER BY query.
 	 * @param string $where SQL WHERE query.
 	 */
-	public function get_ideas($number = 10, $sortby = 'idea_date DESC', $where = 'idea_status != 5 && idea_status != 4')
+	public function get_ideas($number = 10, $sortby = 'idea_date DESC', $where = 'idea_status != 4')
 	{
 		global $db, $user;
 
