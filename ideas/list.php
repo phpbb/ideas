@@ -62,6 +62,7 @@ foreach ($ideas as $idea)
 		'AUTHOR'		=> ideas_get_user_link($idea['idea_author']),
 		'DATE'			=> $user->format_date($idea['idea_date']),
 		'RATING'		=> round($idea['idea_rating'] * 10, 0) / 10,
+		'READ'          => $idea['read'],
 		'VOTES'			=> $idea['idea_votes'],
 		'STATUS'		=> $idea['idea_status'], // For icons
 	));
