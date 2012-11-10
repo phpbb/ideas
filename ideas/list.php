@@ -23,35 +23,7 @@ if ($author)
 	$where .= " && idea_author = $author";
 }
 
-switch (strtolower($sort))
-{
-	case 'author':
-		$sort = 'idea_author ' . $sort_direction;
-		break;
-
-	case 'date':
-		$sort = 'idea_date ' . $sort_direction;
-		break;
-
-	case 'id':
-		$sort = 'idea_id ' . $sort_direction;
-		break;
-
-	case 'title':
-		$sort = 'idea_title ' . $sort_direction;
-		break;
-
-	case 'votes':
-		$sort = 'idea_votes ' . $sort_direction;
-		break;
-
-	case 'rating':
-	default:
-		$sort = 'idea_rating ' . $sort_direction . ', idea_votes ' . $sort_direction;
-		break;
-}
-
-$ideas = $ideas->get_ideas(0, $sort, $where);
+$ideas = $ideas->get_ideas(0, $sort, $sort_direction, $where);
 
 foreach ($ideas as $idea)
 {

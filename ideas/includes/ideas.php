@@ -19,12 +19,41 @@ class Ideas
 	 * excluding duplicate or rejected ideas.
 	 *
 	 * @param int $number The number of ideas to return.
-	 * @param string $sortby SQL ORDER BY query.
+	 * @param string $sort Thing to sort by.
+	 * @param string $sort_direction ASC / DESC.
 	 * @param string $where SQL WHERE query.
 	 */
-	public function get_ideas($number = 10, $sortby = 'idea_date DESC', $where = 'idea_status != 4')
+	public function get_ideas($number = 10, $sort = 'date', $sort_direction = 'DESC', $where = 'idea_status != 4')
 	{
-		global $db, $user;
+		global $db;
+
+		switch (strtolower($sort))
+		{
+			case 'author':
+				$sortby = 'idea_author ' . $sort_direction;
+				break;
+
+			case 'date':
+				$sortby = 'idea_date ' . $sort_direction;
+				break;
+
+			case 'id':
+				$sortby = 'idea_id ' . $sort_direction;
+				break;
+
+			case 'title':
+				$sortby = 'idea_title ' . $sort_direction;
+				break;
+
+			case 'votes':
+				$sortby = 'idea_votes ' . $sort_direction;
+				break;
+
+			case 'rating':
+			default:
+				$sortby = 'idea_rating ' . $sort_direction . ', idea_votes ' . $sort_direction;
+				break;
+		}
 
 		$sql = 'SELECT *
 			FROM ' . IDEAS_TABLE . "
