@@ -43,7 +43,7 @@ foreach ($ideas as $idea)
 
 page_header($user->lang['IDEA_LIST'], false);
 
-$statuses = array('new', 'accepted', 'rejected', 'duplicate', 'merged');
+$statuses = array('new', 'in_progress', 'implemented', 'duplicate');
 $prevstatus = request_var('status', '');
 foreach ($statuses as $key => $status)
 {

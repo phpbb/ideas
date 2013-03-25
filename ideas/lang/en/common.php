@@ -55,6 +55,8 @@ $user->lang = array_merge($user->lang, array(
 	'IDEA_LIST'				=> 'Idea List',
 	'IDEA_NOT_FOUND'		=> 'Idea not found',
 	'IDEAS_HOME'			=> 'Ideas Home',
+	'IMPLEMENTED'           => 'Implemented',
+	'IN_PROGRESS'           => 'In Progress',
 	'INVALID_VOTE'			=> 'Invalid vote; the number you entered was invalid.',
 
 	'JS_DISABLED'           => 'JavaScript is disabled',
