@@ -53,7 +53,7 @@ $version_config_name = 'phpbb_ideas_version';
 * The version numbering must otherwise be compatible with the version_compare function - http://php.net/manual/en/function.version-compare.php
 */
 $versions = array(
-	'1.0.0-RC1' => array(
+	'1.0.0-RC3' => array(
 
 		'table_add' => array(
 			array($table_prefix . 'ideas_ideas', array(
@@ -62,8 +62,8 @@ $versions = array(
 					'idea_author' => array('UINT', 0),
 					'idea_title' => array('VCHAR', ''),
 					'idea_date' => array('TIMESTAMP', 0),
-					'idea_rating' => array('DECIMAL', 0),
-					'idea_votes' => array('UINT', 0),
+					'idea_votes_up' => array('UINT', 0),
+					'idea_votes_down' => array('UINT', 0),
 					'idea_status' => array('UINT', 1),
 					'topic_id' => array('UINT', 0),
 				),
@@ -114,7 +114,7 @@ $versions = array(
 				'COLUMNS' => array(
 					'idea_id' => array('UINT', 0),
 					'user_id' => array('UINT', 0),
-					'vote_value' => array('UINT', 0),
+					'vote_value' => array('BOOL', 0),
 				),
 
 				'KEYS'		=> array(
@@ -132,76 +132,21 @@ $versions = array(
 				),
 				array(
 					'status_id'		=> 2,
-					'status_name'	=> 'Accepted'
-				),
-				array(
-					'status_id'		=> 3,
-					'status_name'	=> 'Rejected'
-				),
-				array(
-					'status_id'		=> 4,
-					'status_name'	=> 'Duplicate'
-				),
-				array(
-					'status_id'		=> 5,
-					'status_name'	=> 'Merged'
-				),
-			)),
-		),
-
-	),
-
-	'1.0.0-RC2' => array(
-		'table_row_remove'  => array(
-			array($table_prefix . 'ideas_statuses', array(
-				'status_id' => 2
-			)),
-			array($table_prefix . 'ideas_statuses', array(
-				'status_id' => 3
-			)),
-			array($table_prefix . 'ideas_statuses', array(
-				'status_id' => 5
-			)),
-		),
-		'table_row_insert'	=> array(
-			array($table_prefix . 'ideas_statuses', array(
-				array(
-					'status_id'		=> 2,
 					'status_name'	=> 'In Progress'
 				),
 				array(
 					'status_id'		=> 3,
 					'status_name'	=> 'Implemented'
 				),
+				array(
+					'status_id'		=> 4,
+					'status_name'	=> 'Duplicate'
+				),
 			)),
 		),
-		'custom'    => array(
-			'update_statuses'
-		),
+
 	),
 );
 
 // Include the UMIL Auto file, it handles the rest
 include($phpbb_root_path . 'umil/umil_auto.' . $phpEx);
-
-function update_statuses($action)
-{
-	global $table_prefix;
-
-	if ($action !== 'update')
-	{
-		return;
-	}
-
-	$sql = 'UPDATE ' . $table_prefix . 'ideas_ideas
-		SET status_id = 1
-		WHERE status_id = 3';
-	$result = $db->sql_query($sql);
-	$db->sql_freeresult($result);
-
-	$sql = 'UPDATE ' . $table_prefix . 'ideas_ideas
-		SET status_id = 3
-		WHERE status_id = 5';
-	$result = $db->sql_query($sql);
-	$db->sql_freeresult($result);
-}
