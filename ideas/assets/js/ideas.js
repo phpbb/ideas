@@ -1,30 +1,23 @@
-$('.rating').each(function() {
+$('.voteup, .votedown').click(function (e) {
 	"use strict";
+	e.preventDefault();
 
 	var $this = $(this),
-		url = $this.data('vote'),
-		width = $this.text() * 25;
+		url = $this.attr('href'),
+		vote = $this.is('.voteup') ? 1 : 0;
 
-	$this.html('<ul class="star-rating' + (url ? ' active' : '') + '"><li class="current-rating" style="width: ' + width + 'px"></li><li><a class="one-star">1</a></li><li><a class="two-stars">2</a></li><li><a class="three-stars">3</a></li><li><a class="four-stars">4</a></li><li><a class="five-stars">5</a></li></ul>');
-	$this.find('a').click(function (e) {
-		e.preventDefault();
+	$.get(url, {v: vote}, function (message) {
+		if (typeof message === 'string') {
+			alert('An error occurred: ' + message); // Error
+		} else {
+			$('.voteup:first').html('+' + message.votes_up);
+			$('.votedown').html('-' + message.votes_down + ' ');
+			$('.votes').text('(' + message.points + ')');
 
-		if (!url) {
-			return;
+			setTimeout(function () {
+				alert(message.message);
+			}, 1);
 		}
-
-		$.get(url, {v: $(this).text()}, function (message) {
-			if (typeof message === 'string') {
-				alert('An error occurred: ' + message); // Error
-			} else {
-				$this.find('.current-rating').css('width', message.rating * 25);
-				$('.votes').text('(' + message.votes + ' votes)');
-
-				setTimeout(function () {
-					alert(message.message);
-				}, 1);
-			}
-		});
 	});
 });
 
@@ -32,9 +25,7 @@ $('.votes').click(function (e) {
 	"use strict";
 	e.preventDefault();
 
-	if ($(this).html().indexOf('(0 ') === -1) {
-		$('.voteslist').slideToggle();
-	}
+	$('.voteslist').slideToggle();
 });
 
 $('.confirm').click(function () {

@@ -1,108 +1,13 @@
-.rating {
-	display: inline-block;
-	overflow: auto;
+a.voteup, span.up {
+	color: green;
 }
 
-.star-rating {
-	display: inline-block;
-	list-style: none;
-	padding: 0;
-	width: 125px;
-	height: 25px;
-	position: relative;
-	background: url(images/stars.png) top left repeat-x;
+a.votedown, span.down {
+	color: red;
 }
 
-.star-rating li {
-	padding: 0;
-	margin: 0;
-	float: left;
-}
-
-.star-rating li a {
-	display: block;
-	width: 25px;
-	height: 25px;
-	text-decoration: none;
-	text-indent: -9000px;
-	z-index: 20;
-	position: absolute;
-	padding: 0;
-	cursor: default;
-}
-
-.star-rating.active li a:hover {
-	background: url(images/stars.png) left bottom;
-	z-index: 2;
-	left: 0;
-	cursor: pointer;
-}
-
-.star-rating.active a:focus,
-.star-rating.active a:active {
-	border: 0;
-	-moz-outline-style: none;
-	outline: none;
-}
-
-.star-rating a.one-star {
-	left: 0;
-}
-
-.star-rating.active a.one-star:hover {
-	width: 25px;
-}
-
-.star-rating a.two-stars {
-	left: 25px;
-}
-
-.star-rating.active a.two-stars:hover {
-	width: 50px;
-}
-
-.star-rating a.three-stars {
-	left: 50px;
-}
-
-.star-rating.active a.three-stars:hover {
-	width: 75px;
-}
-
-.star-rating a.four-stars {
-	left: 75px;
-}
-
-.star-rating.active a.four-stars:hover {
-	width: 100px;
-}
-
-.star-rating a.five-stars {
-	left: 100px;
-}
-
-.star-rating.active a.five-stars:hover {
-	width: 125px;
-}
-
-.star-rating li.current-rating {
-	background: url(images/stars.png) left center;
-	position: absolute;
-	height: 25px;
-	display: block;
-	text-indent: -9000px;
-	z-index: 1;
-}
-
-.votes {
-	position: absolute;
-	margin-top: 5px;
-	margin-left: 5px;
-}
-
-dd.topics {
-	width: 30%;
-	height: 25px;
+dd.topics:not(.bad) {
+	width: 13%;
 	vertical-align: top;
 }
 

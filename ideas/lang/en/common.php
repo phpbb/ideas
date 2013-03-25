@@ -71,7 +71,7 @@ $user->lang = array_merge($user->lang, array(
 
 	'POST_IDEA'				=> 'Post idea',
 
-	'RATING'				=> 'Rating',
+	'RATING'                => 'Rating',
 	'REJECTED'				=> 'Rejected',
 	'RFC'					=> 'RFC',
 
@@ -82,6 +82,7 @@ $user->lang = array_merge($user->lang, array(
 	'TITLE'					=> 'Title',
 	'TITLE_TOO_LONG'		=> 'Title must be under 64 characters long.',
 	'TITLE_TOO_SHORT'		=> 'Title must be 6 characters long.',
+	'TOP'                   => 'Top',
 	'TOP_IDEAS'				=> 'Top Ideas',
 
 	'UPDATED_VOTE'			=> 'Successfully updated vote',
@@ -91,5 +92,5 @@ $user->lang = array_merge($user->lang, array(
 	'VIEWING_IDEA'			=> 'Viewing Idea',
 	'VOTE'					=> 'Vote',
 	'VOTE_SUCCESS'			=> 'Successfully voted on this idea.',
-	'VOTES'					=> 'votes',
+	'VOTES'					=> 'Votes',
 ));

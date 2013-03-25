@@ -14,7 +14,7 @@ include($ideas_root_path . 'common.php');
 
 $mode = request_var('mode', '');
 $id = request_var('id', 0);
-$vote = request_var('v', 0);
+$vote = request_var('v', 1);
 $status = request_var('status', 0);
 $idea = $ideas->get_idea($id);
 if (!$idea)
@@ -122,8 +122,10 @@ $template->assign_vars(array(
 	'IDEA_TITLE'		=> $idea['idea_title'],
 	'IDEA_AUTHOR'		=> ideas_get_user_link($idea['idea_author']),
 	'IDEA_DATE'			=> $user->format_date($idea['idea_date']),
-	'IDEA_RATING'		=> round($idea['idea_rating'] * 10, 0) / 10,
-	'IDEA_VOTES'		=> $idea['idea_votes'],
+	'IDEA_VOTES'        => $idea['idea_votes_up'] + $idea['idea_votes_down'],
+	'IDEA_VOTES_UP'	    => $idea['idea_votes_up'],
+	'IDEA_VOTES_DOWN'   => $idea['idea_votes_down'],
+	'IDEA_POINTS'       => $idea['idea_votes_up'] - $idea['idea_votes_down'],
 	'IDEA_STATUS'		=> $ideas->get_status_from_id($idea['idea_status']),
 	'IDEA_STATUS_LINK'	=> append_sid('./list.php', 'status=' . $idea['idea_status']),
 
@@ -142,13 +144,13 @@ $template->assign_vars(array(
 ));
 
 
-if ($idea['idea_votes'])
+if ($idea['idea_votes_up'] || $idea['idea_votes_down'])
 {
 	$votes = $ideas->get_voters($idea['idea_id']);
 
 	foreach ($votes as $vote)
 	{
-		$template->assign_block_vars('stars_' . $vote['vote_value'], array(
+		$template->assign_block_vars('votes_' . ($vote['vote_value'] ? 'up' : 'down'), array(
 			'USER'	=> ideas_get_user_link($vote['user_id']),
 		));
 	}

@@ -23,13 +23,14 @@ foreach ($rows as $row)
 		'TITLE'		=> $row['idea_title'],
 		'AUTHOR'	=> ideas_get_user_link($row['idea_author']),
 		'DATE'		=> $user->format_date($row['idea_date']),
-		'RATING'	=> round($row['idea_rating'] * 10, 0) / 10,
 		'READ'      => $row['read'],
-		'VOTES'		=> $row['idea_votes'],
+		'VOTES_UP'	=> $row['idea_votes_up'],
+		'VOTES_DOWN'=> $row['idea_votes_down'],
+		'POINTS'    => $row['idea_votes_up'] - $row['idea_votes_down'],
 	));
 }
 
-$rows = $ideas->get_ideas(10, 'rating', 'DESC', 'idea_status != 3 && idea_status != 4 && idea_votes != 0');
+$rows = $ideas->get_ideas(10, 'top', 'DESC', 'idea_status != 3 && idea_status != 4');
 foreach ($rows as $row)
 {
 	$template->assign_block_vars('top_ideas', array(
@@ -38,9 +39,10 @@ foreach ($rows as $row)
 		'TITLE'		=> $row['idea_title'],
 		'AUTHOR'	=> ideas_get_user_link($row['idea_author']),
 		'DATE'		=> $user->format_date($row['idea_date']),
-		'RATING'	=> round($row['idea_rating'] * 10, 0) / 10,
 		'READ'      => $row['read'],
-		'VOTES'		=> $row['idea_votes'],
+		'VOTES_UP'	=> $row['idea_votes_up'],
+		'VOTES_DOWN'=> $row['idea_votes_down'],
+		'POINTS'    => $row['idea_votes_up'] - $row['idea_votes_down'],
 	));
 }
 

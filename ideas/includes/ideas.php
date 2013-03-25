@@ -46,19 +46,37 @@ class Ideas
 				break;
 
 			case 'votes':
-				$sortby = 'idea_votes ' . $sort_direction;
+				$sortby = 'idea_votes_up + idea_votes_down ' . $sort_direction;
 				break;
 
-			case 'rating':
+			case 'top':
 			default:
-				$sortby = 'idea_rating ' . $sort_direction . ', idea_votes ' . $sort_direction;
+				// Special case!
+				$sortby = 'TOP';
 				break;
 		}
 
-		$sql = 'SELECT *
-			FROM ' . IDEAS_TABLE . "
-			WHERE $where
-			ORDER BY $sortby";
+		if ($sortby !== 'TOP')
+		{
+			$sql = 'SELECT *
+				FROM ' . IDEAS_TABLE . "
+				WHERE $where
+				ORDER BY $sortby";
+		}
+		else
+		{
+			// YEEEEEEEEAAAAAAAAAAAAAHHHHHHH
+			// From http://evanmiller.org/how-not-to-sort-by-average-rating.html
+			$sql = 'SELECT *,
+					((idea_votes_up + 1.9208) / (idea_votes_up + idea_votes_down) -
+	                1.96 * SQRT((idea_votes_up * idea_votes_down) / (idea_votes_up + idea_votes_down) + 0.9604) /
+	                (idea_votes_up + idea_votes_down)) / (1 + 3.8416 / (idea_votes_up + idea_votes_down))
+	                AS ci_lower_bound
+       			FROM ' . IDEAS_TABLE . '
+       			WHERE idea_votes_up + idea_votes_down > 0
+       			ORDER BY ci_lower_bound ' . $sort_direction;
+		}
+
 		$result = $db->sql_query_limit($sql, $number);
 		$rows = $db->sql_fetchrowset($result);
 		$db->sql_freeresult($result);
@@ -74,8 +92,8 @@ class Ideas
 
 			$last_times = array();
 			$sql = 'SELECT topic_id, topic_last_post_time
-			FROM ' . TOPICS_TABLE . '
-			WHERE ' . $db->sql_in_set('topic_id', $topic_ids);
+				FROM ' . TOPICS_TABLE . '
+				WHERE ' . $db->sql_in_set('topic_id', $topic_ids);
 			$result = $db->sql_query($sql);
 			while (($last_time = $db->sql_fetchrow($result)))
 			{
@@ -229,16 +247,23 @@ class Ideas
 	 *
 	 * @param array $idea The idea returned by get_idea().
 	 * @param int $user_id The ID of the user voting.
-	 * @param int $value The value to vote for (int, 1-5).
+	 * @param boolean $value Up or down?
 	 *
 	 * @return array Array of information.
 	 */
 	public function vote(&$idea, $user_id, $value)
 	{
+		/*return array(
+			'message' => 'yeah',
+			'votes_up' => 4,
+			'votes_down' => 2,
+			'points'    => 999,
+		);*/
+
 		global $db, $user;
 
 		// Validate $vote - must be a whole number between 1 and 5.
-		if (!is_int($value) || $value > 5 || $value < 1)
+		if ($value !== 0 && $value !== 1)
 		{
 			return 'INVALID_VOTE';
 		}
@@ -251,30 +276,46 @@ class Ideas
 		$db->sql_query_limit($sql, 1);
 		if ($db->sql_fetchrow())
 		{
-			// Get old vote so that we can be mathematical
-			$sql = 'SELECT vote_value FROM ' . IDEA_VOTES_TABLE . '
+			$sql = 'SELECT vote_value
+				FROM ' . IDEA_VOTES_TABLE . '
 				WHERE user_id = ' . (int) $user_id . '
 					AND idea_id = ' . (int) $idea['idea_id'];
 			$db->sql_query($sql);
 			$old_value = $db->sql_fetchfield('vote_value');
 
-			$sql = 'UPDATE ' . IDEA_VOTES_TABLE . '
-				SET vote_value = ' . $value . '
-				WHERE user_id = ' . (int) $user_id . '
-					AND idea_id = ' . (int) $idea['idea_id'];
-			$db->sql_query($sql);
+			if ($old_value != $value)
+			{
+				$sql = 'UPDATE ' . IDEA_VOTES_TABLE . '
+					SET vote_value = ' . $value . '
+					WHERE user_id = ' . (int) $user_id . '
+						AND idea_id = ' . (int) $idea['idea_id'];
+				$db->sql_query($sql);
 
-			$idea['idea_rating'] = ($idea['idea_rating'] * $idea['idea_votes'] - $old_value + $value) / $idea['idea_votes'];
+				if ($value == 1)
+				{
+					// Change to upvote
+					$idea['idea_votes_up']++;
+					$idea['idea_votes_down']--;
+				}
+				else
+				{
+					// Change to downvote
+					$idea['idea_votes_up']--;
+					$idea['idea_votes_down']++;
+				}
 
-			$sql = 'UPDATE ' . IDEAS_TABLE . '
-				SET idea_rating = ' . $idea['idea_rating'] . '
-				WHERE idea_id = ' . $idea['idea_id'];
-			$db->sql_query($sql);
+				$sql = 'UPDATE ' . IDEAS_TABLE . '
+					SET idea_votes_up = ' . $idea['idea_votes_up'] . ',
+						idea_votes_down = ' . $idea['idea_votes_down'] . '
+					WHERE idea_id = ' . $idea['idea_id'];
+				$db->sql_query($sql);
+			}
 
 			return array(
-				'message'	=> $user->lang('UPDATED_VOTE'),
-				'rating'	=> $idea['idea_rating'],
-				'votes'		=> $idea['idea_votes'],
+				'message'	    => $user->lang('UPDATED_VOTE'),
+				'votes_up'	    => $idea['idea_votes_up'],
+				'votes_down'	=> $idea['idea_votes_down'],
+				'points'        => $idea['idea_votes_up'] - $idea['idea_votes_down']
 			);
 		}
 
@@ -290,14 +331,12 @@ class Ideas
 		$db->sql_query($sql);
 
 
-		// Update rating in IDEAS_TABLE and $idea
-		$idea['idea_rating'] = ($idea['idea_rating'] * $idea['idea_votes'] + $value)
-			/ ($idea['idea_votes'] + 1);
-		$idea['idea_votes']++;
+		// Update number of votes in ideas table
+		$idea['idea_votes_' . ($value ? 'up' : 'down')]++;
 
 		$sql_ary = array(
-			'idea_rating'	=> $idea['idea_rating'],
-			'idea_votes'	=> $idea['idea_votes'],
+			'idea_votes_up'	    => $idea['idea_votes_up'],
+			'idea_votes_down'	=> $idea['idea_votes_down'],
 		);
 
 		$sql = 'UPDATE ' . IDEAS_TABLE . '
@@ -306,9 +345,10 @@ class Ideas
 		$db->sql_query($sql);
 
 		return array(
-			'message'	=> $user->lang('VOTE_SUCCESS'),
-			'rating'	=> $idea['idea_rating'],
-			'votes'		=> $idea['idea_votes'],
+			'message'	    => $user->lang('VOTE_SUCCESS'),
+			'votes_up'	    => $idea['idea_votes_up'],
+			'votes_down'	=> $idea['idea_votes_down'],
+			'points'        => $idea['idea_votes_up'] - $idea['idea_votes_down']
 		);
 	}
 

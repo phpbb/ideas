@@ -33,9 +33,10 @@ foreach ($ideas as $idea)
 		'TITLE'			=> $idea['idea_title'],
 		'AUTHOR'		=> ideas_get_user_link($idea['idea_author']),
 		'DATE'			=> $user->format_date($idea['idea_date']),
-		'RATING'		=> round($idea['idea_rating'] * 10, 0) / 10,
 		'READ'          => $idea['read'],
-		'VOTES'			=> $idea['idea_votes'],
+		'VOTES_UP'	    => $idea['idea_votes_up'],
+		'VOTES_DOWN'    => $idea['idea_votes_down'],
+		'POINTS'        => $idea['idea_votes_up'] - $idea['idea_votes_down'],
 		'STATUS'		=> $idea['idea_status'], // For icons
 	));
 }
@@ -53,7 +54,7 @@ foreach ($statuses as $key => $status)
 	));
 }
 
-$sorts = array('author', 'date', 'id', 'title', 'votes', 'rating');
+$sorts = array('author', 'date', 'id', 'title', 'top', 'votes');
 $sorted = request_var('sort', 'rating');
 foreach ($sorts as $sort)
 {
