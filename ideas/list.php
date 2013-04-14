@@ -23,9 +23,11 @@ if ($author)
 	$where .= " && idea_author = $author";
 }
 
-$ideas = $ideas->get_ideas(0, $sort, $sort_direction, $where);
+$status_name = $ideas->get_status_from_id($status);
 
-foreach ($ideas as $idea)
+$returned_ideas = $ideas->get_ideas(0, $sort, $sort_direction, $where);
+
+foreach ($returned_ideas as $idea)
 {
 	$template->assign_block_vars('ideas', array(
 		'ID'			=> $idea['idea_id'],
@@ -68,6 +70,7 @@ foreach ($sorts as $sort)
 $template->assign_vars(array(
 	'U_POST_ACTION'		=> append_sid('./list.php'),
 	'SORT_DIRECTION'	=> $sort_direction,
+	'STATUS_NAME'       => $status_name ?: $user->lang('ALL_IDEAS'),
 ));
 
 $template->set_filenames(array(

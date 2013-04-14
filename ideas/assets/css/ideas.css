@@ -1,3 +1,7 @@
+a.votes {
+	margin-left: 10px;
+}
+
 a.voteup, span.up {
 	color: green;
 }
@@ -7,7 +11,8 @@ a.votedown, span.down {
 }
 
 dd.topics:not(.bad) {
-	width: 13%;
+	text-align: left;
+	padding-left: 10px;
 	vertical-align: top;
 }
 

@@ -72,9 +72,10 @@ class Ideas
 	                1.96 * SQRT((idea_votes_up * idea_votes_down) / (idea_votes_up + idea_votes_down) + 0.9604) /
 	                (idea_votes_up + idea_votes_down)) / (1 + 3.8416 / (idea_votes_up + idea_votes_down))
 	                AS ci_lower_bound
-       			FROM ' . IDEAS_TABLE . '
-       			WHERE idea_votes_up + idea_votes_down > 0
-       			ORDER BY ci_lower_bound ' . $sort_direction;
+       			FROM ' . IDEAS_TABLE . "
+       			WHERE idea_votes_up > idea_votes_down
+       			    AND $where
+       			ORDER BY ci_lower_bound " . $sort_direction;
 		}
 
 		$result = $db->sql_query_limit($sql, $number);
@@ -262,7 +263,7 @@ class Ideas
 
 		global $db, $user;
 
-		// Validate $vote - must be a whole number between 1 and 5.
+		// Validate $vote - must be 0 or 1
 		if ($value !== 0 && $value !== 1)
 		{
 			return 'INVALID_VOTE';

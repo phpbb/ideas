@@ -117,6 +117,8 @@ if ($mod)
 	}
 }
 
+$points = $idea['idea_votes_up'] - $idea['idea_votes_down'];
+
 $template->assign_vars(array(
 	'IDEA_ID'			=> $idea['idea_id'],
 	'IDEA_TITLE'		=> $idea['idea_title'],
@@ -125,7 +127,7 @@ $template->assign_vars(array(
 	'IDEA_VOTES'        => $idea['idea_votes_up'] + $idea['idea_votes_down'],
 	'IDEA_VOTES_UP'	    => $idea['idea_votes_up'],
 	'IDEA_VOTES_DOWN'   => $idea['idea_votes_down'],
-	'IDEA_POINTS'       => $idea['idea_votes_up'] - $idea['idea_votes_down'],
+	'IDEA_POINTS'       => $user->lang('VIEW_VOTES', $points),
 	'IDEA_STATUS'		=> $ideas->get_status_from_id($idea['idea_status']),
 	'IDEA_STATUS_LINK'	=> append_sid('./list.php', 'status=' . $idea['idea_status']),
 
