@@ -119,6 +119,8 @@ if ($mod)
 
 $points = $idea['idea_votes_up'] - $idea['idea_votes_down'];
 
+$idea_topic_link = append_sid($phpbb_root_path . 'viewtopic.php', 't=' . $idea['topic_id']);
+
 $template->assign_vars(array(
 	'IDEA_ID'			=> $idea['idea_id'],
 	'IDEA_TITLE'		=> $idea['idea_title'],
@@ -133,6 +135,8 @@ $template->assign_vars(array(
 
 	'IDEA_RFC'			=> $idea['rfc_link'],
 	'IDEA_TICKET'		=> $idea['ticket_id'],
+
+	'U_IDEA_TOPIC'      => $idea_topic_link,
 
 	'CAN_EDIT'			=> $mod || $own,
 	'CAN_VOTE'          => $auth->acl_get('f_vote', IDEAS_FORUM_ID),

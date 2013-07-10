@@ -54,6 +54,7 @@ $user->lang = array_merge($user->lang, array(
 	'IDEA_DELETED'			=> 'Idea successfully deleted.',
 	'IDEA_LIST'				=> 'Idea List',
 	'IDEA_NOT_FOUND'		=> 'Idea not found',
+	'IDEA_TOPIC'            => 'Idea topic',
 	'IDEAS_HOME'			=> 'Ideas Home',
 	'IMPLEMENTED'           => 'Implemented',
 	'IN_PROGRESS'           => 'In Progress',
