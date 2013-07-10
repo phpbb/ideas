@@ -127,6 +127,10 @@ class Ideas
 		$row = $db->sql_fetchrow($result);
 		$db->sql_freeresult($result);
 
+		if ($row === false) {
+			return null;
+		}
+
 		$sql = 'SELECT ticket_id
 			FROM ' . IDEA_TICKETS_TABLE . "
 			WHERE idea_id = $id";
