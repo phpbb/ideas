@@ -55,6 +55,7 @@ $user->lang = array_merge($user->lang, array(
 	'IDEA_LIST'				=> 'Idea List',
 	'IDEA_NOT_FOUND'		=> 'Idea not found',
 	'IDEA_TOPIC'            => 'Idea topic',
+	'IDEA_POSTER'           => 'Posted by %s', // Warning: submitted to db
 	'IDEAS_HOME'			=> 'Ideas Home',
 	'IMPLEMENTED'           => 'Implemented',
 	'IN_PROGRESS'           => 'In Progress',

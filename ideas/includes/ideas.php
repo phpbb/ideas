@@ -424,10 +424,18 @@ class Ideas
 		$db->sql_query($sql);
 		$idea_id = $db->sql_nextid();
 
+		$sql = 'SELECT username
+			FROM ' . USERS_TABLE . '
+			WHERE user_id = ' . $user_id;
+		$result = $db->sql_query_limit($sql, 1);
+		$username = $db->sql_fetchfield('username');
+		$db->sql_freeresult($result);
+
 		// Submit topic
 		$bbcode = "[idea={$idea_id}]{$title}[/idea]";
 		$desc .= "\n\n----------\n\n" . $user->lang('VIEW_IDEA_AT', $bbcode);
-
+		$bbcode = "[user={$user_id}]{$username}[/user]";
+		$desc .= "\n\n" . $user->lang('IDEA_POSTER', $bbcode);
 
 		$uid = $bitfield = $options = '';
 		generate_text_for_storage($desc, $uid, $bitfield, $options, true, true, true);
