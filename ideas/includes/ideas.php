@@ -401,7 +401,7 @@ class Ideas
 		{
 			$error[] = $user->lang['TITLE_TOO_LONG'];
 		}
-		if (strlen($desc) > 10000)
+		if (strlen($desc) > 9900)
 		{
 			$error[] = $user->lang['DESC_TOO_LONG'];
 		}
@@ -410,6 +410,24 @@ class Ideas
 		{
 			return $error;
 		}
+
+		// Submit idea
+		$sql_ary = array(
+			'idea_title'		=> $title,
+			'idea_author'		=> $user_id,
+			'idea_date'			=> time(),
+			'topic_id'			=> 0
+		);
+
+		$sql = 'INSERT INTO ' . IDEAS_TABLE . ' ' .
+			$db->sql_build_array('INSERT', $sql_ary);
+		$db->sql_query($sql);
+		$idea_id = $db->sql_nextid();
+
+		// Submit topic
+		$bbcode = "[idea={$idea_id}]{$title}[/idea]";
+		$desc .= "\n\n----------\n\n" . $user->lang('VIEW_IDEA_AT', $bbcode);
+
 
 		$uid = $bitfield = $options = '';
 		generate_text_for_storage($desc, $uid, $bitfield, $options, true, true, true);
@@ -446,17 +464,13 @@ class Ideas
 
 		ideas_submit_post($title, POST_NORMAL, $data);
 
-		$sql_ary = array(
-			'idea_title'		=> $title,
-			'idea_author'		=> $user_id,
-			'idea_date'			=> time(),
-			'topic_id'			=> $data['topic_id']
-		);
-
-		$sql = 'INSERT INTO ' . IDEAS_TABLE . ' ' .
-			$db->sql_build_array('INSERT', $sql_ary);
+		// Edit topic ID into idea; both should link to each other
+		$sql = 'UPDATE ' . IDEAS_TABLE . '
+			SET topic_id = ' . $data['topic_id'] . '
+			WHERE idea_id = ' . $idea_id;
 		$db->sql_query($sql);
-		return $db->sql_nextid();
+
+		return $idea_id;
 	}
 
 	/**

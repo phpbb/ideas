@@ -91,6 +91,7 @@ $user->lang = array_merge($user->lang, array(
 
 	'VIEW_ALL'				=> 'View All',
 	'VIEW_IDEA'				=> 'View Idea',
+	'VIEW_IDEA_AT'          => 'View idea at: %s', // Warning: submitted to db
 	'VIEW_VOTES'            => 'View %s votes',
 	'VIEWING_IDEA'			=> 'Viewing Idea',
 	'VOTE'					=> 'Vote',

@@ -146,7 +146,16 @@ $versions = array(
 		),
 
 	),
+
+	'1.0.0-RC4' => array(
+		'custom'    => array('add_ideas_bbcode'),
+	),
 );
 
 // Include the UMIL Auto file, it handles the rest
 include($phpbb_root_path . 'umil/umil_auto.' . $phpEx);
+
+function add_ideas_bbcode()
+{
+	// @todo
+}

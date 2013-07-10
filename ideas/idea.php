@@ -1242,6 +1242,12 @@ for ($i = 0, $end = sizeof($post_list); $i < $end; ++$i)
 	// Parse the message and subject
 	$message = censor_text($row['post_text']);
 
+	// Remove ideas link
+	$message = explode("\n\n----------\n\n", $message);
+	$message[count($message) - 1] = '';
+	$message = implode("\n\n----------\n\n", $message);
+	$message = substr($message, 0, -14);
+
 	// Second parse bbcode here
 	if ($row['bbcode_bitfield'])
 	{
