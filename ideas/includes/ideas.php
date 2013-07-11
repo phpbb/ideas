@@ -131,6 +131,12 @@ class Ideas
 			return null;
 		}
 
+		$sql = 'SELECT duplicate_id
+			FROM ' . IDEA_DUPLICATES_TABLE . "
+			WHERE idea_id = $id";
+		$result = $db->sql_query_limit($sql, 1);
+		$row['duplicate_id'] = $db->sql_fetchfield('duplicate_id');
+
 		$sql = 'SELECT ticket_id
 			FROM ' . IDEA_TICKETS_TABLE . "
 			WHERE idea_id = $id";
@@ -195,6 +201,30 @@ class Ideas
 		$sql = 'UPDATE ' . IDEAS_TABLE . '
 			SET idea_status = ' . (int) $status . '
 			WHERE idea_id = ' . (int) $idea_id;
+		$db->sql_query($sql);
+	}
+
+	/**
+	 * Sets the ID of the duplicate for an idea.
+	 *
+	 * @param int $idea_id ID of the idea to be updated.
+	 * @param string $duplicate Idea ID of duplicate.
+	 */
+	public function set_duplicate($idea_id, $duplicate)
+	{
+		global $db;
+
+		if ($duplicate && !is_numeric($duplicate))
+		{
+			return; // Don't bother informing user, probably an attempted hacker
+		}
+
+		$sql = 'DELETE FROM ' . IDEA_DUPLICATES_TABLE . '
+			WHERE idea_id = ' . (int) $idea_id;
+		$db->sql_query($sql);
+
+		$sql = 'INSERT INTO ' . IDEA_DUPLICATES_TABLE . ' (idea_id, duplicate_id)
+			VALUES (' . (int) $idea_id . ', ' . (int) $duplicate . ')';
 		$db->sql_query($sql);
 	}
 

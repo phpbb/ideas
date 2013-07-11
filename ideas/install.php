@@ -149,6 +149,21 @@ $versions = array(
 
 	'1.0.0-RC4' => array(
 		'custom'    => array('add_ideas_bbcode'),
+
+		'table_add' => array(
+
+			array($table_prefix . 'ideas_duplicates', array(
+				'COLUMNS' => array(
+					'idea_id' => array('UINT', 0),
+					'duplicate_id' => array('UINT', 0),
+				),
+
+				'KEYS'		=> array(
+					'dupe_key' => array('INDEX', array('idea_id', 'duplicate_id')),
+				),
+			)),
+
+		),
 	),
 );
 

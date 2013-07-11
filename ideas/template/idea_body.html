@@ -33,18 +33,30 @@
 			<!-- ENDIF -->
 		</dd>
 		<!-- ENDIF -->
-		<!-- IF IDEA_TICKET or CAN_EDIT -->
-		<dt style="width: 15%">{L_TICKET}:</dt>
-		<dd>
+        <!-- IF IDEA_TICKET or CAN_EDIT -->
+        <dt style="width: 15%">{L_TICKET}:</dt>
+        <dd>
 
-			<a id="ticketlink" <!-- IF IDEA_TICKET -->href="http://tracker.phpbb.com/browse/PHPBB3-{IDEA_TICKET}">PHPBB3-{IDEA_TICKET}<!-- ELSE -->style="display:none"><!-- ENDIF --></a>
+            <a id="ticketlink" <!-- IF IDEA_TICKET -->href="http://tracker.phpbb.com/browse/PHPBB3-{IDEA_TICKET}">PHPBB3-{IDEA_TICKET}<!-- ELSE -->style="display:none"><!-- ENDIF --></a>
 
-			<!-- IF CAN_EDIT -->
-			<a href="{U_EDIT_TICKET}" id="ticketedit"><!-- IF IDEA_TICKET -->{L_EDIT}<!-- ELSE -->{L_ADD}<!-- ENDIF --></a>
-			<input type="text" id="ticketeditinput"<!-- IF IDEA_TICKET --> value="PHPBB3-{IDEA_TICKET}"<!-- ENDIF --> placeholder="PHPBB3-#####" />
-			<!-- ENDIF -->
-		</dd>
-		<!-- ENDIF -->
+            <!-- IF CAN_EDIT -->
+            <a href="{U_EDIT_TICKET}" id="ticketedit"><!-- IF IDEA_TICKET -->{L_EDIT}<!-- ELSE -->{L_ADD}<!-- ENDIF --></a>
+            <input type="text" id="ticketeditinput"<!-- IF IDEA_TICKET --> value="PHPBB3-{IDEA_TICKET}"<!-- ENDIF --> placeholder="PHPBB3-#####" />
+            <!-- ENDIF -->
+        </dd>
+        <!-- ENDIF -->
+        <!-- IF IDEA_DUPLICATE or IS_MOD -->
+        <dt style="width: 15%" class="duplicatetoggle">{L_DUPLICATE}:</dt>
+        <dd class="duplicatetoggle">
+
+            <a id="duplicatelink" <!-- IF IDEA_DUPLICATE -->href="idea.php?id={IDEA_DUPLICATE}">idea.php?id={IDEA_DUPLICATE}<!-- ELSE -->style="display:none"><!-- ENDIF --></a>
+
+            <!-- IF IS_MOD -->
+            <a href="{U_EDIT_DUPLICATE}" id="duplicateedit">{L_SET}</a>
+            <input type="text" id="duplicateeditinput"<!-- IF IDEA_DUPLICATE --> value="{IDEA_DUPLICATE}"<!-- ENDIF --> placeholder="###" />
+            <!-- ENDIF -->
+        </dd>
+        <!-- ENDIF -->
 		<!-- IF U_DELETE_IDEA or CAN_EDIT -->
 		<dt style="width: 15%">{L_MOD_IDEA}:</dt>
 		<dd>

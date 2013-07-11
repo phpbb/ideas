@@ -31,6 +31,11 @@ dd.topics:not(.bad) {
 	width: 160px;
 }
 
+#duplicateeditinput {
+	display: none;
+	width: 360px;
+}
+
 #titleeditinput {
 	display: none;
 	width: 320px;

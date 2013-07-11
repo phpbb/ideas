@@ -55,6 +55,12 @@ $('#status').change(function () {
 
 		anchor.attr('href', href)
 			.text($this.find(':selected').text());
+
+		if (idea_is_duplicate()) {
+			$('.duplicatetoggle').show();
+		} else {
+			$('.duplicatetoggle').hide();
+		}
 	});
 });
 
@@ -156,6 +162,59 @@ $('#ticketeditinput').keydown(function (e) {
 	}
 });
 
+// Hide duplicate column if status is not duplicate
+if (!idea_is_duplicate()) {
+	$('.duplicatetoggle').hide();
+}
+
+$('#duplicateedit').click(function (e) {
+	"use strict";
+	e.preventDefault();
+
+	$('#duplicateedit, #duplicatelink').hide();
+	$('#duplicateeditinput').show().focus();
+});
+
+$('#duplicateeditinput').keydown(function (e) {
+	"use strict";
+
+	if (e.keyCode === 13) {
+		e.preventDefault();
+
+		var $this = $(this),
+			url = $('#duplicateedit').attr('href'),
+			value = $this.val();
+
+		if (value && isNaN(Number(value))) {
+			alert('Error: Please post the ID of the ticket.');
+			return;
+		}
+
+		$.get(url, {duplicate: Number(value)}, function () {
+			if (value) {
+				$('#duplicatelink').text('idea.php?id=' + value)
+					.attr('href', 'idea.php?id=' + value)
+					.show();
+			}
+
+			$this.hide();
+
+			$('#duplicateedit').show();
+		});
+	} else if (e.keyCode === 27) {
+		e.preventDefault();
+
+		var $link = $('#duplicatelink');
+
+		$(this).hide();
+		$('#duplicateedit').show();
+
+		if ($link.html()) {
+			$link.show();
+		}
+	}
+});
+
 $('#titleedit').click(function (e) {
 	"use strict";
 	e.preventDefault();
@@ -190,6 +249,16 @@ $('#titleeditinput').keydown(function (e) {
 		$(this).hide();
 	}
 });
+
+/**
+ * Returns true if idea is a duplicate. Bit hacky.
+ */
+function idea_is_duplicate() {
+	"use strict";
+
+	var href = $('#status').prev('a').attr('href');
+	return href.indexOf('status=4') !== -1;
+}
 
 /**
  * Set display of page element

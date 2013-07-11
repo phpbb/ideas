@@ -79,6 +79,7 @@ $user->lang = array_merge($user->lang, array(
 	'REJECTED'				=> 'Rejected',
 	'RFC'					=> 'RFC',
 
+	'SET'                   => 'Set',
 	'SHOW_W_STATUS'			=> 'Display ideas with status:',
 	'STATUS'				=> 'Status',
 

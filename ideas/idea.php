@@ -31,6 +31,19 @@ if (ideas_is_ajax())
 
 	switch ($mode)
 	{
+		case 'duplicate':
+			if ($mod)
+			{
+				$duplicate = request_var('duplicate', 0);
+				$ideas->set_duplicate($idea['idea_id'], $duplicate);
+				echo 'true';
+			}
+			else
+			{
+				echo 'false';
+			}
+			break;
+
 		case 'rfc':
 			if ($own || $mod)
 			{
@@ -146,16 +159,19 @@ $template->assign_vars(array(
 	'IDEA_STATUS'		=> $ideas->get_status_from_id($idea['idea_status']),
 	'IDEA_STATUS_LINK'	=> append_sid('./list.php', 'status=' . $idea['idea_status']),
 
+	'IDEA_DUPLICATE'    => $idea['duplicate_id'],
 	'IDEA_RFC'			=> $idea['rfc_link'],
 	'IDEA_TICKET'		=> $idea['ticket_id'],
 
 	'U_IDEA_TOPIC'      => $idea_topic_link,
 
+	'IS_MOD'            => $mod,
 	'CAN_EDIT'			=> $mod || $own,
 	'CAN_VOTE'          => $auth->acl_get('f_vote', IDEAS_FORUM_ID),
 
 	'U_DELETE_IDEA'		=> $delete_posts ? append_sid('./idea.php', 'mode=delete&amp;id=' . $id) : false,
 	'U_CHANGE_STATUS'	=> append_sid('./idea.php', 'mode=status&amp;id=' . $id),
+	'U_EDIT_DUPLICATE'	=> append_sid('./idea.php', 'mode=duplicate&amp;id=' . $id),
 	'U_EDIT_RFC'		=> append_sid('./idea.php', 'mode=rfc&amp;id=' . $id),
 	'U_EDIT_TICKET'		=> append_sid('./idea.php', 'mode=ticket&amp;id=' . $id),
 	'U_EDIT_TITLE'		=> append_sid('./idea.php', 'mode=title&amp;id=' . $id),
