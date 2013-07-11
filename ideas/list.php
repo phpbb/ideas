@@ -23,7 +23,14 @@ if ($author)
 	$where .= " && idea_author = $author";
 }
 
-$status_name = $ideas->get_status_from_id($status);
+if ($sort == 'top')
+{
+	$status_name = $user->lang('TOP_IDEAS');
+}
+else
+{
+	$status_name = $ideas->get_status_from_id($status);
+}
 
 $returned_ideas = $ideas->get_ideas(0, $sort, $sort_direction, $where);
 
