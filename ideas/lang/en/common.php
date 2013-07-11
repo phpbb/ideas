@@ -84,6 +84,7 @@ $user->lang = array_merge($user->lang, array(
 
 	'TICKET'				=> 'Ticket',
 	'TITLE'					=> 'Title',
+	'TITLE_EDIT'            => 'Edit title',
 	'TITLE_TOO_LONG'		=> 'Title must be under 64 characters long.',
 	'TITLE_TOO_SHORT'		=> 'Title must be 6 characters long.',
 	'TOP'                   => 'Top',

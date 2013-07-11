@@ -69,6 +69,19 @@ if (ideas_is_ajax())
 			}
 			break;
 
+		case 'title':
+			if ($own || $mod)
+			{
+				$title = request_var('title', '');
+				$ideas->set_title($idea['idea_id'], $title);
+				echo 'true';
+			}
+			else
+			{
+				echo 'false';
+			}
+			break;
+
 		case 'vote':
 			if ($auth->acl_get('f_vote', IDEAS_FORUM_ID))
 			{
@@ -145,6 +158,7 @@ $template->assign_vars(array(
 	'U_CHANGE_STATUS'	=> append_sid('./idea.php', 'mode=status&amp;id=' . $id),
 	'U_EDIT_RFC'		=> append_sid('./idea.php', 'mode=rfc&amp;id=' . $id),
 	'U_EDIT_TICKET'		=> append_sid('./idea.php', 'mode=ticket&amp;id=' . $id),
+	'U_EDIT_TITLE'		=> append_sid('./idea.php', 'mode=title&amp;id=' . $id),
 
 	'U_IDEA_VOTE'		=> append_sid('./idea.php', 'mode=vote&amp;id=' . $id),
 ));

@@ -248,6 +248,35 @@ class Ideas
 	}
 
 	/**
+	 * Sets the title of an idea.
+	 *
+	 * @param int $idea_id ID of the idea to be updated.
+	 * @param string $title New title.
+	 *
+	 * @return boolean False if invalid length.
+	 */
+	public function set_title($idea_id, $title)
+	{
+		global $db;
+
+		if (strlen($title) < 6 || strlen($title) > 64)
+		{
+			return false;
+		}
+
+		$sql_ary = array(
+			'idea_title'    => $title
+		);
+
+		$sql = 'UPDATE ' . IDEAS_TABLE . '
+			SET ' . $db->sql_build_array('UPDATE', $sql_ary) . '
+			WHERE idea_id = ' . $idea_id;
+		$db->sql_query($sql);
+
+		return true;
+	}
+
+	/**
 	 * Submits a vote on an idea.
 	 *
 	 * @param array $idea The idea returned by get_idea().

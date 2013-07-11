@@ -156,6 +156,41 @@ $('#ticketeditinput').keydown(function (e) {
 	}
 });
 
+$('#titleedit').click(function (e) {
+	"use strict";
+	e.preventDefault();
+
+	$('#ideatitle').hide();
+	$('#titleeditinput').show().focus();
+});
+
+$('#titleeditinput').keydown(function (e) {
+	"use strict";
+
+	if (e.keyCode === 13) {
+		e.preventDefault();
+
+		var $this = $(this),
+			url = $('#titleedit').attr('href'),
+			value = $this.val();
+
+		if (value.length < 6 || value.length > 64) {
+			alert('Error: Title must be between 6 and 64 characters.');
+			return;
+		}
+
+		$.get(url, {title: value}, function () {
+			$('#ideatitle').text(value).show();
+			$this.hide();
+		});
+	} else if (e.keyCode === 27) {
+		e.preventDefault();
+
+		$('#ideatitle').show();
+		$(this).hide();
+	}
+});
+
 /**
  * Set display of page element
  * s[-1,0,1] = hide,toggle display,show

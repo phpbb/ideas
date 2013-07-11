@@ -1,6 +1,6 @@
 <!-- INCLUDE overall_header.html -->
 
-<h2 xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">{L_VIEWING_IDEA} - {IDEA_TITLE}</h2>
+<h2 xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">{L_VIEWING_IDEA} - <span id="ideatitle">{IDEA_TITLE}</span><input type="text" id="titleeditinput" value="{IDEA_TITLE}" /></h2>
 <div class="panel bg1">
 	<div class="inner"><span class="corners-top"><span></span></span>
 	<dl class="left-box details" style="width: 95%">
@@ -45,11 +45,12 @@
 			<!-- ENDIF -->
 		</dd>
 		<!-- ENDIF -->
-		<!-- IF U_DELETE_IDEA -->
+		<!-- IF U_DELETE_IDEA or CAN_EDIT -->
 		<dt style="width: 15%">{L_MOD_IDEA}:</dt>
 		<dd>
-			<!-- IF U_DELETE_IDEA --><a href="{U_DELETE_IDEA}" class="confirm">{L_DELETE}</a><!-- ENDIF -->
-            &bull; <a href="{U_IDEA_TOPIC}">{L_IDEA_TOPIC}</a>
+			<!-- IF U_DELETE_IDEA --><a href="{U_DELETE_IDEA}" class="confirm">{L_DELETE}</a> &bull; <!-- ENDIF -->
+            <!-- IF CAN_EDIT --><a href="{U_EDIT_TITLE}" id="titleedit">{L_TITLE_EDIT}</a> &bull; <!-- ENDIF -->
+            <a href="{U_IDEA_TOPIC}">{L_IDEA_TOPIC}</a>
 		</dd>
 		<!-- ENDIF -->
 	</dl>

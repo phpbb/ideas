@@ -31,6 +31,11 @@ dd.topics:not(.bad) {
 	width: 160px;
 }
 
+#titleeditinput {
+	display: none;
+	width: 320px;
+}
+
 .js {
 	display: none;
 }
