@@ -50,13 +50,17 @@ class Ideas
 				break;
 
 			case 'top':
-			default:
 				// Special case!
 				$sortby = 'TOP';
 				break;
+
+			default:
+				// Special case!
+				$sortby = 'ALL';
+				break;
 		}
 
-		if ($sortby !== 'TOP')
+		if ($sortby !== 'TOP' && $sortby !== 'ALL')
 		{
 			$sql = 'SELECT *
 				FROM ' . IDEAS_TABLE . "
@@ -65,6 +69,11 @@ class Ideas
 		}
 		else
 		{
+			if ($sortby === 'TOP')
+			{
+				$where .= ' AND idea_votes_up > idea_votes_down';
+			}
+
 			// YEEEEEEEEAAAAAAAAAAAAAHHHHHHH
 			// From http://evanmiller.org/how-not-to-sort-by-average-rating.html
 			$sql = 'SELECT *,
@@ -73,8 +82,7 @@ class Ideas
 	                (idea_votes_up + idea_votes_down)) / (1 + 3.8416 / (idea_votes_up + idea_votes_down))
 	                AS ci_lower_bound
        			FROM ' . IDEAS_TABLE . "
-       			WHERE idea_votes_up > idea_votes_down
-       			    AND $where
+       			WHERE $where
        			ORDER BY ci_lower_bound " . $sort_direction;
 		}
 
