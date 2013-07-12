@@ -1277,7 +1277,7 @@ for ($i = 0, $end = sizeof($post_list); $i < $end; ++$i)
 	$message = censor_text($row['post_text']);
 
 	// Remove ideas link
-	if (is_numeric(strpos("\n\n----------\n\n", $message))) {
+	if (is_numeric(strpos($message, "\n\n----------\n\n"))) {
 		$message = explode("\n\n----------\n\n", $message);
 		$message[count($message) - 1] = '';
 		$message = implode("\n\n----------\n\n", $message);
