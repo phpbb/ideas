@@ -12,6 +12,14 @@ To install, copy `config.sample.php` to `config.php` and change the configuratio
 
 Then run `install.php` (make sure that you have UMIL in your root phpBB directory), which will set up the database.
 
-## Unstable
+Finally, add two BBCodes, similar to these:
 
-Please don't use this on a live board, a stable release has still not been made.
+```
+[idea={NUMBER}]{TEXT}[/idea]
+<a href="/ideas/idea.php?id={NUMBER}">{TEXT}</a>
+
+[user={NUMBER}]{TEXT}[/user]
+<a href="/phpBB/memberlist.php?mode=viewprofile&u={NUMBER}">{TEXT}</a>
+```
+
+Those BBCodes are used in the forum topics created by phpBB Ideas to link back to the ideas. Make sure you change the URLs so that they are correct.
