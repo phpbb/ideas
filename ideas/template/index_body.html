@@ -1,5 +1,7 @@
 <!-- INCLUDE overall_header.html -->
 
+<h2>phpBB Ideas</h2>
+
 <div style="overflow: auto">
 	<div style="width: 49%; float: left;">
 		<div class="forabg">
@@ -21,7 +23,7 @@
 							by <strong>{latest_ideas.AUTHOR}</strong> &raquo; {latest_ideas.DATE}
 						</dt>
 
-						<dd class="topics"><span class="up">+{latest_ideas.VOTES_UP}</span> <span class="down">-{latest_ideas.VOTES_DOWN}</span></dd>
+						<dd class="topics"><span class="up">&#x25B2;{top_ideas.VOTES_UP}</span> &nbsp; <span class="down">&#x25BC;{top_ideas.VOTES_DOWN}</span></dd>
 					</dl>
 				</li>
 				<!-- END latest_ideas -->
@@ -52,7 +54,7 @@
 							by <strong>{top_ideas.AUTHOR}</strong> &raquo; {top_ideas.DATE}
 						</dt>
 
-                        <dd class="topics"><span class="up">+{top_ideas.VOTES_UP}</span> <span class="down">-{top_ideas.VOTES_DOWN}</span></dd>
+                        <dd class="topics"><span class="up">&#x25B2;{latest_ideas.VOTES_UP}</span> &nbsp; <span class="down">&#x25BC;{latest_ideas.VOTES_DOWN}</span></dd>
 					</dl>
 				</li>
 				<!-- END top_ideas -->
