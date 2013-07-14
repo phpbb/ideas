@@ -10,6 +10,14 @@ a.votedown, span.down {
 	color: red;
 }
 
+a.dead {
+	cursor: text;
+}
+
+a.dead:hover {
+	text-decoration: none;
+}
+
 .successvoted {
 	display: none;
 }

@@ -6,6 +6,10 @@ $('.voteup, .votedown').click(function (e) {
 		url = $this.attr('href'),
 		vote = $this.is('.voteup') ? 1 : 0;
 
+	if ($this.is('.dead')) {
+		return false;
+	}
+
 	$.get(url, {v: vote}, function (message) {
 		if (typeof message === 'string') {
 			alert('An error occurred: ' + message); // Error
@@ -23,6 +27,8 @@ $('.voteup, .votedown').click(function (e) {
 		}
 	});
 });
+
+$('a.dead').attr('href', '#');
 
 $('.votes').click(function (e) {
 	"use strict";

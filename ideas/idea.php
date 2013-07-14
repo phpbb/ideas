@@ -96,6 +96,11 @@ if (ideas_is_ajax())
 			break;
 
 		case 'vote':
+			if ($idea['idea_status'] == 3 || $idea['idea_status'] == 4)
+			{
+				return false;
+			}
+
 			if ($auth->acl_get('f_vote', IDEAS_FORUM_ID))
 			{
 				echo json_encode($ideas->vote($idea, $user->data['user_id'], $vote));
@@ -147,6 +152,13 @@ $points = $idea['idea_votes_up'] - $idea['idea_votes_down'];
 
 $idea_topic_link = append_sid($phpbb_root_path . 'viewtopic.php', 't=' . $idea['topic_id']);
 
+$can_vote = true;
+if ($idea['idea_status'] == 3 || $idea['idea_status'] == 4 || !$auth->acl_get('f_vote', IDEAS_FORUM_ID))
+{
+	$can_vote = false;
+}
+// Topic locked is check later on: search for "TOPIC LOCK CHECK 123"
+
 $template->assign_vars(array(
 	'IDEA_ID'			=> $idea['idea_id'],
 	'IDEA_TITLE'		=> $idea['idea_title'],
@@ -167,7 +179,7 @@ $template->assign_vars(array(
 
 	'IS_MOD'            => $mod,
 	'CAN_EDIT'			=> $mod || $own,
-	'CAN_VOTE'          => $auth->acl_get('f_vote', IDEAS_FORUM_ID),
+	'CAN_VOTE'          => $can_vote,
 
 	'U_DELETE_IDEA'		=> $delete_posts ? append_sid('./idea.php', 'mode=delete&amp;id=' . $id) : false,
 	'U_CHANGE_STATUS'	=> append_sid('./idea.php', 'mode=status&amp;id=' . $id),
@@ -733,6 +745,12 @@ if (!empty($_EXTRA_URL))
 		$url_param = explode('=', $url_param, 2);
 		$s_hidden_fields[$url_param[0]] = $url_param[1];
 	}
+}
+
+// TOPIC LOCK CHECK 123
+if ($topic_data['topic_status'] == ITEM_LOCKED)
+{
+	$template->assign_var('CAN_VOTE', false);
 }
 
 // Send vars to template
