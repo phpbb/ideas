@@ -80,6 +80,7 @@ $user->lang = array_merge($user->lang, array(
 	'RFC'					=> 'RFC',
 
 	'SET'                   => 'Set',
+	'SCORE'                 => 'Score',
 	'SHOW_W_STATUS'			=> 'Display ideas with status:',
 	'STATUS'				=> 'Status',
 

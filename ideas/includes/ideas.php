@@ -41,6 +41,10 @@ class Ideas
 				$sortby = 'idea_id ' . $sort_direction;
 				break;
 
+			case 'score':
+				$sortby = 'idea_votes_up - idea_votes_down ' . $sort_direction;
+				break;
+
 			case 'title':
 				$sortby = 'idea_title ' . $sort_direction;
 				break;

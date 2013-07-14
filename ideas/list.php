@@ -63,7 +63,7 @@ foreach ($statuses as $key => $status)
 	));
 }
 
-$sorts = array('author', 'date', 'id', 'title', 'top', 'votes');
+$sorts = array('author', 'date', 'id', 'score', 'title', 'top', 'votes');
 $sorted = request_var('sort', 'rating');
 foreach ($sorts as $sort)
 {
