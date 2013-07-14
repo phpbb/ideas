@@ -10,6 +10,10 @@ a.votedown, span.down {
 	color: red;
 }
 
+.successvoted {
+	display: none;
+}
+
 dd.topics {
 	text-align: left;
 	width: 100px;

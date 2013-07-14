@@ -8,10 +8,10 @@
 		<dt style="width: 15%">{L_POSTED}:</dt> <dd>{IDEA_DATE}</dd>
 		<dt style="width: 15%">{L_RATING}:</dt>
 		<dd>
-            <span class="rating"><a href="{U_IDEA_VOTE}" class="voteup">&#x25B2;{IDEA_VOTES_UP}</a></span> &nbsp;<a href="{U_IDEA_VOTE}" class="votedown">&#x25BC;{IDEA_VOTES_DOWN}</a></span> &nbsp; <a href="#" class="votes">({IDEA_POINTS})</a></span>
+            <span class="rating"><a href="{U_IDEA_VOTE}" class="voteup">&#x25B2;{IDEA_VOTES_UP}</a></span> &nbsp;<a href="{U_IDEA_VOTE}" class="votedown">&#x25BC;{IDEA_VOTES_DOWN}</a></span>&nbsp;<a href="#" class="votes">({IDEA_POINTS})</a> <span class="successvoted"></span></span>
 			<ul class="voteslist">
-				<!-- IF .votes_up --><li><strong>+1:</strong> <!-- BEGIN votes_up -->{votes_up.USER}<!-- IF not votes_up.S_LAST_ROW -->, <!-- ENDIF --><!-- END votes_up --></li><!-- ENDIF -->
-				<!-- IF .votes_down --><li><strong>-1:</strong> <!-- BEGIN votes_down -->{votes_down.USER}<!-- IF not votes_down.S_LAST_ROW -->, <!-- ENDIF --><!-- END votes_down --></li><!-- ENDIF -->
+				<!-- IF .votes_up --><li><strong>&#x25B2;:</strong> <!-- BEGIN votes_up -->{votes_up.USER}<!-- IF not votes_up.S_LAST_ROW -->, <!-- ENDIF --><!-- END votes_up --></li><!-- ENDIF -->
+				<!-- IF .votes_down --><li><strong>&#x25BC;:</strong> <!-- BEGIN votes_down -->{votes_down.USER}<!-- IF not votes_down.S_LAST_ROW -->, <!-- ENDIF --><!-- END votes_down --></li><!-- ENDIF -->
 			</ul>
 		</dd>
 		<dt style="width: 15%">{L_STATUS}:</dt>

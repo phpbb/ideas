@@ -10,13 +10,16 @@ $('.voteup, .votedown').click(function (e) {
 		if (typeof message === 'string') {
 			alert('An error occurred: ' + message); // Error
 		} else {
-			$('.voteup:first').html('+' + message.votes_up);
-			$('.votedown').html('-' + message.votes_down + ' ');
-			$('.votes').text('(' + message.points + ')');
-
-			setTimeout(function () {
-				alert(message.message);
-			}, 1);
+			$('.voteup:first').html('&#x25B2;' + message.votes_up);
+			$('.votedown').html('&#x25BC;' + message.votes_down + ' ');
+			$('.votes').hide()
+				.text('(' + message.points + ' points. Click to view votes)');
+			$('.successvoted').text('   ' + message.message)
+				.show()
+				.delay(2000)
+					.fadeOut(300, function () {
+						$('.votes').fadeIn(300);
+					});
 		}
 	});
 });
