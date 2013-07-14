@@ -10,6 +10,12 @@ a.votedown, span.down {
 	color: red;
 }
 
+dd.topics {
+	text-align: left;
+	width: 100px;
+	padding-left: 10px !important;
+}
+
 dd.topics:not(.bad) {
 	text-align: left;
 	padding-left: 10px;
