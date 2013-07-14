@@ -315,6 +315,8 @@ class Ideas
 			WHERE idea_id = ' . $idea_id;
 		$db->sql_query($sql);
 
+		add_log('mod', 0, 0, 'LOG_IDEA_TITLE_EDITED', 'Idea #' . $idea_id);
+
 		return true;
 	}
 
