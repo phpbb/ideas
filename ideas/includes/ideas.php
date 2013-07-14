@@ -331,13 +331,6 @@ class Ideas
 	 */
 	public function vote(&$idea, $user_id, $value)
 	{
-		/*return array(
-			'message' => 'yeah',
-			'votes_up' => 4,
-			'votes_down' => 2,
-			'points'    => 999,
-		);*/
-
 		global $db, $user;
 
 		// Validate $vote - must be 0 or 1
@@ -503,6 +496,10 @@ class Ideas
 		$result = $db->sql_query_limit($sql, 1);
 		$username = $db->sql_fetchfield('username');
 		$db->sql_freeresult($result);
+
+		// Initial vote
+		$idea = $this->get_idea($idea_id);
+		$this->vote($idea, $user->data['user_id'], 1);
 
 		// Submit topic
 		$bbcode = "[idea={$idea_id}]{$title}[/idea]";
