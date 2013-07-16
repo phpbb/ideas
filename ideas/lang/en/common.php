@@ -100,6 +100,8 @@ $user->lang = array_merge($user->lang, array(
 	'VIEW_VOTES'            => '%s points. Click to view votes',
 	'VIEWING_IDEA'			=> 'Viewing Idea',
 	'VOTE'					=> 'Vote',
-	'VOTE_SUCCESS'			=> 'Successfully voted on this idea.',
+	'VOTE_DOWN'				=> 'Vote Down',
+	'VOTE_SUCCESS'			=> 'Successfully voted on this idea.',	
+	'VOTE_UP'				=> 'Vote Up',	
 	'VOTES'					=> 'Votes',
 ));

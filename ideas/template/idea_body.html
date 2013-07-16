@@ -8,11 +8,26 @@
 		<dt style="width: 15%">{L_POSTED}:</dt> <dd>{IDEA_DATE}</dd>
 		<dt style="width: 15%">{L_RATING}:</dt>
 		<dd>
-            <span class="rating"><a href="{U_IDEA_VOTE}" class="voteup<!-- IF not CAN_VOTE--> dead<!-- ENDIF -->">&#x25B2;{IDEA_VOTES_UP}</a></span> &nbsp;<a href="{U_IDEA_VOTE}" class="votedown<!-- IF not CAN_VOTE--> dead<!-- ENDIF -->">&#x25BC;{IDEA_VOTES_DOWN}</a></span>&nbsp;<a href="#" class="votes">({IDEA_POINTS})</a> <span class="successvoted"></span></span>
-			<ul class="voteslist">
-				<!-- IF .votes_up --><li><strong>&#x25B2;:</strong> <!-- BEGIN votes_up -->{votes_up.USER}<!-- IF not votes_up.S_LAST_ROW -->, <!-- ENDIF --><!-- END votes_up --></li><!-- ENDIF -->
-				<!-- IF .votes_down --><li><strong>&#x25BC;:</strong> <!-- BEGIN votes_down -->{votes_down.USER}<!-- IF not votes_down.S_LAST_ROW -->, <!-- ENDIF --><!-- END votes_down --></li><!-- ENDIF -->
-			</ul>
+            <span class="rating">
+            	<a href="{U_IDEA_VOTE}" class="minivoteup voteup<!-- IF not CAN_VOTE--> dead<!-- ENDIF -->"><span>{IDEA_VOTES_UP}</a></span> &nbsp;
+                <a href="{U_IDEA_VOTE}" class="minivotedown votedown<!-- IF not CAN_VOTE--> dead<!-- ENDIF -->"><span>{IDEA_VOTES_DOWN}</a></span>
+                <a href="#" class="votes">({IDEA_POINTS})</a> <span class="successvoted"></span>
+            </span>
+
+            <div style="clear: both;"></div>
+                
+                
+			<div class="voteslist bg3">
+                    <ul>
+                    <!-- IF .votes_up -->
+                        <li><strong>&#x25B2;:</strong> <!-- BEGIN votes_up -->{votes_up.USER}<!-- IF not votes_up.S_LAST_ROW -->, <!-- ENDIF --><!-- END votes_up --></li>
+                    <!-- ENDIF -->
+                    <!-- IF .votes_down -->
+                        <li><strong>&#x25BC;:</strong> <!-- BEGIN votes_down -->{votes_down.USER}<!-- IF not votes_down.S_LAST_ROW -->, <!-- ENDIF --><!-- END votes_down --></li>
+                    <!-- ENDIF -->
+                    </ul>
+			</div>
+            
 		</dd>
 		<dt style="width: 15%">{L_STATUS}:</dt>
 		<dd>
@@ -76,6 +91,11 @@
 		<!-- IF S_DISPLAY_REPLY_INFO -->
 		<div class="<!-- IF S_IS_LOCKED -->locked-icon<!-- ELSE -->reply-icon<!-- ENDIF -->"><a href="{U_POST_REPLY_TOPIC}" title="<!-- IF S_IS_LOCKED -->{L_TOPIC_LOCKED}<!-- ELSE -->{L_POST_REPLY}<!-- ENDIF -->"><span></span><!-- IF S_IS_LOCKED -->{L_TOPIC_LOCKED_SHORT}<!-- ELSE -->{L_POST_REPLY}<!-- ENDIF --></a></div>
 		<!-- ENDIF -->
+        
+        <div class="voteup-button"><a href="{U_IDEA_VOTE}" class="voteup"><span></span>{L_VOTE_UP}</a></div>
+        
+        <div class="votedown-button"><a href="{U_IDEA_VOTE}" class="votedown"><span></span>{L_VOTE_DOWN}</a></div>
+              
 	</div>
 	<!-- ENDIF -->
 
@@ -224,6 +244,12 @@
 		<!-- IF S_DISPLAY_REPLY_INFO -->
 		<div class="<!-- IF S_IS_LOCKED -->locked-icon<!-- ELSE -->reply-icon<!-- ENDIF -->"><a href="{U_POST_REPLY_TOPIC}" title="<!-- IF S_IS_LOCKED -->{L_TOPIC_LOCKED}<!-- ELSE -->{L_POST_REPLY}<!-- ENDIF -->"><span></span><!-- IF S_IS_LOCKED -->{L_TOPIC_LOCKED_SHORT}<!-- ELSE -->{L_POST_REPLY}<!-- ENDIF --></a></div>
 		<!-- ENDIF -->
+        
+        <div class="voteup-button"><a href="{U_IDEA_VOTE}" class="voteup"><span></span>{L_VOTE_UP}</a></div>
+        
+        <div class="votedown-button"><a href="{U_IDEA_VOTE}" class="votedown"><span></span>{L_VOTE_DOWN}</a></div>
+        
+                
 	</div>
 	<!-- ENDIF -->
 
