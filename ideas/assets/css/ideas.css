@@ -1,5 +1,7 @@
 a.votes {
-	margin-left: 10px;
+	font-weight: bold;
+	margin-top: 3px;
+	display: inline-block;
 }
 
 a.voteup, span.up {
@@ -24,7 +26,7 @@ a.dead:hover {
 
 dd.topics {
 	text-align: left;
-	width: 100px;
+	width: 150px;
 	padding-left: 10px !important;
 }
 
@@ -74,4 +76,87 @@ dd.topics:not(.bad) {
 
 .newidea:hover span {
 	background-position: 0 25px;
+}
+
+.voteup-button {width: 96px !important; height: 25px;}
+.votedown-button {width: 117px !important; height: 25px;}
+
+.voteup-button span {
+	display: inline-block;
+	background: url("images/button-sprite.png") no-repeat 0 0 !important;
+}
+
+.votedown-button span {
+	display: inline-block;
+	background: url("images/button-sprite.png") no-repeat -96px 0 !important;
+}
+
+.voteup-button a:hover span {background-position: 0 -25px !important;}
+.voteup-button a:active span {background-position: 0 -50px !important;}
+.voteup-button a.voted span {background-position: 0 -75px !important;}
+.votedown-button a:hover span {background-position: -96px -25px !important;}
+.votedown-button a:active span {background-position: -96px -50px !important;}
+.votedown-button a.voted span {background-position: -96px -75px !important;}
+
+.minivoteup, .minivotedown {
+	width: 65px;
+	height: 25px;
+	display: inline-block;
+	float: left;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	font-weight: bold;
+	color: #FFFFFF !important;
+	text-shadow: 0 -1px 0 rgba(0,0,0,1);
+	margin-right: 10px;
+	background: url("images/button-sprite.png") no-repeat;
+}
+
+.minivoteup span, .minivotedown span {
+	display: inline-block;
+	width: 40px;
+	margin-left: 25px;
+	margin-top: 3px;
+	text-align: center;
+	line-height: normal;
+}
+
+.minivoteup {background-position: 0 -100px;}
+.minivotedown {background-position: -65px -100px;}
+
+.minivoteup:hover {background-position: 0 -125px;}
+.minivotedown:hover {background-position: -65px -125px;}
+
+.minivoteup:active {background-position: 0 -150px;}
+.minivotedown:active {background-position: -65px -150px;}
+
+.minivoteup.solid {background-position: 0 -100px !important;}
+.minivotedown.solid {background-position: -65px -100px !important;}
+
+.voteslist {
+	display: none;
+	padding: 6px;
+	margin-top: 6px;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;	
+}
+
+.voteslist ul, .voteslist ul li {
+	list-style: none;
+}
+
+a.viewall {
+	display: block;
+	width: 50%;
+	text-align: center;
+	font-family: Arial, Helvetica, sans-serif;
+	font-weight: bold;
+	font-size: 14px;
+	color: #FFFFFF;
+	margin: 0 auto;
+	padding: 6px;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;	
 }

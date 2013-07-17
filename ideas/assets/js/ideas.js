@@ -14,8 +14,8 @@ $('.voteup, .votedown').click(function (e) {
 		if (typeof message === 'string') {
 			alert('An error occurred: ' + message); // Error
 		} else {
-			$('.voteup:first').html('&#x25B2;' + message.votes_up);
-			$('.votedown').html('&#x25BC;' + message.votes_down + ' ');
+			$('.voteup:first').html('<span>' + message.votes_up + '</span>');
+			$('.votedown:first').html('<span>' + message.votes_down + '</span>');
 			$('.votes').hide()
 				.text('(' + message.points + ' points. Click to view votes)');
 			$('.successvoted').text('   ' + message.message)
@@ -26,6 +26,16 @@ $('.voteup, .votedown').click(function (e) {
 					});
 		}
 	});
+});
+
+$('.voteup-button, .minivoteup').click(function () {
+	$('.voteup-button a').addClass("voted");
+	$('.votedown-button a').removeClass("voted");
+});
+
+$('.votedown-button, .minivotedown').click(function () {
+	$('.votedown-button a').addClass("voted");
+	$('.voteup-button a').removeClass("voted");
 });
 
 $('a.dead').attr('href', '#');
