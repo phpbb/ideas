@@ -18,6 +18,10 @@ a.dead:hover {
 	text-decoration: none;
 }
 
+a.dead.removevote {
+	display: none;
+}
+
 .successvoted {
 	display: none;
 }

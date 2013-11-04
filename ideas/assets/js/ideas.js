@@ -37,6 +37,31 @@ $('.votes').click(function (e) {
 	$('.voteslist').slideToggle();
 });
 
+$('.removevote').click(function (e) {
+	"use strict";
+	e.preventDefault();
+
+	var $this = $(this),
+		url = $this.attr('href');
+
+	if ($this.is('.dead')) {
+		return false;
+	}
+
+	$.get(url, function (message) {
+		$('.voteup:first').html('&#x25B2;' + message.votes_up);
+		$('.votedown').html('&#x25BC;' + message.votes_down + ' ');
+		$('.votes').hide()
+			.text('(' + message.points + ' points. Click to view votes)');
+		$('.successvoted').text('   ' + message.message)
+			.show()
+			.delay(2000)
+			.fadeOut(300, function () {
+				$('.votes').fadeIn(300);
+			});
+	});
+});
+
 $('.confirm').click(function () {
 	"use strict";
 

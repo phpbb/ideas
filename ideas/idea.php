@@ -44,6 +44,22 @@ if (ideas_is_ajax())
 			}
 			break;
 
+		case 'removevote':
+			if ($idea['idea_status'] == 3 || $idea['idea_status'] == 4)
+			{
+				return false;
+			}
+
+			if ($auth->acl_get('f_vote', IDEAS_FORUM_ID))
+			{
+				echo json_encode($ideas->remove_vote($idea, $user->data['user_id']));
+			}
+			else
+			{
+				echo json_encode($user->lang('NO_AUTH_OPERATION'));
+			}
+			break;
+
 		case 'rfc':
 			if ($own || $mod)
 			{
@@ -187,6 +203,7 @@ $template->assign_vars(array(
 	'U_EDIT_RFC'		=> append_sid('./idea.php', 'mode=rfc&amp;id=' . $id),
 	'U_EDIT_TICKET'		=> append_sid('./idea.php', 'mode=ticket&amp;id=' . $id),
 	'U_EDIT_TITLE'		=> append_sid('./idea.php', 'mode=title&amp;id=' . $id),
+	'U_REMOVE_VOTE'     => append_sid('./idea.php', 'mode=removevote&amp;id=' . $id),
 
 	'U_IDEA_VOTE'		=> append_sid('./idea.php', 'mode=vote&amp;id=' . $id),
 ));

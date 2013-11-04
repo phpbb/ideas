@@ -12,6 +12,7 @@
 			<ul class="voteslist">
 				<!-- IF .votes_up --><li><strong>&#x25B2;:</strong> <!-- BEGIN votes_up -->{votes_up.USER}<!-- IF not votes_up.S_LAST_ROW -->, <!-- ENDIF --><!-- END votes_up --></li><!-- ENDIF -->
 				<!-- IF .votes_down --><li><strong>&#x25BC;:</strong> <!-- BEGIN votes_down -->{votes_down.USER}<!-- IF not votes_down.S_LAST_ROW -->, <!-- ENDIF --><!-- END votes_down --></li><!-- ENDIF -->
+				<li><a href="{U_REMOVE_VOTE}" class="removevote<!-- IF not CAN_VOTE--> dead<!-- ENDIF -->">Remove vote</a></li>
 			</ul>
 		</dd>
 		<dt style="width: 15%">{L_STATUS}:</dt>

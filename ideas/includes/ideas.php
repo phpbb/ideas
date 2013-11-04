@@ -425,6 +425,40 @@ class Ideas
 		);
 	}
 
+	public function remove_vote(&$idea, $user_id)
+	{
+		global $db, $user;
+
+		// Only change something if user has already voted
+		$sql = 'SELECT idea_id, vote_value
+			FROM ' . IDEA_VOTES_TABLE . "
+			WHERE idea_id = {$idea['idea_id']}
+				AND user_id = $user_id";
+		$db->sql_query_limit($sql, 1);
+		if ($result = $db->sql_fetchrow())
+		{
+			$sql = 'DELETE FROM ' . IDEA_VOTES_TABLE . '
+				WHERE idea_id = ' . (int) $idea['idea_id'] . '
+					AND user_id = ' . (int) $user_id;
+			$db->sql_query($sql);
+
+			$idea['idea_votes_' . ($result['vote_value'] == 1 ? 'up' : 'down')]--;
+
+			$sql = 'UPDATE ' . IDEAS_TABLE . '
+					SET idea_votes_up = ' . $idea['idea_votes_up'] . ',
+						idea_votes_down = ' . $idea['idea_votes_down'] . '
+					WHERE idea_id = ' . $idea['idea_id'];
+			$db->sql_query($sql);
+		}
+
+		return array(
+			'message'	    => $user->lang('UPDATED_VOTE'),
+			'votes_up'	    => $idea['idea_votes_up'],
+			'votes_down'	=> $idea['idea_votes_down'],
+			'points'        => $idea['idea_votes_up'] - $idea['idea_votes_down']
+		);
+	}
+
 	/**
 	 * Returns voter info on an idea.
 	 *
