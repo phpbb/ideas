@@ -1,3 +1,34 @@
+function voteSuccess(message) {
+	"use strict";
+
+	if (typeof message === 'string') {
+		alert('An error occurred: ' + message); // Error
+	} else {
+		$('.voteup:first').html('&#x25B2;' + message.votes_up);
+		$('.votedown').html('&#x25BC;' + message.votes_down + ' ');
+		$('.votes').hide()
+			.text('(' + message.points + ' points. Click to view votes)');
+		$('.successvoted').text('   ' + message.message)
+			.show()
+			.delay(2000)
+			.fadeOut(300, function () {
+				$('.votes').fadeIn(300);
+			});
+	}
+}
+
+function voteFailure() {
+	"use strict";
+
+	$('.votes').hide();
+	$('.successvoted').text('   Failed to vote; check your connection.')
+		.show()
+		.delay(2000)
+		.fadeOut(300, function () {
+			$('.votes').fadeIn(300);
+		});
+}
+
 $('.voteup, .votedown').click(function (e) {
 	"use strict";
 	e.preventDefault();
@@ -10,22 +41,7 @@ $('.voteup, .votedown').click(function (e) {
 		return false;
 	}
 
-	$.get(url, {v: vote}, function (message) {
-		if (typeof message === 'string') {
-			alert('An error occurred: ' + message); // Error
-		} else {
-			$('.voteup:first').html('&#x25B2;' + message.votes_up);
-			$('.votedown').html('&#x25BC;' + message.votes_down + ' ');
-			$('.votes').hide()
-				.text('(' + message.points + ' points. Click to view votes)');
-			$('.successvoted').text('   ' + message.message)
-				.show()
-				.delay(2000)
-					.fadeOut(300, function () {
-						$('.votes').fadeIn(300);
-					});
-		}
-	});
+	$.get(url, {v: vote}, voteSuccess).fail(voteFailure);
 });
 
 $('a.dead').attr('href', '#');
@@ -48,18 +64,7 @@ $('.removevote').click(function (e) {
 		return false;
 	}
 
-	$.get(url, function (message) {
-		$('.voteup:first').html('&#x25B2;' + message.votes_up);
-		$('.votedown').html('&#x25BC;' + message.votes_down + ' ');
-		$('.votes').hide()
-			.text('(' + message.points + ' points. Click to view votes)');
-		$('.successvoted').text('   ' + message.message)
-			.show()
-			.delay(2000)
-			.fadeOut(300, function () {
-				$('.votes').fadeIn(300);
-			});
-	});
+	$.get(url, voteSuccess).fail(voteFailure);
 });
 
 $('.confirm').click(function () {
