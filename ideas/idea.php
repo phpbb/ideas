@@ -448,7 +448,7 @@ if (!$topic_data)
 	// If post_id was submitted, we try at least to display the topic as a last resort...
 	if ($post_id && $topic_id)
 	{
-		redirect(append_sid("idea.$phpEx", "t=$topic_id" . (($forum_id) ? "&amp;f=$forum_id" : '')));
+		redirect(append_sid("idea.$phpEx", "id=$id"));
 	}
 
 	trigger_error('NO_TOPIC');
@@ -464,7 +464,7 @@ if ($post_id)
 		// If post_id was submitted, we try at least to display the topic as a last resort...
 		if ($topic_id)
 		{
-			redirect(append_sid("idea.$phpEx", "t=$topic_id" . (($forum_id) ? "&amp;f=$forum_id" : '')));
+			redirect(append_sid("idea.$phpEx", "id=$id"));
 		}
 
 		trigger_error('NO_TOPIC');
@@ -553,7 +553,7 @@ if (isset($_GET['e']))
 {
 	$jump_to = request_var('e', 0);
 
-	$redirect_url = append_sid("idea.$phpEx", "f=$forum_id&amp;t=$topic_id");
+	$redirect_url = append_sid("idea.$phpEx", "id=$id");
 
 	if ($user->data['user_id'] == ANONYMOUS)
 	{
@@ -654,7 +654,7 @@ if ($start < 0 || $start >= $total_posts)
 }
 
 // General Viewtopic URL for return links
-$viewtopic_url = append_sid("idea.$phpEx", "f=$forum_id&amp;t=$topic_id" . (($start == 0) ? '' : "&amp;start=$start") . ((strlen($u_sort_param)) ? "&amp;$u_sort_param" : '') . (($highlight_match) ? "&amp;hilit=$highlight" : ''));
+$viewtopic_url = append_sid("idea.$phpEx", "id=$id" . (($start == 0) ? '' : "&amp;start=$start") . ((strlen($u_sort_param)) ? "&amp;$u_sort_param" : '') . (($highlight_match) ? "&amp;hilit=$highlight" : ''));
 
 // Are we watching this topic?
 $s_watching_topic = array(
@@ -815,7 +815,7 @@ $template->assign_vars(array(
 	'S_SELECT_SORT_KEY' 	=> $s_sort_key,
 	'S_SELECT_SORT_DAYS' 	=> $s_limit_days,
 	'S_SINGLE_MODERATOR'	=> (!empty($forum_moderators[$forum_id]) && sizeof($forum_moderators[$forum_id]) > 1) ? false : true,
-	'S_TOPIC_ACTION' 		=> append_sid("idea.$phpEx", "f=$forum_id&amp;t=$topic_id" . (($start == 0) ? '' : "&amp;start=$start")),
+	'S_TOPIC_ACTION' 		=> append_sid("idea.$phpEx", "id=$id" . (($start == 0) ? '' : "&amp;start=$start")),
 	'S_MOD_ACTION' 			=> append_sid("{$phpbb_root_path}mcp.$phpEx", "f=$forum_id&amp;t=$topic_id" . (($start == 0) ? '' : "&amp;start=$start") . "&amp;quickmod=1&amp;redirect=" . urlencode(str_replace('&amp;', '&', $viewtopic_url)), true, $user->session_id),
 
 	'S_VIEWTOPIC'			=> true,
@@ -831,8 +831,8 @@ $template->assign_vars(array(
 	'U_FORUM'				=> $server_path,
 	'U_VIEW_TOPIC' 			=> $viewtopic_url,
 	'U_VIEW_FORUM' 			=> append_sid("{$phpbb_root_path}viewforum.$phpEx", 'f=' . $forum_id),
-	'U_VIEW_OLDER_TOPIC'	=> append_sid("idea.$phpEx", "f=$forum_id&amp;t=$topic_id&amp;view=previous"),
-	'U_VIEW_NEWER_TOPIC'	=> append_sid("idea.$phpEx", "f=$forum_id&amp;t=$topic_id&amp;view=next"),
+	'U_VIEW_OLDER_TOPIC'	=> append_sid("idea.$phpEx", "id=$id&amp;view=previous"),
+	'U_VIEW_NEWER_TOPIC'	=> append_sid("idea.$phpEx", "id=$id&amp;view=next"),
 	'U_PRINT_TOPIC'			=> false,
 	'U_EMAIL_TOPIC'			=> false,
 
@@ -1646,7 +1646,7 @@ else if (!$all_marked_read)
 	else if (!$last_page)
 	{
 		$template->assign_vars(array(
-			'U_VIEW_UNREAD_POST'	=> append_sid("idea.$phpEx", "f=$forum_id&amp;t=$topic_id&amp;view=unread") . '#unread',
+			'U_VIEW_UNREAD_POST'	=> append_sid("idea.$phpEx", "id=$id&amp;view=unread") . '#unread',
 		));
 	}
 }
