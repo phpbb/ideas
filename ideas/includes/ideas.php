@@ -434,10 +434,12 @@ class Ideas
 	{
 		global $db;
 
-		$sql = 'SELECT user_id, vote_value
-			FROM ' . IDEA_VOTES_TABLE . '
-			WHERE idea_id = ' . (int) $id . '
-			ORDER BY vote_value DESC';
+		$sql = 'SELECT iv.user_id, iv.vote_value, u.username, u.user_colour
+			FROM ' . IDEA_VOTES_TABLE . ' as iv,
+				' . USERS_TABLE . ' as u
+			WHERE iv.idea_id = ' . (int) $id . '
+				AND iv.user_id = u.user_id
+			ORDER BY u.username DESC';
 		$result = $db->sql_query($sql);
 		$rows = $db->sql_fetchrowset($result);
 		$db->sql_freeresult($result);

@@ -199,7 +199,7 @@ if ($idea['idea_votes_up'] || $idea['idea_votes_down'])
 	foreach ($votes as $vote)
 	{
 		$template->assign_block_vars('votes_' . ($vote['vote_value'] ? 'up' : 'down'), array(
-			'USER'	=> ideas_get_user_link($vote['user_id']),
+			'USER'	=> get_username_string('full', $vote['user_id'], $vote['username'], $vote['user_colour']),
 		));
 	}
 }
