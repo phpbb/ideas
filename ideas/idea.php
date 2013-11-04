@@ -1628,7 +1628,7 @@ if ($all_marked_read)
 	else if (isset($topic_tracking_info[$topic_id]) && $topic_data['topic_last_post_time'] > $topic_tracking_info[$topic_id])
 	{
 		$template->assign_vars(array(
-			'U_VIEW_UNREAD_POST'	=> append_sid("idea.$phpEx", "f=$forum_id&amp;t=$topic_id&amp;view=unread") . '#unread',
+			'U_VIEW_UNREAD_POST'	=> append_sid("idea.$phpEx", "id=$id&amp;view=unread") . '#unread',
 		));
 	}
 }
