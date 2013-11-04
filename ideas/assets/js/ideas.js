@@ -266,7 +266,7 @@ function idea_is_duplicate() {
 	"use strict";
 
 	var href = $('#status').prev('a').attr('href');
-	return href.indexOf('status=4') !== -1;
+	return href && href.indexOf('status=4') !== -1;
 }
 
 /**
