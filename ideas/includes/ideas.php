@@ -128,6 +128,8 @@ class Ideas
 	 * Returns the specified idea.
 	 *
 	 * @param int $id The ID of the idea to return.
+	 *
+	 * @return array The idea.
 	 */
 	public function get_idea($id)
 	{
@@ -449,6 +451,8 @@ class Ideas
 	 * @param string $title The title of the idea.
 	 * @param string $desc The description of the idea.
 	 * @param int $user_id The ID of the author.
+	 *
+	 * @return array|int Either an array of errors, or the ID of the new idea.
 	 */
 	public function submit($title, $desc, $user_id)
 	{
