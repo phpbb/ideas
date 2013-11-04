@@ -540,7 +540,23 @@ class Ideas
 			'force_approved_state'	=> true,
 		);
 
-		ideas_submit_post($title, POST_NORMAL, $data);
+		// Get Ideas Bot info
+		$sql = 'SELECT *
+			FROM ' . USERS_TABLE . '
+			WHERE user_id = ' . IDEAS_POSTER_ID;
+		$result = $db->sql_query_limit($sql, 1);
+		$poster_bot = $db->sql_fetchrow($result);
+		$db->sql_freeresult($result);
+
+		$poster_bot['is_registered'] = true;
+
+		$tmpdata = $user->data;
+		$user->data = $poster_bot;
+
+		$poll = array();
+		submit_post('post', $title, $user->data['username'], POST_NORMAL, $poll, $data);
+
+		$user->data = $tmpdata;
 
 		// Edit topic ID into idea; both should link to each other
 		$sql = 'UPDATE ' . IDEAS_TABLE . '
