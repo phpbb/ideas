@@ -36,8 +36,6 @@ $mod_name = 'phpbb-ideas';
 */
 $version_config_name = 'phpbb_ideas_version';
 
-
-
 /*
 * Optionally we may specify our own logo image to show in the upper corner instead of the default logo.
 * $phpbb_root_path will get prepended to the path specified
@@ -54,7 +52,6 @@ $version_config_name = 'phpbb_ideas_version';
 */
 $versions = array(
 	'1.0.0-RC3' => array(
-
 		'table_add' => array(
 			array($table_prefix . 'ideas_ideas', array(
 				'COLUMNS' => array(
@@ -163,6 +160,17 @@ $versions = array(
 				),
 			)),
 
+		),
+	),
+
+	'1.0.1' => array(
+		'table_row_insert'	=> array(
+			array($table_prefix . 'ideas_statuses', array(
+				array(
+					'status_id'		=> 5,
+					'status_name'	=> 'Invalid'
+				),
+			),),
 		),
 	),
 );
