@@ -22,7 +22,7 @@ class Ideas
 	 * @param string $sort_direction ASC / DESC.
 	 * @param string $where SQL WHERE query.
 	 */
-	public function get_ideas($number = 10, $sort = 'date', $sort_direction = 'DESC', $where = 'idea_status != 4 OR idea_status != 3 or ideas_status != 5')
+	public function get_ideas($number = 10, $sort = 'date', $sort_direction = 'DESC', $where = 'idea_status != 4 OR idea_status != 3 or idea_status != 5')
 	{
 		global $db;
 

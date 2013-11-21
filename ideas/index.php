@@ -14,7 +14,7 @@ include($ideas_root_path . 'common.php');
 
 page_header($user->lang['IDEAS_HOME'], false);
 
-$rows = $ideas->get_ideas(10, 'date', 'DESC', 'idea_status != 5 ');
+$rows = $ideas->get_ideas(10, 'date', 'DESC');
 foreach ($rows as $row)
 {
 	$template->assign_block_vars('latest_ideas', array(
