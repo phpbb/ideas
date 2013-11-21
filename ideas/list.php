@@ -17,7 +17,7 @@ $sort_direction = (request_var('sd', 'd')) === 'd' ? 'DESC' : 'ASC';
 $status = request_var('status', 0);
 $author = request_var('author', 0);
 
-$where = $status ? "idea_status = $status" : 'idea_status != 5';
+$where = $status ? "idea_status = $status" : 'idea_status != 4 OR idea_status != 5 or ideas_status != 3';
 if ($author)
 {
 	$where .= " && idea_author = $author";
