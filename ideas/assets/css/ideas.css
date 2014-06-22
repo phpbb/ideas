@@ -1,7 +1,3 @@
-a.votes {
-	margin-left: 10px;
-}
-
 a.voteup, span.up {
 	color: green;
 }
@@ -28,14 +24,7 @@ a.dead.removevote {
 
 dd.topics {
 	text-align: left;
-	width: 100px;
 	padding-left: 10px !important;
-}
-
-dd.topics:not(.bad) {
-	text-align: left;
-	padding-left: 10px;
-	vertical-align: top;
 }
 
 .voteslist {
