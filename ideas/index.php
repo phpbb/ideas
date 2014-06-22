@@ -1,12 +1,12 @@
 <?php
 
 /**
-*
-* @package phpBB3 Ideas
-* @author Callum Macrae (callumacrae) <callum@lynxphp.com>
-* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
-*
-*/
+ *
+ * @package phpBB3 Ideas
+ * @author Callum Macrae (callumacrae) <callum@lynxphp.com>
+ * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
+ *
+ */
 
 define('IN_IDEAS', true);
 $ideas_root_path = __DIR__ . '/';
@@ -46,7 +46,7 @@ foreach ($rows as $row)
 	));
 }
 
-$rows = $ideas->get_ideas(10, 'date', 'DESC', 'idea_status = 3');
+$rows = $ideas->get_ideas(5, 'date', 'DESC', 'idea_status = 3');
 foreach ($rows as $row)
 {
 	$template->assign_block_vars('implemented_ideas', array(
@@ -65,6 +65,7 @@ foreach ($rows as $row)
 $template->assign_vars(array(
 	'U_VIEW_TOP'		=> append_sid('./list.php', 'sort=top'),
 	'U_VIEW_LATEST'		=> append_sid('./list.php', 'sort=date'),
+	'U_VIEW_IMPLEMENTED'=> append_sid('./list.php', 'status=3'),
 	'S_POST_ACTION'		=> append_sid('./posting.php'),
 ));
 

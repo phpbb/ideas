@@ -1,16 +1,16 @@
 <?php
 /**
-*
-* common [English]
-*
-* @package phpBB Ideas
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
-*
-*/
+ *
+ * common [English]
+ *
+ * @package phpBB Ideas
+ * @license http://opensource.org/licenses/gpl-license.php GNU Public License
+ *
+ */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_IDEAS'))
 {
 	exit;
@@ -58,6 +58,7 @@ $user->lang = array_merge($user->lang, array(
 	'IDEA_POSTER'           => 'Posted by %s', // Warning: submitted to db
 	'IDEAS_HOME'			=> 'Ideas Home',
 	'IMPLEMENTED'           => 'Implemented',
+	'IMPLEMENTED_IDEAS'		=> 'Recently Implemented Ideas',
 	'IN_PROGRESS'           => 'In Progress',
 	'INVALID_VOTE'			=> 'Invalid vote; the number you entered was invalid.',
 
