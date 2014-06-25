@@ -56,7 +56,7 @@ $template->assign_vars(array(
 ));
 
 $template->set_filenames(array(
-	'body' => 'idea_new.html'
+	'body' => 'ideas/idea_new.html'
 ));
 
 $template->display('body');

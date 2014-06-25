@@ -1710,14 +1710,12 @@ if (empty($_REQUEST['t']) && !empty($topic_id))
 	$_REQUEST['t'] = $topic_id;
 }
 
-// Not sure why I need to do this...
-$template->set_custom_template($ideas_root_path . 'template', 'default');
 
 // Output the page
 page_header($user->lang['VIEW_IDEA'] . ' - ' . $idea['idea_title'], false);
 
 $template->set_filenames(array(
-	'body' => 'idea_body.html'
+	'body' => 'ideas/idea_body.html'
 ));
 
 page_footer();

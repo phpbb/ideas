@@ -70,7 +70,7 @@ $template->assign_vars(array(
 ));
 
 $template->set_filenames(array(
-    'body' => 'index_body.html'
+    'body' => 'ideas/index_body.html'
 ));
 
 $template->display('body');
