@@ -73,4 +73,4 @@ $template->set_filenames(array(
     'body' => 'index_body.html'
 ));
 
-$template->display('body');
+page_footer();
