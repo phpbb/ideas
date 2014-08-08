@@ -1,18 +1,42 @@
 <?php
 /**
-*
-* @package phpBB3 Ideas
-* @author Callum Macrae (callumacrae) <callum@lynxphp.com>
-* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
-*
-*/
+ *
+ * @package phpBB3 Ideas
+ * @author Callum Macrae (callumacrae) <callum@lynxphp.com>
+ * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
+ *
+ */
 
-/**
-* phpBB Ideas class
-* @package phpBB Ideas
-*/
+namespace phpbb\ideas\factory;
+
 class Ideas
 {
+	/* @var \phpbb\db\driver\factory */
+	protected $db;
+
+	/* @var \phpbb\user */
+	protected $user;
+
+	protected $table_ideas;
+	protected $table_duplicates;
+	protected $table_rfcs;
+	protected $table_statuses;
+	protected $table_tickets;
+	protected $table_votes;
+
+	public function __construct(\phpbb\db\driver\factory $db, \phpbb\user $user, $table_ideas, $table_duplicates, $table_rfcs, $table_statuses, $table_tickets, $table_votes) {
+		$this->db = $db;
+		$this->user = $user;
+
+		$this->table_ideas = $table_ideas;
+		$this->table_duplicates = $table_duplicates;
+		$this->table_rfcs = $table_rfcs;
+		$this->table_statuses = $table_statuses;
+		$this->table_tickets = $table_tickets;
+		$this->table_votes = $table_votes;
+	}
+
+
 	/**
 	 * Returns an array of ideas. Defaults to ten ideas ordered by date
 	 * excluding duplicate or rejected ideas.
@@ -24,8 +48,6 @@ class Ideas
 	 */
 	public function get_ideas($number = 10, $sort = 'date', $sort_direction = 'DESC', $where = 'idea_status != 4 AND idea_status != 3 AND idea_status != 5')
 	{
-		global $db;
-
 		switch (strtolower($sort))
 		{
 			case 'author':
@@ -66,7 +88,7 @@ class Ideas
 		if ($sortby !== 'TOP' && $sortby !== 'ALL')
 		{
 			$sql = 'SELECT *
-				FROM ' . IDEAS_TABLE . "
+				FROM ' . $this->table_ideas . "
 				WHERE $where
 				ORDER BY $sortby";
 		}
@@ -84,14 +106,14 @@ class Ideas
 	                1.96 * SQRT((idea_votes_up * idea_votes_down) / (idea_votes_up + idea_votes_down) + 0.9604) /
 	                (idea_votes_up + idea_votes_down)) / (1 + 3.8416 / (idea_votes_up + idea_votes_down))
 	                AS ci_lower_bound
-       			FROM ' . IDEAS_TABLE . "
+       			FROM ' . $this->table_ideas . "
        			WHERE $where
        			ORDER BY ci_lower_bound " . $sort_direction;
 		}
 
-		$result = $db->sql_query_limit($sql, $number);
-		$rows = $db->sql_fetchrowset($result);
-		$db->sql_freeresult($result);
+		$result = $this->db->sql_query_limit($sql, $number);
+		$rows = $this->db->sql_fetchrowset($result);
+		$this->db->sql_freeresult($result);
 
 		if (count($rows))
 		{
@@ -105,13 +127,13 @@ class Ideas
 			$last_times = array();
 			$sql = 'SELECT topic_id, topic_last_post_time
 				FROM ' . TOPICS_TABLE . '
-				WHERE ' . $db->sql_in_set('topic_id', $topic_ids);
-			$result = $db->sql_query($sql);
-			while (($last_time = $db->sql_fetchrow($result)))
+				WHERE ' . $this->db->sql_in_set('topic_id', $topic_ids);
+			$result = $this->db->sql_query($sql);
+			while (($last_time = $this->db->sql_fetchrow($result)))
 			{
 				$last_times[$last_time['topic_id']] = $last_time['topic_last_post_time'];
 			}
-			$db->sql_freeresult($result);
+			$this->db->sql_freeresult($result);
 
 			foreach ($rows as &$row)
 			{
@@ -132,35 +154,34 @@ class Ideas
 	 */
 	public function get_idea($id)
 	{
-		global $db;
 		$sql = 'SELECT *
-			FROM ' . IDEAS_TABLE . "
+			FROM ' . $this->table_ideas . "
 			WHERE idea_id = $id";
-		$result = $db->sql_query_limit($sql, 1);
-		$row = $db->sql_fetchrow($result);
-		$db->sql_freeresult($result);
+		$result = $this->db->sql_query_limit($sql, 1);
+		$row = $this->db->sql_fetchrow($result);
+		$this->db->sql_freeresult($result);
 
 		if ($row === false) {
 			return null;
 		}
 
 		$sql = 'SELECT duplicate_id
-			FROM ' . IDEA_DUPLICATES_TABLE . "
+			FROM ' . $this->table_duplicates . "
 			WHERE idea_id = $id";
-		$result = $db->sql_query_limit($sql, 1);
-		$row['duplicate_id'] = $db->sql_fetchfield('duplicate_id');
+		$result = $this->db->sql_query_limit($sql, 1);
+		$row['duplicate_id'] = $this->db->sql_fetchfield('duplicate_id');
 
 		$sql = 'SELECT ticket_id
-			FROM ' . IDEA_TICKETS_TABLE . "
+			FROM ' . $this->table_tickets . "
 			WHERE idea_id = $id";
-		$result = $db->sql_query_limit($sql, 1);
-		$row['ticket_id'] = $db->sql_fetchfield('ticket_id');
+		$result = $this->db->sql_query_limit($sql, 1);
+		$row['ticket_id'] = $this->db->sql_fetchfield('ticket_id');
 
 		$sql = 'SELECT rfc_link
-			FROM ' . IDEA_RFCS_TABLE . "
+			FROM ' . $this->table_rfcs . "
 			WHERE idea_id = $id";
-		$result = $db->sql_query_limit($sql, 1);
-		$row['rfc_link'] = $db->sql_fetchfield('rfc_link');
+		$result = $this->db->sql_query_limit($sql, 1);
+		$row['rfc_link'] = $this->db->sql_fetchfield('rfc_link');
 
 		return $row;
 	}
@@ -173,13 +194,12 @@ class Ideas
 	 */
 	public function get_status_from_id($id)
 	{
-		global $db;
 		$sql = 'SELECT status_name
-			FROM ' . IDEA_STATUS_TABLE . "
+			FROM ' . $this->table_statuses . "
 			WHERE status_id = $id";
-		$result = $db->sql_query_limit($sql, 1);
-		$row = $db->sql_fetchrow($result);
-		$db->sql_freeresult($result);
+		$result = $this->db->sql_query_limit($sql, 1);
+		$row = $this->db->sql_fetchrow($result);
+		$this->db->sql_freeresult($result);
 
 		return $row['status_name'];
 	}
@@ -191,12 +211,10 @@ class Ideas
 	 */
 	public function get_statuses()
 	{
-		global $db;
-
-		$sql = 'SELECT * FROM ' . IDEA_STATUS_TABLE;
-		$result = $db->sql_query($sql);
-		$rows = $db->sql_fetchrowset($result);
-		$db->sql_freeresult($result);
+		$sql = 'SELECT * FROM ' . $this->table_statuses;
+		$result = $this->db->sql_query($sql);
+		$rows = $this->db->sql_fetchrowset($result);
+		$this->db->sql_freeresult($result);
 
 		return $rows;
 	}
@@ -209,12 +227,10 @@ class Ideas
 	 */
 	public function change_status($idea_id, $status)
 	{
-		global $db;
-
-		$sql = 'UPDATE ' . IDEAS_TABLE . '
+		$sql = 'UPDATE ' . $this->table_ideas . '
 			SET idea_status = ' . (int) $status . '
 			WHERE idea_id = ' . (int) $idea_id;
-		$db->sql_query($sql);
+		$this->db->sql_query($sql);
 	}
 
 	/**
@@ -225,20 +241,18 @@ class Ideas
 	 */
 	public function set_duplicate($idea_id, $duplicate)
 	{
-		global $db;
-
 		if ($duplicate && !is_numeric($duplicate))
 		{
 			return; // Don't bother informing user, probably an attempted hacker
 		}
 
-		$sql = 'DELETE FROM ' . IDEA_DUPLICATES_TABLE . '
+		$sql = 'DELETE FROM ' . $this->table_duplicates . '
 			WHERE idea_id = ' . (int) $idea_id;
-		$db->sql_query($sql);
+		$this->db->sql_query($sql);
 
-		$sql = 'INSERT INTO ' . IDEA_DUPLICATES_TABLE . ' (idea_id, duplicate_id)
+		$sql = 'INSERT INTO ' . $this->table_duplicates . ' (idea_id, duplicate_id)
 			VALUES (' . (int) $idea_id . ', ' . (int) $duplicate . ')';
-		$db->sql_query($sql);
+		$this->db->sql_query($sql);
 	}
 
 	/**
@@ -249,21 +263,19 @@ class Ideas
 	 */
 	public function set_rfc($idea_id, $rfc)
 	{
-		global $db;
-
 		$match = '/^https?:\/\/area51\.phpbb\.com\/phpBB\/viewtopic\.php/';
 		if ($rfc && !preg_match($match, $rfc))
 		{
 			return; // Don't bother informing user, probably an attempted hacker
 		}
 
-		$sql = 'DELETE FROM ' . IDEA_RFCS_TABLE . '
+		$sql = 'DELETE FROM ' . $this->table_rfcs . '
 			WHERE idea_id = ' . (int) $idea_id;
-		$db->sql_query($sql);
+		$this->db->sql_query($sql);
 
-		$sql = 'INSERT INTO ' . IDEA_RFCS_TABLE . ' (idea_id, rfc_link)
-			VALUES (' . (int) $idea_id . ', \'' . $db->sql_escape($rfc) . '\')';
-		$db->sql_query($sql);
+		$sql = 'INSERT INTO ' . $this->table_rfcs . ' (idea_id, rfc_link)
+			VALUES (' . (int) $idea_id . ', \'' . $this->db->sql_escape($rfc) . '\')';
+		$this->db->sql_query($sql);
 	}
 
 	/**
@@ -274,20 +286,18 @@ class Ideas
 	 */
 	public function set_ticket($idea_id, $ticket)
 	{
-		global $db;
-
 		if ($ticket && !is_numeric($ticket))
 		{
 			return; // Don't bother informing user, probably an attempted hacker
 		}
 
-		$sql = 'DELETE FROM ' . IDEA_TICKETS_TABLE . '
+		$sql = 'DELETE FROM ' . $this->table_tickets . '
 			WHERE idea_id = ' . (int) $idea_id;
-		$db->sql_query($sql);
+		$this->db->sql_query($sql);
 
-		$sql = 'INSERT INTO ' . IDEA_TICKETS_TABLE . ' (idea_id, ticket_id)
+		$sql = 'INSERT INTO ' . $this->table_tickets . ' (idea_id, ticket_id)
 			VALUES (' . (int) $idea_id . ', ' . (int) $ticket . ')';
-		$db->sql_query($sql);
+		$this->db->sql_query($sql);
 	}
 
 	/**
@@ -300,8 +310,6 @@ class Ideas
 	 */
 	public function set_title($idea_id, $title)
 	{
-		global $db;
-
 		if (strlen($title) < 6 || strlen($title) > 64)
 		{
 			return false;
@@ -311,10 +319,10 @@ class Ideas
 			'idea_title'    => $title
 		);
 
-		$sql = 'UPDATE ' . IDEAS_TABLE . '
-			SET ' . $db->sql_build_array('UPDATE', $sql_ary) . '
+		$sql = 'UPDATE ' . $this->table_ideas . '
+			SET ' . $this->db->sql_build_array('UPDATE', $sql_ary) . '
 			WHERE idea_id = ' . $idea_id;
-		$db->sql_query($sql);
+		$this->db->sql_query($sql);
 
 		add_log('mod', 0, 0, 'LOG_IDEA_TITLE_EDITED', 'Idea #' . $idea_id);
 
@@ -332,8 +340,6 @@ class Ideas
 	 */
 	public function vote(&$idea, $user_id, $value)
 	{
-		global $db, $user;
-
 		// Validate $vote - must be 0 or 1
 		if ($value !== 0 && $value !== 1)
 		{
@@ -342,26 +348,26 @@ class Ideas
 
 		// Check whether user has already voted - update if they have
 		$sql = 'SELECT idea_id, vote_value
-			FROM ' . IDEA_VOTES_TABLE . "
+			FROM ' . $this->table_votes . "
 			WHERE idea_id = {$idea['idea_id']}
 				AND user_id = $user_id";
-		$db->sql_query_limit($sql, 1);
-		if ($db->sql_fetchrow())
+		$this->db->sql_query_limit($sql, 1);
+		if ($this->db->sql_fetchrow())
 		{
 			$sql = 'SELECT vote_value
-				FROM ' . IDEA_VOTES_TABLE . '
+				FROM ' . $this->table_votes . '
 				WHERE user_id = ' . (int) $user_id . '
 					AND idea_id = ' . (int) $idea['idea_id'];
-			$db->sql_query($sql);
-			$old_value = $db->sql_fetchfield('vote_value');
+			$this->db->sql_query($sql);
+			$old_value = $this->db->sql_fetchfield('vote_value');
 
 			if ($old_value != $value)
 			{
-				$sql = 'UPDATE ' . IDEA_VOTES_TABLE . '
+				$sql = 'UPDATE ' . $this->table_votes . '
 					SET vote_value = ' . $value . '
 					WHERE user_id = ' . (int) $user_id . '
 						AND idea_id = ' . (int) $idea['idea_id'];
-				$db->sql_query($sql);
+				$this->db->sql_query($sql);
 
 				if ($value == 1)
 				{
@@ -376,15 +382,15 @@ class Ideas
 					$idea['idea_votes_down']++;
 				}
 
-				$sql = 'UPDATE ' . IDEAS_TABLE . '
+				$sql = 'UPDATE ' . $this->table_ideas . '
 					SET idea_votes_up = ' . $idea['idea_votes_up'] . ',
 						idea_votes_down = ' . $idea['idea_votes_down'] . '
 					WHERE idea_id = ' . $idea['idea_id'];
-				$db->sql_query($sql);
+				$this->db->sql_query($sql);
 			}
 
 			return array(
-				'message'	    => $user->lang('UPDATED_VOTE'),
+				'message'	    => $this->user->lang('UPDATED_VOTE'),
 				'votes_up'	    => $idea['idea_votes_up'],
 				'votes_down'	=> $idea['idea_votes_down'],
 				'points'        => $idea['idea_votes_up'] - $idea['idea_votes_down']
@@ -398,9 +404,9 @@ class Ideas
 			'vote_value'	=> $value,
 		);
 
-		$sql = 'INSERT INTO ' . IDEA_VOTES_TABLE . ' ' .
-			$db->sql_build_array('INSERT', $sql_ary);
-		$db->sql_query($sql);
+		$sql = 'INSERT INTO ' . $this->table_votes . ' ' .
+			$this->db->sql_build_array('INSERT', $sql_ary);
+		$this->db->sql_query($sql);
 
 
 		// Update number of votes in ideas table
@@ -411,13 +417,13 @@ class Ideas
 			'idea_votes_down'	=> $idea['idea_votes_down'],
 		);
 
-		$sql = 'UPDATE ' . IDEAS_TABLE . '
-			SET ' . $db->sql_build_array('UPDATE', $sql_ary) . '
+		$sql = 'UPDATE ' . $this->table_ideas . '
+			SET ' . $this->db->sql_build_array('UPDATE', $sql_ary) . '
 			WHERE idea_id = ' . $idea['idea_id'];
-		$db->sql_query($sql);
+		$this->db->sql_query($sql);
 
 		return array(
-			'message'	    => $user->lang('VOTE_SUCCESS'),
+			'message'	    => $this->user->lang('VOTE_SUCCESS'),
 			'votes_up'	    => $idea['idea_votes_up'],
 			'votes_down'	=> $idea['idea_votes_down'],
 			'points'        => $idea['idea_votes_up'] - $idea['idea_votes_down']
@@ -426,32 +432,30 @@ class Ideas
 
 	public function remove_vote(&$idea, $user_id)
 	{
-		global $db, $user;
-
 		// Only change something if user has already voted
 		$sql = 'SELECT idea_id, vote_value
-			FROM ' . IDEA_VOTES_TABLE . "
+			FROM ' . $this->table_votes . "
 			WHERE idea_id = {$idea['idea_id']}
 				AND user_id = $user_id";
-		$db->sql_query_limit($sql, 1);
-		if ($result = $db->sql_fetchrow())
+		$this->db->sql_query_limit($sql, 1);
+		if ($result = $this->db->sql_fetchrow())
 		{
-			$sql = 'DELETE FROM ' . IDEA_VOTES_TABLE . '
+			$sql = 'DELETE FROM ' . $this->table_votes . '
 				WHERE idea_id = ' . (int) $idea['idea_id'] . '
 					AND user_id = ' . (int) $user_id;
-			$db->sql_query($sql);
+			$this->db->sql_query($sql);
 
 			$idea['idea_votes_' . ($result['vote_value'] == 1 ? 'up' : 'down')]--;
 
-			$sql = 'UPDATE ' . IDEAS_TABLE . '
+			$sql = 'UPDATE ' . $this->table_ideas . '
 					SET idea_votes_up = ' . $idea['idea_votes_up'] . ',
 						idea_votes_down = ' . $idea['idea_votes_down'] . '
 					WHERE idea_id = ' . $idea['idea_id'];
-			$db->sql_query($sql);
+			$this->db->sql_query($sql);
 		}
 
 		return array(
-			'message'	    => $user->lang('UPDATED_VOTE'),
+			'message'	    => $this->user->lang('UPDATED_VOTE'),
 			'votes_up'	    => $idea['idea_votes_up'],
 			'votes_down'	=> $idea['idea_votes_down'],
 			'points'        => $idea['idea_votes_up'] - $idea['idea_votes_down']
@@ -465,17 +469,15 @@ class Ideas
 	 */
 	public function get_voters($id)
 	{
-		global $db;
-
 		$sql = 'SELECT iv.user_id, iv.vote_value, u.username, u.user_colour
-			FROM ' . IDEA_VOTES_TABLE . ' as iv,
+			FROM ' . $this->table_votes . ' as iv,
 				' . USERS_TABLE . ' as u
 			WHERE iv.idea_id = ' . (int) $id . '
 				AND iv.user_id = u.user_id
 			ORDER BY u.username DESC';
-		$result = $db->sql_query($sql);
-		$rows = $db->sql_fetchrowset($result);
-		$db->sql_freeresult($result);
+		$result = $this->db->sql_query($sql);
+		$rows = $this->db->sql_fetchrowset($result);
+		$this->db->sql_freeresult($result);
 
 		return $rows;
 	}
@@ -491,24 +493,22 @@ class Ideas
 	 */
 	public function submit($title, $desc, $user_id)
 	{
-		global $db, $user;
-
 		$error = array();
 		if (strlen($title) < 6)
 		{
-			$error[] = $user->lang['TITLE_TOO_SHORT'];
+			$error[] = $this->user->lang['TITLE_TOO_SHORT'];
 		}
 		if (strlen($desc) < 5)
 		{
-			$error[] = $user->lang['DESC_TOO_SHORT'];
+			$error[] = $this->user->lang['DESC_TOO_SHORT'];
 		}
 		if (strlen($title) > 64)
 		{
-			$error[] = $user->lang['TITLE_TOO_LONG'];
+			$error[] = $this->user->lang['TITLE_TOO_LONG'];
 		}
 		if (strlen($desc) > 9900)
 		{
-			$error[] = $user->lang['DESC_TOO_LONG'];
+			$error[] = $this->user->lang['DESC_TOO_LONG'];
 		}
 
 		if (count($error))
@@ -524,27 +524,27 @@ class Ideas
 			'topic_id'			=> 0
 		);
 
-		$sql = 'INSERT INTO ' . IDEAS_TABLE . ' ' .
-			$db->sql_build_array('INSERT', $sql_ary);
-		$db->sql_query($sql);
-		$idea_id = $db->sql_nextid();
+		$sql = 'INSERT INTO ' . $this->table_ideas . ' ' .
+			$this->db->sql_build_array('INSERT', $sql_ary);
+		$this->db->sql_query($sql);
+		$idea_id = $this->db->sql_nextid();
 
 		$sql = 'SELECT username
 			FROM ' . USERS_TABLE . '
 			WHERE user_id = ' . $user_id;
-		$result = $db->sql_query_limit($sql, 1);
-		$username = $db->sql_fetchfield('username');
-		$db->sql_freeresult($result);
+		$result = $this->db->sql_query_limit($sql, 1);
+		$username = $this->db->sql_fetchfield('username');
+		$this->db->sql_freeresult($result);
 
 		// Initial vote
 		$idea = $this->get_idea($idea_id);
-		$this->vote($idea, $user->data['user_id'], 1);
+		$this->vote($idea, $this->user->data['user_id'], 1);
 
 		// Submit topic
 		$bbcode = "[idea={$idea_id}]{$title}[/idea]";
-		$desc .= "\n\n----------\n\n" . $user->lang('VIEW_IDEA_AT', $bbcode);
+		$desc .= "\n\n----------\n\n" . $this->user->lang('VIEW_IDEA_AT', $bbcode);
 		$bbcode = "[user={$user_id}]{$username}[/user]";
-		$desc .= "\n\n" . $user->lang('IDEA_POSTER', $bbcode);
+		$desc .= "\n\n" . $this->user->lang('IDEA_POSTER', $bbcode);
 
 		$uid = $bitfield = $options = '';
 		generate_text_for_storage($desc, $uid, $bitfield, $options, true, true, true);
@@ -583,25 +583,25 @@ class Ideas
 		$sql = 'SELECT *
 			FROM ' . USERS_TABLE . '
 			WHERE user_id = ' . IDEAS_POSTER_ID;
-		$result = $db->sql_query_limit($sql, 1);
-		$poster_bot = $db->sql_fetchrow($result);
-		$db->sql_freeresult($result);
+		$result = $this->db->sql_query_limit($sql, 1);
+		$poster_bot = $this->db->sql_fetchrow($result);
+		$this->db->sql_freeresult($result);
 
 		$poster_bot['is_registered'] = true;
 
-		$tmpdata = $user->data;
-		$user->data = $poster_bot;
+		$tmpdata = $this->user->data;
+		$this->user->data = $poster_bot;
 
 		$poll = array();
-		submit_post('post', $title, $user->data['username'], POST_NORMAL, $poll, $data);
+		submit_post('post', $title, $this->user->data['username'], POST_NORMAL, $poll, $data);
 
-		$user->data = $tmpdata;
+		$this->user->data = $tmpdata;
 
 		// Edit topic ID into idea; both should link to each other
-		$sql = 'UPDATE ' . IDEAS_TABLE . '
+		$sql = 'UPDATE ' . $this->table_ideas . '
 			SET topic_id = ' . $data['topic_id'] . '
 			WHERE idea_id = ' . $idea_id;
-		$db->sql_query($sql);
+		$this->db->sql_query($sql);
 
 		return $idea_id;
 	}
@@ -616,8 +616,6 @@ class Ideas
 	 */
 	public function delete($id, $topic_id = 0)
 	{
-		global $db;
-
 		if (!$topic_id)
 		{
 			$idea = $this->get_idea($id);
@@ -628,25 +626,25 @@ class Ideas
 		delete_posts('topic_id', $topic_id);
 
 		// Delete idea
-		$sql = 'DELETE FROM ' . IDEAS_TABLE . '
+		$sql = 'DELETE FROM ' . $this->table_ideas . '
 			WHERE idea_id = ' . (int) $id;
-		$db->sql_query($sql);
-		$deleted = (bool) $db->sql_affectedrows();
+		$this->db->sql_query($sql);
+		$deleted = (bool) $this->db->sql_affectedrows();
 
 		// Delete votes
-		$sql = 'DELETE FROM ' . IDEA_VOTES_TABLE . '
+		$sql = 'DELETE FROM ' . $this->table_votes . '
 			WHERE idea_id = ' . (int) $id;
-		$db->sql_query($sql);
+		$this->db->sql_query($sql);
 
 		// Delete RFCS
-		$sql = 'DELETE FROM ' . IDEA_RFCS_TABLE . '
+		$sql = 'DELETE FROM ' . $this->table_rfcs . '
 			WHERE idea_id = ' . (int) $id;
-		$db->sql_query($sql);
+		$this->db->sql_query($sql);
 
 		// Delete tickets
-		$sql = 'DELETE FROM ' . IDEA_TICKETS_TABLE . '
+		$sql = 'DELETE FROM ' . $this->table_tickets . '
 			WHERE idea_id = ' . (int) $id;
-		$db->sql_query($sql);
+		$this->db->sql_query($sql);
 
 		return $deleted;
 	}

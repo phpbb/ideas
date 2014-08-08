@@ -1,0 +1,22 @@
+imports:
+    - { resource: tables.yml }
+
+services:
+    phpbb.ideas.controller:
+        class: phpbb\ideas\controller\main
+        arguments:
+            - @controller.helper
+            - @template
+            - @user
+            - @phpbb.ideas.Ideas
+    phpbb.ideas.Ideas:
+        class: phpbb\ideas\factory\Ideas
+        arguments:
+            - @dbal.conn
+            - @user
+            - %tables.ideas_ideas%
+            - %tables.ideas_duplicates%
+            - %tables.ideas_rfcs%
+            - %tables.ideas_statuses%
+            - %tables.ideas_tickets%
+            - %tables.ideas_votes%

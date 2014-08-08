@@ -1,0 +1,7 @@
+ideas_index_controller:
+    pattern: /ideas
+    defaults: { _controller: phpbb.ideas.controller:index }
+
+ideas_idea_controller:
+    pattern: /idea/{idea_id}
+    defaults: { _controller: phpbb.ideas.controller:idea }
