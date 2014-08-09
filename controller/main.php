@@ -25,6 +25,9 @@ class main
 	/* @var \phpbb\user */
 	protected $user;
 
+	/* @var \phpbb\ideas\factory\LinkHelper */
+	protected $link_helper;
+
 	/* @var \phpbb\ideas\factory\Ideas */
 	protected $ideas;
 
