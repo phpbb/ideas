@@ -50,7 +50,7 @@ class main
 		{
 			$this->template->assign_block_vars('latest_ideas', array(
 				'ID'		=> $row['idea_id'],
-				'LINK'		=> append_sid('./idea.php', 'id=' . $row['idea_id']),
+				'LINK'		=> $this->getIdeaLink($row['idea_id']),
 				'TITLE'		=> $row['idea_title'],
 				'AUTHOR'	=> ideas_get_user_link($row['idea_author']),
 				'DATE'		=> $this->user->format_date($row['idea_date']),
@@ -66,7 +66,7 @@ class main
 		{
 			$this->template->assign_block_vars('top_ideas', array(
 				'ID'		=> $row['idea_id'],
-				'LINK'		=> append_sid('./idea.php', 'id=' . $row['idea_id']),
+				'LINK'		=> $this->getIdeaLink($row['idea_id']),
 				'TITLE'		=> $row['idea_title'],
 				'AUTHOR'	=> ideas_get_user_link($row['idea_author']),
 				'DATE'		=> $this->user->format_date($row['idea_date']),
@@ -82,7 +82,7 @@ class main
 		{
 			$this->template->assign_block_vars('implemented_ideas', array(
 				'ID'		=> $row['idea_id'],
-				'LINK'		=> append_sid('./idea.php', 'id=' . $row['idea_id']),
+				'LINK'		=> $this->getIdeaLink($row['idea_id']),
 				'TITLE'		=> $row['idea_title'],
 				'AUTHOR'	=> ideas_get_user_link($row['idea_author']),
 				'DATE'		=> $this->user->format_date($row['idea_date']),
@@ -92,6 +92,13 @@ class main
 				'POINTS'    => $row['idea_votes_up'] - $row['idea_votes_down'],
 			));
 		}
+
+		$this->template->assign_vars(array(
+//			'U_VIEW_TOP'		=> append_sid('./list.php', 'sort=top'),
+//			'U_VIEW_LATEST'		=> append_sid('./list.php', 'sort=date'),
+//			'U_VIEW_IMPLEMENTED'=> append_sid('./list.php', 'status=3'),
+//			'S_POST_ACTION'		=> append_sid('./posting.php'),
+		));
 
 		return $this->helper->render('index_body.html', $this->user->lang['IDEAS_HOME']);
 	}
@@ -105,6 +112,19 @@ class main
 	{
 		$idea = $this->ideas->get_idea($idea_id);
 		var_dump($idea);
+	}
+
+	/**
+	 * Shortcut method to get the link to a specified idea.
+	 *
+	 * @param $idea_id int The ID of the idea.
+	 * @return string The route
+	 */
+	private function getIdeaLink($idea_id)
+	{
+		return $this->helper->route('ideas_idea_controller', array(
+			'idea_id' => $idea_id
+		));
 	}
 }
 
