@@ -5,6 +5,8 @@ ideas_index_controller:
 ideas_idea_controller:
     pattern: /idea/{idea_id}
     defaults: { _controller: phpbb.ideas.controller:idea }
+    requirements:
+        idea_id: \d+
 
 ideas_list_controller:
     pattern: /ideas/all/{sort}
