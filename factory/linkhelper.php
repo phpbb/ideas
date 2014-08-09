@@ -36,6 +36,13 @@ class LinkHelper
 		));
 	}
 
+	public function get_list_link($sort = 'date')
+	{
+		return $this->helper->route('ideas_list_controller', array(
+			'sort'	=> $sort
+		));
+	}
+
 	/**
 	 * Returns a link to the users profile, complete with colour.
 	 *
