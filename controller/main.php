@@ -28,12 +28,12 @@ class main
 	/* @var \phpbb\ideas\factory\Ideas */
 	protected $ideas;
 
-	public function __construct(\phpbb\controller\helper $helper, \phpbb\template\template $template, \phpbb\user $user, \phpbb\user_loader $user_loader, \phpbb\ideas\factory\Ideas $ideas)
+	public function __construct(\phpbb\controller\helper $helper, \phpbb\template\template $template, \phpbb\user $user, \phpbb\ideas\factory\LinkHelper $link_helper, \phpbb\ideas\factory\Ideas $ideas)
 	{
 		$this->helper = $helper;
 		$this->template = $template;
 		$this->user = $user;
-		$this->user_loader = $user_loader;
+		$this->link_helper = $link_helper;
 		$this->ideas = $ideas;
 
 		$this->user->add_lang_ext('phpbb/ideas', 'common');
@@ -51,9 +51,9 @@ class main
 		{
 			$this->template->assign_block_vars('latest_ideas', array(
 				'ID'		=> $row['idea_id'],
-				'LINK'		=> $this->get_idea_link($row['idea_id']),
+				'LINK'		=> $this->link_helper->get_idea_link($row['idea_id']),
 				'TITLE'		=> $row['idea_title'],
-				'AUTHOR'	=> $this->get_user_link($row['idea_author']),
+				'AUTHOR'	=> $this->link_helper->get_user_link($row['idea_author']),
 				'DATE'		=> $this->user->format_date($row['idea_date']),
 				'READ'      => $row['read'],
 				'VOTES_UP'	=> $row['idea_votes_up'],
@@ -67,9 +67,9 @@ class main
 		{
 			$this->template->assign_block_vars('top_ideas', array(
 				'ID'		=> $row['idea_id'],
-				'LINK'		=> $this->get_idea_link($row['idea_id']),
+				'LINK'		=> $this->link_helper->get_idea_link($row['idea_id']),
 				'TITLE'		=> $row['idea_title'],
-				'AUTHOR'	=> $this->get_user_link($row['idea_author']),
+				'AUTHOR'	=> $this->link_helper->get_user_link($row['idea_author']),
 				'DATE'		=> $this->user->format_date($row['idea_date']),
 				'READ'      => $row['read'],
 				'VOTES_UP'	=> $row['idea_votes_up'],
@@ -83,9 +83,9 @@ class main
 		{
 			$this->template->assign_block_vars('implemented_ideas', array(
 				'ID'		=> $row['idea_id'],
-				'LINK'		=> $this->get_idea_link($row['idea_id']),
+				'LINK'		=> $this->link_helper->get_idea_link($row['idea_id']),
 				'TITLE'		=> $row['idea_title'],
-				'AUTHOR'	=> $this->get_user_link($row['idea_author']),
+				'AUTHOR'	=> $this->link_helper->get_user_link($row['idea_author']),
 				'DATE'		=> $this->user->format_date($row['idea_date']),
 				'READ'      => $row['read'],
 				'VOTES_UP'	=> $row['idea_votes_up'],
@@ -113,32 +113,5 @@ class main
 	{
 		$idea = $this->ideas->get_idea($idea_id);
 		var_dump($idea);
-	}
-
-	/**
-	 * Shortcut method to get the link to a specified idea.
-	 *
-	 * @param $idea_id int The ID of the idea.
-	 * @return string The route
-	 */
-	private function get_idea_link($idea_id)
-	{
-		return $this->helper->route('ideas_idea_controller', array(
-			'idea_id' => $idea_id
-		));
-	}
-
-	/**
-	 * Returns a link to the users profile, complete with colour.
-	 *
-	 * Is there a function that already does this? This seems fairly database heavy.
-	 *
-	 * @param int $id The ID of the user.
-	 * @return string An HTML link to the users profile.
-	 */
-	private function get_user_link($id)
-	{
-		$this->user_loader->load_users(array($id));
-		return $this->user_loader->get_username($id, 'full');
 	}
 }

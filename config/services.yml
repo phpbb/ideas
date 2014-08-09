@@ -8,7 +8,7 @@ services:
             - @controller.helper
             - @template
             - @user
-            - @user_loader
+            - @phpbb.ideas.LinkHelper
             - @phpbb.ideas.Ideas
     phpbb.ideas.Ideas:
         class: phpbb\ideas\factory\Ideas
@@ -21,3 +21,8 @@ services:
             - %tables.ideas_statuses%
             - %tables.ideas_tickets%
             - %tables.ideas_votes%
+    phpbb.ideas.LinkHelper:
+        class: phpbb\ideas\factory\LinkHelper
+        arguments:
+            - @controller.helper
+            - @user_loader
