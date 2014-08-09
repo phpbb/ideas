@@ -51,7 +51,7 @@ class main
 		{
 			$this->template->assign_block_vars('latest_ideas', array(
 				'ID'		=> $row['idea_id'],
-				'LINK'		=> $this->getIdeaLink($row['idea_id']),
+				'LINK'		=> $this->get_idea_link($row['idea_id']),
 				'TITLE'		=> $row['idea_title'],
 				'AUTHOR'	=> $this->get_user_link($row['idea_author']),
 				'DATE'		=> $this->user->format_date($row['idea_date']),
@@ -67,7 +67,7 @@ class main
 		{
 			$this->template->assign_block_vars('top_ideas', array(
 				'ID'		=> $row['idea_id'],
-				'LINK'		=> $this->getIdeaLink($row['idea_id']),
+				'LINK'		=> $this->get_idea_link($row['idea_id']),
 				'TITLE'		=> $row['idea_title'],
 				'AUTHOR'	=> $this->get_user_link($row['idea_author']),
 				'DATE'		=> $this->user->format_date($row['idea_date']),
@@ -83,7 +83,7 @@ class main
 		{
 			$this->template->assign_block_vars('implemented_ideas', array(
 				'ID'		=> $row['idea_id'],
-				'LINK'		=> $this->getIdeaLink($row['idea_id']),
+				'LINK'		=> $this->get_idea_link($row['idea_id']),
 				'TITLE'		=> $row['idea_title'],
 				'AUTHOR'	=> $this->get_user_link($row['idea_author']),
 				'DATE'		=> $this->user->format_date($row['idea_date']),
@@ -121,7 +121,7 @@ class main
 	 * @param $idea_id int The ID of the idea.
 	 * @return string The route
 	 */
-	private function getIdeaLink($idea_id)
+	private function get_idea_link($idea_id)
 	{
 		return $this->helper->route('ideas_idea_controller', array(
 			'idea_id' => $idea_id
