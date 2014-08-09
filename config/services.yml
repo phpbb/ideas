@@ -8,6 +8,7 @@ services:
             - @controller.helper
             - @template
             - @user
+            - @user_loader
             - @phpbb.ideas.Ideas
     phpbb.ideas.Ideas:
         class: phpbb\ideas\factory\Ideas

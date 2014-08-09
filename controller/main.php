@@ -28,11 +28,12 @@ class main
 	/* @var \phpbb\ideas\factory\Ideas */
 	protected $ideas;
 
-	public function __construct(\phpbb\controller\helper $helper, \phpbb\template\template $template, \phpbb\user $user, \phpbb\ideas\factory\Ideas $ideas)
+	public function __construct(\phpbb\controller\helper $helper, \phpbb\template\template $template, \phpbb\user $user, \phpbb\user_loader $user_loader, \phpbb\ideas\factory\Ideas $ideas)
 	{
 		$this->helper = $helper;
 		$this->template = $template;
 		$this->user = $user;
+		$this->user_loader = $user_loader;
 		$this->ideas = $ideas;
 
 		$this->user->add_lang_ext('phpbb/ideas', 'common');
@@ -52,7 +53,7 @@ class main
 				'ID'		=> $row['idea_id'],
 				'LINK'		=> $this->getIdeaLink($row['idea_id']),
 				'TITLE'		=> $row['idea_title'],
-				'AUTHOR'	=> ideas_get_user_link($row['idea_author']),
+				'AUTHOR'	=> $this->get_user_link($row['idea_author']),
 				'DATE'		=> $this->user->format_date($row['idea_date']),
 				'READ'      => $row['read'],
 				'VOTES_UP'	=> $row['idea_votes_up'],
@@ -68,7 +69,7 @@ class main
 				'ID'		=> $row['idea_id'],
 				'LINK'		=> $this->getIdeaLink($row['idea_id']),
 				'TITLE'		=> $row['idea_title'],
-				'AUTHOR'	=> ideas_get_user_link($row['idea_author']),
+				'AUTHOR'	=> $this->get_user_link($row['idea_author']),
 				'DATE'		=> $this->user->format_date($row['idea_date']),
 				'READ'      => $row['read'],
 				'VOTES_UP'	=> $row['idea_votes_up'],
@@ -84,7 +85,7 @@ class main
 				'ID'		=> $row['idea_id'],
 				'LINK'		=> $this->getIdeaLink($row['idea_id']),
 				'TITLE'		=> $row['idea_title'],
-				'AUTHOR'	=> ideas_get_user_link($row['idea_author']),
+				'AUTHOR'	=> $this->get_user_link($row['idea_author']),
 				'DATE'		=> $this->user->format_date($row['idea_date']),
 				'READ'      => $row['read'],
 				'VOTES_UP'	=> $row['idea_votes_up'],
@@ -126,27 +127,18 @@ class main
 			'idea_id' => $idea_id
 		));
 	}
-}
 
-/**
- * Returns a link to the users profile, complete with colour.
- *
- * Is there a function that already does this? This seems fairly database heavy.
- *
- * @todo: kill kill kill
- *
- * @param int $id The ID of the user.
- * @return string An HTML link to the users profile.
- */
-function ideas_get_user_link($id)
-{
-	global $db;
-	$sql = 'SELECT username, user_colour
-		FROM ' . USERS_TABLE . '
-		WHERE user_id = ' . $id;
-	$result = $db->sql_query_limit($sql, 1);
-	$author = $db->sql_fetchrow($result);
-	$db->sql_freeresult($result);
-
-	return get_username_string('full', $id, $author['username'], $author['user_colour']);
+	/**
+	 * Returns a link to the users profile, complete with colour.
+	 *
+	 * Is there a function that already does this? This seems fairly database heavy.
+	 *
+	 * @param int $id The ID of the user.
+	 * @return string An HTML link to the users profile.
+	 */
+	private function get_user_link($id)
+	{
+		$this->user_loader->load_users(array($id));
+		return $this->user_loader->get_username($id, 'full');
+	}
 }
