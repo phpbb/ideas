@@ -2,8 +2,8 @@ imports:
     - { resource: tables.yml }
 
 services:
-    phpbb.ideas.controller:
-        class: phpbb\ideas\controller\main
+    phpbb.ideas.controller.base:
+        abstract: true
         arguments:
             - @controller.helper
             - @template
@@ -11,6 +11,40 @@ services:
             - @phpbb.ideas.LinkHelper
             - @phpbb.ideas.Ideas
             - @request
+            - %core.root_path%
+            - %core.php_ext%
+
+    phpbb.ideas.index_controller:
+        class: phpbb\ideas\controller\index_controller
+        parent: phpbb.ideas.controller.base
+
+    phpbb.ideas.list_controller:
+        class: phpbb\ideas\controller\list_controller
+        parent: phpbb.ideas.controller.base
+
+    phpbb.ideas.post_controller:
+        class: phpbb\ideas\controller\post_controller
+        parent: phpbb.ideas.controller.base
+
+    phpbb.ideas.idea_controller:
+        class: phpbb\ideas\controller\idea_controller
+        arguments:
+            - @auth
+            - @cache
+            - @config
+            - @content.visibility
+            - @dbal.conn
+            - @controller.helper
+            - @pagination
+            - @profilefields.manager
+            - @template
+            - @user
+            - @phpbb.ideas.LinkHelper
+            - @phpbb.ideas.Ideas
+            - @request
+            - %core.root_path%
+            - %core.php_ext%
+
     phpbb.ideas.Ideas:
         class: phpbb\ideas\factory\Ideas
         arguments:
@@ -22,6 +56,7 @@ services:
             - %tables.ideas_statuses%
             - %tables.ideas_tickets%
             - %tables.ideas_votes%
+
     phpbb.ideas.LinkHelper:
         class: phpbb\ideas\factory\LinkHelper
         arguments:
