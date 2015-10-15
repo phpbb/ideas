@@ -1,9 +1,14 @@
 <?php
 /**
  *
- * @package phpBB3 Ideas
+ * This file is part of the phpBB Forum Software package.
+ *
  * @author Callum Macrae (callumacrae) <callum@lynxphp.com>
- * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
+ * @copyright (c) phpBB Limited <https://www.phpbb.com>
+ * @license GNU General Public License, version 2 (GPL-2.0)
+ *
+ * For full copyright and license information, please see
+ * the docs/CREDITS.txt file.
  *
  */
 
@@ -17,13 +22,34 @@ class Ideas
 	/* @var \phpbb\user */
 	protected $user;
 
+	/** @var string */
 	protected $table_ideas;
+
+	/** @var string */
 	protected $table_duplicates;
+
+	/** @var string */
 	protected $table_rfcs;
+
+	/** @var string */
 	protected $table_statuses;
+
+	/** @var string */
 	protected $table_tickets;
+
+	/** @var string */
 	protected $table_votes;
 
+	/**
+	 * @param \phpbb\db\driver\factory $db
+	 * @param \phpbb\user              $user
+	 * @param string                   $table_ideas
+	 * @param string                   $table_duplicates
+	 * @param string                   $table_rfcs
+	 * @param string                   $table_statuses
+	 * @param string                   $table_tickets
+	 * @param string                   $table_votes
+	 */
 	public function __construct(\phpbb\db\driver\factory $db, \phpbb\user $user, $table_ideas, $table_duplicates, $table_rfcs, $table_statuses, $table_tickets, $table_votes) {
 		$this->db = $db;
 		$this->user = $user;
@@ -45,6 +71,7 @@ class Ideas
 	 * @param string $sort Thing to sort by.
 	 * @param string $sort_direction ASC / DESC.
 	 * @param string $where SQL WHERE query.
+	 * @return array Array of row data
 	 */
 	public function get_ideas($number = 10, $sort = 'date', $sort_direction = 'DESC', $where = 'idea_status != 4 AND idea_status != 3 AND idea_status != 5')
 	{
@@ -168,19 +195,19 @@ class Ideas
 		$sql = 'SELECT duplicate_id
 			FROM ' . $this->table_duplicates . "
 			WHERE idea_id = $id";
-		$result = $this->db->sql_query_limit($sql, 1);
+		$this->db->sql_query_limit($sql, 1);
 		$row['duplicate_id'] = $this->db->sql_fetchfield('duplicate_id');
 
 		$sql = 'SELECT ticket_id
 			FROM ' . $this->table_tickets . "
 			WHERE idea_id = $id";
-		$result = $this->db->sql_query_limit($sql, 1);
+		$this->db->sql_query_limit($sql, 1);
 		$row['ticket_id'] = $this->db->sql_fetchfield('ticket_id');
 
 		$sql = 'SELECT rfc_link
 			FROM ' . $this->table_rfcs . "
 			WHERE idea_id = $id";
-		$result = $this->db->sql_query_limit($sql, 1);
+		$this->db->sql_query_limit($sql, 1);
 		$row['rfc_link'] = $this->db->sql_fetchfield('rfc_link');
 
 		return $row;
@@ -466,6 +493,7 @@ class Ideas
 	 * Returns voter info on an idea.
 	 *
 	 * @param int $id ID of the idea.
+	 * @return array Array of row data
 	 */
 	public function get_voters($id)
 	{
