@@ -1605,31 +1605,31 @@ class idea_controller extends base
 			$s_cannot_edit_locked = $topic_data['topic_status'] == ITEM_LOCKED || $row['post_edit_locked'];
 
 			$s_cannot_delete = $this->user->data['user_id'] != $poster_id || (
-					!$this->auth->acl_get('f_delete', $forum_id) &&
-					(!$this->auth->acl_get('f_softdelete', $forum_id) || $row['post_visibility'] == ITEM_DELETED)
-				);
+				!$this->auth->acl_get('f_delete', $forum_id) &&
+				(!$this->auth->acl_get('f_softdelete', $forum_id) || $row['post_visibility'] == ITEM_DELETED)
+			);
 			$s_cannot_delete_lastpost = $topic_data['topic_last_post_id'] != $row['post_id'];
 			$s_cannot_delete_time = $this->config['delete_time'] && $row['post_time'] <= time() - ($this->config['delete_time'] * 60);
 			// we do not want to allow removal of the last post if a moderator locked it!
 			$s_cannot_delete_locked = $topic_data['topic_status'] == ITEM_LOCKED || $row['post_edit_locked'];
 
 			$edit_allowed = $force_edit_allowed || ($this->user->data['is_registered'] && ($this->auth->acl_get('m_edit', $forum_id) || (
-							!$s_cannot_edit &&
-							!$s_cannot_edit_time &&
-							!$s_cannot_edit_locked
-						)));
+				!$s_cannot_edit &&
+				!$s_cannot_edit_time &&
+				!$s_cannot_edit_locked
+			)));
 
 			$quote_allowed = $this->auth->acl_get('m_edit', $forum_id) || ($topic_data['topic_status'] != ITEM_LOCKED &&
-					($this->user->data['user_id'] == ANONYMOUS || $this->auth->acl_get('f_reply', $forum_id))
-				);
+				($this->user->data['user_id'] == ANONYMOUS || $this->auth->acl_get('f_reply', $forum_id))
+			);
 
 			$delete_allowed = $force_delete_allowed || ($this->user->data['is_registered'] && (
-						($this->auth->acl_get('m_delete', $forum_id) || ($this->auth->acl_get('m_softdelete', $forum_id) && $row['post_visibility'] != ITEM_DELETED)) ||
-						(!$s_cannot_delete && !$s_cannot_delete_lastpost && !$s_cannot_delete_time && !$s_cannot_delete_locked)
-					));
+				($this->auth->acl_get('m_delete', $forum_id) || ($this->auth->acl_get('m_softdelete', $forum_id) && $row['post_visibility'] != ITEM_DELETED)) ||
+				(!$s_cannot_delete && !$s_cannot_delete_lastpost && !$s_cannot_delete_time && !$s_cannot_delete_locked)
+			));
 
 			$softdelete_allowed = ($this->auth->acl_get('m_softdelete', $forum_id) ||
-					($this->auth->acl_get('f_softdelete', $forum_id) && $this->user->data['user_id'] == $poster_id)) && ($row['post_visibility'] != ITEM_DELETED);
+				($this->auth->acl_get('f_softdelete', $forum_id) && $this->user->data['user_id'] == $poster_id)) && ($row['post_visibility'] != ITEM_DELETED);
 
 			$permanent_delete_allowed = ($this->auth->acl_get('m_delete', $forum_id) ||
 				($this->auth->acl_get('f_delete', $forum_id) && $this->user->data['user_id'] == $poster_id));
