@@ -75,7 +75,7 @@ class idea_controller extends base
 		$mod = $this->auth->acl_get('m_', IDEAS_FORUM_ID);
 		$own = $idea['idea_author'] === $this->user->data['user_id'];
 
-		if ($this->request->is_ajax())
+		if ($this->request->is_ajax() && !empty($mode))
 		{
 			switch ($mode)
 			{
@@ -949,7 +949,7 @@ class idea_controller extends base
 				'S_WATCH_TOPIC_TOGGLE'	=> $s_watching_topic['title_toggle'],
 				'S_WATCHING_TOPIC'		=> $s_watching_topic['is_watching'],
 
-				'U_BOOKMARK_TOPIC'		=> ($this->user->data['is_registered'] && $this->config['allow_bookmarks']) ? $viewtopic_url . '&amp;bookmark=1&amp;hash=' . generate_link_hash("topic_$topic_id") : '',
+				'U_BOOKMARK_TOPIC'		=> ($this->user->data['is_registered'] && $this->config['allow_bookmarks']) ? append_sid($viewtopic_url, array('bookmark' => 1, 'hash' => generate_link_hash("topic_$topic_id"))) : '',
 				'S_BOOKMARK_TOPIC'		=> ($this->user->data['is_registered'] && $this->config['allow_bookmarks'] && $topic_data['bookmarked']) ? $this->user->lang('BOOKMARK_TOPIC_REMOVE') : $this->user->lang('BOOKMARK_TOPIC'),
 				'S_BOOKMARK_TOGGLE'		=> (!$this->user->data['is_registered'] || !$this->config['allow_bookmarks'] || !$topic_data['bookmarked']) ? $this->user->lang['BOOKMARK_TOPIC_REMOVE'] : $this->user->lang['BOOKMARK_TOPIC'],
 				'S_BOOKMARKED_TOPIC'	=> ($this->user->data['is_registered'] && $this->config['allow_bookmarks'] && $topic_data['bookmarked']) ? true : false,
