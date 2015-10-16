@@ -64,6 +64,7 @@ $lang = array_merge($lang, array(
 	'NEW'					=> 'New',
 	'NEW_IDEA'				=> 'New Idea',
 	'NO_IDEAS'				=> 'No ideas',
+	'NO_IDEAS_DISPLAY'		=> 'There are no ideas to display.',
 
 	'POST_IDEA'				=> 'Post idea',
 
@@ -92,6 +93,8 @@ $lang = array_merge($lang, array(
 	'VIEW_VOTES'            => '%s points. Click to view votes',
 	'VIEWING_IDEA'			=> 'Viewing Idea',
 	'VOTE'					=> 'Vote',
+	'VOTE_DOWN'				=> 'Vote Down',
 	'VOTE_SUCCESS'			=> 'Successfully voted on this idea.',
+	'VOTE_UP'				=> 'Vote Up',
 	'VOTES'					=> 'Votes',
 ));

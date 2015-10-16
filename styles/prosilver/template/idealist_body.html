@@ -12,7 +12,6 @@
 				</ul>
 				<ul class="topiclist forums">
 	<!-- ENDIF -->
-
 					<li class="row">
 						<dl class="icon forum_<!-- IF not latest_ideas.READ -->un<!-- ENDIF -->read">
 							<dt title="Read posts">
@@ -23,8 +22,8 @@
 							</dt>
 
 							<dd class="topics">
-								<span class="up">&#x25B2;{ideas.VOTES_UP}</span> &nbsp;
-								<span class="down">&#x25BC;{ideas.VOTES_DOWN}</span>
+								<div class="minivoteup"><span>{ideas.VOTES_UP}</span></div>
+								<div class="minivotedown"><span>{ideas.VOTES_DOWN}</span></div>
 							</dd>
 						</dl>
 					</li>

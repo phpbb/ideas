@@ -1,5 +1,7 @@
 a.votes {
-	margin-left: 10px;
+	font-weight: bold;
+	margin-top: 3px;
+	display: inline-block;
 }
 
 a.voteup, span.up {
@@ -28,7 +30,7 @@ a.dead.removevote {
 
 dd.topics {
 	text-align: left;
-	width: 100px;
+	width: 180px;
 	padding-left: 10px !important;
 }
 
@@ -78,4 +80,47 @@ dd.topics:not(.bad) {
 
 .newidea:hover span {
 	background-position: 0 25px;
+}
+
+.minivoteup, .minivotedown {
+	width: 65px;
+	height: 25px;
+	display: inline-block;
+	float: left;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	font-weight: bold;
+	color: #FFFFFF !important;
+	text-shadow: 0 -1px 0 rgba(0, 0, 0, 1);
+	margin-right: 10px;
+	background: url(images/button-sprite.png) no-repeat;
+}
+
+.minivoteup span, .minivotedown span {
+	display: inline-block;
+	width: 40px;
+	margin-left: 25px;
+	margin-top: 5px;
+	text-align: center;
+	line-height: normal;
+}
+
+.minivoteup { background-position: 0 0; }
+.minivotedown { background-position: -65px 0; }
+.minivoteup:hover { background-position: 0 -25px; }
+.minivotedown:hover { background-position: -65px -25px; }
+.minivoteup:active { background-position: 0 -50px; }
+.minivotedown:active { background-position: -65px -50px; }
+
+.voteslist {
+	display: none;
+	padding: 6px;
+	margin-top: 6px;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+}
+
+.voteslist ul, .voteslist ul li {
+	list-style: none;
 }
