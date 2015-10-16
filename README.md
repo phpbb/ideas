@@ -4,25 +4,14 @@ phpBB Ideas is an ideas centre for phpBB. It is based on [WordPress ideas](http:
 
 ## Installation
 
-To install, copy `config.sample.php` to `config.php` and change the configuration. The current configuration settings:
+1. Upload the package to `phpBB3/ext/phpbb/ideas`.
+2. Navigate in the ACP to `Customise -> Manage extensions`.
+3. Look for `phpBB Ideas` under the Disabled Extensions list, and click its `Enable` link.
 
-- **PHPBB_ROOT_PATH** - The path to phpBB. Eg, if you put `ideas/` in the phpBB directory itself, this should be set to `../`
+Open ideas/controller/base.php and change the constants:
+
 - **IDEAS_FORUM_ID** - The ID of the forum that ideas topics will be posted to.
 - **IDEA_POSTER_ID** - The ID of the user that will post idea topics into the forums.
-
-Then run `install.php` (make sure that you have UMIL in your root phpBB directory), which will set up the database.
-
-Finally, add two BBCodes, similar to these:
-
-```
-[idea={NUMBER}]{TEXT}[/idea]
-<a href="/ideas/idea.php?id={NUMBER}">{TEXT}</a>
-
-[user={NUMBER}]{TEXT}[/user]
-<a href="/phpBB/memberlist.php?mode=viewprofile&u={NUMBER}">{TEXT}</a>
-```
-
-Those BBCodes are used in the forum topics created by phpBB Ideas to link back to the ideas. Make sure you change the URLs so that they are correct.
 
 ## Contributing
 
@@ -30,5 +19,10 @@ Please fork this repository and submit a pull request to contribute to phpBB Ide
 
 ## Bug Reporting & Support
 
-You can report bugs or suggest features in the [issue tracker](https://www.phpbb.com/bugs/website/).
-Support is not available for phpBB Ideas however you may email `website [at] phpbb [dot] com` where you may recieve some limited support should the problem be with phpBB Ideas.
+You can report bugs or suggest features in the [issue tracker](https://github.com/phpbb/phpbb-ideas/issues).
+Support is not available for phpBB Ideas however you may email `website [at] phpbb [dot] com` where you may receive some limited support should the problem be with phpBB Ideas.
+
+Note: This extension is currently under development and is not recommended for use on any live forum.
+
+## License
+[GNU General Public License v2](http://opensource.org/licenses/GPL-2.0)
