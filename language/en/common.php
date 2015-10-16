@@ -50,6 +50,7 @@ $lang = array_merge($lang, array(
 	'IMPLEMENTED'           => 'Implemented',
 	'IMPLEMENTED_IDEAS'		=> 'Recently Implemented Ideas',
 	'IN_PROGRESS'           => 'In Progress',
+	'INVALID'				=> 'Invalid',
 	'INVALID_VOTE'			=> 'Invalid vote; the number you entered was invalid.',
 
 	'JS_DISABLED'           => 'JavaScript is disabled',
@@ -60,7 +61,7 @@ $lang = array_merge($lang, array(
 	'MERGED'				=> 'Merged',
 	'MOD_IDEA'				=> 'Moderate idea',
 
-	'NEW'						=> 'New',
+	'NEW'					=> 'New',
 	'NEW_IDEA'				=> 'New Idea',
 	'NO_IDEAS'				=> 'No ideas',
 

@@ -228,7 +228,7 @@ class Ideas
 		$row = $this->db->sql_fetchrow($result);
 		$this->db->sql_freeresult($result);
 
-		return $row['status_name'];
+		return $this->user->lang($row['status_name']);
 	}
 
 	/**

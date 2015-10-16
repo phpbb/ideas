@@ -43,23 +43,23 @@ class m2_initial_data extends \phpbb\db\migration\migration
 		$statuses_data = array(
 			array(
 				'status_id'		=> 1,
-				'status_name'	=> 'New',
+				'status_name'	=> 'NEW',
 			),
 			array(
 				'status_id'		=> 2,
-				'status_name'	=> 'In Progress',
+				'status_name'	=> 'IN_PROGRESS',
 			),
 			array(
 				'status_id'		=> 3,
-				'status_name'	=> 'Implemented',
+				'status_name'	=> 'IMPLEMENTED',
 			),
 			array(
 				'status_id'		=> 4,
-				'status_name'	=> 'Duplicate',
+				'status_name'	=> 'DUPLICATE',
 			),
 			array(
 				'status_id'		=> 5,
-				'status_name'	=> 'Invalid',
+				'status_name'	=> 'INVALID',
 			),
 		);
 

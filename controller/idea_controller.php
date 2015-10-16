@@ -204,7 +204,7 @@ class idea_controller extends base
 			{
 				$this->template->assign_block_vars('statuses', array(
 					'ID'	=> $status['status_id'],
-					'NAME'	=> $status['status_name'],
+					'NAME'	=> $this->user->lang($status['status_name']),
 				));
 			}
 		}
