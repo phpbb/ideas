@@ -19,6 +19,9 @@ class Ideas
 	/* @var \phpbb\db\driver\factory */
 	protected $db;
 
+	/** @var \phpbb\log\log */
+	protected $log;
+
 	/* @var \phpbb\user */
 	protected $user;
 
@@ -42,6 +45,7 @@ class Ideas
 
 	/**
 	 * @param \phpbb\db\driver\factory $db
+	 * @param \phpbb\log\log           $log
 	 * @param \phpbb\user              $user
 	 * @param string                   $table_ideas
 	 * @param string                   $table_duplicates
@@ -50,8 +54,9 @@ class Ideas
 	 * @param string                   $table_tickets
 	 * @param string                   $table_votes
 	 */
-	public function __construct(\phpbb\db\driver\factory $db, \phpbb\user $user, $table_ideas, $table_duplicates, $table_rfcs, $table_statuses, $table_tickets, $table_votes) {
+	public function __construct(\phpbb\db\driver\factory $db, \phpbb\log\log $log, \phpbb\user $user, $table_ideas, $table_duplicates, $table_rfcs, $table_statuses, $table_tickets, $table_votes) {
 		$this->db = $db;
+		$this->log = $log;
 		$this->user = $user;
 
 		$this->table_ideas = $table_ideas;
@@ -351,7 +356,7 @@ class Ideas
 			WHERE idea_id = ' . $idea_id;
 		$this->db->sql_query($sql);
 
-		add_log('mod', 0, 0, 'LOG_IDEA_TITLE_EDITED', 'Idea #' . $idea_id);
+		$this->log->add('mod', $this->user->data['user_id'], $this->user->ip, 'LOG_IDEA_TITLE_EDITED', time(), array($idea_id));
 
 		return true;
 	}

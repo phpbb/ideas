@@ -49,6 +49,7 @@ services:
         class: phpbb\ideas\factory\Ideas
         arguments:
             - @dbal.conn
+            - @log
             - @user
             - %tables.ideas_ideas%
             - %tables.ideas_duplicates%
