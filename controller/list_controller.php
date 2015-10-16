@@ -17,12 +17,12 @@ namespace phpbb\ideas\controller;
 class list_controller extends base
 {
 	/**
-	 * Controller for /all/{sort}
+	 * Controller for /list/{sort}
 	 *
 	 * @param $sort string The direction to sort in.
 	 * @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
 	 */
-	public function all($sort)
+	public function ideas_list($sort)
 	{
 		if ($sort === 'new')
 		{
