@@ -28,7 +28,7 @@ class m2_initial_data extends \phpbb\db\migration\migration
 
 	static public function depends_on()
 	{
-		return array('\phpbb\ideas\migrations\m1_inital_schema');
+		return array('\phpbb\ideas\migrations\m1_initial_schema');
 	}
 
 	public function update_data()
@@ -63,6 +63,13 @@ class m2_initial_data extends \phpbb\db\migration\migration
 			),
 		);
 
-		$this->db->sql_multi_insert($this->table_prefix . 'ideas_statuses', $statuses_data);
+		$insert_buffer = new \phpbb\db\sql_insert_buffer($this->db, $this->table_prefix . 'ideas_statuses');
+
+		foreach ($statuses_data as $row)
+		{
+			$insert_buffer->insert($row);
+		}
+
+		$insert_buffer->flush();
 	}
 }

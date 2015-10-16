@@ -104,5 +104,4 @@ class m1_initial_schema extends \phpbb\db\migration\migration
 			),
 		);
 	}
-
 }
