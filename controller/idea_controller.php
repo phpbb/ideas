@@ -14,6 +14,8 @@
 
 namespace phpbb\ideas\controller;
 
+use phpbb\exception\http_exception;
+
 class idea_controller extends base
 {
 	/** @var \phpbb\auth\auth */
@@ -67,7 +69,7 @@ class idea_controller extends base
 		$idea = $this->ideas->get_idea($idea_id);
 		if (!$idea)
 		{
-			throw new \phpbb\exception\http_exception(404, 'IDEA_NOT_FOUND');
+			throw new http_exception(404, 'IDEA_NOT_FOUND');
 		}
 
 		$mod = $this->auth->acl_get('m_', IDEAS_FORUM_ID);
@@ -188,7 +190,7 @@ class idea_controller extends base
 
 			$message = $this->user->lang('IDEA_DELETED') . '<br /><br />';
 			$message .= $this->user->lang('RETURN_INDEX', '<a href="' . append_sid("{$this->root_path}index.{$this->php_ext}") . '">', '</a>');
-			trigger_error($message);
+			throw new http_exception(200, $message);
 		}
 
 		include($this->root_path . 'includes/functions_display.' . $this->php_ext);
@@ -266,7 +268,7 @@ class idea_controller extends base
 		}
 
 
-		$forum_id = IDEAS_FORUM_ID; // TODO
+		$forum_id = IDEAS_FORUM_ID;
 		$topic_id = $idea['topic_id'];
 		$post_id  = $this->request->variable('p', 0);
 
@@ -299,7 +301,7 @@ class idea_controller extends base
 //
 // 				if (!$forum_id)
 // 				{
-// 					trigger_error('NO_TOPIC');
+// 					throw new http_exception(404, 'NO_TOPIC');
 // 				}
 // 			}
 //
@@ -333,9 +335,9 @@ class idea_controller extends base
 				if (!$row)
 				{
 					// Setup user environment so we can process lang string
-					$this->user->setup('viewtopic');
+					//$this->user->setup('viewtopic');
 
-					trigger_error('NO_TOPIC');
+					throw new http_exception(404, 'NO_TOPIC');
 				}
 
 				$post_id = $row['post_id'];
@@ -357,7 +359,7 @@ class idea_controller extends base
 				{
 					$this->user->setup('viewtopic');
 					// OK, the topic doesn't exist. This error message is not helpful, but technically correct.
-					trigger_error(($view == 'next') ? 'NO_NEWER_TOPICS' : 'NO_OLDER_TOPICS');
+					throw new http_exception(404, ($view == 'next') ? 'NO_NEWER_TOPICS' : 'NO_OLDER_TOPICS');
 				}
 				else
 				{
@@ -382,7 +384,7 @@ class idea_controller extends base
 						$this->db->sql_freeresult($result);
 
 						//$this->user->setup('viewtopic', $forum_style);
-						trigger_error(($view == 'next') ? 'NO_NEWER_TOPICS' : 'NO_OLDER_TOPICS');
+						throw new http_exception(404, ($view == 'next') ? 'NO_NEWER_TOPICS' : 'NO_OLDER_TOPICS');
 					}
 					else
 					{
@@ -391,7 +393,7 @@ class idea_controller extends base
 						// Check for global announcement correctness?
 						if (!$row['forum_id'] && !$forum_id)
 						{
-							trigger_error('NO_TOPIC');
+							throw new http_exception(404, 'NO_TOPIC');
 						}
 						else if ($row['forum_id'])
 						{
@@ -404,7 +406,7 @@ class idea_controller extends base
 			// Check for global announcement correctness?
 			if ((!isset($row) || !$row['forum_id']) && !$forum_id)
 			{
-				trigger_error('NO_TOPIC');
+				throw new http_exception(404, 'NO_TOPIC');
 			}
 			else if (isset($row) && $row['forum_id'])
 			{
@@ -509,7 +511,7 @@ class idea_controller extends base
 				redirect($this->helper->route('ideas_idea_controller', array('idea_id' => $idea_id)));
 			}
 
-			trigger_error('NO_TOPIC');
+			throw new http_exception(404, 'NO_TOPIC');
 		}
 
 		$forum_id = (int) $topic_data['forum_id'];
@@ -517,7 +519,7 @@ class idea_controller extends base
 		// Now we know the forum_id and can check the permissions
 		if ($topic_data['topic_visibility'] != ITEM_APPROVED && !$this->auth->acl_get('m_approve', $forum_id))
 		{
-			trigger_error('NO_TOPIC');
+			throw new http_exception(404, 'NO_TOPIC');
 		}
 
 		// This is for determining where we are (page)
@@ -532,7 +534,7 @@ class idea_controller extends base
 					redirect($this->helper->route('ideas_idea_controller', array('idea_id' => $idea_id)));
 				}
 
-				trigger_error('NO_TOPIC');
+				throw new http_exception(404, 'NO_TOPIC');
 			}
 			if ($post_id == $topic_data['topic_first_post_id'] || $post_id == $topic_data['topic_last_post_id'])
 			{
@@ -596,7 +598,7 @@ class idea_controller extends base
 		{
 			if ($this->user->data['user_id'] != ANONYMOUS)
 			{
-				trigger_error('SORRY_AUTH_READ');
+				throw new http_exception(403, 'SORRY_AUTH_READ');
 			}
 
 			login_box('', $this->user->lang('LOGIN_VIEWFORUM'));
@@ -762,7 +764,7 @@ class idea_controller extends base
 			}
 			meta_refresh(3, $viewtopic_url);
 
-			trigger_error($message);
+			throw new http_exception(200, $message);
 		}
 
 		// Grab ranks
@@ -1012,11 +1014,11 @@ class idea_controller extends base
 		{
 			if ($sort_days)
 			{
-				trigger_error('NO_POSTS_TIME_FRAME');
+				throw new http_exception(404, 'NO_POSTS_TIME_FRAME');
 			}
 			else
 			{
-				trigger_error('NO_TOPIC');
+				throw new http_exception(404, 'NO_TOPIC');
 			}
 		}
 
