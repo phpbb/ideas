@@ -49,6 +49,7 @@ services:
         class: phpbb\ideas\factory\Ideas
         arguments:
             - @dbal.conn
+            - @controller.helper
             - @log
             - @user
             - %tables.ideas_ideas%
@@ -57,6 +58,7 @@ services:
             - %tables.ideas_statuses%
             - %tables.ideas_tickets%
             - %tables.ideas_votes%
+            - %core.php_ext%
 
     phpbb.ideas.LinkHelper:
         class: phpbb\ideas\factory\LinkHelper

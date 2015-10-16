@@ -14,10 +14,15 @@
 
 namespace phpbb\ideas\factory;
 
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+
 class Ideas
 {
 	/* @var \phpbb\db\driver\factory */
 	protected $db;
+
+	/* @var \phpbb\controller\helper */
+	protected $helper;
 
 	/** @var \phpbb\log\log */
 	protected $log;
@@ -43,8 +48,12 @@ class Ideas
 	/** @var string */
 	protected $table_votes;
 
+	/** @var string */
+	protected $php_ext;
+
 	/**
 	 * @param \phpbb\db\driver\factory $db
+	 * @param \phpbb\controller\helper $helper
 	 * @param \phpbb\log\log           $log
 	 * @param \phpbb\user              $user
 	 * @param string                   $table_ideas
@@ -53,9 +62,11 @@ class Ideas
 	 * @param string                   $table_statuses
 	 * @param string                   $table_tickets
 	 * @param string                   $table_votes
+	 * @param string                   $php_ext
 	 */
-	public function __construct(\phpbb\db\driver\factory $db, \phpbb\log\log $log, \phpbb\user $user, $table_ideas, $table_duplicates, $table_rfcs, $table_statuses, $table_tickets, $table_votes) {
+	public function __construct(\phpbb\db\driver\factory $db, \phpbb\controller\helper $helper, \phpbb\log\log $log, \phpbb\user $user, $table_ideas, $table_duplicates, $table_rfcs, $table_statuses, $table_tickets, $table_votes, $php_ext) {
 		$this->db = $db;
+		$this->helper = $helper;
 		$this->log = $log;
 		$this->user = $user;
 
@@ -65,6 +76,8 @@ class Ideas
 		$this->table_statuses = $table_statuses;
 		$this->table_tickets = $table_tickets;
 		$this->table_votes = $table_votes;
+
+		$this->php_ext = $php_ext;
 	}
 
 
@@ -574,9 +587,9 @@ class Ideas
 		$this->vote($idea, $this->user->data['user_id'], 1);
 
 		// Submit topic
-		$bbcode = "[idea={$idea_id}]{$title}[/idea]";
+		$bbcode = '[url=' . $this->helper->route('ideas_idea_controller', array('idea_id' => $idea_id), true, false, UrlGeneratorInterface::ABSOLUTE_URL) . "]{$title}[/url]";
 		$desc .= "\n\n----------\n\n" . $this->user->lang('VIEW_IDEA_AT', $bbcode);
-		$bbcode = "[user={$user_id}]{$username}[/user]";
+		$bbcode = '[url=' . generate_board_url() . '/' . append_sid("memberlist.{$this->php_ext}", array('u' => $user_id, 'mode' => 'viewprofile')) . "]{$username}[/url]";
 		$desc .= "\n\n" . $this->user->lang('IDEA_POSTER', $bbcode);
 
 		$uid = $bitfield = $options = '';
