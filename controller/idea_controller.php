@@ -376,14 +376,14 @@ class idea_controller extends base
 
 					if (!$row)
 					{
-						$sql = 'SELECT forum_style
-							FROM ' . FORUMS_TABLE . "
-							WHERE forum_id = $forum_id";
-						$result = $this->db->sql_query($sql);
-						$forum_style = (int) $this->db->sql_fetchfield('forum_style');
-						$this->db->sql_freeresult($result);
-
-						//$this->user->setup('viewtopic', $forum_style);
+//						$sql = 'SELECT forum_style
+//							FROM ' . FORUMS_TABLE . "
+//							WHERE forum_id = $forum_id";
+//						$result = $this->db->sql_query($sql);
+//						$forum_style = (int) $this->db->sql_fetchfield('forum_style');
+//						$this->db->sql_freeresult($result);
+//
+//						$this->user->setup('viewtopic', $forum_style);
 						throw new http_exception(404, ($view == 'next') ? 'NO_NEWER_TOPICS' : 'NO_OLDER_TOPICS');
 					}
 					else
