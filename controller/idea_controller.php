@@ -1746,11 +1746,46 @@ class idea_controller extends base
 			// Dump vars into template
 			$this->template->assign_block_vars('postrow', $postrow);
 
+			$contact_fields = array(
+				array(
+					'ID'		=> 'pm',
+					'NAME' 		=> $this->user->lang['SEND_PRIVATE_MESSAGE'],
+					'U_CONTACT'	=> $u_pm,
+				),
+				array(
+					'ID'		=> 'email',
+					'NAME'		=> $this->user->lang['SEND_EMAIL'],
+					'U_CONTACT'	=> $user_cache[$poster_id]['email'],
+				),
+				array(
+					'ID'		=> 'jabber',
+					'NAME'		=> $this->user->lang['JABBER'],
+					'U_CONTACT'	=> $user_cache[$poster_id]['jabber'],
+				),
+			);
+
+			foreach ($contact_fields as $field)
+			{
+				if ($field['U_CONTACT'])
+				{
+					$this->template->assign_block_vars('postrow.contact', $field);
+				}
+			}
+
 			if (!empty($cp_row['blockrow']))
 			{
 				foreach ($cp_row['blockrow'] as $field_data)
 				{
 					$this->template->assign_block_vars('postrow.custom_fields', $field_data);
+
+					if ($field_data['S_PROFILE_CONTACT'])
+					{
+						$this->template->assign_block_vars('postrow.contact', array(
+							'ID'		=> $field_data['PROFILE_FIELD_IDENT'],
+							'NAME'		=> $field_data['PROFILE_FIELD_NAME'],
+							'U_CONTACT'	=> $field_data['PROFILE_FIELD_CONTACT'],
+						));
+					}
 				}
 			}
 
@@ -1776,16 +1811,16 @@ class idea_controller extends base
 		if (isset($this->user->data['session_page']) && !$this->user->data['is_bot'] && (strpos($this->user->data['session_page'], '&t=' . $topic_id) === false || isset($this->user->data['session_created'])))
 		{
 			$sql = 'UPDATE ' . TOPICS_TABLE . '
-		SET topic_views = topic_views + 1, topic_last_view_time = ' . time() . "
-		WHERE topic_id = $topic_id";
+				SET topic_views = topic_views + 1, topic_last_view_time = ' . time() . "
+				WHERE topic_id = $topic_id";
 			$this->db->sql_query($sql);
 
 			// Update the attachment download counts
 			if (sizeof($update_count))
 			{
 				$sql = 'UPDATE ' . ATTACHMENTS_TABLE . '
-			SET download_count = download_count + 1
-			WHERE ' . $this->db->sql_in_set('attach_id', array_unique($update_count));
+					SET download_count = download_count + 1
+					WHERE ' . $this->db->sql_in_set('attach_id', array_unique($update_count));
 				$this->db->sql_query($sql);
 			}
 		}
@@ -1824,7 +1859,8 @@ class idea_controller extends base
 			$all_marked_read = true;
 		}
 
-		// If there are absolutely no more unread posts in this forum and unread posts shown, we can savely show the #unread link
+		// If there are absolutely no more unread posts in this forum
+		// and unread posts shown, we can safely show the #unread link
 		if ($all_marked_read)
 		{
 			if ($post_unread)
@@ -1908,13 +1944,13 @@ class idea_controller extends base
 		// to be able to display the correct online list.
 		// One downside is that the user currently viewing this topic/post is not taken into account.
 
-		if (empty($this->request->variable('f', '')))
+		if (!$this->request->variable('f', 0))
 		{
 			$this->request->overwrite('f', $forum_id);
 		}
 
 		// We need to do the same with the topic_id. See #53025.
-		if (empty($this->request->variable('t', '')) && !empty($topic_id))
+		if (!$this->request->variable('t', 0) && !empty($topic_id))
 		{
 			$this->request->overwrite('t', $topic_id);
 		}
