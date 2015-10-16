@@ -784,6 +784,9 @@ class idea_controller extends base
 		$s_forum_rules = '';
 		gen_forum_auth_level('topic', $forum_id, $topic_data['forum_status']);
 
+		// Dont use quickmod tools
+		$s_quickmod_action = false;
+/*
 		// Quick mod tools
 		$allow_change_type = ($this->auth->acl_get('m_', $forum_id) || ($this->user->data['is_registered'] && $this->user->data['user_id'] == $topic_data['topic_poster'])) ? true : false;
 
@@ -826,6 +829,7 @@ class idea_controller extends base
 				phpbb_add_quickmod_option($s_quickmod_action, $option, $qm_ary[0]);
 			}
 		}
+*/
 
 		// Navigation links
 		generate_forum_nav($topic_data);
