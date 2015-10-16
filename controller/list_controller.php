@@ -98,6 +98,16 @@ class list_controller extends base
 			'STATUS_NAME'       => $status_name ?: $this->user->lang('ALL_IDEAS'),
 		));
 
+		// Assign breadcrumb template vars
+		$this->template->assign_block_vars('navlinks', array(
+			'U_VIEW_FORUM'		=> $this->helper->route('ideas_index_controller'),
+			'FORUM_NAME'		=> $this->user->lang('IDEAS'),
+		));
+		$this->template->assign_block_vars('navlinks', array(
+			'U_VIEW_FORUM'		=> $this->helper->route('ideas_list_controller'),
+			'FORUM_NAME'		=> $this->user->lang('ALL_IDEAS'),
+		));
+
 		return $this->helper->render('list_body.html', $this->user->lang('IDEA_LIST'));
 	}
 }

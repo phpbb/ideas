@@ -78,6 +78,12 @@ class index_controller extends base
 			'U_POST_ACTION'		=> $this->helper->route('ideas_post_controller'),
 		));
 
+		// Assign breadcrumb template vars
+		$this->template->assign_block_vars('navlinks', array(
+			'U_VIEW_FORUM'		=> $this->helper->route('ideas_index_controller'),
+			'FORUM_NAME'		=> $this->user->lang('IDEAS'),
+		));
+
 		return $this->helper->render('index_body.html', $this->user->lang('IDEAS_HOME'));
 	}
 }

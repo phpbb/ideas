@@ -1940,6 +1940,13 @@ class idea_controller extends base
 		// now I have the urge to wash my hands :(
 
 
+		// Use Ideas breadcrumbs
+		$this->template->destroy_block_vars('navlinks');
+		$this->template->assign_block_vars('navlinks', array(
+			'U_VIEW_FORUM'		=> $this->helper->route('ideas_index_controller'),
+			'FORUM_NAME'		=> $this->user->lang('IDEAS'),
+		));
+
 		// We overwrite $_REQUEST['f'] if there is no forum specified
 		// to be able to display the correct online list.
 		// One downside is that the user currently viewing this topic/post is not taken into account.
