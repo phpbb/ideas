@@ -59,13 +59,15 @@ class post_controller extends base
 		));
 
 		// Assign breadcrumb template vars
-		$this->template->assign_block_vars('navlinks', array(
-			'U_VIEW_FORUM'		=> $this->helper->route('ideas_index_controller'),
-			'FORUM_NAME'		=> $this->user->lang('IDEAS'),
-		));
-		$this->template->assign_block_vars('navlinks', array(
-			'U_VIEW_FORUM'		=> $this->helper->route('ideas_post_controller'),
-			'FORUM_NAME'		=> $this->user->lang('POST_IDEA'),
+		$this->template->assign_block_vars_array('navlinks', array(
+			array(
+				'U_VIEW_FORUM'	=> $this->helper->route('ideas_index_controller'),
+				'FORUM_NAME'	=> $this->user->lang('IDEAS'),
+			),
+			array(
+				'U_VIEW_FORUM'	=> $this->helper->route('ideas_post_controller'),
+				  'FORUM_NAME'	=> $this->user->lang('POST_IDEA'),
+			),
 		));
 
 		return $this->helper->render('idea_new.html', $this->user->lang('NEW_IDEA'));
