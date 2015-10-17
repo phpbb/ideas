@@ -493,9 +493,9 @@ class Ideas
 			$idea['idea_votes_' . ($result['vote_value'] == 1 ? 'up' : 'down')]--;
 
 			$sql = 'UPDATE ' . $this->table_ideas . '
-					SET idea_votes_up = ' . $idea['idea_votes_up'] . ',
-						idea_votes_down = ' . $idea['idea_votes_down'] . '
-					WHERE idea_id = ' . $idea['idea_id'];
+				SET idea_votes_up = ' . $idea['idea_votes_up'] . ',
+					idea_votes_down = ' . $idea['idea_votes_down'] . '
+				WHERE idea_id = ' . $idea['idea_id'];
 			$this->db->sql_query($sql);
 		}
 
