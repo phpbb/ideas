@@ -7,15 +7,25 @@
     "license": "GPL-2.0",
     "authors": [
         {
-            "name": "Callum Macrae",
-            "email": "callum@phpbb.com",
-            "homepage": "http://macr.ae/",
-            "role": "phpBB Website Team"
+            "name": "phpBB Website Team",
+			"email": "website@phpbb.com",
+            "homepage": "https://www.phpbb.com"
         },
+		{
+			"name": "phpBB Extensions Team",
+			"email": "operations@phpbb.com",
+			"homepage": "https://www.phpbb.com"
+		},
+		{
+			"name": "Callum Macrae",
+			"email": "callum@phpbb.com",
+			"homepage": "http://macr.ae/",
+			"role": "Original author"
+		},
 		{
 			"name": "Matt Friedman",
 			"homepage": "http://mattfriedman.me",
-			"role": "phpBB Extensions Team"
+			"role": "Contributor"
 		}
 	],
     "require": {
