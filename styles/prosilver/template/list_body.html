@@ -1,4 +1,4 @@
-<!-- INCLUDECSS ../theme/ideas.css -->
+<!-- INCLUDECSS @phpbb_ideas/ideas.css -->
 
 <!-- INCLUDE overall_header.html -->
 
@@ -26,7 +26,11 @@
 </form>
 
 <!-- IF S_USER_LOGGED_IN -->
-<a href="posting.php" class="newidea"><span></span></a>
+	<div class="action-bar top">
+		<div class="buttons">
+			<a href="{U_POST_ACTION}" class="button icon-button new-idea" title="{L_NEW_IDEA}">{L_NEW_IDEA}</a>
+		</div>
+	</div>
 <!-- ENDIF -->
 
 <!-- INCLUDE overall_footer.html -->

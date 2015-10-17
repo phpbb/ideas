@@ -1,31 +1,74 @@
 <?php
 /**
  *
- * @package phpBB3 Ideas
- * @author Callum Macrae (callumacrae) <callum@lynxphp.com>
- * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
+ * Ideas extension for the phpBB Forum Software package.
+ *
+ * @copyright (c) phpBB Limited <https://www.phpbb.com>
+ * @license GNU General Public License, version 2 (GPL-2.0)
  *
  */
 
 namespace phpbb\ideas\factory;
 
-class Ideas
+use phpbb\controller\helper;
+use phpbb\db\driver\driver_interface;
+use phpbb\log\log;
+use phpbb\user;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+
+class ideas
 {
-	/* @var \phpbb\db\driver\factory */
+	/* @var driver_interface */
 	protected $db;
 
-	/* @var \phpbb\user */
+	/* @var helper */
+	protected $helper;
+
+	/** @var log */
+	protected $log;
+
+	/* @var user */
 	protected $user;
 
+	/** @var string */
 	protected $table_ideas;
+
+	/** @var string */
 	protected $table_duplicates;
+
+	/** @var string */
 	protected $table_rfcs;
+
+	/** @var string */
 	protected $table_statuses;
+
+	/** @var string */
 	protected $table_tickets;
+
+	/** @var string */
 	protected $table_votes;
 
-	public function __construct(\phpbb\db\driver\factory $db, \phpbb\user $user, $table_ideas, $table_duplicates, $table_rfcs, $table_statuses, $table_tickets, $table_votes) {
+	/** @var string */
+	protected $php_ext;
+
+	/**
+	 * @param driver_interface $db
+	 * @param helper           $helper
+	 * @param log              $log
+	 * @param user             $user
+	 * @param string           $table_ideas
+	 * @param string           $table_duplicates
+	 * @param string           $table_rfcs
+	 * @param string           $table_statuses
+	 * @param string           $table_tickets
+	 * @param string           $table_votes
+	 * @param string           $php_ext
+	 */
+	public function __construct(driver_interface $db, helper $helper, log $log, user $user, $table_ideas, $table_duplicates, $table_rfcs, $table_statuses, $table_tickets, $table_votes, $php_ext)
+	{
 		$this->db = $db;
+		$this->helper = $helper;
+		$this->log = $log;
 		$this->user = $user;
 
 		$this->table_ideas = $table_ideas;
@@ -34,6 +77,8 @@ class Ideas
 		$this->table_statuses = $table_statuses;
 		$this->table_tickets = $table_tickets;
 		$this->table_votes = $table_votes;
+
+		$this->php_ext = $php_ext;
 	}
 
 
@@ -45,6 +90,7 @@ class Ideas
 	 * @param string $sort Thing to sort by.
 	 * @param string $sort_direction ASC / DESC.
 	 * @param string $where SQL WHERE query.
+	 * @return array Array of row data
 	 */
 	public function get_ideas($number = 10, $sort = 'date', $sort_direction = 'DESC', $where = 'idea_status != 4 AND idea_status != 3 AND idea_status != 5')
 	{
@@ -168,19 +214,19 @@ class Ideas
 		$sql = 'SELECT duplicate_id
 			FROM ' . $this->table_duplicates . "
 			WHERE idea_id = $id";
-		$result = $this->db->sql_query_limit($sql, 1);
+		$this->db->sql_query_limit($sql, 1);
 		$row['duplicate_id'] = $this->db->sql_fetchfield('duplicate_id');
 
 		$sql = 'SELECT ticket_id
 			FROM ' . $this->table_tickets . "
 			WHERE idea_id = $id";
-		$result = $this->db->sql_query_limit($sql, 1);
+		$this->db->sql_query_limit($sql, 1);
 		$row['ticket_id'] = $this->db->sql_fetchfield('ticket_id');
 
 		$sql = 'SELECT rfc_link
 			FROM ' . $this->table_rfcs . "
 			WHERE idea_id = $id";
-		$result = $this->db->sql_query_limit($sql, 1);
+		$this->db->sql_query_limit($sql, 1);
 		$row['rfc_link'] = $this->db->sql_fetchfield('rfc_link');
 
 		return $row;
@@ -201,7 +247,7 @@ class Ideas
 		$row = $this->db->sql_fetchrow($result);
 		$this->db->sql_freeresult($result);
 
-		return $row['status_name'];
+		return $this->user->lang($row['status_name']);
 	}
 
 	/**
@@ -324,7 +370,7 @@ class Ideas
 			WHERE idea_id = ' . $idea_id;
 		$this->db->sql_query($sql);
 
-		add_log('mod', 0, 0, 'LOG_IDEA_TITLE_EDITED', 'Idea #' . $idea_id);
+		$this->log->add('mod', $this->user->data['user_id'], $this->user->ip, 'LOG_IDEA_TITLE_EDITED', time(), array($idea_id));
 
 		return true;
 	}
@@ -448,9 +494,9 @@ class Ideas
 			$idea['idea_votes_' . ($result['vote_value'] == 1 ? 'up' : 'down')]--;
 
 			$sql = 'UPDATE ' . $this->table_ideas . '
-					SET idea_votes_up = ' . $idea['idea_votes_up'] . ',
-						idea_votes_down = ' . $idea['idea_votes_down'] . '
-					WHERE idea_id = ' . $idea['idea_id'];
+				SET idea_votes_up = ' . $idea['idea_votes_up'] . ',
+					idea_votes_down = ' . $idea['idea_votes_down'] . '
+				WHERE idea_id = ' . $idea['idea_id'];
 			$this->db->sql_query($sql);
 		}
 
@@ -466,6 +512,7 @@ class Ideas
 	 * Returns voter info on an idea.
 	 *
 	 * @param int $id ID of the idea.
+	 * @return array Array of row data
 	 */
 	public function get_voters($id)
 	{
@@ -541,9 +588,9 @@ class Ideas
 		$this->vote($idea, $this->user->data['user_id'], 1);
 
 		// Submit topic
-		$bbcode = "[idea={$idea_id}]{$title}[/idea]";
+		$bbcode = '[url=' . $this->helper->route('ideas_idea_controller', array('idea_id' => $idea_id), true, false, UrlGeneratorInterface::ABSOLUTE_URL) . "]{$title}[/url]";
 		$desc .= "\n\n----------\n\n" . $this->user->lang('VIEW_IDEA_AT', $bbcode);
-		$bbcode = "[user={$user_id}]{$username}[/user]";
+		$bbcode = '[url=' . generate_board_url() . '/' . append_sid("memberlist.{$this->php_ext}", array('u' => $user_id, 'mode' => 'viewprofile')) . "]{$username}[/url]";
 		$desc .= "\n\n" . $this->user->lang('IDEA_POSTER', $bbcode);
 
 		$uid = $bitfield = $options = '';

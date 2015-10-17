@@ -1,27 +1,43 @@
 {
-	"name": "phpbb/ideas",
-	"type": "phpbb-extension",
-	"description": "phpBB Ideas extension",
-	"homepage": "https://github.com/phpbb/phpbb-ideas",
-	"version": "2.0.0",
-	"time": "2014-08-08",
-	"license": "GPL-2.0",
-	"authors": [{
-		"name": "Callum Macrae",
-		"email": "callum@phpbb.com",
-		"homepage": "http://macr.ae/",
-		"role": "Head Fixer of Things"
-	}],
-	"require": {
-		"php": ">=5.3.3"
-	},
-	"require-dev": {
-		"phpbb/epv": "dev-master"
-	},
-	"extra": {
-		"display-name": "phpBB Ideas",
-		"soft-require": {
-			"phpbb/phpbb": ">=3.1.0-RC2,<3.2.*@dev"
+    "name": "phpbb/ideas",
+    "type": "phpbb-extension",
+    "description": "phpBB Ideas extension",
+    "homepage": "https://www.phpbb.com",
+    "version": "2.0.0-dev",
+    "license": "GPL-2.0",
+    "authors": [
+        {
+            "name": "phpBB Website Team",
+			"email": "website@phpbb.com",
+            "homepage": "https://www.phpbb.com"
+        },
+		{
+			"name": "phpBB Extensions Team",
+			"email": "operations@phpbb.com",
+			"homepage": "https://www.phpbb.com"
+		},
+		{
+			"name": "Callum Macrae",
+			"email": "callum@phpbb.com",
+			"homepage": "http://macr.ae/",
+			"role": "Original author"
+		},
+		{
+			"name": "Matt Friedman",
+			"homepage": "http://mattfriedman.me",
+			"role": "Contributor"
 		}
-	}
+	],
+    "require": {
+        "php": ">=5.3.3"
+    },
+    "require-dev": {
+        "phpbb/epv": "dev-master"
+    },
+    "extra": {
+        "display-name": "phpBB Ideas",
+        "soft-require": {
+            "phpbb/phpbb": ">=3.1.4,<3.3.0@dev"
+        }
+    }
 }

@@ -2,19 +2,55 @@ imports:
     - { resource: tables.yml }
 
 services:
-    phpbb.ideas.controller:
-        class: phpbb\ideas\controller\main
+    phpbb.ideas.controller.base:
+        abstract: true
         arguments:
             - @controller.helper
+            - @phpbb.ideas.ideas
+            - @phpbb.ideas.linkhelper
+            - @request
             - @template
             - @user
-            - @phpbb.ideas.LinkHelper
-            - @phpbb.ideas.Ideas
+            - %core.root_path%
+            - %core.php_ext%
+
+    phpbb.ideas.index_controller:
+        class: phpbb\ideas\controller\index_controller
+        parent: phpbb.ideas.controller.base
+
+    phpbb.ideas.list_controller:
+        class: phpbb\ideas\controller\list_controller
+        parent: phpbb.ideas.controller.base
+
+    phpbb.ideas.post_controller:
+        class: phpbb\ideas\controller\post_controller
+        parent: phpbb.ideas.controller.base
+
+    phpbb.ideas.idea_controller:
+        class: phpbb\ideas\controller\idea_controller
+        arguments:
+            - @auth
+            - @cache
+            - @config
+            - @content.visibility
+            - @profilefields.manager
+            - @dbal.conn
+            - @controller.helper
+            - @phpbb.ideas.ideas
+            - @phpbb.ideas.linkhelper
+            - @pagination
             - @request
-    phpbb.ideas.Ideas:
-        class: phpbb\ideas\factory\Ideas
+            - @template
+            - @user
+            - %core.root_path%
+            - %core.php_ext%
+
+    phpbb.ideas.ideas:
+        class: phpbb\ideas\factory\ideas
         arguments:
             - @dbal.conn
+            - @controller.helper
+            - @log
             - @user
             - %tables.ideas_ideas%
             - %tables.ideas_duplicates%
@@ -22,8 +58,10 @@ services:
             - %tables.ideas_statuses%
             - %tables.ideas_tickets%
             - %tables.ideas_votes%
-    phpbb.ideas.LinkHelper:
-        class: phpbb\ideas\factory\LinkHelper
+            - %core.php_ext%
+
+    phpbb.ideas.linkhelper:
+        class: phpbb\ideas\factory\linkhelper
         arguments:
             - @controller.helper
             - @user_loader
