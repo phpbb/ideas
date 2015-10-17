@@ -9,9 +9,9 @@
 		ESC: 27
 	};
 
-	function voteSuccess(message) {
+	function voteSuccess(message, $this) {
 		if (typeof message === 'string') {
-			phpbb.alert('Error', 'An error occurred: ' + message); // Error
+			phpbb.alert($this.attr('data-l-err'), $this.attr('data-l-msg') + ' ' + message);
 		} else {
 			$('.voteup:first').html('<span>' + message.votes_up + '</span>');
 			$('.votedown:first').html('<span>' + message.votes_down + '</span>');
@@ -50,7 +50,9 @@
 			return false;
 		}
 
-		$.get(url, {v: vote}, voteSuccess).fail(voteFailure);
+		$.get(url, {v: vote}, function(data) {
+			voteSuccess(data, $this);
+		}).fail(voteFailure);
 	});
 
 	$('a.dead').attr('href', '#');
@@ -71,7 +73,10 @@
 			return false;
 		}
 
-		$.get(url, voteSuccess).fail(voteFailure);
+		$.get(url, function(data) {
+			voteSuccess(data, $this);
+		}).fail(voteFailure);
+
 	});
 
 	$('#status').change(function() {

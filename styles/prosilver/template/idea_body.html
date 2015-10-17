@@ -56,8 +56,8 @@
 		<dt style="width: 15%">{L_RATING}:</dt>
 		<dd>
 			<span class="rating">
-				<a href="{U_IDEA_VOTE}" class="minivoteup <!-- IF CAN_VOTE-->voteup<!-- ELSE -->dead<!-- ENDIF -->" title="{L_VOTE_UP}"><span>{IDEA_VOTES_UP}</span></a> &nbsp;
-				<a href="{U_IDEA_VOTE}" class="minivotedown <!-- IF CAN_VOTE-->votedown<!-- ELSE -->dead<!-- ENDIF -->" title="{L_VOTE_DOWN}"><span>{IDEA_VOTES_DOWN}</span></a>
+				<a href="{U_IDEA_VOTE}" class="minivoteup <!-- IF CAN_VOTE-->voteup<!-- ELSE -->dead<!-- ENDIF -->" title="{L_VOTE_UP}" data-l-err="{L_ERROR}" data-l-msg="{L_VOTE_ERROR}{L_COLON}"><span>{IDEA_VOTES_UP}</span></a> &nbsp;
+				<a href="{U_IDEA_VOTE}" class="minivotedown <!-- IF CAN_VOTE-->votedown<!-- ELSE -->dead<!-- ENDIF -->" title="{L_VOTE_DOWN}" data-l-err="{L_ERROR}" data-l-msg="{L_VOTE_ERROR}{L_COLON}"><span>{IDEA_VOTES_DOWN}</span></a>
 				<a href="#" class="votes" data-l-msg="({L_VIEW_VOTES})">({IDEA_POINTS})</a> <span class="successvoted" data-l-err="{L_VOTE_FAIL}"></span>
 			</span>
 			<div class="clear"><</div>
@@ -67,13 +67,13 @@
 						<li>
 							<strong>&#x25B2;:</strong> <!-- BEGIN votes_up -->{votes_up.USER}<!-- IF not votes_up.S_LAST_ROW -->, <!-- ENDIF --><!-- END votes_up -->
 						</li>
-						<!-- BEGIN votes_up --><!-- IF votes_up.S_VOTED --><li><a href="{U_REMOVE_VOTE}" class="removevote ">{L_REMOVE_VOTE}</a></li><!-- ENDIF --><!-- END votes_up -->
+						<!-- BEGIN votes_up --><!-- IF votes_up.S_VOTED --><li><a href="{U_REMOVE_VOTE}" class="removevote" data-l-err="{L_ERROR}" data-l-msg="{L_VOTE_ERROR}{L_COLON}">{L_REMOVE_VOTE}</a></li><!-- ENDIF --><!-- END votes_up -->
 					<!-- ENDIF -->
 					<!-- IF .votes_down -->
 						<li>
 							<strong>&#x25BC;:</strong> <!-- BEGIN votes_down -->{votes_down.USER}<!-- IF not votes_down.S_LAST_ROW -->, <!-- ENDIF --><!-- END votes_down -->
 						</li>
-					<!-- BEGIN votes_down --><!-- IF votes_down.S_VOTED --><li><a href="{U_REMOVE_VOTE}" class="removevote ">{L_REMOVE_VOTE}</a></li><!-- ENDIF --><!-- END votes_down -->
+					<!-- BEGIN votes_down --><!-- IF votes_down.S_VOTED --><li><a href="{U_REMOVE_VOTE}" class="removevote" data-l-err="{L_ERROR}" data-l-msg="{L_VOTE_ERROR}{L_COLON}">{L_REMOVE_VOTE}</a></li><!-- ENDIF --><!-- END votes_down -->
 					<!-- ENDIF -->
 				</ul>
 			</div>

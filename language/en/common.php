@@ -96,6 +96,7 @@ $lang = array_merge($lang, array(
 	'VIEWING_IDEA'			=> 'Viewing Idea',
 	'VOTE'					=> 'Vote',
 	'VOTE_DOWN'				=> 'Vote Down',
+	'VOTE_ERROR'			=> 'An error occurred',
 	'VOTE_FAIL'				=> 'Failed to vote; check your connection.',
 	'VOTE_SUCCESS'			=> 'Successfully voted on this idea.',
 	'VOTE_UP'				=> 'Vote Up',
