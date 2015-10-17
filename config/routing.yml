@@ -9,8 +9,8 @@ ideas_idea_controller:
         idea_id: \d+
 
 ideas_list_controller:
-    pattern: /ideas/all/{sort}
-    defaults: { _controller: phpbb.ideas.list_controller:all, sort: new }
+    pattern: /ideas/list/{sort}
+    defaults: { _controller: phpbb.ideas.list_controller:ideas_list, sort: new }
 
 ideas_post_controller:
     pattern: /ideas/post
