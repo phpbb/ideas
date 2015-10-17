@@ -16,6 +16,8 @@ namespace phpbb\ideas\controller;
 
 class index_controller extends base
 {
+	const IDEAS = 5;
+
 	/**
 	 * Controller for /ideas
 	 *
@@ -23,7 +25,7 @@ class index_controller extends base
 	 */
 	public function index()
 	{
-		$rows = $this->ideas->get_ideas(10, 'date', 'DESC');
+		$rows = $this->ideas->get_ideas(self::IDEAS, 'date', 'DESC');
 		foreach ($rows as $row)
 		{
 			$this->template->assign_block_vars('latest_ideas', array(
@@ -39,7 +41,7 @@ class index_controller extends base
 			));
 		}
 
-		$rows = $this->ideas->get_ideas(10, 'top', 'DESC');
+		$rows = $this->ideas->get_ideas(self::IDEAS, 'top', 'DESC');
 		foreach ($rows as $row)
 		{
 			$this->template->assign_block_vars('top_ideas', array(
@@ -55,7 +57,7 @@ class index_controller extends base
 			));
 		}
 
-		$rows = $this->ideas->get_ideas(5, 'date', 'DESC', 'idea_status = 3');
+		$rows = $this->ideas->get_ideas(self::IDEAS, 'date', 'DESC', 'idea_status = 3');
 		foreach ($rows as $row)
 		{
 			$this->template->assign_block_vars('implemented_ideas', array(
