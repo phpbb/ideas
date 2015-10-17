@@ -29,10 +29,10 @@ abstract class base
 	/* @var \phpbb\user */
 	protected $user;
 
-	/* @var \phpbb\ideas\factory\LinkHelper */
+	/* @var \phpbb\ideas\factory\linkhelper */
 	protected $link_helper;
 
-	/* @var \phpbb\ideas\factory\Ideas */
+	/* @var \phpbb\ideas\factory\ideas */
 	protected $ideas;
 
 	/* @var \phpbb\request\request */
@@ -48,13 +48,13 @@ abstract class base
 	 * @param \phpbb\controller\helper        $helper
 	 * @param \phpbb\template\template        $template
 	 * @param \phpbb\user                     $user
-	 * @param \phpbb\ideas\factory\LinkHelper $link_helper
-	 * @param \phpbb\ideas\factory\Ideas      $ideas
+	 * @param \phpbb\ideas\factory\linkhelper $link_helper
+	 * @param \phpbb\ideas\factory\ideas      $ideas
 	 * @param \phpbb\request\request          $request
 	 * @param string                          $root_path
 	 * @param string                          $php_ext
 	 */
-	public function __construct(\phpbb\controller\helper $helper, \phpbb\template\template $template, \phpbb\user $user, \phpbb\ideas\factory\LinkHelper $link_helper, \phpbb\ideas\factory\Ideas $ideas, \phpbb\request\request $request, $root_path, $php_ext)
+	public function __construct(\phpbb\controller\helper $helper, \phpbb\template\template $template, \phpbb\user $user, \phpbb\ideas\factory\linkhelper $link_helper, \phpbb\ideas\factory\ideas $ideas, \phpbb\request\request $request, $root_path, $php_ext)
 	{
 		$this->helper = $helper;
 		$this->template = $template;

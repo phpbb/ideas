@@ -39,7 +39,7 @@ class idea_controller extends base
 	/** @var \phpbb\profilefields\manager */
 	protected $profilefields_manager;
 
-	public function __construct(\phpbb\auth\auth $auth, \phpbb\cache\service $cache, \phpbb\config\config $config, \phpbb\content_visibility $content_visibility, \phpbb\db\driver\driver_interface $db, \phpbb\controller\helper $helper, \phpbb\pagination $pagination, \phpbb\profilefields\manager $profilefields_manager, \phpbb\template\template $template, \phpbb\user $user, \phpbb\ideas\factory\LinkHelper $link_helper, \phpbb\ideas\factory\Ideas $ideas, \phpbb\request\request $request, $root_path, $php_ext)
+	public function __construct(\phpbb\auth\auth $auth, \phpbb\cache\service $cache, \phpbb\config\config $config, \phpbb\content_visibility $content_visibility, \phpbb\db\driver\driver_interface $db, \phpbb\controller\helper $helper, \phpbb\pagination $pagination, \phpbb\profilefields\manager $profilefields_manager, \phpbb\template\template $template, \phpbb\user $user, \phpbb\ideas\factory\linkhelper $link_helper, \phpbb\ideas\factory\ideas $ideas, \phpbb\request\request $request, $root_path, $php_ext)
 	{
 		parent::__construct($helper, $template, $user, $link_helper, $ideas, $request, $root_path, $php_ext);
 

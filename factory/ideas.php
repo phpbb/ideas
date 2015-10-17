@@ -16,7 +16,7 @@ namespace phpbb\ideas\factory;
 
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
-class Ideas
+class ideas
 {
 	/* @var \phpbb\db\driver\factory */
 	protected $db;

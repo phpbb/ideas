@@ -14,7 +14,7 @@
 
 namespace phpbb\ideas\factory;
 
-class LinkHelper
+class linkhelper
 {
 	/* @var \phpbb\controller\helper */
 	protected $helper;

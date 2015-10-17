@@ -8,8 +8,8 @@ services:
             - @controller.helper
             - @template
             - @user
-            - @phpbb.ideas.LinkHelper
-            - @phpbb.ideas.Ideas
+            - @phpbb.ideas.linkhelper
+            - @phpbb.ideas.ideas
             - @request
             - %core.root_path%
             - %core.php_ext%
@@ -39,14 +39,14 @@ services:
             - @profilefields.manager
             - @template
             - @user
-            - @phpbb.ideas.LinkHelper
-            - @phpbb.ideas.Ideas
+            - @phpbb.ideas.linkhelper
+            - @phpbb.ideas.ideas
             - @request
             - %core.root_path%
             - %core.php_ext%
 
-    phpbb.ideas.Ideas:
-        class: phpbb\ideas\factory\Ideas
+    phpbb.ideas.ideas:
+        class: phpbb\ideas\factory\ideas
         arguments:
             - @dbal.conn
             - @controller.helper
@@ -60,8 +60,8 @@ services:
             - %tables.ideas_votes%
             - %core.php_ext%
 
-    phpbb.ideas.LinkHelper:
-        class: phpbb\ideas\factory\LinkHelper
+    phpbb.ideas.linkhelper:
+        class: phpbb\ideas\factory\linkhelper
         arguments:
             - @controller.helper
             - @user_loader
