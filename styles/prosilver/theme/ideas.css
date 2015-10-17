@@ -34,12 +34,6 @@ dd.topics {
 	padding-left: 10px !important;
 }
 
-dd.topics:not(.bad) {
-	text-align: left;
-	padding-left: 10px;
-	vertical-align: top;
-}
-
 .voteslist {
 	display: none;
 	list-style-type: none;
