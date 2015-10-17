@@ -10,7 +10,6 @@
 	};
 
 	function voteSuccess(message) {
-		console.log($(this));
 		if (typeof message === 'string') {
 			phpbb.alert('Error', 'An error occurred: ' + message); // Error
 		} else {
@@ -76,12 +75,7 @@
 	});
 
 	$('.confirm').click(function(e) {
-		e.preventDefault();
-		e.stopPropagation();
-		phpbb.confirm('test', function(e) {
-
-		});
-		//return confirm($(this).attr('data-l-msg')); // EVERYTHING IS BLEEDING
+		return confirm($(this).attr('data-l-msg')); // EVERYTHING IS BLEEDING
 	});
 
 	$('#status').change(function() {
