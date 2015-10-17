@@ -10,42 +10,72 @@
 
 namespace phpbb\ideas\controller;
 
+use phpbb\auth\auth;
+use phpbb\cache\service;
+use phpbb\config\config;
+use phpbb\content_visibility;
+use phpbb\controller\helper;
+use phpbb\db\driver\driver_interface;
 use phpbb\exception\http_exception;
+use phpbb\ideas\factory\ideas;
+use phpbb\ideas\factory\linkhelper;
+use phpbb\pagination;
+use phpbb\profilefields\manager;
+use phpbb\request\request;
+use phpbb\template\template;
+use phpbb\user;
 
 class idea_controller extends base
 {
-	/** @var \phpbb\auth\auth */
+	/** @var auth */
 	protected $auth;
 
-	/** @var \phpbb\cache\service */
+	/** @var service */
 	protected $cache;
 
-	/** @var \phpbb\config\config */
+	/** @var config */
 	protected $config;
 
-	/** @var \phpbb\content_visibility */
+	/** @var content_visibility */
 	protected $content_visibility;
 
-	/** @var \phpbb\db\driver\driver_interface */
+	/** @var manager */
+	protected $cp;
+
+	/** @var driver_interface */
 	protected $db;
 
-	/** @var \phpbb\pagination */
+	/** @var pagination */
 	protected $pagination;
 
-	/** @var \phpbb\profilefields\manager */
-	protected $profilefields_manager;
-
-	public function __construct(\phpbb\auth\auth $auth, \phpbb\cache\service $cache, \phpbb\config\config $config, \phpbb\content_visibility $content_visibility, \phpbb\db\driver\driver_interface $db, \phpbb\controller\helper $helper, \phpbb\pagination $pagination, \phpbb\profilefields\manager $profilefields_manager, \phpbb\template\template $template, \phpbb\user $user, \phpbb\ideas\factory\linkhelper $link_helper, \phpbb\ideas\factory\ideas $ideas, \phpbb\request\request $request, $root_path, $php_ext)
+	/**
+	 * @param \phpbb\auth\auth                  $auth
+	 * @param \phpbb\cache\service              $cache
+	 * @param \phpbb\config\config              $config
+	 * @param \phpbb\content_visibility         $content_visibility
+	 * @param \phpbb\profilefields\manager      $cp
+	 * @param \phpbb\db\driver\driver_interface $db
+	 * @param \phpbb\controller\helper          $helper
+	 * @param \phpbb\ideas\factory\ideas        $ideas
+	 * @param \phpbb\ideas\factory\linkhelper   $link_helper
+	 * @param \phpbb\pagination                 $pagination
+	 * @param \phpbb\request\request            $request
+	 * @param \phpbb\template\template          $template
+	 * @param \phpbb\user                       $user
+	 * @param                                   $root_path
+	 * @param                                   $php_ext
+	 */
+	public function __construct(auth $auth, service $cache, config $config, content_visibility $content_visibility, manager $cp, driver_interface $db, helper $helper, ideas $ideas, linkhelper $link_helper, pagination $pagination, request $request, template $template, user $user, $root_path, $php_ext)
 	{
-		parent::__construct($helper, $template, $user, $link_helper, $ideas, $request, $root_path, $php_ext);
+		parent::__construct($helper, $ideas, $link_helper, $request, $template, $user, $root_path, $php_ext);
 
 		$this->auth = $auth;
 		$this->cache = $cache;
 		$this->config = $config;
 		$this->content_visibility = $content_visibility;
+		$this->cp = $cp;
 		$this->db = $db;
 		$this->pagination = $pagination;
-		$this->profilefields_manager = $profilefields_manager;
 
 		$this->user->add_lang('viewtopic');
 	}
@@ -1252,7 +1282,7 @@ class idea_controller extends base
 		if ($this->config['load_cpf_viewtopic'])
 		{
 			// Grab all profile fields from users in id cache for later use - similar to the poster cache
-			$profile_fields_tmp = $this->profilefields_manager->grab_profile_fields_data($id_cache);
+			$profile_fields_tmp = $this->cp->grab_profile_fields_data($id_cache);
 
 			// filter out fields not to be displayed on viewtopic. Yes, it's a hack, but this shouldn't break any MODs.
 			$profile_fields_cache = array();
@@ -1588,7 +1618,7 @@ class idea_controller extends base
 			//
 			if ($this->config['load_cpf_viewtopic'])
 			{
-				$cp_row = (isset($profile_fields_cache[$poster_id])) ? $this->profilefields_manager->generate_profile_fields_template_data($profile_fields_cache[$poster_id]) : array();
+				$cp_row = (isset($profile_fields_cache[$poster_id])) ? $this->cp->generate_profile_fields_template_data($profile_fields_cache[$poster_id]) : array();
 			}
 
 			$post_unread = (isset($topic_tracking_info[$topic_id]) && $row['post_time'] > $topic_tracking_info[$topic_id]) ? true : false;

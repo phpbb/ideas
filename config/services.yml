@@ -6,11 +6,11 @@ services:
         abstract: true
         arguments:
             - @controller.helper
+            - @phpbb.ideas.ideas
+            - @phpbb.ideas.linkhelper
+            - @request
             - @template
             - @user
-            - @phpbb.ideas.linkhelper
-            - @phpbb.ideas.ideas
-            - @request
             - %core.root_path%
             - %core.php_ext%
 
@@ -33,15 +33,15 @@ services:
             - @cache
             - @config
             - @content.visibility
+            - @profilefields.manager
             - @dbal.conn
             - @controller.helper
+            - @phpbb.ideas.ideas
+            - @phpbb.ideas.linkhelper
             - @pagination
-            - @profilefields.manager
+            - @request
             - @template
             - @user
-            - @phpbb.ideas.linkhelper
-            - @phpbb.ideas.ideas
-            - @request
             - %core.root_path%
             - %core.php_ext%
 

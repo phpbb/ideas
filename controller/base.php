@@ -10,28 +10,35 @@
 
 namespace phpbb\ideas\controller;
 
+use phpbb\controller\helper;
+use phpbb\ideas\factory\ideas;
+use phpbb\ideas\factory\linkhelper;
+use phpbb\request\request;
+use phpbb\template\template;
+use phpbb\user;
+
 // @todo: refactor out
 define('IDEAS_FORUM_ID', 2);
 define('IDEAS_POSTER_ID', 2);
 
 abstract class base
 {
-	/* @var \phpbb\controller\helper */
+	/* @var helper */
 	protected $helper;
 
-	/* @var \phpbb\template\template */
+	/* @var template */
 	protected $template;
 
-	/* @var \phpbb\user */
+	/* @var user */
 	protected $user;
 
-	/* @var \phpbb\ideas\factory\linkhelper */
+	/* @var linkhelper */
 	protected $link_helper;
 
-	/* @var \phpbb\ideas\factory\ideas */
+	/* @var ideas */
 	protected $ideas;
 
-	/* @var \phpbb\request\request */
+	/* @var request */
 	protected $request;
 
 	/** @var string */
@@ -41,23 +48,23 @@ abstract class base
 	protected $php_ext;
 
 	/**
-	 * @param \phpbb\controller\helper        $helper
-	 * @param \phpbb\template\template        $template
-	 * @param \phpbb\user                     $user
-	 * @param \phpbb\ideas\factory\linkhelper $link_helper
-	 * @param \phpbb\ideas\factory\ideas      $ideas
-	 * @param \phpbb\request\request          $request
-	 * @param string                          $root_path
-	 * @param string                          $php_ext
+	 * @param helper     $helper
+	 * @param ideas      $ideas
+	 * @param linkhelper $link_helper
+	 * @param request    $request
+	 * @param template   $template
+	 * @param user       $user
+	 * @param string     $root_path
+	 * @param string     $php_ext
 	 */
-	public function __construct(\phpbb\controller\helper $helper, \phpbb\template\template $template, \phpbb\user $user, \phpbb\ideas\factory\linkhelper $link_helper, \phpbb\ideas\factory\ideas $ideas, \phpbb\request\request $request, $root_path, $php_ext)
+	public function __construct(helper $helper, ideas $ideas, linkhelper $link_helper, request $request, template $template, user $user, $root_path, $php_ext)
 	{
 		$this->helper = $helper;
+		$this->ideas = $ideas;
+		$this->link_helper = $link_helper;
+		$this->request = $request;
 		$this->template = $template;
 		$this->user = $user;
-		$this->link_helper = $link_helper;
-		$this->ideas = $ideas;
-		$this->request = $request;
 		$this->root_path = $root_path;
 		$this->php_ext = $php_ext;
 

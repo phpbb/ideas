@@ -10,20 +10,24 @@
 
 namespace phpbb\ideas\factory;
 
+use phpbb\controller\helper;
+use phpbb\db\driver\driver_interface;
+use phpbb\log\log;
+use phpbb\user;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class ideas
 {
-	/* @var \phpbb\db\driver\factory */
+	/* @var driver_interface */
 	protected $db;
 
-	/* @var \phpbb\controller\helper */
+	/* @var helper */
 	protected $helper;
 
-	/** @var \phpbb\log\log */
+	/** @var log */
 	protected $log;
 
-	/* @var \phpbb\user */
+	/* @var user */
 	protected $user;
 
 	/** @var string */
@@ -48,19 +52,20 @@ class ideas
 	protected $php_ext;
 
 	/**
-	 * @param \phpbb\db\driver\factory $db
-	 * @param \phpbb\controller\helper $helper
-	 * @param \phpbb\log\log           $log
-	 * @param \phpbb\user              $user
-	 * @param string                   $table_ideas
-	 * @param string                   $table_duplicates
-	 * @param string                   $table_rfcs
-	 * @param string                   $table_statuses
-	 * @param string                   $table_tickets
-	 * @param string                   $table_votes
-	 * @param string                   $php_ext
+	 * @param driver_interface $db
+	 * @param helper           $helper
+	 * @param log              $log
+	 * @param user             $user
+	 * @param string           $table_ideas
+	 * @param string           $table_duplicates
+	 * @param string           $table_rfcs
+	 * @param string           $table_statuses
+	 * @param string           $table_tickets
+	 * @param string           $table_votes
+	 * @param string           $php_ext
 	 */
-	public function __construct(\phpbb\db\driver\factory $db, \phpbb\controller\helper $helper, \phpbb\log\log $log, \phpbb\user $user, $table_ideas, $table_duplicates, $table_rfcs, $table_statuses, $table_tickets, $table_votes, $php_ext) {
+	public function __construct(driver_interface $db, helper $helper, log $log, user $user, $table_ideas, $table_duplicates, $table_rfcs, $table_statuses, $table_tickets, $table_votes, $php_ext)
+	{
 		$this->db = $db;
 		$this->helper = $helper;
 		$this->log = $log;

@@ -10,15 +10,22 @@
 
 namespace phpbb\ideas\factory;
 
+use phpbb\controller\helper;
+use phpbb\user_loader;
+
 class linkhelper
 {
-	/* @var \phpbb\controller\helper */
+	/* @var helper */
 	protected $helper;
 
-	/* @var \phpbb\user_loader */
+	/* @var user_loader */
 	protected $user_loader;
 
-	public function __construct(\phpbb\controller\helper $helper, \phpbb\user_loader $user_loader)
+	/**
+	 * @param \phpbb\controller\helper $helper
+	 * @param \phpbb\user_loader       $user_loader
+	 */
+	public function __construct(helper $helper, user_loader $user_loader)
 	{
 		$this->helper = $helper;
 		$this->user_loader = $user_loader;
