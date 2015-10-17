@@ -4,14 +4,6 @@ a.votes {
 	display: inline-block;
 }
 
-a.voteup, span.up {
-	color: green;
-}
-
-a.votedown, span.down {
-	color: red;
-}
-
 a.dead {
 	cursor: text;
 }
@@ -30,7 +22,7 @@ a.dead.removevote {
 
 dd.topics {
 	text-align: left;
-	width: 180px;
+	width: auto;
 	padding-left: 10px !important;
 }
 
@@ -86,11 +78,11 @@ dd.topics {
 }
 
 .minivoteup { background-position: 0 0; }
+.minivoteup.voteup:hover { background-position: 0 -25px; }
+.minivoteup.voteup:active { background-position: 0 -50px; }
 .minivotedown { background-position: -65px 0; }
-.minivoteup:hover { background-position: 0 -25px; }
-.minivotedown:hover { background-position: -65px -25px; }
-.minivoteup:active { background-position: 0 -50px; }
-.minivotedown:active { background-position: -65px -50px; }
+.minivotedown.votedown:hover { background-position: -65px -25px; }
+.minivotedown.votedown:active { background-position: -65px -50px; }
 
 .voteslist {
 	display: none;
