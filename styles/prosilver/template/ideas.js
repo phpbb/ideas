@@ -74,10 +74,6 @@
 		$.get(url, voteSuccess).fail(voteFailure);
 	});
 
-	$('.confirm').click(function(e) {
-		return confirm($(this).attr('data-l-msg')); // EVERYTHING IS BLEEDING
-	});
-
 	$('#status').change(function() {
 		var $this = $(this),
 			data = {

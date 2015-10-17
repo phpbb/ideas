@@ -124,7 +124,7 @@
 		<!-- IF U_DELETE_IDEA or CAN_EDIT -->
 		<dt style="width: 15%">{L_MOD_IDEA}:</dt>
 		<dd>
-			<!-- IF U_DELETE_IDEA --><a href="{U_DELETE_IDEA}" class="confirm" data-l-msg="{L_CONFIRM_DELETE}">{L_DELETE}</a> &bull; <!-- ENDIF -->
+			<!-- IF U_DELETE_IDEA --><a href="{U_DELETE_IDEA}" data-ajax="true" data-refresh="true">{L_DELETE}</a> &bull; <!-- ENDIF -->
             <!-- IF CAN_EDIT --><a href="{U_EDIT_TITLE}" id="titleedit">{L_TITLE_EDIT}</a> &bull; <!-- ENDIF -->
             <a href="{U_IDEA_TOPIC}">{L_IDEA_TOPIC}</a>
 		</dd>

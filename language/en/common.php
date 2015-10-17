@@ -24,7 +24,6 @@ $lang = array_merge($lang, array(
 	'ALL_IDEAS'				=> 'All ideas',
 	'ALREADY_VOTED'			=> 'You have already voted on this idea.',
 
-	'CONFIRM_DELETE'		=> 'Really delete idea?',
 	'CREATE_IDEA'			=> 'Create new idea',
 
 	'DATE'					=> 'Date',
@@ -68,6 +67,7 @@ $lang = array_merge($lang, array(
 	'RATING'                => 'Rating',
 	'REJECTED'				=> 'Rejected',
 	'REMOVE_VOTE'			=> 'Remove vote',
+	'RETURN_IDEAS'			=> '%sReturn to Ideas%s',
 	'RFC'					=> 'RFC',
 	'RFC_ERROR'				=> 'RFC must be a topic on Area51.',
 

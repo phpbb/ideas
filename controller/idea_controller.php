@@ -101,6 +101,27 @@ class idea_controller extends base
 		$mod = $this->auth->acl_get('m_', IDEAS_FORUM_ID);
 		$own = $idea['idea_author'] === $this->user->data['user_id'];
 
+		if ($mode === 'delete' && ($mod || ($own && $this->auth->acl_get('f_delete', IDEAS_FORUM_ID))))
+		{
+			if (confirm_box(true))
+			{
+				include($this->root_path . 'includes/functions_admin.' . $this->php_ext);
+				$this->ideas->delete($idea_id, $idea['topic_id']);
+
+				$redirect = $this->helper->route('ideas_index_controller');
+				$message = $this->user->lang('IDEA_DELETED') . '<br /><br />' . $this->user->lang('RETURN_IDEAS', '<a href="' . $redirect . '">', '</a>');
+				meta_refresh(3, $redirect);
+				trigger_error($message); // trigger error needed for data-ajax
+			}
+			else
+			{
+				confirm_box(false, $this->user->lang('CONFIRM_OPERATION'), build_hidden_fields(array(
+					'idea_id' => $idea_id,
+					'mode' => 'delete',
+				)));
+			}
+		}
+
 		if ($this->request->is_ajax() && !empty($mode))
 		{
 			switch ($mode)
@@ -209,15 +230,6 @@ class idea_controller extends base
 			return new \Symfony\Component\HttpFoundation\JsonResponse($result);
 		}
 
-		if ($mode === 'delete' && ($mod || ($own && $this->auth->acl_get('f_delete', IDEAS_FORUM_ID))))
-		{
-			include($this->root_path . 'includes/functions_admin.' . $this->php_ext);
-			$this->ideas->delete($idea_id, $idea['topic_id']);
-
-			$message = $this->user->lang('IDEA_DELETED') . '<br /><br />';
-			$message .= $this->user->lang('RETURN_INDEX', '<a href="' . append_sid("{$this->root_path}index.{$this->php_ext}") . '">', '</a>');
-			throw new http_exception(200, $message);
-		}
 
 		include($this->root_path . 'includes/functions_display.' . $this->php_ext);
 		include($this->root_path . 'includes/bbcode.' . $this->php_ext);
