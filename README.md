@@ -19,7 +19,7 @@ Please fork this repository and submit a pull request to contribute to phpBB Ide
 
 ## Bug Reporting & Support
 
-You can report bugs or suggest features in the [issue tracker](https://github.com/phpbb/phpbb-ideas/issues).
+You can report bugs or suggest features in the [issue tracker](https://tracker.phpbb.com/projects/WEBSITE).
 Support is not available for phpBB Ideas however you may email `website [at] phpbb [dot] com` where you may receive some limited support should the problem be with phpBB Ideas.
 
 Note: This extension is currently under development and is not recommended for use on any live forum.

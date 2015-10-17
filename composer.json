@@ -10,9 +10,14 @@
             "name": "Callum Macrae",
             "email": "callum@phpbb.com",
             "homepage": "http://macr.ae/",
-            "role": "Head Fixer of Things"
-        }
-    ],
+            "role": "phpBB Website Team"
+        },
+		{
+			"name": "Matt Friedman",
+			"homepage": "http://mattfriedman.me",
+			"role": "phpBB Extensions Team"
+		}
+	],
     "require": {
         "php": ">=5.3.3"
     },
