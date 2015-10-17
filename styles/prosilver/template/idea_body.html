@@ -3,7 +3,7 @@
 
 <!-- INCLUDE overall_header.html -->
 
-<h2>{L_VIEWING_IDEA} - <span id="ideatitle">{IDEA_TITLE}</span><input type="text" id="titleeditinput" value="{IDEA_TITLE}" /></h2>
+<h2>{L_VIEWING_IDEA} - <span id="ideatitle">{IDEA_TITLE}</span><input type="text" id="titleeditinput" value="{IDEA_TITLE}" data-l-err="{L_ERROR}" data-l-msg="{L_TITLE_EDIT_ERROR}" /></h2>
 
 <div class="action-bar top">
 
@@ -58,7 +58,7 @@
 			<span class="rating">
 				<a href="{U_IDEA_VOTE}" class="minivoteup voteup<!-- IF not CAN_VOTE--> dead<!-- ENDIF -->" title="{L_VOTE_UP}"><span>{IDEA_VOTES_UP}</span></a> &nbsp;
 				<a href="{U_IDEA_VOTE}" class="minivotedown votedown<!-- IF not CAN_VOTE--> dead<!-- ENDIF -->" title="{L_VOTE_DOWN}"><span>{IDEA_VOTES_DOWN}</span></a>
-				<a href="#" class="votes">({IDEA_POINTS})</a> <span class="successvoted"></span>
+				<a href="#" class="votes" data-l-msg="({L_VIEW_VOTES})">({IDEA_POINTS})</a> <span class="successvoted" data-l-err="{L_VOTE_FAIL}"></span>
 			</span>
 			<div class="clear"><</div>
 			<div class="voteslist bg3">
@@ -92,8 +92,8 @@
 			<a id="rfclink" href="{IDEA_RFC}"<!-- IF not IDEA_RFC --> style="display:none"<!-- ENDIF -->>{IDEA_RFC}</a>
 
 			<!-- IF CAN_EDIT -->
-			<a href="{U_EDIT_RFC}" id="rfcedit"><!-- IF IDEA_RFC -->{L_EDIT}<!-- ELSE -->{L_ADD}<!-- ENDIF --></a>
-			<input type="text" id="rfceditinput" value="{IDEA_RFC}" />
+			<a href="{U_EDIT_RFC}" id="rfcedit" data-l-add="{L_ADD}" data-l-edit="{L_EDIT}"><!-- IF IDEA_RFC -->{L_EDIT}<!-- ELSE -->{L_ADD}<!-- ENDIF --></a>
+			<input type="text" id="rfceditinput" value="{IDEA_RFC}" data-l-err="{L_ERROR}" data-l-msg="{L_RFC_ERROR}" />
 			<!-- ENDIF -->
 		</dd>
 		<!-- ENDIF -->
@@ -104,8 +104,8 @@
             <a id="ticketlink" <!-- IF IDEA_TICKET -->href="http://tracker.phpbb.com/browse/PHPBB3-{IDEA_TICKET}">PHPBB3-{IDEA_TICKET}<!-- ELSE -->style="display:none"><!-- ENDIF --></a>
 
             <!-- IF CAN_EDIT -->
-            <a href="{U_EDIT_TICKET}" id="ticketedit"><!-- IF IDEA_TICKET -->{L_EDIT}<!-- ELSE -->{L_ADD}<!-- ENDIF --></a>
-            <input type="text" id="ticketeditinput"<!-- IF IDEA_TICKET --> value="PHPBB3-{IDEA_TICKET}"<!-- ENDIF --> placeholder="PHPBB3-#####" />
+            <a href="{U_EDIT_TICKET}" id="ticketedit" data-l-add="{L_ADD}" data-l-edit="{L_EDIT}"><!-- IF IDEA_TICKET -->{L_EDIT}<!-- ELSE -->{L_ADD}<!-- ENDIF --></a>
+            <input type="text" id="ticketeditinput"<!-- IF IDEA_TICKET --> value="PHPBB3-{IDEA_TICKET}"<!-- ENDIF --> placeholder="PHPBB3-#####" data-l-err="{L_ERROR}" data-l-msg="{L_TICKET_ERROR}" />
             <!-- ENDIF -->
         </dd>
         <!-- ENDIF -->
@@ -117,14 +117,14 @@
 
             <!-- IF IS_MOD -->
             <a href="{U_EDIT_DUPLICATE}" id="duplicateedit">{L_SET}</a>
-            <input type="text" id="duplicateeditinput"<!-- IF IDEA_DUPLICATE --> value="{IDEA_DUPLICATE}"<!-- ENDIF --> placeholder="###" />
+            <input type="text" id="duplicateeditinput"<!-- IF IDEA_DUPLICATE --> value="{IDEA_DUPLICATE}"<!-- ENDIF --> placeholder="###" data-l-err="{L_ERROR}" data-l-msg="{L_TICKET_ERROR_DUP}" />
             <!-- ENDIF -->
         </dd>
         <!-- ENDIF -->
 		<!-- IF U_DELETE_IDEA or CAN_EDIT -->
 		<dt style="width: 15%">{L_MOD_IDEA}:</dt>
 		<dd>
-			<!-- IF U_DELETE_IDEA --><a href="{U_DELETE_IDEA}" class="confirm">{L_DELETE}</a> &bull; <!-- ENDIF -->
+			<!-- IF U_DELETE_IDEA --><a href="{U_DELETE_IDEA}" class="confirm" data-l-msg="{L_CONFIRM_DELETE}">{L_DELETE}</a> &bull; <!-- ENDIF -->
             <!-- IF CAN_EDIT --><a href="{U_EDIT_TITLE}" id="titleedit">{L_TITLE_EDIT}</a> &bull; <!-- ENDIF -->
             <a href="{U_IDEA_TOPIC}">{L_IDEA_TOPIC}</a>
 		</dd>

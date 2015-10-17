@@ -28,6 +28,7 @@ $lang = array_merge($lang, array(
 	'ALL_IDEAS'				=> 'All ideas',
 	'ALREADY_VOTED'			=> 'You have already voted on this idea.',
 
+	'CONFIRM_DELETE'		=> 'Really delete idea?',
 	'CREATE_IDEA'			=> 'Create new idea',
 
 	'DATE'					=> 'Date',
@@ -72,6 +73,7 @@ $lang = array_merge($lang, array(
 	'REJECTED'				=> 'Rejected',
 	'REMOVE_VOTE'			=> 'Remove vote',
 	'RFC'					=> 'RFC',
+	'RFC_ERROR'				=> 'RFC must be a topic on Area51.',
 
 	'SET'                   => 'Set',
 	'SCORE'                 => 'Score',
@@ -79,8 +81,11 @@ $lang = array_merge($lang, array(
 	'STATUS'				=> 'Status',
 
 	'TICKET'				=> 'Ticket',
+	'TICKET_ERROR'			=> 'Ticket ID must be of the format “PHPBB3-#####”.',
+	'TICKET_ERROR_DUP'		=> 'Please post the ID of the ticket.',
 	'TITLE'					=> 'Title',
 	'TITLE_EDIT'            => 'Edit title',
+	'TITLE_EDIT_ERROR'		=> 'Title must be between 6 and 64 characters.',
 	'TITLE_TOO_LONG'		=> 'Title must be under 64 characters long.',
 	'TITLE_TOO_SHORT'		=> 'Title must be 6 characters long.',
 	'TOP'                   => 'Top',
@@ -95,6 +100,7 @@ $lang = array_merge($lang, array(
 	'VIEWING_IDEA'			=> 'Viewing Idea',
 	'VOTE'					=> 'Vote',
 	'VOTE_DOWN'				=> 'Vote Down',
+	'VOTE_FAIL'				=> 'Failed to vote; check your connection.',
 	'VOTE_SUCCESS'			=> 'Successfully voted on this idea.',
 	'VOTE_UP'				=> 'Vote Up',
 	'VOTES'					=> 'Votes',

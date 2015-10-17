@@ -10,14 +10,16 @@
 	};
 
 	function voteSuccess(message) {
+		console.log($(this));
 		if (typeof message === 'string') {
 			phpbb.alert('Error', 'An error occurred: ' + message); // Error
 		} else {
 			$('.voteup:first').html('<span>' + message.votes_up + '</span>');
 			$('.votedown:first').html('<span>' + message.votes_down + '</span>');
-			$('.votes').hide()
-				.text('(' + message.points + ' points. Click to view votes)');
-			$('.successvoted').text('   ' + message.message)
+			$('.votes').hide().text(function() {
+				return $(this).attr('data-l-msg').replace('%s', message.points);
+			});
+			$('.successvoted').text(message.message)
 				.show()
 				.delay(2000)
 				.fadeOut(300, function() {
@@ -28,7 +30,9 @@
 
 	function voteFailure() {
 		$('.votes').hide();
-		$('.successvoted').text('   Failed to vote; check your connection.')
+		$('.successvoted').text(function(){
+			return $(this).attr('data-l-err');
+		})
 			.show()
 			.delay(2000)
 			.fadeOut(300, function() {
@@ -71,8 +75,13 @@
 		$.get(url, voteSuccess).fail(voteFailure);
 	});
 
-	$('.confirm').click(function() {
-		return confirm('Really delete idea?'); // EVERYTHING IS BLEEDING
+	$('.confirm').click(function(e) {
+		e.preventDefault();
+		e.stopPropagation();
+		phpbb.confirm('test', function(e) {
+
+		});
+		//return confirm($(this).attr('data-l-msg')); // EVERYTHING IS BLEEDING
 	});
 
 	$('#status').change(function() {
@@ -121,7 +130,7 @@
 				value = $this.val();
 
 			if (value && !find.test(value)) {
-				phpbb.alert('Error', 'Error: RFC must be a topic on Area51.');
+				phpbb.alert($this.attr('data-l-err'), $this.attr('data-l-msg'));
 				return;
 			}
 
@@ -132,7 +141,9 @@
 
 				$this.hide();
 
-				$('#rfcedit').text(value ? 'Edit' : 'Add').show();
+				$('#rfcedit').text(function() {
+					return value ? $(this).attr('data-l-edit') : $(this).attr('data-l-add');
+				}).show();
 			});
 		} else if (e.keyCode === keymap.ESC) {
 			e.preventDefault();
@@ -166,7 +177,7 @@
 				info;
 
 			if (value && !(info = /^PHPBB3\-(\d{1,6})$/.exec(value))) {
-				phpbb.alert('Error', 'Error: Ticket ID must be of the format "PHPBB3-#####".');
+				phpbb.alert($this.attr('data-l-err'), $this.attr('data-l-msg'));
 				return;
 			}
 
@@ -181,7 +192,9 @@
 
 				$this.hide();
 
-				$('#ticketedit').text(value ? 'Edit' : 'Add').show();
+				$('#ticketedit').text(function() {
+					return value ? $(this).attr('data-l-edit') : $(this).attr('data-l-add');
+				}).show();
 			});
 		} else if (e.keyCode === keymap.ESC) {
 			e.preventDefault();
@@ -219,7 +232,7 @@
 				value = $this.val();
 
 			if (value && isNaN(Number(value))) {
-				phpbb.alert('Error', 'Error: Please post the ID of the ticket.');
+				phpbb.alert($this.attr('data-l-err'), $this.attr('data-l-msg'));
 				return;
 			}
 
@@ -265,7 +278,7 @@
 				value = $this.val();
 
 			if (value.length < 6 || value.length > 64) {
-				phpbb.alert('Error', 'Error: Title must be between 6 and 64 characters.');
+				phpbb.alert($this.attr('data-l-err'), $this.attr('data-l-msg'));
 				return;
 			}
 
