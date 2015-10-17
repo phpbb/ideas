@@ -263,6 +263,7 @@ class idea_controller extends base
 			{
 				$this->template->assign_block_vars('votes_' . ($vote['vote_value'] ? 'up' : 'down'), array(
 					'USER'	=> get_username_string('full', $vote['user_id'], $vote['username'], $vote['user_colour']),
+					'S_VOTED' => ($this->user->data['user_id'] == $vote['user_id']) ? true : false,
 				));
 			}
 		}

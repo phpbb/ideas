@@ -70,6 +70,7 @@ $lang = array_merge($lang, array(
 
 	'RATING'                => 'Rating',
 	'REJECTED'				=> 'Rejected',
+	'REMOVE_VOTE'			=> 'Remove vote',
 	'RFC'					=> 'RFC',
 
 	'SET'                   => 'Set',

@@ -67,11 +67,13 @@
 						<li>
 							<strong>&#x25B2;:</strong> <!-- BEGIN votes_up -->{votes_up.USER}<!-- IF not votes_up.S_LAST_ROW -->, <!-- ENDIF --><!-- END votes_up -->
 						</li>
+						<!-- BEGIN votes_up --><!-- IF votes_up.S_VOTED --><li><a href="{U_REMOVE_VOTE}" class="removevote ">{L_REMOVE_VOTE}</a></li><!-- ENDIF --><!-- END votes_up -->
 					<!-- ENDIF -->
 					<!-- IF .votes_down -->
 						<li>
 							<strong>&#x25BC;:</strong> <!-- BEGIN votes_down -->{votes_down.USER}<!-- IF not votes_down.S_LAST_ROW -->, <!-- ENDIF --><!-- END votes_down -->
 						</li>
+					<!-- BEGIN votes_down --><!-- IF votes_down.S_VOTED --><li><a href="{U_REMOVE_VOTE}" class="removevote ">{L_REMOVE_VOTE}</a></li><!-- ENDIF --><!-- END votes_down -->
 					<!-- ENDIF -->
 				</ul>
 			</div>
