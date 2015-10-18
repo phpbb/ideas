@@ -89,8 +89,8 @@ class idea_controller extends base
 	public function idea($idea_id)
 	{
 		$mode = $this->request->variable('mode', '');
-		//$idea_id = $this->request->variable('id', 0);
 		$vote = $this->request->variable('v', 1);
+		$hash = $this->request->variable('hash', '');
 		$status = $this->request->variable('status', 0);
 		$idea = $this->ideas->get_idea($idea_id);
 		if (!$idea)
@@ -101,25 +101,46 @@ class idea_controller extends base
 		$mod = $this->auth->acl_get('m_', IDEAS_FORUM_ID);
 		$own = $idea['idea_author'] === $this->user->data['user_id'];
 
+		if ($mode === 'delete' && ($mod || ($own && $this->auth->acl_get('f_delete', IDEAS_FORUM_ID))))
+		{
+			if (confirm_box(true))
+			{
+				include($this->root_path . 'includes/functions_admin.' . $this->php_ext);
+				$this->ideas->delete($idea_id, $idea['topic_id']);
+
+				$redirect = $this->helper->route('ideas_index_controller');
+				$message = $this->user->lang('IDEA_DELETED') . '<br /><br />' . $this->user->lang('RETURN_IDEAS', '<a href="' . $redirect . '">', '</a>');
+				meta_refresh(3, $redirect);
+				trigger_error($message); // trigger error needed for data-ajax
+			}
+			else
+			{
+				confirm_box(false, $this->user->lang('CONFIRM_OPERATION'), build_hidden_fields(array(
+					'idea_id' => $idea_id,
+					'mode' => 'delete',
+				)));
+			}
+		}
+
 		if ($this->request->is_ajax() && !empty($mode))
 		{
 			switch ($mode)
 			{
 				case 'duplicate':
-					if ($mod)
+					if ($mod && check_link_hash($hash, "{$mode}_{$idea_id}"))
 					{
 						$duplicate = $this->request->variable('duplicate', 0);
 						$this->ideas->set_duplicate($idea['idea_id'], $duplicate);
-						$result = 'true';
+						$result = true;
 					}
 					else
 					{
-						$result = 'false';
+						$result = false;
 					}
 				break;
 
 				case 'removevote':
-					if ($idea['idea_status'] == 3 || $idea['idea_status'] == 4)
+					if ($idea['idea_status'] == 3 || $idea['idea_status'] == 4 || !check_link_hash($hash, "{$mode}_{$idea_id}"))
 					{
 						return false;
 					}
@@ -135,58 +156,58 @@ class idea_controller extends base
 				break;
 
 				case 'rfc':
-					if ($own || $mod)
+					if (($own || $mod) && check_link_hash($hash, "{$mode}_{$idea_id}"))
 					{
 						$rfc = $this->request->variable('rfc', '');
 						$this->ideas->set_rfc($idea['idea_id'], $rfc);
-						$result = 'true';
+						$result = true;
 					}
 					else
 					{
-						$result = 'false';
+						$result = false;
 					}
 				break;
 
 				case 'status':
-					if ($status && $mod)
+					if ($status && $mod && check_link_hash($hash, "{$mode}_{$idea_id}"))
 					{
 						$this->ideas->change_status($idea['idea_id'], $status);
-						$result = 'true';
+						$result = true;
 					}
 					else
 					{
-						$result = 'false';
+						$result = false;
 					}
 				break;
 
 				case 'ticket':
-					if ($own || $mod)
+					if (($own || $mod) && check_link_hash($hash, "{$mode}_{$idea_id}"))
 					{
 						$ticket = $this->request->variable('ticket', 0);
 						$this->ideas->set_ticket($idea['idea_id'], $ticket);
-						$result = 'true';
+						$result = true;
 					}
 					else
 					{
-						$result = 'false';
+						$result = false;
 					}
 				break;
 
 				case 'title':
-					if ($own || $mod)
+					if (($own || $mod) && check_link_hash($hash, "{$mode}_{$idea_id}"))
 					{
 						$title = $this->request->variable('title', '');
 						$this->ideas->set_title($idea['idea_id'], $title);
-						$result = 'true';
+						$result = true;
 					}
 					else
 					{
-						$result = 'false';
+						$result = false;
 					}
 				break;
 
 				case 'vote':
-					if ($idea['idea_status'] == 3 || $idea['idea_status'] == 4)
+					if ($idea['idea_status'] == 3 || $idea['idea_status'] == 4 || !check_link_hash($hash, "{$mode}_{$idea_id}"))
 					{
 						return false;
 					}
@@ -209,15 +230,6 @@ class idea_controller extends base
 			return new \Symfony\Component\HttpFoundation\JsonResponse($result);
 		}
 
-		if ($mode === 'delete' && ($mod || ($own && $this->auth->acl_get('f_delete', IDEAS_FORUM_ID))))
-		{
-			include($this->root_path . 'includes/functions_admin.' . $this->php_ext);
-			$this->ideas->delete($idea_id, $idea['topic_id']);
-
-			$message = $this->user->lang('IDEA_DELETED') . '<br /><br />';
-			$message .= $this->user->lang('RETURN_INDEX', '<a href="' . append_sid("{$this->root_path}index.{$this->php_ext}") . '">', '</a>');
-			throw new http_exception(200, $message);
-		}
 
 		include($this->root_path . 'includes/functions_display.' . $this->php_ext);
 		include($this->root_path . 'includes/bbcode.' . $this->php_ext);
@@ -270,15 +282,14 @@ class idea_controller extends base
 			'CAN_EDIT'			=> $mod || $own,
 			'CAN_VOTE'          => $can_vote,
 
-			'U_DELETE_IDEA'		=> $delete_posts ? $this->helper->route('ideas_idea_controller', array('idea_id' => $idea_id, 'mode' => 'delete')) : false,
-			'U_CHANGE_STATUS'	=> $this->helper->route('ideas_idea_controller', array('idea_id' => $idea_id, 'mode' => 'status')),
-			'U_EDIT_DUPLICATE'	=> $this->helper->route('ideas_idea_controller', array('idea_id' => $idea_id, 'mode' => 'duplicate')),
-			'U_EDIT_RFC'		=> $this->helper->route('ideas_idea_controller', array('idea_id' => $idea_id, 'mode' => 'rfc')),
-			'U_EDIT_TICKET'		=> $this->helper->route('ideas_idea_controller', array('idea_id' => $idea_id, 'mode' => 'ticket')),
-			'U_EDIT_TITLE'		=> $this->helper->route('ideas_idea_controller', array('idea_id' => $idea_id, 'mode' => 'title')),
-			'U_REMOVE_VOTE'     => $this->helper->route('ideas_idea_controller', array('idea_id' => $idea_id, 'mode' => 'removevote')),
-
-			'U_IDEA_VOTE'		=> $this->helper->route('ideas_idea_controller', array('idea_id' => $idea_id, 'mode' => 'vote')),
+			'U_DELETE_IDEA'		=> ($delete_posts) ? $this->link_helper->get_idea_link($idea_id, 'delete') : false,
+			'U_CHANGE_STATUS'	=> $this->link_helper->get_idea_link($idea_id, 'status', true),
+			'U_EDIT_DUPLICATE'	=> $this->link_helper->get_idea_link($idea_id, 'duplicate', true),
+			'U_EDIT_RFC'		=> $this->link_helper->get_idea_link($idea_id, 'rfc', true),
+			'U_EDIT_TICKET'		=> $this->link_helper->get_idea_link($idea_id, 'ticket', true),
+			'U_EDIT_TITLE'		=> $this->link_helper->get_idea_link($idea_id, 'title', true),
+			'U_REMOVE_VOTE'     => $this->link_helper->get_idea_link($idea_id, 'removevote', true),
+			'U_IDEA_VOTE'		=> $this->link_helper->get_idea_link($idea_id, 'vote', true),
 		));
 
 		if ($idea['idea_votes_up'] || $idea['idea_votes_down'])
@@ -535,7 +546,7 @@ class idea_controller extends base
 			// If post_id was submitted, we try at least to display the topic as a last resort...
 			if ($post_id && $topic_id)
 			{
-				redirect($this->helper->route('ideas_idea_controller', array('idea_id' => $idea_id)));
+				redirect($this->link_helper->get_idea_link($idea_id));
 			}
 
 			throw new http_exception(404, 'NO_TOPIC');
@@ -558,7 +569,7 @@ class idea_controller extends base
 				// If post_id was submitted, we try at least to display the topic as a last resort...
 				if ($topic_id)
 				{
-					redirect($this->helper->route('ideas_idea_controller', array('idea_id' => $idea_id)));
+					redirect($this->link_helper->get_idea_link($idea_id));
 				}
 
 				throw new http_exception(404, 'NO_TOPIC');
@@ -643,7 +654,7 @@ class idea_controller extends base
 		{
 			$jump_to = $this->request->variable('e', 0);
 
-			$redirect_url = $this->helper->route('ideas_idea_controller', array('idea_id' => $idea_id));
+			$redirect_url = $this->link_helper->get_idea_link($idea_id);
 
 			if ($this->user->data['user_id'] == ANONYMOUS)
 			{

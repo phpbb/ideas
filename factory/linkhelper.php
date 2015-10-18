@@ -33,15 +33,20 @@ class linkhelper
 
 	/**
 	 * Shortcut method to get the link to a specified idea.
+	 * Optionally add mode and hash URL arguments.
 	 *
-	 * @param $idea_id int The ID of the idea.
+	 * @param int    $idea_id int The ID of the idea.
+	 * @param string $mode        The mode argument (vote, delete, etc.)
+	 * @param bool   $hash        Add a link hash
 	 * @return string The route
 	 */
-	public function get_idea_link($idea_id)
+	public function get_idea_link($idea_id, $mode = '', $hash = false)
 	{
-		return $this->helper->route('ideas_idea_controller', array(
-			'idea_id' => $idea_id
-		));
+		$params = array('idea_id' => $idea_id);
+		$params = ($mode) ? array_merge($params, array('mode' => $mode)) : $params;
+		$params = ($hash) ? array_merge($params, array('hash' => generate_link_hash("{$mode}_{$idea_id}"))) : $params;
+
+		return $this->helper->route('ideas_idea_controller', $params);
 	}
 
 	public function get_list_link($sort = 'date')

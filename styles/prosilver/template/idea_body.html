@@ -55,11 +55,11 @@
 		<dt style="width: 15%">{L_POSTED}:</dt> <dd>{IDEA_DATE}</dd>
 		<dt style="width: 15%">{L_RATING}:</dt>
 		<dd>
-			<span class="rating">
-				<a href="{U_IDEA_VOTE}" class="minivoteup <!-- IF CAN_VOTE-->voteup<!-- ELSE -->dead<!-- ENDIF -->" title="{L_VOTE_UP}"><span>{IDEA_VOTES_UP}</span></a> &nbsp;
-				<a href="{U_IDEA_VOTE}" class="minivotedown <!-- IF CAN_VOTE-->votedown<!-- ELSE -->dead<!-- ENDIF -->" title="{L_VOTE_DOWN}"><span>{IDEA_VOTES_DOWN}</span></a>
+			<div class="rating">
+				<a <!-- IF CAN_VOTE-->href="{U_IDEA_VOTE}"<!-- ENDIF --> class="minivoteup <!-- IF CAN_VOTE-->voteup<!-- ELSE -->dead<!-- ENDIF -->" title="{L_VOTE_UP}" data-l-err="{L_ERROR}" data-l-msg="{L_VOTE_ERROR}{L_COLON}"><span>{IDEA_VOTES_UP}</span></a> &nbsp;
+				<a <!-- IF CAN_VOTE-->href="{U_IDEA_VOTE}"<!-- ENDIF --> class="minivotedown <!-- IF CAN_VOTE-->votedown<!-- ELSE -->dead<!-- ENDIF -->" title="{L_VOTE_DOWN}" data-l-err="{L_ERROR}" data-l-msg="{L_VOTE_ERROR}{L_COLON}"><span>{IDEA_VOTES_DOWN}</span></a>
 				<a href="#" class="votes" data-l-msg="({L_VIEW_VOTES})">({IDEA_POINTS})</a> <span class="successvoted" data-l-err="{L_VOTE_FAIL}"></span>
-			</span>
+			</div>
 			<div class="clear"><</div>
 			<div class="voteslist bg3">
 				<ul>
@@ -67,13 +67,13 @@
 						<li>
 							<strong>&#x25B2;:</strong> <!-- BEGIN votes_up -->{votes_up.USER}<!-- IF not votes_up.S_LAST_ROW -->, <!-- ENDIF --><!-- END votes_up -->
 						</li>
-						<!-- BEGIN votes_up --><!-- IF votes_up.S_VOTED --><li><a href="{U_REMOVE_VOTE}" class="removevote ">{L_REMOVE_VOTE}</a></li><!-- ENDIF --><!-- END votes_up -->
+						<!-- BEGIN votes_up --><!-- IF votes_up.S_VOTED --><li><a href="{U_REMOVE_VOTE}" class="removevote" data-l-err="{L_ERROR}" data-l-msg="{L_VOTE_ERROR}{L_COLON}">{L_REMOVE_VOTE}</a></li><!-- ENDIF --><!-- END votes_up -->
 					<!-- ENDIF -->
 					<!-- IF .votes_down -->
 						<li>
 							<strong>&#x25BC;:</strong> <!-- BEGIN votes_down -->{votes_down.USER}<!-- IF not votes_down.S_LAST_ROW -->, <!-- ENDIF --><!-- END votes_down -->
 						</li>
-					<!-- BEGIN votes_down --><!-- IF votes_down.S_VOTED --><li><a href="{U_REMOVE_VOTE}" class="removevote ">{L_REMOVE_VOTE}</a></li><!-- ENDIF --><!-- END votes_down -->
+					<!-- BEGIN votes_down --><!-- IF votes_down.S_VOTED --><li><a href="{U_REMOVE_VOTE}" class="removevote" data-l-err="{L_ERROR}" data-l-msg="{L_VOTE_ERROR}{L_COLON}">{L_REMOVE_VOTE}</a></li><!-- ENDIF --><!-- END votes_down -->
 					<!-- ENDIF -->
 				</ul>
 			</div>
@@ -101,7 +101,7 @@
         <dt style="width: 15%">{L_TICKET}:</dt>
         <dd>
 
-            <a id="ticketlink" <!-- IF IDEA_TICKET -->href="http://tracker.phpbb.com/browse/PHPBB3-{IDEA_TICKET}">PHPBB3-{IDEA_TICKET}<!-- ELSE -->style="display:none"><!-- ENDIF --></a>
+            <a id="ticketlink" <!-- IF IDEA_TICKET -->href="https://tracker.phpbb.com/browse/PHPBB3-{IDEA_TICKET}">PHPBB3-{IDEA_TICKET}<!-- ELSE -->style="display:none"><!-- ENDIF --></a>
 
             <!-- IF CAN_EDIT -->
             <a href="{U_EDIT_TICKET}" id="ticketedit" data-l-add="{L_ADD}" data-l-edit="{L_EDIT}"><!-- IF IDEA_TICKET -->{L_EDIT}<!-- ELSE -->{L_ADD}<!-- ENDIF --></a>
@@ -124,7 +124,7 @@
 		<!-- IF U_DELETE_IDEA or CAN_EDIT -->
 		<dt style="width: 15%">{L_MOD_IDEA}:</dt>
 		<dd>
-			<!-- IF U_DELETE_IDEA --><a href="{U_DELETE_IDEA}" class="confirm" data-l-msg="{L_CONFIRM_DELETE}">{L_DELETE}</a> &bull; <!-- ENDIF -->
+			<!-- IF U_DELETE_IDEA --><a href="{U_DELETE_IDEA}" data-ajax="true" data-refresh="true">{L_DELETE}</a> &bull; <!-- ENDIF -->
             <!-- IF CAN_EDIT --><a href="{U_EDIT_TITLE}" id="titleedit">{L_TITLE_EDIT}</a> &bull; <!-- ENDIF -->
             <a href="{U_IDEA_TOPIC}">{L_IDEA_TOPIC}</a>
 		</dd>
