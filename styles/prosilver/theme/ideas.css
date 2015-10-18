@@ -93,6 +93,6 @@ dd.topics {
 	border-radius: 3px;
 }
 
-.voteslist ul, .voteslist ul li {
-	list-style: none;
-}
+.voteslist ul, .voteslist ul li { list-style: none; }
+
+.view-all, .view-all:hover { color: #536482; }
