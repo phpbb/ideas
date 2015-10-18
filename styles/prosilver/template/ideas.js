@@ -2,44 +2,65 @@
 
 	'use strict';
 
-	// define a couple constants for keydown functions.
 	var keymap = {
-		TAB: 9,
-		ENTER: 13,
-		ESC: 27
-	};
+			TAB: 9,
+			ENTER: 13,
+			ESC: 27
+		},
+		$obj = {
+			ideaTitle: $('#ideatitle'),
+			duplicateEdit: $('#duplicateedit'),
+			duplicateEditInput: $('#duplicateeditinput'),
+			duplicateLink: $('#duplicatelink'),
+			duplicateToggle: $('.duplicatetoggle'),
+			ticketEdit: $('#ticketedit'),
+			ticketEditInput: $('#ticketeditinput'),
+			ticketLink: $('#ticketlink'),
+			titleEdit: $('#titleedit'),
+			titleEditInput: $('#titleeditinput'),
+			rfcEdit: $('#rfcedit'),
+			rfcEditInput: $('#rfceditinput'),
+			rfcLink: $('#rfclink'),
+			removeVote: $('.removevote'),
+			status: $('#status'),
+			successVoted: $('.successvoted'),
+			votes: $('.votes'),
+			votesList: $('.voteslist'),
+			voteDown: $('.votedown'),
+			voteUp: $('.voteup')
+		};
 
 	function voteSuccess(message, $this) {
 		if (typeof message === 'string') {
 			phpbb.alert($this.attr('data-l-err'), $this.attr('data-l-msg') + ' ' + message);
 		} else {
-			$('.voteup:first').html('<span>' + message.votes_up + '</span>');
-			$('.votedown:first').html('<span>' + message.votes_down + '</span>');
-			$('.votes').hide().text(function() {
+			$obj.voteUp.first().html('<span>' + message.votes_up + '</span>');
+			$obj.voteDown.first().html('<span>' + message.votes_down + '</span>');
+			$obj.votes.hide().text(function() {
 				return $(this).attr('data-l-msg').replace('%s', message.points);
 			});
-			$('.successvoted').text(message.message)
+			$obj.successVoted.text(message.message)
 				.show()
 				.delay(2000)
 				.fadeOut(300, function() {
-					$('.votes').fadeIn(300);
+					$obj.votes.fadeIn(300);
 				});
 		}
 	}
 
 	function voteFailure() {
-		$('.votes').hide();
-		$('.successvoted').text(function(){
+		$obj.votes.hide();
+		$obj.successVoted.text(function(){
 			return $(this).attr('data-l-err');
 		})
 			.show()
 			.delay(2000)
 			.fadeOut(300, function() {
-				$('.votes').fadeIn(300);
+				$obj.votes.fadeIn(300);
 			});
 	}
 
-	$('.voteup, .votedown').click(function(e) {
+	$obj.voteUp.add($obj.voteDown).on('click', function(e) {
 		e.preventDefault();
 
 		var $this = $(this),
@@ -55,15 +76,13 @@
 		}).fail(voteFailure);
 	});
 
-	$('a.dead').attr('href', '#');
-
-	$('.votes').click(function(e) {
+	$obj.votes.on('click', function(e) {
 		e.preventDefault();
 
-		$('.voteslist').slideToggle();
+		$obj.votesList.slideToggle();
 	});
 
-	$('.removevote').click(function(e) {
+	$obj.removeVote.on('click', function(e) {
 		e.preventDefault();
 
 		var $this = $(this),
@@ -79,7 +98,7 @@
 
 	});
 
-	$('#status').change(function() {
+	$obj.status.change(function() {
 		var $this = $(this),
 			data = {
 				mode: 'status',
@@ -90,38 +109,40 @@
 			return;
 		}
 
-		$.get($this.attr('data-url'), data, function() {
-			var anchor = $this.prev('a'),
-				href = anchor.attr('href');
+		$.get($this.attr('data-url'), data, function(res) {
+			if (res) {
+				var anchor = $this.prev('a'),
+					href = anchor.attr('href');
 
-			href = href.replace(/status=\d/, 'status=' + data.status);
+				href = href.replace(/status=\d/, 'status=' + data.status);
 
-			anchor.attr('href', href)
-				.text($this.find(':selected').text());
+				anchor.attr('href', href)
+					.text($this.find(':selected').text());
 
-			if (idea_is_duplicate()) {
-				$('.duplicatetoggle').show();
-			} else {
-				$('.duplicatetoggle').hide();
+				if (idea_is_duplicate()) {
+					$obj.duplicateToggle.show();
+				} else {
+					$obj.duplicateToggle.hide();
+				}
 			}
 		});
 	});
 
-	$('#rfcedit').click(function(e) {
+	$obj.rfcEdit.on('click', function(e) {
 		e.preventDefault();
 
-		$('#rfcedit, #rfclink').hide();
-		$('#rfceditinput').show().focus();
+		$obj.rfcEdit.add($obj.rfcLink).hide();
+		$obj.rfcEditInput.show().focus();
 	});
 
-	$('#rfceditinput').keydown(function(e) {
+	$obj.rfcEditInput.on('keydown', function(e) {
 		if (e.keyCode === keymap.ENTER) {
 			e.preventDefault();
 			e.stopPropagation();
 
 			var $this = $(this),
 				find = /^https?:\/\/area51\.phpbb\.com\/phpBB\/viewtopic\.php/,
-				url = $('#rfcedit').attr('href'),
+				url = $obj.rfcEdit.attr('href'),
 				value = $this.val();
 
 			if (value && !find.test(value)) {
@@ -129,24 +150,26 @@
 				return;
 			}
 
-			$.get(url, {rfc: value}, function() {
-				$('#rfclink').text(value)
-					.attr('href', value)
-					.show();
+			$.get(url, {rfc: value}, function(res) {
+				if (res) {
+					$obj.rfcLink.text(value)
+						.attr('href', value)
+						.show();
 
-				$this.hide();
+					$this.hide();
 
-				$('#rfcedit').text(function() {
-					return value ? $(this).attr('data-l-edit') : $(this).attr('data-l-add');
-				}).show();
+					$obj.rfcEdit.text(function() {
+						return value ? $(this).attr('data-l-edit') : $(this).attr('data-l-add');
+					}).show();
+				}
 			});
 		} else if (e.keyCode === keymap.ESC) {
 			e.preventDefault();
 
-			var $link = $('#rfclink');
+			var $link = $obj.rfcLink;
 
 			$(this).hide();
-			$('#rfcedit').show();
+			$obj.rfcEdit.show();
 
 			if ($link.html()) {
 				$link.show();
@@ -154,20 +177,20 @@
 		}
 	});
 
-	$('#ticketedit').click(function(e) {
+	$obj.ticketEdit.on('click', function(e) {
 		e.preventDefault();
 
-		$('#ticketedit, #ticketlink').hide();
-		$('#ticketeditinput').show().focus();
+		$obj.ticketEdit.add($obj.ticketLink).hide();
+		$obj.ticketEditInput.show().focus();
 	});
 
-	$('#ticketeditinput').keydown(function(e) {
+	$obj.ticketEditInput.on('keydown', function(e) {
 		if (e.keyCode === keymap.ENTER) {
 			e.preventDefault();
 			e.stopPropagation();
 
 			var $this = $(this),
-				url = $('#ticketedit').attr('href'),
+				url = $obj.ticketEdit.attr('href'),
 				value = $this.val(),
 				info;
 
@@ -180,24 +203,27 @@
 				value = 'PHPBB3-' + info[1];
 			}
 
-			$.get(url, {ticket: value && info[1]}, function() {
-				$('#ticketlink').text(value)
-					.attr('href', 'http://tracker.phpbb.com/browse/' + value)
-					.show();
+			$.get(url, {ticket: value && info[1]}, function(res) {
+				if (res) {
+					$obj.ticketLink.text(value)
+						.attr('href', 'http://tracker.phpbb.com/browse/' + value)
+						.show();
 
-				$this.hide();
+					$this.hide();
 
-				$('#ticketedit').text(function() {
-					return value ? $(this).attr('data-l-edit') : $(this).attr('data-l-add');
-				}).show();
+					$obj.ticketEdit.text(function() {
+						return value ? $(this).attr('data-l-edit') : $(this).attr('data-l-add');
+					}).show();
+				}
+
 			});
 		} else if (e.keyCode === keymap.ESC) {
 			e.preventDefault();
 
-			var $link = $('#ticketlink');
+			var $link = $obj.ticketLink;
 
 			$(this).hide();
-			$('#ticketedit').show();
+			$obj.ticketEdit.show();
 
 			if ($link.html()) {
 				$link.show();
@@ -207,23 +233,23 @@
 
 	// Hide duplicate column if status is not duplicate
 	if (!idea_is_duplicate()) {
-		$('.duplicatetoggle').hide();
+		$obj.duplicateToggle.hide();
 	}
 
-	$('#duplicateedit').click(function(e) {
+	$obj.duplicateEdit.on('click', function(e) {
 		e.preventDefault();
 
-		$('#duplicateedit, #duplicatelink').hide();
-		$('#duplicateeditinput').show().focus();
+		$obj.duplicateEdit.add($obj.duplicateLink).hide();
+		$obj.duplicateEditInput.show().focus();
 	});
 
-	$('#duplicateeditinput').keydown(function(e) {
+	$obj.duplicateEditInput.on('keydown', function(e) {
 		if (e.keyCode === keymap.ENTER) {
 			e.preventDefault();
 			e.stopPropagation();
 
 			var $this = $(this),
-				url = $('#duplicateedit').attr('href'),
+				url = $obj.duplicateEdit.attr('href'),
 				value = $this.val();
 
 			if (value && isNaN(Number(value))) {
@@ -231,24 +257,26 @@
 				return;
 			}
 
-			$.get(url, {duplicate: Number(value)}, function() {
-				if (value) {
-					$('#duplicatelink').text('idea.php?id=' + value)
-						.attr('href', 'idea.php?id=' + value)
-						.show();
+			$.get(url, {duplicate: Number(value)}, function(res) {
+				if (res) {
+					if (value) {
+						$obj.duplicateLink.text('idea.php?id=' + value)
+							.attr('href', 'idea.php?id=' + value)
+							.show();
+					}
+
+					$this.hide();
+
+					$obj.duplicateEdit.show();
 				}
-
-				$this.hide();
-
-				$('#duplicateedit').show();
 			});
 		} else if (e.keyCode === keymap.ESC) {
 			e.preventDefault();
 
-			var $link = $('#duplicatelink');
+			var $link = $obj.duplicateLink;
 
 			$(this).hide();
-			$('#duplicateedit').show();
+			$obj.duplicateEdit.show();
 
 			if ($link.html()) {
 				$link.show();
@@ -256,20 +284,20 @@
 		}
 	});
 
-	$('#titleedit').click(function(e) {
+	$obj.titleEdit.on('click', function(e) {
 		e.preventDefault();
 
-		$('#ideatitle').hide();
-		$('#titleeditinput').show().focus();
+		$obj.ideaTitle.hide();
+		$obj.titleEditInput.show().focus();
 	});
 
-	$('#titleeditinput').keydown(function(e) {
+	$obj.titleEditInput.on('keydown', function(e) {
 		if (e.keyCode === keymap.ENTER) {
 			e.preventDefault();
 			e.stopPropagation();
 
 			var $this = $(this),
-				url = $('#titleedit').attr('href'),
+				url = $obj.titleEdit.attr('href'),
 				value = $this.val();
 
 			if (value.length < 6 || value.length > 64) {
@@ -277,14 +305,16 @@
 				return;
 			}
 
-			$.get(url, {title: value}, function() {
-				$('#ideatitle').text(value).show();
-				$this.hide();
+			$.get(url, {title: value}, function(res) {
+				if (res) {
+					$obj.ideaTitle.text(value).show();
+					$this.hide();
+				}
 			});
 		} else if (e.keyCode === keymap.ESC) {
 			e.preventDefault();
 
-			$('#ideatitle').show();
+			$obj.ideaTitle.show();
 			$(this).hide();
 		}
 	});
@@ -294,7 +324,7 @@
 	 */
 	function idea_is_duplicate() {
 
-		var href = $('#status').prev('a').attr('href');
+		var href = $obj.status.prev('a').attr('href');
 		return href && href.indexOf('status=4') !== -1;
 	}
 

@@ -56,8 +56,8 @@
 		<dt style="width: 15%">{L_RATING}:</dt>
 		<dd>
 			<span class="rating">
-				<a href="{U_IDEA_VOTE}" class="minivoteup <!-- IF CAN_VOTE-->voteup<!-- ELSE -->dead<!-- ENDIF -->" title="{L_VOTE_UP}" data-l-err="{L_ERROR}" data-l-msg="{L_VOTE_ERROR}{L_COLON}"><span>{IDEA_VOTES_UP}</span></a> &nbsp;
-				<a href="{U_IDEA_VOTE}" class="minivotedown <!-- IF CAN_VOTE-->votedown<!-- ELSE -->dead<!-- ENDIF -->" title="{L_VOTE_DOWN}" data-l-err="{L_ERROR}" data-l-msg="{L_VOTE_ERROR}{L_COLON}"><span>{IDEA_VOTES_DOWN}</span></a>
+				<a <!-- IF CAN_VOTE-->href="{U_IDEA_VOTE}"<!-- ENDIF --> class="minivoteup <!-- IF CAN_VOTE-->voteup<!-- ELSE -->dead<!-- ENDIF -->" title="{L_VOTE_UP}" data-l-err="{L_ERROR}" data-l-msg="{L_VOTE_ERROR}{L_COLON}"><span>{IDEA_VOTES_UP}</span></a> &nbsp;
+				<a <!-- IF CAN_VOTE-->href="{U_IDEA_VOTE}"<!-- ENDIF --> class="minivotedown <!-- IF CAN_VOTE-->votedown<!-- ELSE -->dead<!-- ENDIF -->" title="{L_VOTE_DOWN}" data-l-err="{L_ERROR}" data-l-msg="{L_VOTE_ERROR}{L_COLON}"><span>{IDEA_VOTES_DOWN}</span></a>
 				<a href="#" class="votes" data-l-msg="({L_VIEW_VOTES})">({IDEA_POINTS})</a> <span class="successvoted" data-l-err="{L_VOTE_FAIL}"></span>
 			</span>
 			<div class="clear"><</div>
