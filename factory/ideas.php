@@ -81,7 +81,6 @@ class ideas
 		$this->php_ext = $php_ext;
 	}
 
-
 	/**
 	 * Returns an array of ideas. Defaults to ten ideas ordered by date
 	 * excluding duplicate or rejected ideas.
@@ -292,13 +291,14 @@ class ideas
 			return; // Don't bother informing user, probably an attempted hacker
 		}
 
-		$sql = 'DELETE FROM ' . $this->table_duplicates . '
-			WHERE idea_id = ' . (int) $idea_id;
-		$this->db->sql_query($sql);
+		$this->delete_idea_data($idea_id, 'table_duplicates');
 
-		$sql = 'INSERT INTO ' . $this->table_duplicates . ' (idea_id, duplicate_id)
-			VALUES (' . (int) $idea_id . ', ' . (int) $duplicate . ')';
-		$this->db->sql_query($sql);
+		$sql_ary = array(
+			'idea_id'		=> (int) $idea_id,
+			'duplicate_id'	=> (int) $duplicate,
+		);
+
+		$this->insert_idea_data($sql_ary, 'table_duplicates');
 	}
 
 	/**
@@ -315,13 +315,14 @@ class ideas
 			return; // Don't bother informing user, probably an attempted hacker
 		}
 
-		$sql = 'DELETE FROM ' . $this->table_rfcs . '
-			WHERE idea_id = ' . (int) $idea_id;
-		$this->db->sql_query($sql);
+		$this->delete_idea_data($idea_id, 'table_rfcs');
 
-		$sql = 'INSERT INTO ' . $this->table_rfcs . ' (idea_id, rfc_link)
-			VALUES (' . (int) $idea_id . ', \'' . $this->db->sql_escape($rfc) . '\')';
-		$this->db->sql_query($sql);
+		$sql_ary = array(
+			'idea_id'	=> (int) $idea_id,
+			'rfc_link'	=> $rfc, // string is escaped by build_array()
+		);
+
+		$this->insert_idea_data($sql_ary, 'table_rfcs');
 	}
 
 	/**
@@ -337,13 +338,14 @@ class ideas
 			return; // Don't bother informing user, probably an attempted hacker
 		}
 
-		$sql = 'DELETE FROM ' . $this->table_tickets . '
-			WHERE idea_id = ' . (int) $idea_id;
-		$this->db->sql_query($sql);
+		$this->delete_idea_data($idea_id, 'table_tickets');
 
-		$sql = 'INSERT INTO ' . $this->table_tickets . ' (idea_id, ticket_id)
-			VALUES (' . (int) $idea_id . ', ' . (int) $ticket . ')';
-		$this->db->sql_query($sql);
+		$sql_ary = array(
+			'idea_id'	=> (int) $idea_id,
+			'ticket_id'	=> (int) $ticket,
+		);
+
+		$this->insert_idea_data($sql_ary, 'table_tickets');
 	}
 
 	/**
@@ -450,10 +452,7 @@ class ideas
 			'vote_value'	=> $value,
 		);
 
-		$sql = 'INSERT INTO ' . $this->table_votes . ' ' .
-			$this->db->sql_build_array('INSERT', $sql_ary);
-		$this->db->sql_query($sql);
-
+		$this->insert_idea_data($sql_ary, 'table_votes');
 
 		// Update number of votes in ideas table
 		$idea['idea_votes_' . ($value ? 'up' : 'down')]++;
@@ -571,10 +570,7 @@ class ideas
 			'topic_id'			=> 0
 		);
 
-		$sql = 'INSERT INTO ' . $this->table_ideas . ' ' .
-			$this->db->sql_build_array('INSERT', $sql_ary);
-		$this->db->sql_query($sql);
-		$idea_id = $this->db->sql_nextid();
+		$idea_id = $this->insert_idea_data($sql_ary, 'table_ideas');
 
 		$sql = 'SELECT username
 			FROM ' . USERS_TABLE . '
@@ -673,26 +669,49 @@ class ideas
 		delete_posts('topic_id', $topic_id);
 
 		// Delete idea
-		$sql = 'DELETE FROM ' . $this->table_ideas . '
-			WHERE idea_id = ' . (int) $id;
-		$this->db->sql_query($sql);
-		$deleted = (bool) $this->db->sql_affectedrows();
+		$deleted = $this->delete_idea_data($id, 'table_ideas');
 
 		// Delete votes
-		$sql = 'DELETE FROM ' . $this->table_votes . '
-			WHERE idea_id = ' . (int) $id;
-		$this->db->sql_query($sql);
+		$this->delete_idea_data($id, 'table_votes');
 
 		// Delete RFCS
-		$sql = 'DELETE FROM ' . $this->table_rfcs . '
-			WHERE idea_id = ' . (int) $id;
-		$this->db->sql_query($sql);
+		$this->delete_idea_data($id, 'table_rfcs');
 
 		// Delete tickets
-		$sql = 'DELETE FROM ' . $this->table_tickets . '
+		$this->delete_idea_data($id, 'table_tickets');
+
+		return $deleted;
+	}
+
+	/**
+	 * Helper method for inserting new idea data
+	 *
+	 * @param array $data   The array of data to insert
+	 * @param string $table The name of the table
+	 * @return int The ID of the inserted row
+	 */
+	protected function insert_idea_data(array $data, $table)
+	{
+		$sql = 'INSERT INTO ' . $this->{$table} . '
+		' . $this->db->sql_build_array('INSERT', $data);
+		$this->db->sql_query($sql);
+
+		return (int) $this->db->sql_nextid();
+	}
+
+	/**
+	 * Helper method for deleting idea data
+	 *
+	 * @param int $id       The ID of the idea
+	 * @param string $table The name of the table
+	 * @return bool True if idea was deleted, false otherwise
+	 */
+	protected function delete_idea_data($id, $table)
+	{
+		$sql = 'DELETE FROM ' . $this->{$table} . '
 			WHERE idea_id = ' . (int) $id;
 		$this->db->sql_query($sql);
 
-		return $deleted;
+		return (bool) $this->db->sql_affectedrows();
 	}
 }
