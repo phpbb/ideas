@@ -1,6 +1,5 @@
 a.votes {
 	font-weight: bold;
-	margin-top: 3px;
 	display: inline-block;
 }
 
@@ -17,6 +16,7 @@ a.dead.removevote {
 }
 
 .successvoted {
+	font-weight: bold;
 	display: none;
 }
 
