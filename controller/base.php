@@ -17,12 +17,11 @@ use phpbb\request\request;
 use phpbb\template\template;
 use phpbb\user;
 
-// @todo: refactor out
-define('IDEAS_FORUM_ID', 2);
-define('IDEAS_POSTER_ID', 2);
-
 abstract class base
 {
+	/* @var \phpbb\config\config */
+	protected $config;
+
 	/* @var helper */
 	protected $helper;
 
@@ -48,6 +47,7 @@ abstract class base
 	protected $php_ext;
 
 	/**
+	 * @param config     $config
 	 * @param helper     $helper
 	 * @param ideas      $ideas
 	 * @param linkhelper $link_helper
@@ -57,8 +57,9 @@ abstract class base
 	 * @param string     $root_path
 	 * @param string     $php_ext
 	 */
-	public function __construct(helper $helper, ideas $ideas, linkhelper $link_helper, request $request, template $template, user $user, $root_path, $php_ext)
+	public function __construct(\phpbb\config\config $config, helper $helper, ideas $ideas, linkhelper $link_helper, request $request, template $template, user $user, $root_path, $php_ext)
 	{
+		$this->config = $config;
 		$this->helper = $helper;
 		$this->ideas = $ideas;
 		$this->link_helper = $link_helper;
@@ -69,5 +70,17 @@ abstract class base
 		$this->php_ext = $php_ext;
 
 		$this->user->add_lang_ext('phpbb/ideas', 'common');
+
+		// Don't let using Ideas if it's not been properly configured
+		if (!$this->is_available())
+		{
+			throw new \phpbb\exception\http_exception(404, 'IDEAS_NOT_AVAILABLE');
+		}
+	}
+
+	// Check if Ideas is properly configured after installation
+	public function is_available()
+	{
+		return $this->config['ideas_forum_id'] && $this->config['ideas_poster_id'];
 	}
 }

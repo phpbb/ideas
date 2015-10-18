@@ -8,11 +8,6 @@ phpBB Ideas is an ideas centre for phpBB. It is based on [WordPress ideas](http:
 2. Navigate in the ACP to `Customise -> Manage extensions`.
 3. Look for `phpBB Ideas` under the Disabled Extensions list, and click its `Enable` link.
 
-Open ideas/controller/base.php and change the constants:
-
-- **IDEAS_FORUM_ID** - The ID of the forum that ideas topics will be posted to.
-- **IDEA_POSTER_ID** - The ID of the user that will post idea topics into the forums.
-
 ## Contributing
 
 Please fork this repository and submit a pull request to contribute to phpBB Ideas

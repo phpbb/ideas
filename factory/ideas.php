@@ -18,6 +18,9 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class ideas
 {
+	/* @var \phpbb\config\config */
+	protected $config;
+
 	/* @var driver_interface */
 	protected $db;
 
@@ -52,20 +55,22 @@ class ideas
 	protected $php_ext;
 
 	/**
-	 * @param driver_interface $db
-	 * @param helper           $helper
-	 * @param log              $log
-	 * @param user             $user
-	 * @param string           $table_ideas
-	 * @param string           $table_duplicates
-	 * @param string           $table_rfcs
-	 * @param string           $table_statuses
-	 * @param string           $table_tickets
-	 * @param string           $table_votes
-	 * @param string           $php_ext
+	 * @param \phpbb\config\config              $config
+	 * @param \phpbb\db\driver\driver_interface $db
+	 * @param \phpbb\controller\helper          $helper
+	 * @param \phpbb\log\log                    $log
+	 * @param \phpbb\user                       $user
+	 * @param string                            $table_ideas
+	 * @param string                            $table_duplicates
+	 * @param string                            $table_rfcs
+	 * @param string                            $table_statuses
+	 * @param string                            $table_tickets
+	 * @param string                            $table_votes
+	 * @param string                            $php_ext
 	 */
-	public function __construct(driver_interface $db, helper $helper, log $log, user $user, $table_ideas, $table_duplicates, $table_rfcs, $table_statuses, $table_tickets, $table_votes, $php_ext)
+	public function __construct(\phpbb\config\config $config, \phpbb\db\driver\driver_interface $db, \phpbb\controller\helper $helper, \phpbb\log\log $log, \phpbb\user $user, $table_ideas, $table_duplicates, $table_rfcs, $table_statuses, $table_tickets, $table_votes, $php_ext)
 	{
+		$this->config = $config;
 		$this->db = $db;
 		$this->helper = $helper;
 		$this->log = $log;
@@ -167,7 +172,7 @@ class ideas
 			{
 				$topic_ids[] = $row['topic_id'];
 			}
-			$topic_tracking_info = get_complete_topic_tracking(IDEAS_FORUM_ID, $topic_ids);
+			$topic_tracking_info = get_complete_topic_tracking((int) $this->config['ideas_forum_id'], $topic_ids);
 
 			$last_times = array();
 			$sql = 'SELECT topic_id, topic_last_post_time
@@ -372,7 +377,7 @@ class ideas
 			WHERE idea_id = ' . $idea_id;
 		$this->db->sql_query($sql);
 
-		$this->log->add('mod', $this->user->data['user_id'], $this->user->ip, 'LOG_IDEA_TITLE_EDITED', time(), array($idea_id));
+		$this->log->add('mod', $this->user->data['user_id'], $this->user->ip, 'ACP_IDEA_TITLE_EDITED_LOG', time(), array($idea_id));
 
 		return true;
 	}
@@ -593,10 +598,10 @@ class ideas
 		generate_text_for_storage($desc, $uid, $bitfield, $options, true, true, true);
 
 		$data = array(
-			'forum_id'			=> IDEAS_FORUM_ID,
+			'forum_id'			=> (int) $this->config['ideas_forum_id'],
 			'topic_id'			=> 0,
 			'icon_id'			=> false,
-			'poster_id'			=> IDEAS_POSTER_ID,
+			'poster_id'			=> (int) $this->config['ideas_poster_id'],
 
 			'enable_bbcode'		=> true,
 			'enable_smilies'	=> true,
@@ -625,7 +630,7 @@ class ideas
 		// Get Ideas Bot info
 		$sql = 'SELECT *
 			FROM ' . USERS_TABLE . '
-			WHERE user_id = ' . IDEAS_POSTER_ID;
+			WHERE user_id = ' . (int) $this->config['ideas_poster_id'];
 		$result = $this->db->sql_query_limit($sql, 1);
 		$poster_bot = $this->db->sql_fetchrow($result);
 		$this->db->sql_freeresult($result);
