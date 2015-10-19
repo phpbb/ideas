@@ -51,9 +51,6 @@ dd.topics {
 	width: 320px;
 }
 
-.new-idea:before { background: url(images/new-idea.png); }
-.new-idea:hover:before { background-position: 0 -20px; }
-
 .minivoteup, .minivotedown {
 	width: 65px;
 	height: 25px;
