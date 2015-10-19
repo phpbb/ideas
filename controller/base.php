@@ -26,20 +26,20 @@ abstract class base
 	/* @var helper */
 	protected $helper;
 
+	/* @var ideas */
+	protected $ideas;
+
+	/* @var linkhelper */
+	protected $link_helper;
+
+	/* @var request */
+	protected $request;
+
 	/* @var template */
 	protected $template;
 
 	/* @var user */
 	protected $user;
-
-	/* @var linkhelper */
-	protected $link_helper;
-
-	/* @var ideas */
-	protected $ideas;
-
-	/* @var request */
-	protected $request;
 
 	/** @var string */
 	protected $root_path;
