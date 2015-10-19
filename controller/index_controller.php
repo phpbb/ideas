@@ -10,6 +10,8 @@
 
 namespace phpbb\ideas\controller;
 
+use \phpbb\exception\http_exception;
+
 class index_controller extends base
 {
 	const IDEAS = 5;
@@ -18,9 +20,15 @@ class index_controller extends base
 	 * Controller for /ideas
 	 *
 	 * @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
+	 * @throws http_exception
 	 */
 	public function index()
 	{
+		if (!$this->is_available())
+		{
+			throw new http_exception(404, 'IDEAS_NOT_AVAILABLE');
+		}
+
 		$rows = $this->ideas->get_ideas(self::IDEAS, 'date', 'DESC');
 		foreach ($rows as $row)
 		{
