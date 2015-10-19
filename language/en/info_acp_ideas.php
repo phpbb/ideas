@@ -21,10 +21,9 @@ if (empty($lang) || !is_array($lang))
 $lang = array_merge($lang, array(
 	// ACP module
 	'ACP_PHPBB_IDEAS'			=> 'phpBB Ideas',
-	'ACP_PHPBB_IDEAS_EXPLAIN'	=> 'Here you can configure phpBB Ideas extension.<br />phpBB Ideas is an ideas centre for phpBB. It is based on <a href="http://wordpress.org/extend/ideas/">WordPress ideas</a>, and allows users to suggest and vote on "ideas" that would help improve and enhance phpBB.',
 	'ACP_PHPBB_IDEAS_SETTINGS'	=> 'Ideas settings',
 
 	// ACP Logs
-	'ACP_IDEA_TITLE_EDITED_LOG'			=> '<strong>Idea title edited</strong><br />» Idea ID #%s',
+	'ACP_IDEA_TITLE_EDITED_LOG'			=> '<strong>Idea title edited</strong><br />» phpBB Ideas ID #%s',
 	'ACP_PHPBB_IDEAS_SETTINGS_LOG'		=> '<strong>phpBB Ideas settings changed</strong>',
 ));

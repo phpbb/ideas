@@ -10,12 +10,12 @@
 
 namespace phpbb\ideas\acp;
 
-class phpbb_ideas_info
+class ideas_info
 {
 	public function module()
 	{
 		return array(
-			'filename'	=> '\phpbb\ideas\acp\phpbb_ideas_module',
+			'filename'	=> '\phpbb\ideas\acp\ideas_module',
 			'title'		=> 'ACP_PHPBB_IDEAS',
 			'modes'		=> array(
 				'settings'	=> array(

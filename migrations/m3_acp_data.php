@@ -14,7 +14,7 @@ class m3_acp_data extends \phpbb\db\migration\migration
 {
 	public function effectively_installed()
 	{
-		return isset($this->config['ideas_forum_id']) || isset($this->config['ideas_poster_id']);
+		return $this->config->offsetExists('ideas_forum_id') || $this->config->offsetExists('ideas_poster_id');
 	}
 
 	static public function depends_on()
@@ -28,7 +28,7 @@ class m3_acp_data extends \phpbb\db\migration\migration
 			array('module.add', array('acp', 'ACP_CAT_DOT_MODS', 'ACP_PHPBB_IDEAS')),
 			array('module.add', array(
 				'acp', 'ACP_PHPBB_IDEAS', array(
-					'module_basename'	=> '\phpbb\ideas\acp\phpbb_ideas_module',
+					'module_basename'	=> '\phpbb\ideas\acp\ideas_module',
 					'modes'				=> array('settings'),
 				),
 			)),

@@ -88,10 +88,9 @@ class idea_controller extends base
 	 */
 	public function idea($idea_id)
 	{
-		// Don't let using Ideas if it's not been properly configured
 		if (!$this->is_available())
 		{
-			throw new \phpbb\exception\http_exception(404, 'IDEAS_NOT_AVAILABLE');
+			throw new http_exception(404, 'IDEAS_NOT_AVAILABLE');
 		}
 
 		$mode = $this->request->variable('mode', '');

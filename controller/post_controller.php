@@ -14,10 +14,9 @@ class post_controller extends base
 {
 	public function post()
 	{
-		// Don't let using Ideas if it's not been properly configured
 		if (!$this->is_available())
 		{
-			throw new \phpbb\exception\http_exception(404, 'IDEAS_NOT_AVAILABLE');
+			throw new http_exception(404, 'IDEAS_NOT_AVAILABLE');
 		}
 
 		include($this->root_path . 'includes/functions_posting.' . $this->php_ext);

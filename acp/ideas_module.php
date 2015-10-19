@@ -10,7 +10,7 @@
 
 namespace phpbb\ideas\acp;
 
-class phpbb_ideas_module
+class ideas_module
 {
 	/** @var \phpbb\config\config */
 	protected $config;
@@ -30,10 +30,13 @@ class phpbb_ideas_module
 	/** @var \phpbb\user */
 	protected $user;
 
+	/** @var array */
+	protected $new_config;
+
 	/** @var string */
 	public $u_action;
 
-	public function main($id, $mode)
+	public function __construct()
 	{
 		global $config, $db, $phpbb_log, $request, $template, $user;
 
@@ -44,7 +47,7 @@ class phpbb_ideas_module
 		$this->template = $template;
 		$this->user = $user;
 
-		// Add the board rules ACP lang file
+		// Add the phpBB Ideas ACP lang file
 		$this->user->add_lang_ext('phpbb/ideas', 'phpbb_ideas_acp');
 
 		// Load a template from adm/style for our ACP page
@@ -52,7 +55,17 @@ class phpbb_ideas_module
 
 		// Set the page title for our ACP page
 		$this->page_title = 'ACP_PHPBB_IDEAS_SETTINGS';
+	}
 
+	/**
+	* Main ACP module
+	*
+	* @param int $id
+	* @param string $mode
+	* @access public
+	*/
+	public function main($id, $mode)
+	{
 		// Define the name of the form for use as a form key
 		$form_name = 'acp_phpbb_ideas_settings';
 		add_form_key($form_name);
@@ -65,9 +78,9 @@ class phpbb_ideas_module
 			'ideas_poster_id'	=> array('lang' => 'ACP_IDEAS_POSTER_ID',	'validate' => 'string',	'type' => 'custom', 'method' => 'select_ideas_topics_poster', 'explain' => true),
 		);
 
-		$this->new_config = $config;
-		$cfg_array = ($request->is_set('config')) ? $request->variable('config', array('' => ''), true) : $this->new_config;
-		$submit = (isset($_POST['submit'])) ? true : false;
+		$this->new_config = $this->config;
+		$cfg_array = ($this->request->is_set('config')) ? $this->request->variable('config', array('' => ''), true) : $this->new_config;
+		$submit = $this->request->is_set('submit');
 
 		// We validate the complete config if wished
 		validate_config_vars($display_vars, $cfg_array, $errors);
@@ -76,7 +89,7 @@ class phpbb_ideas_module
 		{
 			if (!check_form_key($form_name))
 			{
-				$errors[] = $user->lang['FORM_INVALID'];
+				$errors[] = $this->user->lang['FORM_INVALID'];
 			}
 
 			// Check if selected user exists
@@ -104,7 +117,7 @@ class phpbb_ideas_module
 			$submit = false;
 		}
 
-		// We go through the display_vars to make sure noone is trying to set the variables are not allowed to
+		// We go through the display_vars to make sure no one is trying to set variables he/she is not allowed to
 		foreach ($display_vars as $config_name => $null)
 		{
 			if (!isset($cfg_array[$config_name]))
@@ -125,7 +138,7 @@ class phpbb_ideas_module
 			// Add option settings change action to the admin log
 			$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'ACP_PHPBB_IDEAS_SETTINGS_LOG');
 
-			trigger_error($user->lang['ACP_PHPBB_IDEAS_SETTINGS_CHANGED'] . adm_back_link($this->u_action));
+			trigger_error($this->user->lang['ACP_PHPBB_IDEAS_SETTINGS_CHANGED'] . adm_back_link($this->u_action));
 		}
 
 		// Output relevant page
@@ -140,18 +153,17 @@ class phpbb_ideas_module
 				continue;
 			}
 
-			$template->assign_block_vars('options', array(
+			$this->template->assign_block_vars('options', array(
 				'KEY'			=> $config_key,
 				'TITLE'			=> $this->user->lang($vars['lang']),
 				'S_EXPLAIN'		=> $vars['explain'],
 				'TITLE_EXPLAIN'	=> ($vars['explain']) ? $this->user->lang($vars['lang'] . '_EXPLAIN') : '',
 				'CONTENT'		=> $content,
-				)
-			);
+			));
 		}
 
 		$this->template->assign_vars(array(
-			'S_ERROR'	=> (sizeof($errors)) ? true : false,
+			'S_ERROR'	=> (bool) sizeof($errors),
 			'ERROR_MSG'	=> (sizeof($errors)) ? implode('<br />', $errors) : '',
 
 			'U_ACTION'	=> $this->u_action,
