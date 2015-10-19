@@ -43,6 +43,7 @@ $lang = array_merge($lang, array(
 	'IDEA_TOPIC'            => 'Idea topic',
 	'IDEA_POSTER'           => 'Posted by %s', // Warning: submitted to db
 	'IDEAS_HOME'			=> 'Ideas Home',
+	'IDEAS_TITLE'			=> 'phpBB Ideas',
 	'IMPLEMENTED'           => 'Implemented',
 	'IMPLEMENTED_IDEAS'		=> 'Recently Implemented Ideas',
 	'IN_PROGRESS'           => 'In Progress',
