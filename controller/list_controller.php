@@ -18,8 +18,8 @@ class list_controller extends base
 	 * Controller for /list/{sort}
 	 *
 	 * @param $sort string The direction to sort in.
-	 * @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
 	 * @throws http_exception
+	 * @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
 	 */
 	public function ideas_list($sort)
 	{

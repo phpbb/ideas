@@ -17,8 +17,8 @@ class post_controller extends base
 	/**
 	 * Controller for /post
 	 *
-	 * @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
 	 * @throws http_exception
+	 * @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
 	 */
 	public function post()
 	{

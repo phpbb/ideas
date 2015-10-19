@@ -19,8 +19,8 @@ class index_controller extends base
 	/**
 	 * Controller for /ideas
 	 *
-	 * @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
 	 * @throws http_exception
+	 * @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
 	 */
 	public function index()
 	{

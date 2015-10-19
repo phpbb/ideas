@@ -73,7 +73,6 @@ class idea_controller extends base
 
 		$this->auth = $auth;
 		$this->cache = $cache;
-		$this->config = $config;
 		$this->content_visibility = $content_visibility;
 		$this->cp = $cp;
 		$this->db = $db;
@@ -86,8 +85,8 @@ class idea_controller extends base
 	 * Controller for /idea/{idea_id}
 	 *
 	 * @param $idea_id int The ID of the requested idea, maybe?
-	 * @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
 	 * @throws http_exception
+	 * @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
 	 */
 	public function idea($idea_id)
 	{
@@ -1143,7 +1142,7 @@ class idea_controller extends base
 						'rank_title'		=> '',
 						'rank_image'		=> '',
 						'rank_image_src'	=> '',
-						'sig'				=> '',
+						//'sig'				=> '',
 						'pm'				=> '',
 						'email'				=> '',
 						'jabber'			=> '',
