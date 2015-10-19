@@ -1138,7 +1138,7 @@ class idea_controller extends base
 						'sig_bbcode_bitfield'	=> '',
 
 						'online'			=> false,
-						'avatar'			=> ($this->user->optionget('viewavatars')) ? get_user_avatar($row['user_avatar'], $row['user_avatar_type'], $row['user_avatar_width'], $row['user_avatar_height']) : '',
+						'avatar'			=> ($this->user->optionget('viewavatars')) ? phpbb_get_user_avatar($row) : '',
 						'rank_title'		=> '',
 						'rank_image'		=> '',
 						'rank_image_src'	=> '',
@@ -1189,7 +1189,7 @@ class idea_controller extends base
 						'viewonline'	=> $row['user_allow_viewonline'],
 						'allow_pm'		=> $row['user_allow_pm'],
 
-						'avatar'		=> ($this->user->optionget('viewavatars')) ? get_user_avatar($row['user_avatar'], $row['user_avatar_type'], $row['user_avatar_width'], $row['user_avatar_height']) : '',
+						'avatar'		=> ($this->user->optionget('viewavatars')) ? phpbb_get_user_avatar($row) : '',
 						'age'			=> '',
 
 						'rank_title'		=> '',
