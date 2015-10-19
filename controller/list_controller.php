@@ -18,8 +18,8 @@ class list_controller extends base
 	 * Controller for /list/{sort}
 	 *
 	 * @param $sort string The direction to sort in.
-	 * @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
 	 * @throws http_exception
+	 * @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
 	 */
 	public function ideas_list($sort)
 	{
@@ -51,7 +51,7 @@ class list_controller extends base
 
 		if ($sort == 'top')
 		{
-			$status_name = $this->user->lang('TOP_IDEAS');
+			$status_name = $this->language->lang('TOP_IDEAS');
 		}
 		else
 		{
@@ -81,7 +81,7 @@ class list_controller extends base
 		{
 			$this->template->assign_block_vars('status', array(
 				'VALUE'		=> $key + 1,
-				'TEXT'		=> $this->user->lang[strtoupper($statusText)],
+				'TEXT'		=> $this->language->lang(strtoupper($statusText)),
 				'SELECTED'	=> $status == $key + 1,
 			));
 		}
@@ -91,7 +91,7 @@ class list_controller extends base
 		{
 			$this->template->assign_block_vars('sortby', array(
 				'VALUE'		=> $sortBy,
-				'TEXT'		=> $this->user->lang[strtoupper($sortBy)],
+				'TEXT'		=> $this->language->lang(strtoupper($sortBy)),
 				'SELECTED'	=> $sortBy == $sort,
 			));
 		}
@@ -99,21 +99,21 @@ class list_controller extends base
 		$this->template->assign_vars(array(
 			'U_POST_ACTION'		=> $this->helper->route('ideas_list_controller'),
 			'SORT_DIRECTION'	=> $sort_direction,
-			'STATUS_NAME'       => $status_name ?: $this->user->lang('ALL_IDEAS'),
+			'STATUS_NAME'       => $status_name ?: $this->language->lang('ALL_IDEAS'),
 		));
 
 		// Assign breadcrumb template vars
 		$this->template->assign_block_vars_array('navlinks', array(
 			array(
 				'U_VIEW_FORUM'	=> $this->helper->route('ideas_index_controller'),
-				'FORUM_NAME'	=> $this->user->lang('IDEAS'),
+				'FORUM_NAME'	=> $this->language->lang('IDEAS'),
 			),
 			array(
 				'U_VIEW_FORUM'	=> $this->helper->route('ideas_list_controller'),
-				'FORUM_NAME'	=> $status_name ?: $this->user->lang('ALL_IDEAS'),
+				'FORUM_NAME'	=> $status_name ?: $this->language->lang('ALL_IDEAS'),
 			),
 		));
 
-		return $this->helper->render('list_body.html', $this->user->lang('IDEA_LIST'));
+		return $this->helper->render('list_body.html', $this->language->lang('IDEA_LIST'));
 	}
 }

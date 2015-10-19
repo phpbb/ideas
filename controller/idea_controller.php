@@ -19,6 +19,7 @@ use phpbb\db\driver\driver_interface;
 use phpbb\exception\http_exception;
 use phpbb\ideas\factory\ideas;
 use phpbb\ideas\factory\linkhelper;
+use phpbb\language\language;
 use phpbb\pagination;
 use phpbb\profilefields\manager;
 use phpbb\request\request;
@@ -57,17 +58,18 @@ class idea_controller extends base
 	 * @param \phpbb\db\driver\driver_interface $db
 	 * @param \phpbb\controller\helper          $helper
 	 * @param \phpbb\ideas\factory\ideas        $ideas
+	 * @param \phpbb\language\language          $language
 	 * @param \phpbb\ideas\factory\linkhelper   $link_helper
 	 * @param \phpbb\pagination                 $pagination
 	 * @param \phpbb\request\request            $request
 	 * @param \phpbb\template\template          $template
 	 * @param \phpbb\user                       $user
-	 * @param                                   $root_path
-	 * @param                                   $php_ext
+	 * @param string                            $root_path
+	 * @param string                            $php_ext
 	 */
-	public function __construct(auth $auth, service $cache, config $config, content_visibility $content_visibility, manager $cp, driver_interface $db, helper $helper, ideas $ideas, linkhelper $link_helper, pagination $pagination, request $request, template $template, user $user, $root_path, $php_ext)
+	public function __construct(auth $auth, service $cache, config $config, content_visibility $content_visibility, manager $cp, driver_interface $db, helper $helper, ideas $ideas, language $language, linkhelper $link_helper, pagination $pagination, request $request, template $template, user $user, $root_path, $php_ext)
 	{
-		parent::__construct($config, $helper, $ideas, $link_helper, $request, $template, $user, $root_path, $php_ext);
+		parent::__construct($config, $helper, $ideas, $language, $link_helper, $request, $template, $user, $root_path, $php_ext);
 
 		$this->auth = $auth;
 		$this->cache = $cache;
@@ -76,15 +78,15 @@ class idea_controller extends base
 		$this->db = $db;
 		$this->pagination = $pagination;
 
-		$this->user->add_lang('viewtopic');
+		$this->language->add_lang('viewtopic');
 	}
 
 	/**
 	 * Controller for /idea/{idea_id}
 	 *
 	 * @param $idea_id int The ID of the requested idea, maybe?
-	 * @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
 	 * @throws http_exception
+	 * @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
 	 */
 	public function idea($idea_id)
 	{
@@ -114,13 +116,13 @@ class idea_controller extends base
 				$this->ideas->delete($idea_id, $idea['topic_id']);
 
 				$redirect = $this->helper->route('ideas_index_controller');
-				$message = $this->user->lang('IDEA_DELETED') . '<br /><br />' . $this->user->lang('RETURN_IDEAS', '<a href="' . $redirect . '">', '</a>');
+				$message = $this->language->lang('IDEA_DELETED') . '<br /><br />' . $this->language->lang('RETURN_IDEAS', '<a href="' . $redirect . '">', '</a>');
 				meta_refresh(3, $redirect);
 				trigger_error($message); // trigger error needed for data-ajax
 			}
 			else
 			{
-				confirm_box(false, $this->user->lang('CONFIRM_OPERATION'), build_hidden_fields(array(
+				confirm_box(false, $this->language->lang('CONFIRM_OPERATION'), build_hidden_fields(array(
 					'idea_id' => $idea_id,
 					'mode' => 'delete',
 				)));
@@ -156,7 +158,7 @@ class idea_controller extends base
 					}
 					else
 					{
-						$result = $this->user->lang('NO_AUTH_OPERATION');
+						$result = $this->language->lang('NO_AUTH_OPERATION');
 					}
 				break;
 
@@ -223,7 +225,7 @@ class idea_controller extends base
 					}
 					else
 					{
-						$result = $this->user->lang('NO_AUTH_OPERATION');
+						$result = $this->language->lang('NO_AUTH_OPERATION');
 					}
 				break;
 
@@ -248,7 +250,7 @@ class idea_controller extends base
 			{
 				$this->template->assign_block_vars('statuses', array(
 					'ID'	=> $status['status_id'],
-					'NAME'	=> $this->user->lang($status['status_name']),
+					'NAME'	=> $this->language->lang($status['status_name']),
 				));
 			}
 		}
@@ -272,7 +274,7 @@ class idea_controller extends base
 			'IDEA_VOTES'        => $idea['idea_votes_up'] + $idea['idea_votes_down'],
 			'IDEA_VOTES_UP'	    => $idea['idea_votes_up'],
 			'IDEA_VOTES_DOWN'   => $idea['idea_votes_down'],
-			'IDEA_POINTS'       => $this->user->lang('VIEW_VOTES', $points),
+			'IDEA_POINTS'       => $this->language->lang('VIEW_VOTES', $points),
 			'IDEA_STATUS'		=> $this->ideas->get_status_from_id($idea['idea_status']),
 			'IDEA_STATUS_LINK'	=> $this->helper->route('ideas_list_controller', array('status' => $idea['idea_status'])),
 
@@ -608,7 +610,7 @@ class idea_controller extends base
 				throw new http_exception(403, 'SORRY_AUTH_READ');
 			}
 
-			login_box('', $this->user->lang('LOGIN_VIEWFORUM'));
+			login_box('', $this->language->lang('LOGIN_VIEWFORUM'));
 		}
 
 		// Forum is passworded ... check whether access has been granted to this
@@ -621,7 +623,7 @@ class idea_controller extends base
 		// Redirect to login upon emailed notification links if user is not logged in.
 		if (isset($_GET['e']) && $this->user->data['user_id'] == ANONYMOUS)
 		{
-			login_box(build_url('e') . '#unread', $this->user->lang('LOGIN_NOTIFY_TOPIC'));
+			login_box(build_url('e') . '#unread', $this->language->lang('LOGIN_NOTIFY_TOPIC'));
 		}
 
 		// What is start equal to?
@@ -649,9 +651,9 @@ class idea_controller extends base
 		}
 
 		// Post ordering options
-		$limit_days = array(0 => $this->user->lang('ALL_POSTS'), 1 => $this->user->lang('1_DAY'), 7 => $this->user->lang('7_DAYS'), 14 => $this->user->lang('2_WEEKS'), 30 => $this->user->lang('1_MONTH'), 90 => $this->user->lang('3_MONTHS'), 180 => $this->user->lang('6_MONTHS'), 365 => $this->user->lang('1_YEAR'));
+		$limit_days = array(0 => $this->language->lang('ALL_POSTS'), 1 => $this->language->lang('1_DAY'), 7 => $this->language->lang('7_DAYS'), 14 => $this->language->lang('2_WEEKS'), 30 => $this->language->lang('1_MONTH'), 90 => $this->language->lang('3_MONTHS'), 180 => $this->language->lang('6_MONTHS'), 365 => $this->language->lang('1_YEAR'));
 
-		$sort_by_text = array('a' => $this->user->lang('AUTHOR'), 't' => $this->user->lang('POST_TIME'), 's' => $this->user->lang('SUBJECT'));
+		$sort_by_text = array('a' => $this->language->lang('AUTHOR'), 't' => $this->language->lang('POST_TIME'), 's' => $this->language->lang('SUBJECT'));
 		$sort_by_sql = array('a' => array('u.username_clean', 'p.post_id'), 't' => array('p.post_time', 'p.post_id'), 's' => array('p.post_subject', 'p.post_id'));
 		$join_user_sql = array('a' => true, 't' => false, 's' => false);
 
@@ -750,20 +752,20 @@ class idea_controller extends base
 							AND topic_id = $topic_id";
 					$this->db->sql_query($sql);
 				}
-				$message = (($topic_data['bookmarked']) ? $this->user->lang('BOOKMARK_REMOVED') : $this->user->lang('BOOKMARK_ADDED')) . '<br /><br />' . $this->user->lang('RETURN_TOPIC', '<a href="' . $viewtopic_url . '">', '</a>');
+				$message = (($topic_data['bookmarked']) ? $this->language->lang('BOOKMARK_REMOVED') : $this->language->lang('BOOKMARK_ADDED'));
 
 				if (!$this->request->is_ajax())
 				{
-					$message .= '<br /><br />' . $this->user->lang('RETURN_TOPIC', '<a href="' . $viewtopic_url . '">', '</a>');
+					$message .= '<br /><br />' . $this->language->lang('RETURN_TOPIC', '<a href="' . $viewtopic_url . '">', '</a>');
 				}
 			}
 			else
 			{
-				$message = $this->user->lang['BOOKMARK_ERR'];
+				$message = $this->language->lang('BOOKMARK_ERR');
 
 				if (!$this->request->is_ajax())
 				{
-					$message .= '<br /><br />' . $this->user->lang('RETURN_TOPIC', '<a href="' . $viewtopic_url . '">', '</a>');
+					$message .= '<br /><br />' . $this->language->lang('RETURN_TOPIC', '<a href="' . $viewtopic_url . '">', '</a>');
 				}
 			}
 			meta_refresh(3, $viewtopic_url);
@@ -897,9 +899,9 @@ class idea_controller extends base
 			'TOPIC_AUTHOR_COLOUR'	=> get_username_string('colour', $topic_data['topic_poster'], $topic_data['topic_first_poster_name'], $topic_data['topic_first_poster_colour']),
 			'TOPIC_AUTHOR'			=> get_username_string('username', $topic_data['topic_poster'], $topic_data['topic_first_poster_name'], $topic_data['topic_first_poster_colour']),
 
-			'TOTAL_POSTS'	=> $this->user->lang('VIEW_TOPIC_POSTS', (int) $total_posts),
+			'TOTAL_POSTS'	=> $this->language->lang('VIEW_TOPIC_POSTS', (int) $total_posts),
 			'U_MCP' 		=> ($this->auth->acl_get('m_', $forum_id)) ? append_sid("{$this->root_path}mcp.$this->php_ext", "i=main&amp;mode=topic_view&amp;f=$forum_id&amp;t=$topic_id" . (($start == 0) ? '' : "&amp;start=$start") . ((strlen($u_sort_param)) ? "&amp;$u_sort_param" : ''), true, $this->user->session_id) : '',
-			'MODERATORS'	=> (isset($forum_moderators[$forum_id]) && sizeof($forum_moderators[$forum_id])) ? implode($this->user->lang['COMMA_SEPARATOR'], $forum_moderators[$forum_id]) : '',
+			'MODERATORS'	=> (isset($forum_moderators[$forum_id]) && sizeof($forum_moderators[$forum_id])) ? implode($this->language->lang('COMMA_SEPARATOR'), $forum_moderators[$forum_id]) : '',
 
 			'POST_IMG' 			=> ($topic_data['forum_status'] == ITEM_LOCKED) ? $this->user->img('button_topic_locked', 'FORUM_LOCKED') : $this->user->img('button_topic_new', 'POST_NEW_TOPIC'),
 			'QUOTE_IMG' 		=> $this->user->img('icon_post_quote', 'REPLY_WITH_QUOTE'),
@@ -926,7 +928,7 @@ class idea_controller extends base
 			'S_TOPIC_ACTION' 		=> $this->helper->route('ideas_idea_controller', array('idea_id' => $idea_id, 'start' => $start)),
 			'S_MOD_ACTION' 			=> $s_quickmod_action,
 
-			'L_RETURN_TO_FORUM'		=> $this->user->lang('RETURN_TO', $topic_data['forum_name']),
+			'L_RETURN_TO_FORUM'		=> $this->language->lang('RETURN_TO', $topic_data['forum_name']),
 			'S_VIEWTOPIC'			=> true,
 			'S_UNREAD_VIEW'			=> $view == 'unread',
 			'S_DISPLAY_SEARCHBOX'	=> ($this->auth->acl_get('u_search') && $this->auth->acl_get('f_search', $forum_id) && $this->config['load_search']) ? true : false,
@@ -954,8 +956,8 @@ class idea_controller extends base
 			'S_WATCHING_TOPIC'		=> $s_watching_topic['is_watching'],
 
 			'U_BOOKMARK_TOPIC'		=> ($this->user->data['is_registered'] && $this->config['allow_bookmarks']) ? append_sid($viewtopic_url, array('bookmark' => 1, 'hash' => generate_link_hash("topic_$topic_id"))) : '',
-			'S_BOOKMARK_TOPIC'		=> ($this->user->data['is_registered'] && $this->config['allow_bookmarks'] && $topic_data['bookmarked']) ? $this->user->lang('BOOKMARK_TOPIC_REMOVE') : $this->user->lang('BOOKMARK_TOPIC'),
-			'S_BOOKMARK_TOGGLE'		=> (!$this->user->data['is_registered'] || !$this->config['allow_bookmarks'] || !$topic_data['bookmarked']) ? $this->user->lang['BOOKMARK_TOPIC_REMOVE'] : $this->user->lang['BOOKMARK_TOPIC'],
+			'S_BOOKMARK_TOPIC'		=> ($this->user->data['is_registered'] && $this->config['allow_bookmarks'] && $topic_data['bookmarked']) ? $this->language->lang('BOOKMARK_TOPIC_REMOVE') : $this->language->lang('BOOKMARK_TOPIC'),
+			'S_BOOKMARK_TOGGLE'		=> (!$this->user->data['is_registered'] || !$this->config['allow_bookmarks'] || !$topic_data['bookmarked']) ? $this->language->lang('BOOKMARK_TOPIC_REMOVE') : $this->language->lang('BOOKMARK_TOPIC'),
 			'S_BOOKMARKED_TOPIC'	=> ($this->user->data['is_registered'] && $this->config['allow_bookmarks'] && $topic_data['bookmarked']) ? true : false,
 
 			'U_POST_NEW_TOPIC' 		=> ($this->auth->acl_get('f_post', $forum_id) || $this->user->data['user_id'] == ANONYMOUS) ? append_sid("{$this->root_path}posting.$this->php_ext", "mode=post&amp;f=$forum_id") : '',
@@ -1136,11 +1138,11 @@ class idea_controller extends base
 						'sig_bbcode_bitfield'	=> '',
 
 						'online'			=> false,
-						'avatar'			=> ($this->user->optionget('viewavatars')) ? get_user_avatar($row['user_avatar'], $row['user_avatar_type'], $row['user_avatar_width'], $row['user_avatar_height']) : '',
+						'avatar'			=> ($this->user->optionget('viewavatars')) ? phpbb_get_user_avatar($row) : '',
 						'rank_title'		=> '',
 						'rank_image'		=> '',
 						'rank_image_src'	=> '',
-						'sig'				=> '',
+						//'sig'				=> '',
 						'pm'				=> '',
 						'email'				=> '',
 						'jabber'			=> '',
@@ -1187,7 +1189,7 @@ class idea_controller extends base
 						'viewonline'	=> $row['user_allow_viewonline'],
 						'allow_pm'		=> $row['user_allow_pm'],
 
-						'avatar'		=> ($this->user->optionget('viewavatars')) ? get_user_avatar($row['user_avatar'], $row['user_avatar_type'], $row['user_avatar_width'], $row['user_avatar_height']) : '',
+						'avatar'		=> ($this->user->optionget('viewavatars')) ? phpbb_get_user_avatar($row) : '',
 						'age'			=> '',
 
 						'rank_title'		=> '',
@@ -1196,7 +1198,7 @@ class idea_controller extends base
 
 						'username'			=> $row['username'],
 						'user_colour'		=> $row['user_colour'],
-						'contact_user' 		=> $this->user->lang('CONTACT_USER', get_username_string('username', $poster_id, $row['username'], $row['user_colour'], $row['username'])),
+						'contact_user' 		=> $this->language->lang('CONTACT_USER', get_username_string('username', $poster_id, $row['username'], $row['user_colour'], $row['username'])),
 
 						'online'		=> false,
 						'jabber'		=> ($this->config['jab_enable'] && $row['user_jabber'] && $this->auth->acl_get('u_sendim')) ? append_sid("{$this->root_path}memberlist.{$this->php_ext}", "mode=contact&amp;action=jabber&amp;u=$poster_id") : '',
@@ -1459,7 +1461,7 @@ class idea_controller extends base
 						$display_username = get_username_string('full', $row['post_edit_user'], $post_edit_list[$row['post_edit_user']]['username'], $post_edit_list[$row['post_edit_user']]['user_colour']);
 					}
 
-					$l_edited_by = $this->user->lang('EDITED_TIMES_TOTAL', (int) $row['post_edit_count'], $display_username, $this->user->format_date($row['post_edit_time'], false, true));
+					$l_edited_by = $this->language->lang('EDITED_TIMES_TOTAL', (int) $row['post_edit_count'], $display_username, $this->user->format_date($row['post_edit_time'], false, true));
 				}
 				else
 				{
@@ -1478,7 +1480,7 @@ class idea_controller extends base
 						$display_username = get_username_string('full', $row['post_edit_user'], $user_cache[$row['post_edit_user']]['username'], $user_cache[$row['post_edit_user']]['user_colour']);
 					}
 
-					$l_edited_by = $this->user->lang('EDITED_TIMES_TOTAL', (int) $row['post_edit_count'], $display_username, $this->user->format_date($row['post_edit_time'], false, true));
+					$l_edited_by = $this->language->lang('EDITED_TIMES_TOTAL', (int) $row['post_edit_count'], $display_username, $this->user->format_date($row['post_edit_time'], false, true));
 				}
 			}
 			else
@@ -1529,13 +1531,13 @@ class idea_controller extends base
 
 				if ($row['post_delete_reason'])
 				{
-					$l_deleted_message = $this->user->lang('POST_DELETED_BY_REASON', $display_postername, $display_username, $this->user->format_date($row['post_delete_time'], false, true), $row['post_delete_reason']);
+					$l_deleted_message = $this->language->lang('POST_DELETED_BY_REASON', $display_postername, $display_username, $this->user->format_date($row['post_delete_time'], false, true), $row['post_delete_reason']);
 				}
 				else
 				{
-					$l_deleted_message = $this->user->lang('POST_DELETED_BY', $display_postername, $display_username, $this->user->format_date($row['post_delete_time'], false, true));
+					$l_deleted_message = $this->language->lang('POST_DELETED_BY', $display_postername, $display_username, $this->user->format_date($row['post_delete_time'], false, true));
 				}
-				$l_deleted_by = $this->user->lang('DELETED_INFORMATION', $display_username, $this->user->format_date($row['post_delete_time'], false, true));
+				$l_deleted_by = $this->language->lang('DELETED_INFORMATION', $display_username, $this->user->format_date($row['post_delete_time'], false, true));
 			}
 			else
 			{
@@ -1548,7 +1550,7 @@ class idea_controller extends base
 				// It is safe to grab the username from the user cache array, we are at the last
 				// post and only the topic poster and last poster are allowed to bump.
 				// Admins and mods are bound to the above rules too...
-				$l_bumped_by = $this->user->lang('BUMPED_BY', $user_cache[$topic_data['topic_bumper']]['username'], $this->user->format_date($topic_data['topic_last_post_time'], false, true));
+				$l_bumped_by = $this->language->lang('BUMPED_BY', $user_cache[$topic_data['topic_bumper']]['username'], $this->user->format_date($topic_data['topic_last_post_time'], false, true));
 			}
 			else
 			{
@@ -1678,7 +1680,7 @@ class idea_controller extends base
 				'U_JABBER'		=> $user_cache[$poster_id]['jabber'],
 
 				'U_APPROVE_ACTION'		=> append_sid("{$this->root_path}mcp.{$this->php_ext}", "i=queue&amp;p={$row['post_id']}&amp;f=$forum_id&amp;redirect=" . urlencode(str_replace('&amp;', '&', $viewtopic_url . '&amp;p=' . $row['post_id'] . '#p' . $row['post_id']))),
-				'U_REPORT'			=> ($this->auth->acl_get('f_report', $forum_id)) ? append_sid("{$this->root_path}report.$this->php_ext", 'f=' . $forum_id . '&amp;p=' . $row['post_id']) : '',
+				'U_REPORT'			=> ($this->auth->acl_get('f_report', $forum_id)) ? $this->helper->route('phpbb_report_post_controller', array('id' => $row['post_id'])) : '',
 				'U_MCP_REPORT'		=> ($this->auth->acl_get('m_report', $forum_id)) ? append_sid("{$this->root_path}mcp.$this->php_ext", 'i=reports&amp;mode=report_details&amp;f=' . $forum_id . '&amp;p=' . $row['post_id'], true, $this->user->session_id) : '',
 				'U_MCP_APPROVE'		=> ($this->auth->acl_get('m_approve', $forum_id)) ? append_sid("{$this->root_path}mcp.$this->php_ext", 'i=queue&amp;mode=approve_details&amp;f=' . $forum_id . '&amp;p=' . $row['post_id'], true, $this->user->session_id) : '',
 				'U_MCP_RESTORE'		=> ($this->auth->acl_get('m_approve', $forum_id)) ? append_sid("{$this->root_path}mcp.{$this->php_ext}", 'i=queue&amp;mode=' . (($topic_data['topic_visibility'] != ITEM_DELETED) ? 'deleted_posts' : 'deleted_topics') . '&amp;f=' . $forum_id . '&amp;p=' . $row['post_id'], true, $this->user->session_id) : '',
@@ -1691,6 +1693,7 @@ class idea_controller extends base
 				'POST_ID'			=> $row['post_id'],
 				'POST_NUMBER'		=> $i + $start + 1,
 				'POSTER_ID'			=> $poster_id,
+				'MINI_POST'			=> ($post_unread) ? $this->language->lang('UNREAD_POST') : $this->language->lang('POST'),
 
 				'S_HAS_ATTACHMENTS'	=> (!empty($attachments[$row['post_id']])) ? true : false,
 				'S_MULTIPLE_ATTACHMENTS'	=> !empty($attachments[$row['post_id']]) && sizeof($attachments[$row['post_id']]) > 1,
@@ -1706,9 +1709,9 @@ class idea_controller extends base
 				'S_TOPIC_POSTER'	=> ($topic_data['topic_poster'] == $poster_id) ? true : false,
 
 				'S_IGNORE_POST'		=> ($row['foe']) ? true : false,
-				'L_IGNORE_POST'		=> ($row['foe']) ? $this->user->lang('POST_BY_FOE', get_username_string('full', $poster_id, $row['username'], $row['user_colour'], $row['post_username'])) : '',
+				'L_IGNORE_POST'		=> ($row['foe']) ? $this->language->lang('POST_BY_FOE', get_username_string('full', $poster_id, $row['username'], $row['user_colour'], $row['post_username'])) : '',
 				'S_POST_HIDDEN'		=> $row['hide_post'],
-				'L_POST_DISPLAY'	=> ($row['hide_post']) ? $this->user->lang('POST_DISPLAY', '<a class="display_post" data-post-id="' . $row['post_id'] . '" href="' . $viewtopic_url . "&amp;p={$row['post_id']}&amp;view=show#p{$row['post_id']}" . '">', '</a>') : '',
+				'L_POST_DISPLAY'	=> ($row['hide_post']) ? $this->language->lang('POST_DISPLAY', '<a class="display_post" data-post-id="' . $row['post_id'] . '" href="' . $viewtopic_url . "&amp;p={$row['post_id']}&amp;view=show#p{$row['post_id']}" . '">', '</a>') : '',
 				'S_DELETE_PERMANENT'	=> $permanent_delete_allowed,
 			);
 
@@ -1723,17 +1726,17 @@ class idea_controller extends base
 			$contact_fields = array(
 				array(
 					'ID'		=> 'pm',
-					'NAME' 		=> $this->user->lang['SEND_PRIVATE_MESSAGE'],
+					'NAME' 		=> $this->language->lang('SEND_PRIVATE_MESSAGE'),
 					'U_CONTACT'	=> $u_pm,
 				),
 				array(
 					'ID'		=> 'email',
-					'NAME'		=> $this->user->lang['SEND_EMAIL'],
+					'NAME'		=> $this->language->lang('SEND_EMAIL'),
 					'U_CONTACT'	=> $user_cache[$poster_id]['email'],
 				),
 				array(
 					'ID'		=> 'jabber',
-					'NAME'		=> $this->user->lang['JABBER'],
+					'NAME'		=> $this->language->lang('JABBER'),
 					'U_CONTACT'	=> $user_cache[$poster_id]['jabber'],
 				),
 			);
@@ -1897,7 +1900,7 @@ class idea_controller extends base
 		$this->template->destroy_block_vars('navlinks');
 		$this->template->assign_block_vars('navlinks', array(
 			'U_VIEW_FORUM'		=> $this->helper->route('ideas_index_controller'),
-			'FORUM_NAME'		=> $this->user->lang('IDEAS'),
+			'FORUM_NAME'		=> $this->language->lang('IDEAS'),
 		));
 
 		// We overwrite $_REQUEST['f'] if there is no forum specified
@@ -1914,6 +1917,6 @@ class idea_controller extends base
 			$this->request->overwrite('t', $topic_id);
 		}
 
-		return $this->helper->render('idea_body.html', $this->user->lang('VIEW_IDEA') . ' - ' . $idea['idea_title']);
+		return $this->helper->render('idea_body.html', $this->language->lang('VIEW_IDEA') . ' - ' . $idea['idea_title']);
 	}
 }
