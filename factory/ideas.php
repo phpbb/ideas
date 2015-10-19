@@ -12,6 +12,7 @@ namespace phpbb\ideas\factory;
 
 use phpbb\controller\helper;
 use phpbb\db\driver\driver_interface;
+use phpbb\language\language;
 use phpbb\log\log;
 use phpbb\user;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -23,6 +24,9 @@ class ideas
 
 	/* @var helper */
 	protected $helper;
+
+	/** @var language */
+	protected $language;
 
 	/** @var log */
 	protected $log;
@@ -54,6 +58,7 @@ class ideas
 	/**
 	 * @param driver_interface $db
 	 * @param helper           $helper
+	 * @param language         $language
 	 * @param log              $log
 	 * @param user             $user
 	 * @param string           $table_ideas
@@ -64,10 +69,11 @@ class ideas
 	 * @param string           $table_votes
 	 * @param string           $php_ext
 	 */
-	public function __construct(driver_interface $db, helper $helper, log $log, user $user, $table_ideas, $table_duplicates, $table_rfcs, $table_statuses, $table_tickets, $table_votes, $php_ext)
+	public function __construct(driver_interface $db, helper $helper, language $language, log $log, user $user, $table_ideas, $table_duplicates, $table_rfcs, $table_statuses, $table_tickets, $table_votes, $php_ext)
 	{
 		$this->db = $db;
 		$this->helper = $helper;
+		$this->language = $language;
 		$this->log = $log;
 		$this->user = $user;
 
@@ -246,7 +252,7 @@ class ideas
 		$row = $this->db->sql_fetchrow($result);
 		$this->db->sql_freeresult($result);
 
-		return $this->user->lang($row['status_name']);
+		return $this->language->lang($row['status_name']);
 	}
 
 	/**
@@ -438,7 +444,7 @@ class ideas
 			}
 
 			return array(
-				'message'	    => $this->user->lang('UPDATED_VOTE'),
+				'message'	    => $this->language->lang('UPDATED_VOTE'),
 				'votes_up'	    => $idea['idea_votes_up'],
 				'votes_down'	=> $idea['idea_votes_down'],
 				'points'        => $idea['idea_votes_up'] - $idea['idea_votes_down']
@@ -468,7 +474,7 @@ class ideas
 		$this->db->sql_query($sql);
 
 		return array(
-			'message'	    => $this->user->lang('VOTE_SUCCESS'),
+			'message'	    => $this->language->lang('VOTE_SUCCESS'),
 			'votes_up'	    => $idea['idea_votes_up'],
 			'votes_down'	=> $idea['idea_votes_down'],
 			'points'        => $idea['idea_votes_up'] - $idea['idea_votes_down']
@@ -500,7 +506,7 @@ class ideas
 		}
 
 		return array(
-			'message'	    => $this->user->lang('UPDATED_VOTE'),
+			'message'	    => $this->language->lang('UPDATED_VOTE'),
 			'votes_up'	    => $idea['idea_votes_up'],
 			'votes_down'	=> $idea['idea_votes_down'],
 			'points'        => $idea['idea_votes_up'] - $idea['idea_votes_down']
@@ -542,19 +548,19 @@ class ideas
 		$error = array();
 		if (strlen($title) < 6)
 		{
-			$error[] = $this->user->lang['TITLE_TOO_SHORT'];
+			$error[] = $this->language->lang('TITLE_TOO_SHORT');
 		}
 		if (strlen($desc) < 5)
 		{
-			$error[] = $this->user->lang['DESC_TOO_SHORT'];
+			$error[] = $this->language->lang('DESC_TOO_SHORT');
 		}
 		if (strlen($title) > 64)
 		{
-			$error[] = $this->user->lang['TITLE_TOO_LONG'];
+			$error[] = $this->language->lang('TITLE_TOO_LONG');
 		}
 		if (strlen($desc) > 9900)
 		{
-			$error[] = $this->user->lang['DESC_TOO_LONG'];
+			$error[] = $this->language->lang('DESC_TOO_LONG');
 		}
 
 		if (count($error))
@@ -585,9 +591,9 @@ class ideas
 
 		// Submit topic
 		$bbcode = '[url=' . $this->helper->route('ideas_idea_controller', array('idea_id' => $idea_id), true, false, UrlGeneratorInterface::ABSOLUTE_URL) . "]{$title}[/url]";
-		$desc .= "\n\n----------\n\n" . $this->user->lang('VIEW_IDEA_AT', $bbcode);
+		$desc .= "\n\n----------\n\n" . $this->language->lang('VIEW_IDEA_AT', $bbcode);
 		$bbcode = '[url=' . generate_board_url() . '/' . append_sid("memberlist.{$this->php_ext}", array('u' => $user_id, 'mode' => 'viewprofile')) . "]{$username}[/url]";
-		$desc .= "\n\n" . $this->user->lang('IDEA_POSTER', $bbcode);
+		$desc .= "\n\n" . $this->language->lang('IDEA_POSTER', $bbcode);
 
 		$uid = $bitfield = $options = '';
 		generate_text_for_storage($desc, $uid, $bitfield, $options, true, true, true);

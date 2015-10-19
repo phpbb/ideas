@@ -7,6 +7,7 @@ services:
         arguments:
             - @controller.helper
             - @phpbb.ideas.ideas
+            - @language
             - @phpbb.ideas.linkhelper
             - @request
             - @template
@@ -37,6 +38,7 @@ services:
             - @dbal.conn
             - @controller.helper
             - @phpbb.ideas.ideas
+            - @language
             - @phpbb.ideas.linkhelper
             - @pagination
             - @request
@@ -50,6 +52,7 @@ services:
         arguments:
             - @dbal.conn
             - @controller.helper
+            - @language
             - @log
             - @user
             - %tables.ideas_ideas%

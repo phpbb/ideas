@@ -13,6 +13,7 @@ namespace phpbb\ideas\controller;
 use phpbb\controller\helper;
 use phpbb\ideas\factory\ideas;
 use phpbb\ideas\factory\linkhelper;
+use phpbb\language\language;
 use phpbb\request\request;
 use phpbb\template\template;
 use phpbb\user;
@@ -28,6 +29,9 @@ abstract class base
 
 	/* @var ideas */
 	protected $ideas;
+
+	/** @var language  */
+	protected $language;
 
 	/* @var linkhelper */
 	protected $link_helper;
@@ -50,6 +54,7 @@ abstract class base
 	/**
 	 * @param helper     $helper
 	 * @param ideas      $ideas
+	 * @param language   $language
 	 * @param linkhelper $link_helper
 	 * @param request    $request
 	 * @param template   $template
@@ -57,10 +62,11 @@ abstract class base
 	 * @param string     $root_path
 	 * @param string     $php_ext
 	 */
-	public function __construct(helper $helper, ideas $ideas, linkhelper $link_helper, request $request, template $template, user $user, $root_path, $php_ext)
+	public function __construct(helper $helper, ideas $ideas, language $language, linkhelper $link_helper, request $request, template $template, user $user, $root_path, $php_ext)
 	{
 		$this->helper = $helper;
 		$this->ideas = $ideas;
+		$this->language = $language;
 		$this->link_helper = $link_helper;
 		$this->request = $request;
 		$this->template = $template;
@@ -68,6 +74,6 @@ abstract class base
 		$this->root_path = $root_path;
 		$this->php_ext = $php_ext;
 
-		$this->user->add_lang_ext('phpbb/ideas', 'common');
+		$this->language->add_lang('common', 'phpbb/ideas');
 	}
 }
