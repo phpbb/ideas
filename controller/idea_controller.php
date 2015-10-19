@@ -426,26 +426,12 @@ class idea_controller extends base
 					else
 					{
 						$topic_id = $row['topic_id'];
-
-						// Check for global announcement correctness?
-						if (!$row['forum_id'] && !$forum_id)
-						{
-							throw new http_exception(404, 'NO_TOPIC');
-						}
-						else if ($row['forum_id'])
-						{
-							$forum_id = $row['forum_id'];
-						}
+						$forum_id = $row['forum_id'];
 					}
 				}
 			}
 
-			// Check for global announcement correctness?
-			if ((!isset($row) || !$row['forum_id']) && !$forum_id)
-			{
-				throw new http_exception(404, 'NO_TOPIC');
-			}
-			else if (isset($row) && $row['forum_id'])
+			if (isset($row) && $row['forum_id'])
 			{
 				$forum_id = $row['forum_id'];
 			}
@@ -514,26 +500,8 @@ class idea_controller extends base
 			$sql_array['WHERE'] = "p.post_id = $post_id AND t.topic_id = p.topic_id";
 		}
 
-		$sql_array['WHERE'] .= ' AND (f.forum_id = t.forum_id';
+		$sql_array['WHERE'] .= ' AND f.forum_id = t.forum_id';
 
-		if (!$forum_id)
-		{
-			// If it is a global announcement make sure to set the forum id to a postable forum
-			$sql_array['WHERE'] .= ' OR (t.topic_type = ' . POST_GLOBAL . '
-				AND f.forum_type = ' . FORUM_POST . ')';
-		}
-		else
-		{
-			$sql_array['WHERE'] .= ' OR (t.topic_type = ' . POST_GLOBAL . "
-				AND f.forum_id = $forum_id)";
-		}
-
-		$sql_array['WHERE'] .= ')';
-
-		// Join to forum table on topic forum_id unless topic forum_id is zero
-		// whereupon we join on the forum_id passed as a parameter ... this
-		// is done so navigation, forum name, etc. remain consistent with where
-		// user clicked to view a global topic
 		$sql = $this->db->sql_build_query('SELECT', $sql_array);
 		$result = $this->db->sql_query($sql);
 		$topic_data = $this->db->sql_fetchrow($result);
@@ -646,23 +614,10 @@ class idea_controller extends base
 			login_forum_box($topic_data);
 		}
 
-		// Redirect to login or to the correct post upon emailed notification links
-		if (isset($_GET['e']))
+		// Redirect to login upon emailed notification links if user is not logged in.
+		if (isset($_GET['e']) && $this->user->data['user_id'] == ANONYMOUS)
 		{
-			$jump_to = $this->request->variable('e', 0);
-
-			$redirect_url = $this->link_helper->get_idea_link($idea_id);
-
-			if ($this->user->data['user_id'] == ANONYMOUS)
-			{
-				login_box($redirect_url . "&amp;p=$post_id&amp;e=$jump_to", $this->user->lang('LOGIN_NOTIFY_TOPIC'));
-			}
-
-			if ($jump_to > 0)
-			{
-				// We direct the already logged in user to the correct post...
-				redirect($redirect_url . ((!$post_id) ? "&amp;p=$jump_to" : "&amp;p=$post_id") . "#p$jump_to");
-			}
+			login_box(build_url('e') . '#unread', $this->user->lang('LOGIN_NOTIFY_TOPIC'));
 		}
 
 		// What is start equal to?
@@ -860,10 +815,10 @@ class idea_controller extends base
 			'merge'					=> array('MERGE_POSTS', $this->auth->acl_get('m_merge', $forum_id)),
 			'merge_topic'		=> array('MERGE_TOPIC', $this->auth->acl_get('m_merge', $forum_id)),
 			'fork'					=> array('FORK_TOPIC', $this->auth->acl_get('m_move', $forum_id)),
-			'make_normal'		=> array('MAKE_NORMAL', ($allow_change_type && $this->auth->acl_gets('f_sticky', 'f_announce', $forum_id) && $topic_data['topic_type'] != POST_NORMAL)),
+			'make_normal'		=> array('MAKE_NORMAL', ($allow_change_type && $this->auth->acl_gets('f_sticky', 'f_announce', 'f_announce_global', $forum_id) && $topic_data['topic_type'] != POST_NORMAL)),
 			'make_sticky'		=> array('MAKE_STICKY', ($allow_change_type && $this->auth->acl_get('f_sticky', $forum_id) && $topic_data['topic_type'] != POST_STICKY)),
 			'make_announce'	=> array('MAKE_ANNOUNCE', ($allow_change_type && $this->auth->acl_get('f_announce', $forum_id) && $topic_data['topic_type'] != POST_ANNOUNCE)),
-			'make_global'		=> array('MAKE_GLOBAL', ($allow_change_type && $this->auth->acl_get('f_announce', $forum_id) && $topic_data['topic_type'] != POST_GLOBAL)),
+			'make_global'		=> array('MAKE_GLOBAL', ($allow_change_type && $this->auth->acl_get('f_announce_global', $forum_id) && $topic_data['topic_type'] != POST_GLOBAL)),
 			'topic_logs'			=> array('VIEW_TOPIC_LOGS', $this->auth->acl_get('m_', $forum_id)),
 		);
 
@@ -1039,13 +994,12 @@ class idea_controller extends base
 		$post_list = $user_cache = $id_cache = $attachments = $attach_list = $rowset = $update_count = $post_edit_list = $post_delete_list = array();
 		$has_unapproved_attachments = $has_approved_attachments = $display_notice = false;
 		$i = $i_total = 0;
-		$bbcode_bitfield = '';
 
 		// Go ahead and pull all data for this topic
 		$sql = 'SELECT p.post_id
 			FROM ' . POSTS_TABLE . ' p' . (($join_user_sql[$sort_key]) ? ', ' . USERS_TABLE . ' u': '') . "
 			WHERE p.topic_id = $topic_id
-				" . ((!$this->auth->acl_get('m_approve', $forum_id)) ? 'AND p.post_visibility = 1' : '') . "
+				AND " . $this->content_visibility->get_visibility_sql('post', $forum_id, 'p.') . "
 				" . (($join_user_sql[$sort_key]) ? 'AND u.user_id = p.poster_id': '') . "
 				$limit_posts_time
 			ORDER BY $sql_sort_order";
@@ -1075,7 +1029,7 @@ class idea_controller extends base
 		// We need to grab it because we do reverse ordering sometimes
 		$max_post_time = 0;
 
-		$sql = $this->db->sql_build_query('SELECT', array(
+		$sql_ary = array(
 			'SELECT'	=> 'u.*, z.friend, z.foe, p.*',
 
 			'FROM'		=> array(
@@ -1086,14 +1040,15 @@ class idea_controller extends base
 			'LEFT_JOIN'	=> array(
 				array(
 					'FROM'	=> array(ZEBRA_TABLE => 'z'),
-					'ON'	=> 'z.user_id = ' . $this->user->data['user_id'] . ' AND z.zebra_id = p.poster_id'
-				)
+					'ON'	=> 'z.user_id = ' . $this->user->data['user_id'] . ' AND z.zebra_id = p.poster_id',
+				),
 			),
 
 			'WHERE'		=> $this->db->sql_in_set('p.post_id', $post_list) . '
-		AND u.user_id = p.poster_id'
-		));
+				AND u.user_id = p.poster_id',
+		);
 
+		$sql = $this->db->sql_build_query('SELECT', $sql_ary);
 		$result = $this->db->sql_query($sql);
 
 		$now = $this->user->create_datetime();
@@ -1160,15 +1115,6 @@ class idea_controller extends base
 				'friend'			=> $row['friend'],
 				'foe'				=> $row['foe'],
 			);
-
-			// Define the global bbcode bitfield, will be used to load bbcodes
-			$bbcode_bitfield = $bbcode_bitfield | base64_decode($row['bbcode_bitfield']);
-
-			// Is a signature attached? Are we going to display it?
-			if ($row['enable_sig'] && $this->config['allow_sig'] && $this->user->optionget('viewsigs'))
-			{
-				$bbcode_bitfield = $bbcode_bitfield | base64_decode($row['user_sig_bbcode_bitfield']);
-			}
 
 			// Cache various user specific data ... so we don't have to recompute
 			// this each time the same user appears on this page
@@ -1420,12 +1366,6 @@ class idea_controller extends base
 		// Get the list of permanently banned users
 		$permanently_banned_users = phpbb_get_banned_user_ids(array_keys($user_cache), false);
 
-		// Instantiate BBCode if need be
-		if ($bbcode_bitfield !== '')
-		{
-			$bbcode = new \bbcode(base64_encode($bbcode_bitfield));
-		}
-
 		$i_total = sizeof($rowset) - 1;
 		$prev_post_id = '';
 
@@ -1445,43 +1385,23 @@ class idea_controller extends base
 				continue;
 			}
 
-			$row =& $rowset[$post_list[$i]];
+			$row = $rowset[$post_list[$i]];
 			$poster_id = $row['user_id'];
 
 			// End signature parsing, only if needed
 			if ($user_cache[$poster_id]['sig'] && $row['enable_sig'] && empty($user_cache[$poster_id]['sig_parsed']))
 			{
-				$user_cache[$poster_id]['sig'] = censor_text($user_cache[$poster_id]['sig']);
-
-				if ($user_cache[$poster_id]['sig_bbcode_bitfield'])
-				{
-					$bbcode->bbcode_second_pass($user_cache[$poster_id]['sig'], $user_cache[$poster_id]['sig_bbcode_uid'], $user_cache[$poster_id]['sig_bbcode_bitfield']);
-				}
-
-				$user_cache[$poster_id]['sig'] = bbcode_nl2br($user_cache[$poster_id]['sig']);
-				$user_cache[$poster_id]['sig'] = smiley_text($user_cache[$poster_id]['sig']);
-				$user_cache[$poster_id]['sig_parsed'] = true;
+				$parse_flags = ($user_cache[$poster_id]['sig_bbcode_bitfield'] ? OPTION_FLAG_BBCODE : 0) | OPTION_FLAG_SMILIES;
+				$user_cache[$poster_id]['sig'] = generate_text_for_display($user_cache[$poster_id]['sig'], $user_cache[$poster_id]['sig_bbcode_uid'], $user_cache[$poster_id]['sig_bbcode_bitfield'],  $parse_flags, true);
 			}
 
 			// Parse the message and subject
-			$message = censor_text($row['post_text']);
+			$parse_flags = ($row['bbcode_bitfield'] ? OPTION_FLAG_BBCODE : 0) | OPTION_FLAG_SMILIES;
+			$message = generate_text_for_display($row['post_text'], $row['bbcode_uid'], $row['bbcode_bitfield'], $parse_flags, true);
 
-			// Remove ideas link
-			if (is_numeric(strpos($message, "\n\n----------\n\n"))) {
-				$message = explode("\n\n----------\n\n", $message);
-				$message[count($message) - 1] = '';
-				$message = implode("\n\n----------\n\n", $message);
-				$message = substr($message, 0, -14);
-			}
-
-			// Second parse bbcode here
-			if ($row['bbcode_bitfield'])
-			{
-				$bbcode->bbcode_second_pass($message, $row['bbcode_uid'], $row['bbcode_bitfield']);
-			}
-
-			$message = bbcode_nl2br($message);
-			$message = smiley_text($message);
+			// This freakish looking regex pattern should
+			// remove the ideas link-backs from the message.
+			$message = preg_replace('/(<br[^>]*>\\n?)\\1-{10}\\1\\1.*/s', '', $message);
 
 			if (!empty($attachments[$row['post_id']]))
 			{
@@ -1739,6 +1659,7 @@ class idea_controller extends base
 				'POST_ICON_IMG'			=> ($topic_data['enable_icons'] && !empty($row['icon_id'])) ? $icons[$row['icon_id']]['img'] : '',
 				'POST_ICON_IMG_WIDTH'	=> ($topic_data['enable_icons'] && !empty($row['icon_id'])) ? $icons[$row['icon_id']]['width'] : '',
 				'POST_ICON_IMG_HEIGHT'	=> ($topic_data['enable_icons'] && !empty($row['icon_id'])) ? $icons[$row['icon_id']]['height'] : '',
+				'POST_ICON_IMG_ALT' 	=> ($topic_data['enable_icons'] && !empty($row['icon_id'])) ? $icons[$row['icon_id']]['alt'] : '',
 				'ONLINE_IMG'			=> ($poster_id == ANONYMOUS || !$this->config['load_onlinetrack']) ? '' : (($user_cache[$poster_id]['online']) ? $this->user->img('icon_user_online', 'ONLINE') : $this->user->img('icon_user_offline', 'OFFLINE')),
 				'S_ONLINE'				=> ($poster_id == ANONYMOUS || !$this->config['load_onlinetrack']) ? false : (($user_cache[$poster_id]['online']) ? true : false),
 
@@ -1757,7 +1678,7 @@ class idea_controller extends base
 				'U_MCP_REPORT'		=> ($this->auth->acl_get('m_report', $forum_id)) ? append_sid("{$this->root_path}mcp.$this->php_ext", 'i=reports&amp;mode=report_details&amp;f=' . $forum_id . '&amp;p=' . $row['post_id'], true, $this->user->session_id) : '',
 				'U_MCP_APPROVE'		=> ($this->auth->acl_get('m_approve', $forum_id)) ? append_sid("{$this->root_path}mcp.$this->php_ext", 'i=queue&amp;mode=approve_details&amp;f=' . $forum_id . '&amp;p=' . $row['post_id'], true, $this->user->session_id) : '',
 				'U_MCP_RESTORE'		=> ($this->auth->acl_get('m_approve', $forum_id)) ? append_sid("{$this->root_path}mcp.{$this->php_ext}", 'i=queue&amp;mode=' . (($topic_data['topic_visibility'] != ITEM_DELETED) ? 'deleted_posts' : 'deleted_topics') . '&amp;f=' . $forum_id . '&amp;p=' . $row['post_id'], true, $this->user->session_id) : '',
-				'U_MINI_POST'		=> $this->helper->route('ideas_idea_controller', array_merge(array('idea_id' => $idea_id, '#p' => $row['post_id']), (($topic_data['topic_type'] == POST_GLOBAL) ? array('f' => $forum_id) : array()))),
+				'U_MINI_POST'		=> $this->helper->route('ideas_idea_controller', array_merge(array('idea_id' => $idea_id, '#' => "p{$row['post_id']}"), (($topic_data['topic_type'] == POST_GLOBAL) ? array('f' => $forum_id) : array()))),
 				'U_NEXT_POST_ID'	=> ($i < $i_total && isset($rowset[$post_list[$i + 1]])) ? $rowset[$post_list[$i + 1]]['post_id'] : '',
 				'U_PREV_POST_ID'	=> $prev_post_id,
 				'U_NOTES'			=> ($this->auth->acl_getf_global('m_')) ? append_sid("{$this->root_path}mcp.$this->php_ext", 'i=notes&amp;mode=user_notes&amp;u=' . $poster_id, true, $this->user->session_id) : '',
@@ -1874,34 +1795,13 @@ class idea_controller extends base
 			}
 		}
 
-		// Get last post time for all global announcements
-		// to keep proper forums tracking
-		if ($topic_data['topic_type'] == POST_GLOBAL)
-		{
-			$sql = 'SELECT topic_last_post_time as forum_last_post_time
-				FROM ' . TOPICS_TABLE . '
-				WHERE forum_id = 0
-				ORDER BY topic_last_post_time DESC';
-			$result = $this->db->sql_query_limit($sql, 1);
-			$topic_data['forum_last_post_time'] = (int) $this->db->sql_fetchfield('forum_last_post_time');
-			$this->db->sql_freeresult($result);
-
-			$sql = 'SELECT mark_time as forum_mark_time
-				FROM ' . FORUMS_TRACK_TABLE . '
-				WHERE forum_id = 0
-					AND user_id = ' . $this->user->data['user_id'];
-			$result = $this->db->sql_query($sql);
-			$topic_data['forum_mark_time'] = (int) $this->db->sql_fetchfield('forum_mark_time');
-			$this->db->sql_freeresult($result);
-		}
-
 		// Only mark topic if it's currently unread. Also make sure we do not set topic tracking back if earlier pages are viewed.
 		if (isset($topic_tracking_info[$topic_id]) && $topic_data['topic_last_post_time'] > $topic_tracking_info[$topic_id] && $max_post_time > $topic_tracking_info[$topic_id])
 		{
-			markread('topic', (($topic_data['topic_type'] == POST_GLOBAL) ? 0 : $forum_id), $topic_id, $max_post_time);
+			markread('topic', $forum_id, $topic_id, $max_post_time);
 
 			// Update forum info
-			$all_marked_read = update_forum_tracking_info((($topic_data['topic_type'] == POST_GLOBAL) ? 0 : $forum_id), $topic_data['forum_last_post_time'], (isset($topic_data['forum_mark_time'])) ? $topic_data['forum_mark_time'] : false, false);
+			$all_marked_read = update_forum_tracking_info($forum_id, $topic_data['forum_last_post_time'], (isset($topic_data['forum_mark_time'])) ? $topic_data['forum_mark_time'] : false, false);
 		}
 		else
 		{
