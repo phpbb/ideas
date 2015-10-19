@@ -260,8 +260,12 @@
 			$.get(url, {duplicate: Number(value)}, function(res) {
 				if (res) {
 					if (value) {
-						$obj.duplicateLink.text('idea.php?id=' + value)
-							.attr('href', 'idea.php?id=' + value)
+						var msg = $obj.duplicateLink.attr('data-l-msg');
+						var link = $obj.duplicateLink.attr('data-link').replace(/(^.*\/)(\d)$/, '$1');
+
+						$obj.duplicateLink
+							.text(msg)
+							.attr('href', link + value)
 							.show();
 					}
 
