@@ -10,6 +10,7 @@
 
 namespace phpbb\ideas\factory;
 
+use phpbb\config\config;
 use phpbb\controller\helper;
 use phpbb\db\driver\driver_interface;
 use phpbb\language\language;
@@ -19,6 +20,9 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class ideas
 {
+	/* @var config */
+	protected $config;
+
 	/* @var driver_interface */
 	protected $db;
 
@@ -56,6 +60,7 @@ class ideas
 	protected $php_ext;
 
 	/**
+	 * @param config           $config
 	 * @param driver_interface $db
 	 * @param helper           $helper
 	 * @param language         $language
@@ -69,8 +74,9 @@ class ideas
 	 * @param string           $table_votes
 	 * @param string           $php_ext
 	 */
-	public function __construct(driver_interface $db, helper $helper, language $language, log $log, user $user, $table_ideas, $table_duplicates, $table_rfcs, $table_statuses, $table_tickets, $table_votes, $php_ext)
+	public function __construct(config $config, driver_interface $db, helper $helper, language $language, log $log, user $user, $table_ideas, $table_duplicates, $table_rfcs, $table_statuses, $table_tickets, $table_votes, $php_ext)
 	{
+		$this->config = $config;
 		$this->db = $db;
 		$this->helper = $helper;
 		$this->language = $language;
@@ -173,7 +179,7 @@ class ideas
 			{
 				$topic_ids[] = $row['topic_id'];
 			}
-			$topic_tracking_info = get_complete_topic_tracking(IDEAS_FORUM_ID, $topic_ids);
+			$topic_tracking_info = get_complete_topic_tracking((int) $this->config['ideas_forum_id'], $topic_ids);
 
 			$last_times = array();
 			$sql = 'SELECT topic_id, topic_last_post_time
@@ -378,7 +384,7 @@ class ideas
 			WHERE idea_id = ' . $idea_id;
 		$this->db->sql_query($sql);
 
-		$this->log->add('mod', $this->user->data['user_id'], $this->user->ip, 'LOG_IDEA_TITLE_EDITED', time(), array($idea_id));
+		$this->log->add('mod', $this->user->data['user_id'], $this->user->ip, 'ACP_IDEA_TITLE_EDITED_LOG', time(), array($idea_id));
 
 		return true;
 	}
@@ -599,10 +605,10 @@ class ideas
 		generate_text_for_storage($desc, $uid, $bitfield, $options, true, true, true);
 
 		$data = array(
-			'forum_id'			=> IDEAS_FORUM_ID,
+			'forum_id'			=> (int) $this->config['ideas_forum_id'],
 			'topic_id'			=> 0,
 			'icon_id'			=> false,
-			'poster_id'			=> IDEAS_POSTER_ID,
+			'poster_id'			=> (int) $this->config['ideas_poster_id'],
 
 			'enable_bbcode'		=> true,
 			'enable_smilies'	=> true,
@@ -631,7 +637,7 @@ class ideas
 		// Get Ideas Bot info
 		$sql = 'SELECT *
 			FROM ' . USERS_TABLE . '
-			WHERE user_id = ' . IDEAS_POSTER_ID;
+			WHERE user_id = ' . (int) $this->config['ideas_poster_id'];
 		$result = $this->db->sql_query_limit($sql, 1);
 		$poster_bot = $this->db->sql_fetchrow($result);
 		$this->db->sql_freeresult($result);

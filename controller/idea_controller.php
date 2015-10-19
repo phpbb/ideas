@@ -69,7 +69,7 @@ class idea_controller extends base
 	 */
 	public function __construct(auth $auth, service $cache, config $config, content_visibility $content_visibility, manager $cp, driver_interface $db, helper $helper, ideas $ideas, language $language, linkhelper $link_helper, pagination $pagination, request $request, template $template, user $user, $root_path, $php_ext)
 	{
-		parent::__construct($helper, $ideas, $language, $link_helper, $request, $template, $user, $root_path, $php_ext);
+		parent::__construct($config, $helper, $ideas, $language, $link_helper, $request, $template, $user, $root_path, $php_ext);
 
 		$this->auth = $auth;
 		$this->cache = $cache;
@@ -87,9 +87,15 @@ class idea_controller extends base
 	 *
 	 * @param $idea_id int The ID of the requested idea, maybe?
 	 * @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
+	 * @throws http_exception
 	 */
 	public function idea($idea_id)
 	{
+		if (!$this->is_available())
+		{
+			throw new http_exception(404, 'IDEAS_NOT_AVAILABLE');
+		}
+
 		$mode = $this->request->variable('mode', '');
 		$vote = $this->request->variable('v', 1);
 		$hash = $this->request->variable('hash', '');
@@ -100,7 +106,7 @@ class idea_controller extends base
 			throw new http_exception(404, 'IDEA_NOT_FOUND');
 		}
 
-		$mod = $this->auth->acl_get('m_', IDEAS_FORUM_ID);
+		$mod = $this->auth->acl_get('m_', $this->config['ideas_forum_id']);
 		$own = $idea['idea_author'] === $this->user->data['user_id'];
 
 		if ($mode === 'delete' && ($mod || ($own && $this->auth->acl_get('f_delete', IDEAS_FORUM_ID))))
@@ -147,7 +153,7 @@ class idea_controller extends base
 						return false;
 					}
 
-					if ($this->auth->acl_get('f_vote', IDEAS_FORUM_ID))
+					if ($this->auth->acl_get('f_vote', $this->config['ideas_forum_id']))
 					{
 						$result = $this->ideas->remove_vote($idea, $this->user->data['user_id']);
 					}
@@ -214,7 +220,7 @@ class idea_controller extends base
 						return false;
 					}
 
-					if ($this->auth->acl_get('f_vote', IDEAS_FORUM_ID))
+					if ($this->auth->acl_get('f_vote', $this->config['ideas_forum_id']))
 					{
 						$result = $this->ideas->vote($idea, $this->user->data['user_id'], $vote);
 					}
@@ -232,12 +238,11 @@ class idea_controller extends base
 			return new \Symfony\Component\HttpFoundation\JsonResponse($result);
 		}
 
-
 		include($this->root_path . 'includes/functions_display.' . $this->php_ext);
 		include($this->root_path . 'includes/bbcode.' . $this->php_ext);
 		include($this->root_path . 'includes/functions_user.' . $this->php_ext);
 
-		$delete_posts = $mod || ($own && $this->auth->acl_get('f_delete', IDEAS_FORUM_ID));
+		$delete_posts = $mod || ($own && $this->auth->acl_get('f_delete', $this->config['ideas_forum_id']));
 
 		if ($mod)
 		{
@@ -256,7 +261,7 @@ class idea_controller extends base
 		$idea_topic_link = append_sid("{$this->root_path}viewtopic.{$this->php_ext}", 't=' . $idea['topic_id']);
 
 		$can_vote = true;
-		if ($idea['idea_status'] == 3 || $idea['idea_status'] == 4 || !$this->auth->acl_get('f_vote', IDEAS_FORUM_ID))
+		if ($idea['idea_status'] == 3 || $idea['idea_status'] == 4 || !$this->auth->acl_get('f_vote', $this->config['ideas_forum_id']))
 		{
 			$can_vote = false;
 		}
@@ -307,7 +312,7 @@ class idea_controller extends base
 			}
 		}
 
-		$forum_id = IDEAS_FORUM_ID;
+		$forum_id = $this->config['ideas_forum_id'];
 		$topic_id = $idea['topic_id'];
 		$post_id  = $this->request->variable('p', 0);
 

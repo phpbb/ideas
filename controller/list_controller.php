@@ -10,6 +10,8 @@
 
 namespace phpbb\ideas\controller;
 
+use \phpbb\exception\http_exception;
+
 class list_controller extends base
 {
 	/**
@@ -17,9 +19,15 @@ class list_controller extends base
 	 *
 	 * @param $sort string The direction to sort in.
 	 * @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
+	 * @throws http_exception
 	 */
 	public function ideas_list($sort)
 	{
+		if (!$this->is_available())
+		{
+			throw new http_exception(404, 'IDEAS_NOT_AVAILABLE');
+		}
+
 		if ($sort === 'new')
 		{
 			$sort = 'date';

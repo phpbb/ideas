@@ -10,10 +10,23 @@
 
 namespace phpbb\ideas\controller;
 
+use \phpbb\exception\http_exception;
+
 class post_controller extends base
 {
+	/**
+	 * Controller for /post
+	 *
+	 * @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
+	 * @throws http_exception
+	 */
 	public function post()
 	{
+		if (!$this->is_available())
+		{
+			throw new http_exception(404, 'IDEAS_NOT_AVAILABLE');
+		}
+
 		include($this->root_path . 'includes/functions_posting.' . $this->php_ext);
 		include($this->root_path . 'includes/functions_display.' . $this->php_ext);
 		include($this->root_path . 'includes/message_parser.' . $this->php_ext);
