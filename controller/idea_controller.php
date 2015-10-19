@@ -305,7 +305,6 @@ class idea_controller extends base
 			}
 		}
 
-
 		$forum_id = IDEAS_FORUM_ID;
 		$topic_id = $idea['topic_id'];
 		$post_id  = $this->request->variable('p', 0);
@@ -427,26 +426,12 @@ class idea_controller extends base
 					else
 					{
 						$topic_id = $row['topic_id'];
-
-						// Check for global announcement correctness?
-						if (!$row['forum_id'] && !$forum_id)
-						{
-							throw new http_exception(404, 'NO_TOPIC');
-						}
-						else if ($row['forum_id'])
-						{
-							$forum_id = $row['forum_id'];
-						}
+						$forum_id = $row['forum_id'];
 					}
 				}
 			}
 
-			// Check for global announcement correctness?
-			if ((!isset($row) || !$row['forum_id']) && !$forum_id)
-			{
-				throw new http_exception(404, 'NO_TOPIC');
-			}
-			else if (isset($row) && $row['forum_id'])
+			if (isset($row) && $row['forum_id'])
 			{
 				$forum_id = $row['forum_id'];
 			}
@@ -515,26 +500,8 @@ class idea_controller extends base
 			$sql_array['WHERE'] = "p.post_id = $post_id AND t.topic_id = p.topic_id";
 		}
 
-		$sql_array['WHERE'] .= ' AND (f.forum_id = t.forum_id';
+		$sql_array['WHERE'] .= ' AND f.forum_id = t.forum_id';
 
-		if (!$forum_id)
-		{
-			// If it is a global announcement make sure to set the forum id to a postable forum
-			$sql_array['WHERE'] .= ' OR (t.topic_type = ' . POST_GLOBAL . '
-				AND f.forum_type = ' . FORUM_POST . ')';
-		}
-		else
-		{
-			$sql_array['WHERE'] .= ' OR (t.topic_type = ' . POST_GLOBAL . "
-				AND f.forum_id = $forum_id)";
-		}
-
-		$sql_array['WHERE'] .= ')';
-
-		// Join to forum table on topic forum_id unless topic forum_id is zero
-		// whereupon we join on the forum_id passed as a parameter ... this
-		// is done so navigation, forum name, etc. remain consistent with where
-		// user clicked to view a global topic
 		$sql = $this->db->sql_build_query('SELECT', $sql_array);
 		$result = $this->db->sql_query($sql);
 		$topic_data = $this->db->sql_fetchrow($result);
@@ -581,7 +548,6 @@ class idea_controller extends base
 				if ($sort_dir == $check_sort)
 				{
 					$topic_data['prev_posts'] = $this->content_visibility->get_count('topic_posts', $topic_data, $forum_id) - 1;
-
 				}
 				else
 				{
@@ -613,7 +579,6 @@ class idea_controller extends base
 		}
 
 		$topic_id = (int) $topic_data['topic_id'];
-
 		$topic_replies = $this->content_visibility->get_count('topic_posts', $topic_data, $forum_id) - 1;
 
 		// Check sticky/announcement time limit
@@ -649,23 +614,10 @@ class idea_controller extends base
 			login_forum_box($topic_data);
 		}
 
-		// Redirect to login or to the correct post upon emailed notification links
-		if (isset($_GET['e']))
+		// Redirect to login upon emailed notification links if user is not logged in.
+		if (isset($_GET['e']) && $this->user->data['user_id'] == ANONYMOUS)
 		{
-			$jump_to = $this->request->variable('e', 0);
-
-			$redirect_url = $this->link_helper->get_idea_link($idea_id);
-
-			if ($this->user->data['user_id'] == ANONYMOUS)
-			{
-				login_box($redirect_url . "&amp;p=$post_id&amp;e=$jump_to", $this->user->lang('LOGIN_NOTIFY_TOPIC'));
-			}
-
-			if ($jump_to > 0)
-			{
-				// We direct the already logged in user to the correct post...
-				redirect($redirect_url . ((!$post_id) ? "&amp;p=$jump_to" : "&amp;p=$post_id") . "#p$jump_to");
-			}
+			login_box(build_url('e') . '#unread', $this->user->lang('LOGIN_NOTIFY_TOPIC'));
 		}
 
 		// What is start equal to?
@@ -782,9 +734,9 @@ class idea_controller extends base
 				if (!$topic_data['bookmarked'])
 				{
 					$sql = 'INSERT INTO ' . BOOKMARKS_TABLE . ' ' . $this->db->sql_build_array('INSERT', array(
-							'user_id'	=> $this->user->data['user_id'],
-							'topic_id'	=> $topic_id,
-						));
+						'user_id'	=> $this->user->data['user_id'],
+						'topic_id'	=> $topic_id,
+					));
 					$this->db->sql_query($sql);
 				}
 				else
@@ -795,10 +747,20 @@ class idea_controller extends base
 					$this->db->sql_query($sql);
 				}
 				$message = (($topic_data['bookmarked']) ? $this->user->lang('BOOKMARK_REMOVED') : $this->user->lang('BOOKMARK_ADDED')) . '<br /><br />' . $this->user->lang('RETURN_TOPIC', '<a href="' . $viewtopic_url . '">', '</a>');
+
+				if (!$this->request->is_ajax())
+				{
+					$message .= '<br /><br />' . $this->user->lang('RETURN_TOPIC', '<a href="' . $viewtopic_url . '">', '</a>');
+				}
 			}
 			else
 			{
-				$message = $this->user->lang('BOOKMARK_ERR') . '<br /><br />' . $this->user->lang('RETURN_TOPIC', '<a href="' . $viewtopic_url . '">', '</a>');
+				$message = $this->user->lang['BOOKMARK_ERR'];
+
+				if (!$this->request->is_ajax())
+				{
+					$message .= '<br /><br />' . $this->user->lang('RETURN_TOPIC', '<a href="' . $viewtopic_url . '">', '</a>');
+				}
 			}
 			meta_refresh(3, $viewtopic_url);
 
@@ -853,10 +815,10 @@ class idea_controller extends base
 			'merge'					=> array('MERGE_POSTS', $this->auth->acl_get('m_merge', $forum_id)),
 			'merge_topic'		=> array('MERGE_TOPIC', $this->auth->acl_get('m_merge', $forum_id)),
 			'fork'					=> array('FORK_TOPIC', $this->auth->acl_get('m_move', $forum_id)),
-			'make_normal'		=> array('MAKE_NORMAL', ($allow_change_type && $this->auth->acl_gets('f_sticky', 'f_announce', $forum_id) && $topic_data['topic_type'] != POST_NORMAL)),
+			'make_normal'		=> array('MAKE_NORMAL', ($allow_change_type && $this->auth->acl_gets('f_sticky', 'f_announce', 'f_announce_global', $forum_id) && $topic_data['topic_type'] != POST_NORMAL)),
 			'make_sticky'		=> array('MAKE_STICKY', ($allow_change_type && $this->auth->acl_get('f_sticky', $forum_id) && $topic_data['topic_type'] != POST_STICKY)),
 			'make_announce'	=> array('MAKE_ANNOUNCE', ($allow_change_type && $this->auth->acl_get('f_announce', $forum_id) && $topic_data['topic_type'] != POST_ANNOUNCE)),
-			'make_global'		=> array('MAKE_GLOBAL', ($allow_change_type && $this->auth->acl_get('f_announce', $forum_id) && $topic_data['topic_type'] != POST_GLOBAL)),
+			'make_global'		=> array('MAKE_GLOBAL', ($allow_change_type && $this->auth->acl_get('f_announce_global', $forum_id) && $topic_data['topic_type'] != POST_GLOBAL)),
 			'topic_logs'			=> array('VIEW_TOPIC_LOGS', $this->auth->acl_get('m_', $forum_id)),
 		);
 
@@ -916,85 +878,85 @@ class idea_controller extends base
 		$params = array('idea_id' => $idea_id);
 		$params = (strlen($u_sort_param)) ? array_merge($params, explode('=', $u_sort_param)) : $params;
 		$params = ($highlight_match) ? array_merge($params, array('hilit' => $highlight)) : $params;
-		$this->pagination->generate_template_pagination($this->helper->route('ideas_idea_controller', $params), 'pagination', 'start', $total_posts + 1, $this->config['posts_per_page'], $start);
+		$this->pagination->generate_template_pagination($this->helper->route('ideas_idea_controller', $params), 'pagination', 'start', $total_posts, $this->config['posts_per_page'], $start);
 
 		// Send vars to template
 		$this->template->assign_vars(array(
-				'FORUM_ID' 		=> $forum_id,
-				'FORUM_NAME' 	=> $topic_data['forum_name'],
-				'FORUM_DESC'	=> generate_text_for_display($topic_data['forum_desc'], $topic_data['forum_desc_uid'], $topic_data['forum_desc_bitfield'], $topic_data['forum_desc_options']),
-				'TOPIC_ID' 		=> $topic_id,
-				'TOPIC_TITLE' 	=> $topic_data['topic_title'],
-				'TOPIC_POSTER'	=> $topic_data['topic_poster'],
+			'FORUM_ID' 		=> $forum_id,
+			'FORUM_NAME' 	=> $topic_data['forum_name'],
+			'FORUM_DESC'	=> generate_text_for_display($topic_data['forum_desc'], $topic_data['forum_desc_uid'], $topic_data['forum_desc_bitfield'], $topic_data['forum_desc_options']),
+			'TOPIC_ID' 		=> $topic_id,
+			'TOPIC_TITLE' 	=> $topic_data['topic_title'],
+			'TOPIC_POSTER'	=> $topic_data['topic_poster'],
 
-				'TOPIC_AUTHOR_FULL'		=> get_username_string('full', $topic_data['topic_poster'], $topic_data['topic_first_poster_name'], $topic_data['topic_first_poster_colour']),
-				'TOPIC_AUTHOR_COLOUR'	=> get_username_string('colour', $topic_data['topic_poster'], $topic_data['topic_first_poster_name'], $topic_data['topic_first_poster_colour']),
-				'TOPIC_AUTHOR'			=> get_username_string('username', $topic_data['topic_poster'], $topic_data['topic_first_poster_name'], $topic_data['topic_first_poster_colour']),
+			'TOPIC_AUTHOR_FULL'		=> get_username_string('full', $topic_data['topic_poster'], $topic_data['topic_first_poster_name'], $topic_data['topic_first_poster_colour']),
+			'TOPIC_AUTHOR_COLOUR'	=> get_username_string('colour', $topic_data['topic_poster'], $topic_data['topic_first_poster_name'], $topic_data['topic_first_poster_colour']),
+			'TOPIC_AUTHOR'			=> get_username_string('username', $topic_data['topic_poster'], $topic_data['topic_first_poster_name'], $topic_data['topic_first_poster_colour']),
 
-				'TOTAL_POSTS'	=> $this->user->lang('VIEW_TOPIC_POSTS', (int) $total_posts),
-				'U_MCP' 		=> ($this->auth->acl_get('m_', $forum_id)) ? append_sid("{$this->root_path}mcp.$this->php_ext", "i=main&amp;mode=topic_view&amp;f=$forum_id&amp;t=$topic_id" . (($start == 0) ? '' : "&amp;start=$start") . ((strlen($u_sort_param)) ? "&amp;$u_sort_param" : ''), true, $this->user->session_id) : '',
-				'MODERATORS'	=> (isset($forum_moderators[$forum_id]) && sizeof($forum_moderators[$forum_id])) ? implode($this->user->lang['COMMA_SEPARATOR'], $forum_moderators[$forum_id]) : '',
+			'TOTAL_POSTS'	=> $this->user->lang('VIEW_TOPIC_POSTS', (int) $total_posts),
+			'U_MCP' 		=> ($this->auth->acl_get('m_', $forum_id)) ? append_sid("{$this->root_path}mcp.$this->php_ext", "i=main&amp;mode=topic_view&amp;f=$forum_id&amp;t=$topic_id" . (($start == 0) ? '' : "&amp;start=$start") . ((strlen($u_sort_param)) ? "&amp;$u_sort_param" : ''), true, $this->user->session_id) : '',
+			'MODERATORS'	=> (isset($forum_moderators[$forum_id]) && sizeof($forum_moderators[$forum_id])) ? implode($this->user->lang['COMMA_SEPARATOR'], $forum_moderators[$forum_id]) : '',
 
-				'POST_IMG' 			=> ($topic_data['forum_status'] == ITEM_LOCKED) ? $this->user->img('button_topic_locked', 'FORUM_LOCKED') : $this->user->img('button_topic_new', 'POST_NEW_TOPIC'),
-				'QUOTE_IMG' 		=> $this->user->img('icon_post_quote', 'REPLY_WITH_QUOTE'),
-				'REPLY_IMG'			=> ($topic_data['forum_status'] == ITEM_LOCKED || $topic_data['topic_status'] == ITEM_LOCKED) ? $this->user->img('button_topic_locked', 'TOPIC_LOCKED') : $this->user->img('button_topic_reply', 'REPLY_TO_TOPIC'),
-				'EDIT_IMG' 			=> $this->user->img('icon_post_edit', 'EDIT_POST'),
-				'DELETE_IMG' 		=> $this->user->img('icon_post_delete', 'DELETE_POST'),
-				'DELETED_IMG'		=> $this->user->img('icon_topic_deleted', 'POST_DELETED_RESTORE'),
-				'INFO_IMG' 			=> $this->user->img('icon_post_info', 'VIEW_INFO'),
-				'PROFILE_IMG'		=> $this->user->img('icon_user_profile', 'READ_PROFILE'),
-				'SEARCH_IMG' 		=> $this->user->img('icon_user_search', 'SEARCH_USER_POSTS'),
-				'PM_IMG' 			=> $this->user->img('icon_contact_pm', 'SEND_PRIVATE_MESSAGE'),
-				'EMAIL_IMG' 		=> $this->user->img('icon_contact_email', 'SEND_EMAIL'),
-				'JABBER_IMG'		=> $this->user->img('icon_contact_jabber', 'JABBER') ,
-				'REPORT_IMG'		=> $this->user->img('icon_post_report', 'REPORT_POST'),
-				'REPORTED_IMG'		=> $this->user->img('icon_topic_reported', 'POST_REPORTED'),
-				'UNAPPROVED_IMG'	=> $this->user->img('icon_topic_unapproved', 'POST_UNAPPROVED'),
-				'WARN_IMG'			=> $this->user->img('icon_user_warn', 'WARN_USER'),
+			'POST_IMG' 			=> ($topic_data['forum_status'] == ITEM_LOCKED) ? $this->user->img('button_topic_locked', 'FORUM_LOCKED') : $this->user->img('button_topic_new', 'POST_NEW_TOPIC'),
+			'QUOTE_IMG' 		=> $this->user->img('icon_post_quote', 'REPLY_WITH_QUOTE'),
+			'REPLY_IMG'			=> ($topic_data['forum_status'] == ITEM_LOCKED || $topic_data['topic_status'] == ITEM_LOCKED) ? $this->user->img('button_topic_locked', 'TOPIC_LOCKED') : $this->user->img('button_topic_reply', 'REPLY_TO_TOPIC'),
+			'EDIT_IMG' 			=> $this->user->img('icon_post_edit', 'EDIT_POST'),
+			'DELETE_IMG' 		=> $this->user->img('icon_post_delete', 'DELETE_POST'),
+			'DELETED_IMG'		=> $this->user->img('icon_topic_deleted', 'POST_DELETED_RESTORE'),
+			'INFO_IMG' 			=> $this->user->img('icon_post_info', 'VIEW_INFO'),
+			'PROFILE_IMG'		=> $this->user->img('icon_user_profile', 'READ_PROFILE'),
+			'SEARCH_IMG' 		=> $this->user->img('icon_user_search', 'SEARCH_USER_POSTS'),
+			'PM_IMG' 			=> $this->user->img('icon_contact_pm', 'SEND_PRIVATE_MESSAGE'),
+			'EMAIL_IMG' 		=> $this->user->img('icon_contact_email', 'SEND_EMAIL'),
+			'JABBER_IMG'		=> $this->user->img('icon_contact_jabber', 'JABBER') ,
+			'REPORT_IMG'		=> $this->user->img('icon_post_report', 'REPORT_POST'),
+			'REPORTED_IMG'		=> $this->user->img('icon_topic_reported', 'POST_REPORTED'),
+			'UNAPPROVED_IMG'	=> $this->user->img('icon_topic_unapproved', 'POST_UNAPPROVED'),
+			'WARN_IMG'			=> $this->user->img('icon_user_warn', 'WARN_USER'),
 
-				'S_IS_LOCKED'			=> ($topic_data['topic_status'] == ITEM_UNLOCKED && $topic_data['forum_status'] == ITEM_UNLOCKED) ? false : true,
-				'S_SELECT_SORT_DIR' 	=> $s_sort_dir,
-				'S_SELECT_SORT_KEY' 	=> $s_sort_key,
-				'S_SELECT_SORT_DAYS' 	=> $s_limit_days,
-				'S_SINGLE_MODERATOR'	=> (!empty($forum_moderators[$forum_id]) && sizeof($forum_moderators[$forum_id]) > 1) ? false : true,
-				'S_TOPIC_ACTION' 		=> $this->helper->route('ideas_idea_controller', array('idea_id' => $idea_id, 'start' => $start)),
-				'S_MOD_ACTION' 			=> $s_quickmod_action,
+			'S_IS_LOCKED'			=> ($topic_data['topic_status'] == ITEM_UNLOCKED && $topic_data['forum_status'] == ITEM_UNLOCKED) ? false : true,
+			'S_SELECT_SORT_DIR' 	=> $s_sort_dir,
+			'S_SELECT_SORT_KEY' 	=> $s_sort_key,
+			'S_SELECT_SORT_DAYS' 	=> $s_limit_days,
+			'S_SINGLE_MODERATOR'	=> (!empty($forum_moderators[$forum_id]) && sizeof($forum_moderators[$forum_id]) > 1) ? false : true,
+			'S_TOPIC_ACTION' 		=> $this->helper->route('ideas_idea_controller', array('idea_id' => $idea_id, 'start' => $start)),
+			'S_MOD_ACTION' 			=> $s_quickmod_action,
 
-				'L_RETURN_TO_FORUM'		=> $this->user->lang('RETURN_TO', $topic_data['forum_name']),
-				'S_VIEWTOPIC'			=> true,
-				'S_UNREAD_VIEW'			=> $view == 'unread',
-				'S_DISPLAY_SEARCHBOX'	=> ($this->auth->acl_get('u_search') && $this->auth->acl_get('f_search', $forum_id) && $this->config['load_search']) ? true : false,
-				'S_SEARCHBOX_ACTION'	=> append_sid("{$this->root_path}search.$this->php_ext"),
-				'S_SEARCH_LOCAL_HIDDEN_FIELDS'	=> build_hidden_fields($s_search_hidden_fields),
+			'L_RETURN_TO_FORUM'		=> $this->user->lang('RETURN_TO', $topic_data['forum_name']),
+			'S_VIEWTOPIC'			=> true,
+			'S_UNREAD_VIEW'			=> $view == 'unread',
+			'S_DISPLAY_SEARCHBOX'	=> ($this->auth->acl_get('u_search') && $this->auth->acl_get('f_search', $forum_id) && $this->config['load_search']) ? true : false,
+			'S_SEARCHBOX_ACTION'	=> append_sid("{$this->root_path}search.$this->php_ext"),
+			'S_SEARCH_LOCAL_HIDDEN_FIELDS'	=> build_hidden_fields($s_search_hidden_fields),
 
-				'S_DISPLAY_POST_INFO'	=> ($topic_data['forum_type'] == FORUM_POST && ($this->auth->acl_get('f_post', $forum_id) || $this->user->data['user_id'] == ANONYMOUS)) ? true : false,
-				'S_DISPLAY_REPLY_INFO'	=> ($topic_data['forum_type'] == FORUM_POST && ($this->auth->acl_get('f_reply', $forum_id) || $this->user->data['user_id'] == ANONYMOUS)) ? true : false,
-				'S_ENABLE_FEEDS_TOPIC'	=> ($this->config['feed_topic'] && !phpbb_optionget(FORUM_OPTION_FEED_EXCLUDE, $topic_data['forum_options'])) ? true : false,
+			'S_DISPLAY_POST_INFO'	=> ($topic_data['forum_type'] == FORUM_POST && ($this->auth->acl_get('f_post', $forum_id) || $this->user->data['user_id'] == ANONYMOUS)) ? true : false,
+			'S_DISPLAY_REPLY_INFO'	=> ($topic_data['forum_type'] == FORUM_POST && ($this->auth->acl_get('f_reply', $forum_id) || $this->user->data['user_id'] == ANONYMOUS)) ? true : false,
+			'S_ENABLE_FEEDS_TOPIC'	=> ($this->config['feed_topic'] && !phpbb_optionget(FORUM_OPTION_FEED_EXCLUDE, $topic_data['forum_options'])) ? true : false,
 
-				'U_TOPIC'				=> "{$server_path}viewtopic.$this->php_ext?f=$forum_id&amp;t=$topic_id",
-				'U_FORUM'				=> $server_path,
-				'U_VIEW_TOPIC' 			=> $viewtopic_url,
-				'U_CANONICAL'			=> generate_board_url() . '/' . append_sid("viewtopic.{$this->php_ext}", "t=$topic_id" . (($start) ? "&amp;start=$start" : ''), true, ''),
-				'U_VIEW_FORUM' 			=> append_sid("{$this->root_path}viewforum.$this->php_ext", 'f=' . $forum_id),
-				'U_VIEW_OLDER_TOPIC'	=> $this->helper->route('ideas_idea_controller', array('idea_id' => $idea_id, 'view' => 'previous')),
-				'U_VIEW_NEWER_TOPIC'	=> $this->helper->route('ideas_idea_controller', array('idea_id' => $idea_id, 'view' => 'next')),
-				'U_PRINT_TOPIC'			=> false,
-				'U_EMAIL_TOPIC'			=> false,
+			'U_TOPIC'				=> "{$server_path}viewtopic.$this->php_ext?f=$forum_id&amp;t=$topic_id",
+			'U_FORUM'				=> $server_path,
+			'U_VIEW_TOPIC' 			=> $viewtopic_url,
+			'U_CANONICAL'			=> generate_board_url() . '/' . append_sid("viewtopic.{$this->php_ext}", "t=$topic_id" . (($start) ? "&amp;start=$start" : ''), true, ''),
+			'U_VIEW_FORUM' 			=> append_sid("{$this->root_path}viewforum.$this->php_ext", 'f=' . $forum_id),
+			'U_VIEW_OLDER_TOPIC'	=> $this->helper->route('ideas_idea_controller', array('idea_id' => $idea_id, 'view' => 'previous')),
+			'U_VIEW_NEWER_TOPIC'	=> $this->helper->route('ideas_idea_controller', array('idea_id' => $idea_id, 'view' => 'next')),
+			'U_PRINT_TOPIC'			=> false,
+			'U_EMAIL_TOPIC'			=> false,
 
-				'U_WATCH_TOPIC'			=> $s_watching_topic['link'],
-				'U_WATCH_TOPIC_TOGGLE'	=> $s_watching_topic['link_toggle'],
-				'S_WATCH_TOPIC_TITLE'	=> $s_watching_topic['title'],
-				'S_WATCH_TOPIC_TOGGLE'	=> $s_watching_topic['title_toggle'],
-				'S_WATCHING_TOPIC'		=> $s_watching_topic['is_watching'],
+			'U_WATCH_TOPIC'			=> $s_watching_topic['link'],
+			'U_WATCH_TOPIC_TOGGLE'	=> $s_watching_topic['link_toggle'],
+			'S_WATCH_TOPIC_TITLE'	=> $s_watching_topic['title'],
+			'S_WATCH_TOPIC_TOGGLE'	=> $s_watching_topic['title_toggle'],
+			'S_WATCHING_TOPIC'		=> $s_watching_topic['is_watching'],
 
-				'U_BOOKMARK_TOPIC'		=> ($this->user->data['is_registered'] && $this->config['allow_bookmarks']) ? append_sid($viewtopic_url, array('bookmark' => 1, 'hash' => generate_link_hash("topic_$topic_id"))) : '',
-				'S_BOOKMARK_TOPIC'		=> ($this->user->data['is_registered'] && $this->config['allow_bookmarks'] && $topic_data['bookmarked']) ? $this->user->lang('BOOKMARK_TOPIC_REMOVE') : $this->user->lang('BOOKMARK_TOPIC'),
-				'S_BOOKMARK_TOGGLE'		=> (!$this->user->data['is_registered'] || !$this->config['allow_bookmarks'] || !$topic_data['bookmarked']) ? $this->user->lang['BOOKMARK_TOPIC_REMOVE'] : $this->user->lang['BOOKMARK_TOPIC'],
-				'S_BOOKMARKED_TOPIC'	=> ($this->user->data['is_registered'] && $this->config['allow_bookmarks'] && $topic_data['bookmarked']) ? true : false,
+			'U_BOOKMARK_TOPIC'		=> ($this->user->data['is_registered'] && $this->config['allow_bookmarks']) ? append_sid($viewtopic_url, array('bookmark' => 1, 'hash' => generate_link_hash("topic_$topic_id"))) : '',
+			'S_BOOKMARK_TOPIC'		=> ($this->user->data['is_registered'] && $this->config['allow_bookmarks'] && $topic_data['bookmarked']) ? $this->user->lang('BOOKMARK_TOPIC_REMOVE') : $this->user->lang('BOOKMARK_TOPIC'),
+			'S_BOOKMARK_TOGGLE'		=> (!$this->user->data['is_registered'] || !$this->config['allow_bookmarks'] || !$topic_data['bookmarked']) ? $this->user->lang['BOOKMARK_TOPIC_REMOVE'] : $this->user->lang['BOOKMARK_TOPIC'],
+			'S_BOOKMARKED_TOPIC'	=> ($this->user->data['is_registered'] && $this->config['allow_bookmarks'] && $topic_data['bookmarked']) ? true : false,
 
-				'U_POST_NEW_TOPIC' 		=> ($this->auth->acl_get('f_post', $forum_id) || $this->user->data['user_id'] == ANONYMOUS) ? append_sid("{$this->root_path}posting.$this->php_ext", "mode=post&amp;f=$forum_id") : '',
-				'U_POST_REPLY_TOPIC' 	=> ($this->auth->acl_get('f_reply', $forum_id) || $this->user->data['user_id'] == ANONYMOUS) ? append_sid("{$this->root_path}posting.$this->php_ext", "mode=reply&amp;f=$forum_id&amp;t=$topic_id") : '',
-				'U_BUMP_TOPIC'			=> (bump_topic_allowed($forum_id, $topic_data['topic_bumped'], $topic_data['topic_last_post_time'], $topic_data['topic_poster'], $topic_data['topic_last_poster_id'])) ? append_sid("{$this->root_path}posting.$this->php_ext", "mode=bump&amp;f=$forum_id&amp;t=$topic_id&amp;hash=" . generate_link_hash("topic_$topic_id")) : '')
+			'U_POST_NEW_TOPIC' 		=> ($this->auth->acl_get('f_post', $forum_id) || $this->user->data['user_id'] == ANONYMOUS) ? append_sid("{$this->root_path}posting.$this->php_ext", "mode=post&amp;f=$forum_id") : '',
+			'U_POST_REPLY_TOPIC' 	=> ($this->auth->acl_get('f_reply', $forum_id) || $this->user->data['user_id'] == ANONYMOUS) ? append_sid("{$this->root_path}posting.$this->php_ext", "mode=reply&amp;f=$forum_id&amp;t=$topic_id") : '',
+			'U_BUMP_TOPIC'			=> (bump_topic_allowed($forum_id, $topic_data['topic_bumped'], $topic_data['topic_last_post_time'], $topic_data['topic_poster'], $topic_data['topic_last_poster_id'])) ? append_sid("{$this->root_path}posting.$this->php_ext", "mode=bump&amp;f=$forum_id&amp;t=$topic_id&amp;hash=" . generate_link_hash("topic_$topic_id")) : '')
 		);
 
 		// If the user is trying to reach the second half of the topic, fetch it starting from the end
@@ -1032,13 +994,12 @@ class idea_controller extends base
 		$post_list = $user_cache = $id_cache = $attachments = $attach_list = $rowset = $update_count = $post_edit_list = $post_delete_list = array();
 		$has_unapproved_attachments = $has_approved_attachments = $display_notice = false;
 		$i = $i_total = 0;
-		$bbcode_bitfield = '';
 
 		// Go ahead and pull all data for this topic
 		$sql = 'SELECT p.post_id
 			FROM ' . POSTS_TABLE . ' p' . (($join_user_sql[$sort_key]) ? ', ' . USERS_TABLE . ' u': '') . "
 			WHERE p.topic_id = $topic_id
-				" . ((!$this->auth->acl_get('m_approve', $forum_id)) ? 'AND p.post_visibility = 1' : '') . "
+				AND " . $this->content_visibility->get_visibility_sql('post', $forum_id, 'p.') . "
 				" . (($join_user_sql[$sort_key]) ? 'AND u.user_id = p.poster_id': '') . "
 				$limit_posts_time
 			ORDER BY $sql_sort_order";
@@ -1068,7 +1029,7 @@ class idea_controller extends base
 		// We need to grab it because we do reverse ordering sometimes
 		$max_post_time = 0;
 
-		$sql = $this->db->sql_build_query('SELECT', array(
+		$sql_ary = array(
 			'SELECT'	=> 'u.*, z.friend, z.foe, p.*',
 
 			'FROM'		=> array(
@@ -1079,14 +1040,15 @@ class idea_controller extends base
 			'LEFT_JOIN'	=> array(
 				array(
 					'FROM'	=> array(ZEBRA_TABLE => 'z'),
-					'ON'	=> 'z.user_id = ' . $this->user->data['user_id'] . ' AND z.zebra_id = p.poster_id'
-				)
+					'ON'	=> 'z.user_id = ' . $this->user->data['user_id'] . ' AND z.zebra_id = p.poster_id',
+				),
 			),
 
 			'WHERE'		=> $this->db->sql_in_set('p.post_id', $post_list) . '
-		AND u.user_id = p.poster_id'
-		));
+				AND u.user_id = p.poster_id',
+		);
 
+		$sql = $this->db->sql_build_query('SELECT', $sql_ary);
 		$result = $this->db->sql_query($sql);
 
 		$now = $this->user->create_datetime();
@@ -1153,15 +1115,6 @@ class idea_controller extends base
 				'friend'			=> $row['friend'],
 				'foe'				=> $row['foe'],
 			);
-
-			// Define the global bbcode bitfield, will be used to load bbcodes
-			$bbcode_bitfield = $bbcode_bitfield | base64_decode($row['bbcode_bitfield']);
-
-			// Is a signature attached? Are we going to display it?
-			if ($row['enable_sig'] && $this->config['allow_sig'] && $this->user->optionget('viewsigs'))
-			{
-				$bbcode_bitfield = $bbcode_bitfield | base64_decode($row['user_sig_bbcode_bitfield']);
-			}
 
 			// Cache various user specific data ... so we don't have to recompute
 			// this each time the same user appears on this page
@@ -1413,12 +1366,6 @@ class idea_controller extends base
 		// Get the list of permanently banned users
 		$permanently_banned_users = phpbb_get_banned_user_ids(array_keys($user_cache), false);
 
-		// Instantiate BBCode if need be
-		if ($bbcode_bitfield !== '')
-		{
-			$bbcode = new \bbcode(base64_encode($bbcode_bitfield));
-		}
-
 		$i_total = sizeof($rowset) - 1;
 		$prev_post_id = '';
 
@@ -1438,43 +1385,23 @@ class idea_controller extends base
 				continue;
 			}
 
-			$row =& $rowset[$post_list[$i]];
+			$row = $rowset[$post_list[$i]];
 			$poster_id = $row['user_id'];
 
 			// End signature parsing, only if needed
 			if ($user_cache[$poster_id]['sig'] && $row['enable_sig'] && empty($user_cache[$poster_id]['sig_parsed']))
 			{
-				$user_cache[$poster_id]['sig'] = censor_text($user_cache[$poster_id]['sig']);
-
-				if ($user_cache[$poster_id]['sig_bbcode_bitfield'])
-				{
-					$bbcode->bbcode_second_pass($user_cache[$poster_id]['sig'], $user_cache[$poster_id]['sig_bbcode_uid'], $user_cache[$poster_id]['sig_bbcode_bitfield']);
-				}
-
-				$user_cache[$poster_id]['sig'] = bbcode_nl2br($user_cache[$poster_id]['sig']);
-				$user_cache[$poster_id]['sig'] = smiley_text($user_cache[$poster_id]['sig']);
-				$user_cache[$poster_id]['sig_parsed'] = true;
+				$parse_flags = ($user_cache[$poster_id]['sig_bbcode_bitfield'] ? OPTION_FLAG_BBCODE : 0) | OPTION_FLAG_SMILIES;
+				$user_cache[$poster_id]['sig'] = generate_text_for_display($user_cache[$poster_id]['sig'], $user_cache[$poster_id]['sig_bbcode_uid'], $user_cache[$poster_id]['sig_bbcode_bitfield'],  $parse_flags, true);
 			}
 
 			// Parse the message and subject
-			$message = censor_text($row['post_text']);
+			$parse_flags = ($row['bbcode_bitfield'] ? OPTION_FLAG_BBCODE : 0) | OPTION_FLAG_SMILIES;
+			$message = generate_text_for_display($row['post_text'], $row['bbcode_uid'], $row['bbcode_bitfield'], $parse_flags, true);
 
-			// Remove ideas link
-			if (is_numeric(strpos($message, "\n\n----------\n\n"))) {
-				$message = explode("\n\n----------\n\n", $message);
-				$message[count($message) - 1] = '';
-				$message = implode("\n\n----------\n\n", $message);
-				$message = substr($message, 0, -14);
-			}
-
-			// Second parse bbcode here
-			if ($row['bbcode_bitfield'])
-			{
-				$bbcode->bbcode_second_pass($message, $row['bbcode_uid'], $row['bbcode_bitfield']);
-			}
-
-			$message = bbcode_nl2br($message);
-			$message = smiley_text($message);
+			// This freakish looking regex pattern should
+			// remove the ideas link-backs from the message.
+			$message = preg_replace('/(<br[^>]*>\\n?)\\1-{10}\\1\\1.*/s', '', $message);
 
 			if (!empty($attachments[$row['post_id']]))
 			{
@@ -1732,6 +1659,7 @@ class idea_controller extends base
 				'POST_ICON_IMG'			=> ($topic_data['enable_icons'] && !empty($row['icon_id'])) ? $icons[$row['icon_id']]['img'] : '',
 				'POST_ICON_IMG_WIDTH'	=> ($topic_data['enable_icons'] && !empty($row['icon_id'])) ? $icons[$row['icon_id']]['width'] : '',
 				'POST_ICON_IMG_HEIGHT'	=> ($topic_data['enable_icons'] && !empty($row['icon_id'])) ? $icons[$row['icon_id']]['height'] : '',
+				'POST_ICON_IMG_ALT' 	=> ($topic_data['enable_icons'] && !empty($row['icon_id'])) ? $icons[$row['icon_id']]['alt'] : '',
 				'ONLINE_IMG'			=> ($poster_id == ANONYMOUS || !$this->config['load_onlinetrack']) ? '' : (($user_cache[$poster_id]['online']) ? $this->user->img('icon_user_online', 'ONLINE') : $this->user->img('icon_user_offline', 'OFFLINE')),
 				'S_ONLINE'				=> ($poster_id == ANONYMOUS || !$this->config['load_onlinetrack']) ? false : (($user_cache[$poster_id]['online']) ? true : false),
 
@@ -1750,7 +1678,7 @@ class idea_controller extends base
 				'U_MCP_REPORT'		=> ($this->auth->acl_get('m_report', $forum_id)) ? append_sid("{$this->root_path}mcp.$this->php_ext", 'i=reports&amp;mode=report_details&amp;f=' . $forum_id . '&amp;p=' . $row['post_id'], true, $this->user->session_id) : '',
 				'U_MCP_APPROVE'		=> ($this->auth->acl_get('m_approve', $forum_id)) ? append_sid("{$this->root_path}mcp.$this->php_ext", 'i=queue&amp;mode=approve_details&amp;f=' . $forum_id . '&amp;p=' . $row['post_id'], true, $this->user->session_id) : '',
 				'U_MCP_RESTORE'		=> ($this->auth->acl_get('m_approve', $forum_id)) ? append_sid("{$this->root_path}mcp.{$this->php_ext}", 'i=queue&amp;mode=' . (($topic_data['topic_visibility'] != ITEM_DELETED) ? 'deleted_posts' : 'deleted_topics') . '&amp;f=' . $forum_id . '&amp;p=' . $row['post_id'], true, $this->user->session_id) : '',
-				'U_MINI_POST'		=> $this->helper->route('ideas_idea_controller', array_merge(array('idea_id' => $idea_id, '#p' => $row['post_id']), (($topic_data['topic_type'] == POST_GLOBAL) ? array('f' => $forum_id) : array()))),
+				'U_MINI_POST'		=> $this->helper->route('ideas_idea_controller', array_merge(array('idea_id' => $idea_id, '#' => "p{$row['post_id']}"), (($topic_data['topic_type'] == POST_GLOBAL) ? array('f' => $forum_id) : array()))),
 				'U_NEXT_POST_ID'	=> ($i < $i_total && isset($rowset[$post_list[$i + 1]])) ? $rowset[$post_list[$i + 1]]['post_id'] : '',
 				'U_PREV_POST_ID'	=> $prev_post_id,
 				'U_NOTES'			=> ($this->auth->acl_getf_global('m_')) ? append_sid("{$this->root_path}mcp.$this->php_ext", 'i=notes&amp;mode=user_notes&amp;u=' . $poster_id, true, $this->user->session_id) : '',
@@ -1837,7 +1765,7 @@ class idea_controller extends base
 				foreach ($attachments[$row['post_id']] as $attachment)
 				{
 					$this->template->assign_block_vars('postrow.attachment', array(
-							'DISPLAY_ATTACHMENT'	=> $attachment)
+						'DISPLAY_ATTACHMENT'	=> $attachment)
 					);
 				}
 			}
@@ -1867,34 +1795,13 @@ class idea_controller extends base
 			}
 		}
 
-		// Get last post time for all global announcements
-		// to keep proper forums tracking
-		if ($topic_data['topic_type'] == POST_GLOBAL)
-		{
-			$sql = 'SELECT topic_last_post_time as forum_last_post_time
-				FROM ' . TOPICS_TABLE . '
-				WHERE forum_id = 0
-				ORDER BY topic_last_post_time DESC';
-			$result = $this->db->sql_query_limit($sql, 1);
-			$topic_data['forum_last_post_time'] = (int) $this->db->sql_fetchfield('forum_last_post_time');
-			$this->db->sql_freeresult($result);
-
-			$sql = 'SELECT mark_time as forum_mark_time
-				FROM ' . FORUMS_TRACK_TABLE . '
-				WHERE forum_id = 0
-					AND user_id = ' . $this->user->data['user_id'];
-			$result = $this->db->sql_query($sql);
-			$topic_data['forum_mark_time'] = (int) $this->db->sql_fetchfield('forum_mark_time');
-			$this->db->sql_freeresult($result);
-		}
-
 		// Only mark topic if it's currently unread. Also make sure we do not set topic tracking back if earlier pages are viewed.
 		if (isset($topic_tracking_info[$topic_id]) && $topic_data['topic_last_post_time'] > $topic_tracking_info[$topic_id] && $max_post_time > $topic_tracking_info[$topic_id])
 		{
-			markread('topic', (($topic_data['topic_type'] == POST_GLOBAL) ? 0 : $forum_id), $topic_id, $max_post_time);
+			markread('topic', $forum_id, $topic_id, $max_post_time);
 
 			// Update forum info
-			$all_marked_read = update_forum_tracking_info((($topic_data['topic_type'] == POST_GLOBAL) ? 0 : $forum_id), $topic_data['forum_last_post_time'], (isset($topic_data['forum_mark_time'])) ? $topic_data['forum_mark_time'] : false, false);
+			$all_marked_read = update_forum_tracking_info($forum_id, $topic_data['forum_last_post_time'], (isset($topic_data['forum_mark_time'])) ? $topic_data['forum_mark_time'] : false, false);
 		}
 		else
 		{
@@ -1992,7 +1899,6 @@ class idea_controller extends base
 		// We overwrite $_REQUEST['f'] if there is no forum specified
 		// to be able to display the correct online list.
 		// One downside is that the user currently viewing this topic/post is not taken into account.
-
 		if (!$this->request->variable('f', 0))
 		{
 			$this->request->overwrite('f', $forum_id);
