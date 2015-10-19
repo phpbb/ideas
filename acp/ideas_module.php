@@ -34,11 +34,17 @@ class ideas_module
 	protected $new_config;
 
 	/** @var string */
+	protected $phpbb_root_path;
+
+	/** @var string */
+	protected $php_ext;
+
+	/** @var string */
 	public $u_action;
 
 	public function __construct()
 	{
-		global $config, $db, $phpbb_log, $request, $template, $user;
+		global $config, $db, $phpbb_log, $request, $template, $user, $phpbb_root_path, $phpEx;
 
 		$this->config = $config;
 		$this->db = $db;
@@ -46,6 +52,8 @@ class ideas_module
 		$this->request = $request;
 		$this->template = $template;
 		$this->user = $user;
+		$this->phpbb_root_path = $phpbb_root_path;
+		$this->php_ext = $phpEx;
 
 		// Add the phpBB Ideas ACP lang file
 		$this->user->add_lang_ext('phpbb/ideas', 'phpbb_ideas_acp');
@@ -167,6 +175,7 @@ class ideas_module
 			'ERROR_MSG'	=> (sizeof($errors)) ? implode('<br />', $errors) : '',
 
 			'U_ACTION'	=> $this->u_action,
+			'U_FIND_USERNAME'	=> append_sid("{$this->phpbb_root_path}memberlist.$this->php_ext", 'mode=searchuser&amp;form=acp_phpbb_ideas_settings&amp;field=ideas_poster_id&amp;select_single=true'),
 		));
 	}
 

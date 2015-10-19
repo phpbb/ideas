@@ -85,6 +85,7 @@ class idea_controller extends base
 	 *
 	 * @param $idea_id int The ID of the requested idea, maybe?
 	 * @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
+	 * @throws http_exception
 	 */
 	public function idea($idea_id)
 	{

@@ -10,8 +10,16 @@
 
 namespace phpbb\ideas\controller;
 
+use \phpbb\exception\http_exception;
+
 class post_controller extends base
 {
+	/**
+	 * Controller for /post
+	 *
+	 * @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
+	 * @throws http_exception
+	 */
 	public function post()
 	{
 		if (!$this->is_available())

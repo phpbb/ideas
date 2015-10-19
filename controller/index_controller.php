@@ -10,6 +10,8 @@
 
 namespace phpbb\ideas\controller;
 
+use \phpbb\exception\http_exception;
+
 class index_controller extends base
 {
 	const IDEAS = 5;
@@ -18,6 +20,7 @@ class index_controller extends base
 	 * Controller for /ideas
 	 *
 	 * @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
+	 * @throws http_exception
 	 */
 	public function index()
 	{
