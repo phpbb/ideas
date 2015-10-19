@@ -212,7 +212,8 @@ class ideas
 		$row = $this->db->sql_fetchrow($result);
 		$this->db->sql_freeresult($result);
 
-		if ($row === false) {
+		if ($row === false)
+		{
 			return null;
 		}
 
