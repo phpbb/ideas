@@ -282,9 +282,9 @@ class idea_controller extends base
 
 			'U_IDEA_TOPIC'      => $idea_topic_link,
 
-			'IS_MOD'            => $mod,
-			'CAN_EDIT'			=> $mod || $own,
-			'CAN_VOTE'          => $can_vote,
+			'S_IS_MOD'			=> $mod,
+			'S_CAN_EDIT'		=> $mod || $own,
+			'S_CAN_VOTE'		=> $can_vote,
 
 			'U_DELETE_IDEA'		=> ($delete_posts) ? $this->link_helper->get_idea_link($idea_id, 'delete') : false,
 			'U_CHANGE_STATUS'	=> $this->link_helper->get_idea_link($idea_id, 'status', true),
@@ -875,7 +875,7 @@ class idea_controller extends base
 		// TOPIC LOCK CHECK 123
 		if ($topic_data['topic_status'] == ITEM_LOCKED)
 		{
-			$this->template->assign_var('CAN_VOTE', false);
+			$this->template->assign_var('S_CAN_VOTE', false);
 		}
 
 		// If we've got a highlight set pass it on to pagination.
