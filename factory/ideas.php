@@ -10,6 +10,7 @@
 
 namespace phpbb\ideas\factory;
 
+use phpbb\config\config;
 use phpbb\controller\helper;
 use phpbb\db\driver\driver_interface;
 use phpbb\log\log;
@@ -18,7 +19,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class ideas
 {
-	/* @var \phpbb\config\config */
+	/* @var config */
 	protected $config;
 
 	/* @var driver_interface */
@@ -55,20 +56,20 @@ class ideas
 	protected $php_ext;
 
 	/**
-	 * @param \phpbb\config\config              $config
-	 * @param \phpbb\db\driver\driver_interface $db
-	 * @param \phpbb\controller\helper          $helper
-	 * @param \phpbb\log\log                    $log
-	 * @param \phpbb\user                       $user
-	 * @param string                            $table_ideas
-	 * @param string                            $table_duplicates
-	 * @param string                            $table_rfcs
-	 * @param string                            $table_statuses
-	 * @param string                            $table_tickets
-	 * @param string                            $table_votes
-	 * @param string                            $php_ext
+	 * @param config           $config
+	 * @param driver_interface $db
+	 * @param helper           $helper
+	 * @param log              $log
+	 * @param user             $user
+	 * @param string           $table_ideas
+	 * @param string           $table_duplicates
+	 * @param string           $table_rfcs
+	 * @param string           $table_statuses
+	 * @param string           $table_tickets
+	 * @param string           $table_votes
+	 * @param string           $php_ext
 	 */
-	public function __construct(\phpbb\config\config $config, \phpbb\db\driver\driver_interface $db, \phpbb\controller\helper $helper, \phpbb\log\log $log, \phpbb\user $user, $table_ideas, $table_duplicates, $table_rfcs, $table_statuses, $table_tickets, $table_votes, $php_ext)
+	public function __construct(config $config, driver_interface $db, helper $helper, log $log, user $user, $table_ideas, $table_duplicates, $table_rfcs, $table_statuses, $table_tickets, $table_votes, $php_ext)
 	{
 		$this->config = $config;
 		$this->db = $db;

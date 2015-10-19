@@ -21,6 +21,12 @@ class index_controller extends base
 	 */
 	public function index()
 	{
+		// Don't let using Ideas if it's not been properly configured
+		if (!$this->is_available())
+		{
+			throw new \phpbb\exception\http_exception(404, 'IDEAS_NOT_AVAILABLE');
+		}
+
 		$rows = $this->ideas->get_ideas(self::IDEAS, 'date', 'DESC');
 		foreach ($rows as $row)
 		{

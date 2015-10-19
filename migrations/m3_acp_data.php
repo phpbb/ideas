@@ -3,18 +3,23 @@
  *
  * Ideas extension for the phpBB Forum Software package.
  *
- * @copyright (c) 2015 phpBB Limited <https://www.phpbb.com>
+ * @copyright (c) phpBB Limited <https://www.phpbb.com>
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
  */
 
 namespace phpbb\ideas\migrations;
 
-class m3_acp_module extends \phpbb\db\migration\migration
+class m3_acp_data extends \phpbb\db\migration\migration
 {
+	public function effectively_installed()
+	{
+		return isset($this->config['ideas_forum_id']) || isset($this->config['ideas_poster_id']);
+	}
+
 	static public function depends_on()
 	{
-		return array('\phpbb\ideas\migrations\m2_initial_data');
+		return array('\phpbb\ideas\migrations\m1_initial_schema');
 	}
 
 	public function update_data()
@@ -28,8 +33,8 @@ class m3_acp_module extends \phpbb\db\migration\migration
 				),
 			)),
 
-			array('config.add', array('ideas_forum_id', '0')),
-			array('config.add', array('ideas_poster_id', '0')),
+			array('config.add', array('ideas_forum_id', 0)),
+			array('config.add', array('ideas_poster_id', 0)),
 		);
 	}
 }

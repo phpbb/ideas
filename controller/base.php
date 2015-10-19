@@ -10,6 +10,7 @@
 
 namespace phpbb\ideas\controller;
 
+use phpbb\config\config;
 use phpbb\controller\helper;
 use phpbb\ideas\factory\ideas;
 use phpbb\ideas\factory\linkhelper;
@@ -19,7 +20,7 @@ use phpbb\user;
 
 abstract class base
 {
-	/* @var \phpbb\config\config */
+	/* @var config */
 	protected $config;
 
 	/* @var helper */
@@ -57,7 +58,7 @@ abstract class base
 	 * @param string     $root_path
 	 * @param string     $php_ext
 	 */
-	public function __construct(\phpbb\config\config $config, helper $helper, ideas $ideas, linkhelper $link_helper, request $request, template $template, user $user, $root_path, $php_ext)
+	public function __construct(config $config, helper $helper, ideas $ideas, linkhelper $link_helper, request $request, template $template, user $user, $root_path, $php_ext)
 	{
 		$this->config = $config;
 		$this->helper = $helper;
@@ -70,17 +71,16 @@ abstract class base
 		$this->php_ext = $php_ext;
 
 		$this->user->add_lang_ext('phpbb/ideas', 'common');
-
-		// Don't let using Ideas if it's not been properly configured
-		if (!$this->is_available())
-		{
-			throw new \phpbb\exception\http_exception(404, 'IDEAS_NOT_AVAILABLE');
-		}
 	}
 
-	// Check if Ideas is properly configured after installation
+	/**
+	 * Check if Ideas is properly configured after installation
+	 * Ideas is available only after forum and poster settings have been set in ACP
+	 *
+	 * @return bool Depending on whether or not the extension is properly configured
+	 */
 	public function is_available()
 	{
-		return $this->config['ideas_forum_id'] && $this->config['ideas_poster_id'];
+		return (bool) $this->config['ideas_forum_id'] && (bool) $this->config['ideas_poster_id'];
 	}
 }

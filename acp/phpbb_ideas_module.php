@@ -3,7 +3,7 @@
  *
  * Ideas extension for the phpBB Forum Software package.
  *
- * @copyright (c) 2015 phpBB Limited <https://www.phpbb.com>
+ * @copyright (c) phpBB Limited <https://www.phpbb.com>
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
  */
@@ -12,14 +12,8 @@ namespace phpbb\ideas\acp;
 
 class phpbb_ideas_module
 {
-	/** @var \phpbb\cache\driver\driver_interface */
-	protected $cache;
-
 	/** @var \phpbb\config\config */
 	protected $config;
-
-	/** @var \phpbb\config\db_text */
-	protected $config_text;
 
 	/** @var \phpbb\db\driver\driver_interface */
 	protected $db;
@@ -37,27 +31,21 @@ class phpbb_ideas_module
 	protected $user;
 
 	/** @var string */
-	protected $phpbb_root_path;
-
-	/** @var string */
-	protected $php_ext;
-
-	/** @var string */
 	public $u_action;
 
 	public function main($id, $mode)
 	{
-		global $cache, $config, $db, $phpbb_log, $request, $template, $user, $phpbb_root_path, $phpEx;
+		global $config, $db, $phpbb_log, $request, $template, $user;
 
-		$this->cache = $cache;
 		$this->config = $config;
 		$this->db = $db;
 		$this->log = $phpbb_log;
 		$this->request = $request;
 		$this->template = $template;
 		$this->user = $user;
-		$this->phpbb_root_path = $phpbb_root_path;
-		$this->php_ext = $phpEx;
+
+		// Add the board rules ACP lang file
+		$this->user->add_lang_ext('phpbb/ideas', 'phpbb_ideas_acp');
 
 		// Load a template from adm/style for our ACP page
 		$this->tpl_name = 'acp_phpbb_ideas';

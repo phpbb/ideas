@@ -20,6 +20,12 @@ class list_controller extends base
 	 */
 	public function ideas_list($sort)
 	{
+		// Don't let using Ideas if it's not been properly configured
+		if (!$this->is_available())
+		{
+			throw new \phpbb\exception\http_exception(404, 'IDEAS_NOT_AVAILABLE');
+		}
+
 		if ($sort === 'new')
 		{
 			$sort = 'date';
