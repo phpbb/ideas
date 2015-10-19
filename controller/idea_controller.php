@@ -64,8 +64,8 @@ class idea_controller extends base
 	 * @param \phpbb\request\request            $request
 	 * @param \phpbb\template\template          $template
 	 * @param \phpbb\user                       $user
-	 * @param                                   $root_path
-	 * @param                                   $php_ext
+	 * @param string                            $root_path
+	 * @param string                            $php_ext
 	 */
 	public function __construct(auth $auth, service $cache, config $config, content_visibility $content_visibility, manager $cp, driver_interface $db, helper $helper, ideas $ideas, language $language, linkhelper $link_helper, pagination $pagination, request $request, template $template, user $user, $root_path, $php_ext)
 	{
@@ -1689,6 +1689,7 @@ class idea_controller extends base
 				'POST_ID'			=> $row['post_id'],
 				'POST_NUMBER'		=> $i + $start + 1,
 				'POSTER_ID'			=> $poster_id,
+				'MINI_POST'			=> ($post_unread) ? $this->language->lang('UNREAD_POST') : $this->language->lang('POST'),
 
 				'S_HAS_ATTACHMENTS'	=> (!empty($attachments[$row['post_id']])) ? true : false,
 				'S_MULTIPLE_ATTACHMENTS'	=> !empty($attachments[$row['post_id']]) && sizeof($attachments[$row['post_id']]) > 1,
