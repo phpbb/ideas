@@ -28,7 +28,7 @@ class m1_initial_schema extends \phpbb\db\migration\migration
 			'add_tables'	=> array(
 				$this->table_prefix . 'ideas_ideas' => array(
 					'COLUMNS'	=> array(
-						'idea_id'			=> array('UINT', NULL, 'auto_increment'),
+						'idea_id'			=> array('UINT', null, 'auto_increment'),
 						'idea_author'		=> array('UINT', 0),
 						'idea_title'		=> array('VCHAR', ''),
 						'idea_date'			=> array('TIMESTAMP', 0),
