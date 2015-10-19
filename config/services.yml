@@ -5,6 +5,7 @@ services:
     phpbb.ideas.controller.base:
         abstract: true
         arguments:
+            - @config
             - @controller.helper
             - @phpbb.ideas.ideas
             - @phpbb.ideas.linkhelper
@@ -48,6 +49,7 @@ services:
     phpbb.ideas.ideas:
         class: phpbb\ideas\factory\ideas
         arguments:
+            - @config
             - @dbal.conn
             - @controller.helper
             - @log

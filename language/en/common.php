@@ -44,6 +44,7 @@ $lang = array_merge($lang, array(
 	'IDEA_POSTER'           => 'Posted by %s', // Warning: submitted to db
 	'IDEAS_HOME'			=> 'Ideas Home',
 	'IDEAS_TITLE'			=> 'phpBB Ideas',
+	'IDEAS_NOT_AVAILABLE'	=> 'Ideas is not available at this time.',
 	'IMPLEMENTED'           => 'Implemented',
 	'IMPLEMENTED_IDEAS'		=> 'Recently Implemented Ideas',
 	'IN_PROGRESS'           => 'In Progress',
