@@ -47,6 +47,7 @@
 <!-- END ideas -->
 <form method="post" action="{U_POST_ACTION}">
 	<fieldset class="display-options">
+		<!-- IF not S_IS_BOT -->
 		<label>{L_SHOW_W_STATUS} <select name="status" id="st">
 		<option value="0">{L_ALL_IDEAS}</option>
 		<!-- BEGIN status --><option value="{status.VALUE}"<!-- IF status.SELECTED --> selected="selected"<!-- ENDIF -->>{status.TEXT}</option><!-- END status -->
@@ -59,8 +60,9 @@
 				<option value="a"<!-- IF SORT_DIRECTION === 'ASC' --> selected="selected"<!-- ENDIF -->>{L_ASCENDING}</option>
 				<option value="d"<!-- IF SORT_DIRECTION === 'DESC' --> selected="selected"<!-- ENDIF -->>{L_DESCENDING}</option>
 			</select>
-			<input type="submit" value="Go" class="button2" />
 		</label>
+		<input type="submit" value="{L_GO}" class="button2" />
+		<!-- ENDIF -->
 	</fieldset>
 </form>
 

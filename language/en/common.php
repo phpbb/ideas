@@ -92,6 +92,7 @@ $lang = array_merge($lang, array(
 	'UPDATED_VOTE'			=> 'Successfully updated vote',
 
 	'VIEW_ALL'				=> 'View All',
+	'VIEW_DUPLICATE'		=> 'View duplicate',
 	'VIEW_IDEA'				=> 'View Idea',
 	'VIEW_IDEA_AT'          => 'View idea at: %s', // Warning: submitted to db
 	'VIEW_VOTES'            => '%s point(s). Click to view votes',

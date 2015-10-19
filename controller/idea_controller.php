@@ -271,22 +271,23 @@ class idea_controller extends base
 			'IDEA_TITLE'		=> $idea['idea_title'],
 			'IDEA_AUTHOR'		=> $this->link_helper->get_user_link($idea['idea_author']),
 			'IDEA_DATE'			=> $this->user->format_date($idea['idea_date']),
-			'IDEA_VOTES'        => $idea['idea_votes_up'] + $idea['idea_votes_down'],
-			'IDEA_VOTES_UP'	    => $idea['idea_votes_up'],
-			'IDEA_VOTES_DOWN'   => $idea['idea_votes_down'],
-			'IDEA_POINTS'       => $this->language->lang('VIEW_VOTES', $points),
+			'IDEA_VOTES'		=> $idea['idea_votes_up'] + $idea['idea_votes_down'],
+			'IDEA_VOTES_UP'		=> $idea['idea_votes_up'],
+			'IDEA_VOTES_DOWN'	=> $idea['idea_votes_down'],
+			'IDEA_POINTS'		=> $this->language->lang('VIEW_VOTES', $points),
 			'IDEA_STATUS'		=> $this->ideas->get_status_from_id($idea['idea_status']),
 			'IDEA_STATUS_LINK'	=> $this->helper->route('ideas_list_controller', array('status' => $idea['idea_status'])),
 
-			'IDEA_DUPLICATE'    => $idea['duplicate_id'],
+			'IDEA_DUPLICATE'	=> $idea['duplicate_id'],
 			'IDEA_RFC'			=> $idea['rfc_link'],
 			'IDEA_TICKET'		=> $idea['ticket_id'],
 
-			'U_IDEA_TOPIC'      => $idea_topic_link,
+			'U_IDEA_TOPIC'		=> $idea_topic_link,
+			'U_IDEA_DUPLICATE'	=> $this->link_helper->get_idea_link((int) $idea['duplicate_id']),
 
-			'IS_MOD'            => $mod,
-			'CAN_EDIT'			=> $mod || $own,
-			'CAN_VOTE'          => $can_vote,
+			'S_IS_MOD'			=> $mod,
+			'S_CAN_EDIT'		=> $mod || $own,
+			'S_CAN_VOTE'		=> $can_vote,
 
 			'U_DELETE_IDEA'		=> ($delete_posts) ? $this->link_helper->get_idea_link($idea_id, 'delete') : false,
 			'U_CHANGE_STATUS'	=> $this->link_helper->get_idea_link($idea_id, 'status', true),
@@ -294,7 +295,7 @@ class idea_controller extends base
 			'U_EDIT_RFC'		=> $this->link_helper->get_idea_link($idea_id, 'rfc', true),
 			'U_EDIT_TICKET'		=> $this->link_helper->get_idea_link($idea_id, 'ticket', true),
 			'U_EDIT_TITLE'		=> $this->link_helper->get_idea_link($idea_id, 'title', true),
-			'U_REMOVE_VOTE'     => $this->link_helper->get_idea_link($idea_id, 'removevote', true),
+			'U_REMOVE_VOTE'		=> $this->link_helper->get_idea_link($idea_id, 'removevote', true),
 			'U_IDEA_VOTE'		=> $this->link_helper->get_idea_link($idea_id, 'vote', true),
 		));
 
@@ -877,7 +878,7 @@ class idea_controller extends base
 		// TOPIC LOCK CHECK 123
 		if ($topic_data['topic_status'] == ITEM_LOCKED)
 		{
-			$this->template->assign_var('CAN_VOTE', false);
+			$this->template->assign_var('S_CAN_VOTE', false);
 		}
 
 		// If we've got a highlight set pass it on to pagination.
