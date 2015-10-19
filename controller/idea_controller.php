@@ -281,6 +281,7 @@ class idea_controller extends base
 			'IDEA_TICKET'		=> $idea['ticket_id'],
 
 			'U_IDEA_TOPIC'      => $idea_topic_link,
+			'U_IDEA_DUPLICATE'	=> $this->link_helper->get_idea_link((int) $idea['duplicate_id']),
 
 			'S_IS_MOD'			=> $mod,
 			'S_CAN_EDIT'		=> $mod || $own,
