@@ -5,18 +5,18 @@
 <h2>{L_IDEAS_TITLE}</h2>
 
 <!-- IF S_USER_LOGGED_IN -->
-	<div class="action-bar top">
-		<div class="buttons">
-			<a href="{U_POST_ACTION}" class="button icon-button new-idea" title="{L_NEW_IDEA}">{L_NEW_IDEA}</a>
-		</div>
-	</div>
+<div class="action-bar bar-top">
+	<a href="{U_POST_ACTION}" class="button" title="{L_NEW_IDEA}">
+		<span>{L_NEW_IDEA}</span> <i class="icon fa-lightbulb-o fa-fw" aria-hidden="true"></i>
+	</a>
+</div>
 <!-- ENDIF -->
 
 <div class="forumbg">
 	<div class="inner">
 		<ul class="topiclist">
 			<li class="header">
-				<dl class="icon">
+				<dl class="row-item">
 					<dt><div class="list-inner">{L_TOP_IDEAS}</div></dt>
 					<dd class="posts">{L_RATING}</dd>
 				</dl>
@@ -25,7 +25,7 @@
 		<ul class="topiclist forums">
 			<!-- BEGIN top_ideas -->
 			<li class="row">
-				<dl class="icon topic_<!-- IF not top_ideas.READ -->un<!-- ENDIF -->read">
+				<dl class="row-item topic_<!-- IF not top_ideas.READ -->un<!-- ENDIF -->read">
 					<dt title="<!-- IF top_ideas.READ -->{L_NO_UNREAD_POSTS}<!-- ELSE -->{L_UNREAD_POSTS}<!-- ENDIF -->">
 					<div class="list-inner">
 						<a href="{top_ideas.LINK}" class="forumtitle">{top_ideas.TITLE}</a><br />
@@ -59,7 +59,7 @@
 	<div class="inner">
 		<ul class="topiclist">
 			<li class="header">
-				<dl class="icon">
+				<dl class="row-item">
 					<dt><div class="list-inner">{L_LATEST_IDEAS}</div></dt>
 					<dd class="posts">{L_RATING}</dd>
 				</dl>
@@ -68,7 +68,7 @@
 		<ul class="topiclist forums">
 			<!-- BEGIN latest_ideas -->
 			<li class="row">
-				<dl class="icon topic_<!-- IF not latest_ideas.READ -->un<!-- ENDIF -->read">
+				<dl class="row-item topic_<!-- IF not latest_ideas.READ -->un<!-- ENDIF -->read">
 					<dt title="<!-- IF latest_ideas.READ -->{L_NO_UNREAD_POSTS}<!-- ELSE -->{L_UNREAD_POSTS}<!-- ENDIF -->">
 					<div class="list-inner">
 						<a href="{latest_ideas.LINK}" class="forumtitle">{latest_ideas.TITLE}</a><br />
@@ -102,7 +102,7 @@
 	<div class="inner">
 		<ul class="topiclist">
 			<li class="header">
-				<dl class="icon">
+				<dl class="row-item">
 					<dt><div class="list-inner">{L_IMPLEMENTED_IDEAS}</div></dt>
 					<dd class="posts">{L_RATING}</dd>
 				</dl>
@@ -111,7 +111,7 @@
 		<ul class="topiclist forums">
 			<!-- BEGIN implemented_ideas -->
 			<li class="row">
-				<dl class="icon topic_<!-- IF not implemented_ideas.READ -->un<!-- ENDIF -->read">
+				<dl class="row-item topic_<!-- IF not implemented_ideas.READ -->un<!-- ENDIF -->read">
 					<dt title="<!-- IF implemented_ideas.READ -->{L_NO_UNREAD_POSTS}<!-- ELSE -->{L_UNREAD_POSTS}<!-- ENDIF -->">
 					<div class="list-inner">
 						<a href="{implemented_ideas.LINK}" class="forumtitle">{implemented_ideas.TITLE}</a><br />
@@ -140,5 +140,7 @@
 <!-- IF .implemented_ideas -->
 	<a class="button view-all" href="{U_VIEW_IMPLEMENTED}">{L_VIEW_ALL}&hellip;</a>
 <!-- ENDIF -->
+
+<br />
 
 <!-- INCLUDE overall_footer.html -->

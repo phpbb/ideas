@@ -4,9 +4,48 @@
 
 <h2>{STATUS_NAME}</h2>
 
-<!-- INCLUDE idealist_body.html -->
+<!-- BEGIN ideas -->
+	<!-- IF ideas.S_FIRST_ROW  -->
+		<div class="forumbg">
+			<div class="inner">
+				<ul class="topiclist">
+					<li class="header">
+						<dl class="row-item">
+							<dt><div class="list-inner">{L_IDEAS}</div></dt>
+							<dd class="posts">{L_RATING}</dd>
+						</dl>
+					</li>
+				</ul>
+				<ul class="topiclist forums">
+	<!-- ENDIF -->
+					<li class="row">
+						<dl class="row-item forum_<!-- IF not ideas.READ -->un<!-- ENDIF -->read">
+							<dt title="Read posts">
+							<div class="list-inner">
+								<a href="{ideas.LINK}" class="forumtitle">{ideas.TITLE}</a><br />
+								by <strong>{ideas.AUTHOR}</strong> &raquo; {ideas.DATE}
+							</div>
+							</dt>
 
-<form action="{U_POST_ACTION}" method="get">
+							<dd class="topics">
+								<div class="minivoteup"><span>{ideas.VOTES_UP}</span></div>
+								<div class="minivotedown"><span>{ideas.VOTES_DOWN}</span></div>
+							</dd>
+						</dl>
+					</li>
+	<!-- IF ideas.S_LAST_ROW -->
+				</ul>
+			</div>
+		</div>
+	<!-- ENDIF -->
+<!-- BEGINELSE -->
+	<div class="panel">
+		<div class="inner">
+			<strong>{L_NO_IDEAS}</strong>
+		</div>
+	</div>
+<!-- END ideas -->
+<form method="post" action="{U_POST_ACTION}">
 	<fieldset class="display-options">
 		<label>{L_SHOW_W_STATUS} <select name="status" id="st">
 		<option value="0">{L_ALL_IDEAS}</option>
@@ -32,5 +71,7 @@
 		</div>
 	</div>
 <!-- ENDIF -->
+
+<br />
 
 <!-- INCLUDE overall_footer.html -->
