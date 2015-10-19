@@ -105,10 +105,10 @@ class idea_controller extends base
 			throw new http_exception(404, 'IDEA_NOT_FOUND');
 		}
 
-		$mod = $this->auth->acl_get('m_', $this->config['ideas_forum_id']);
+		$mod = $this->auth->acl_get('m_', (int) $this->config['ideas_forum_id']);
 		$own = $idea['idea_author'] === $this->user->data['user_id'];
 
-		if ($mode === 'delete' && ($mod || ($own && $this->auth->acl_get('f_delete', IDEAS_FORUM_ID))))
+		if ($mode === 'delete' && ($mod || ($own && $this->auth->acl_get('f_delete', (int) $this->config['ideas_forum_id']))))
 		{
 			if (confirm_box(true))
 			{
@@ -152,7 +152,7 @@ class idea_controller extends base
 						return false;
 					}
 
-					if ($this->auth->acl_get('f_vote', $this->config['ideas_forum_id']))
+					if ($this->auth->acl_get('f_vote', (int) $this->config['ideas_forum_id']))
 					{
 						$result = $this->ideas->remove_vote($idea, $this->user->data['user_id']);
 					}
@@ -219,7 +219,7 @@ class idea_controller extends base
 						return false;
 					}
 
-					if ($this->auth->acl_get('f_vote', $this->config['ideas_forum_id']))
+					if ($this->auth->acl_get('f_vote', (int) $this->config['ideas_forum_id']))
 					{
 						$result = $this->ideas->vote($idea, $this->user->data['user_id'], $vote);
 					}
@@ -241,7 +241,7 @@ class idea_controller extends base
 		include($this->root_path . 'includes/bbcode.' . $this->php_ext);
 		include($this->root_path . 'includes/functions_user.' . $this->php_ext);
 
-		$delete_posts = $mod || ($own && $this->auth->acl_get('f_delete', $this->config['ideas_forum_id']));
+		$delete_posts = $mod || ($own && $this->auth->acl_get('f_delete', (int) $this->config['ideas_forum_id']));
 
 		if ($mod)
 		{
@@ -260,7 +260,7 @@ class idea_controller extends base
 		$idea_topic_link = append_sid("{$this->root_path}viewtopic.{$this->php_ext}", 't=' . $idea['topic_id']);
 
 		$can_vote = true;
-		if ($idea['idea_status'] == 3 || $idea['idea_status'] == 4 || !$this->auth->acl_get('f_vote', $this->config['ideas_forum_id']))
+		if ($idea['idea_status'] == 3 || $idea['idea_status'] == 4 || !$this->auth->acl_get('f_vote', (int) $this->config['ideas_forum_id']))
 		{
 			$can_vote = false;
 		}
@@ -311,7 +311,7 @@ class idea_controller extends base
 			}
 		}
 
-		$forum_id = $this->config['ideas_forum_id'];
+		$forum_id = (int) $this->config['ideas_forum_id'];
 		$topic_id = $idea['topic_id'];
 		$post_id  = $this->request->variable('p', 0);
 
