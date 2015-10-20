@@ -60,7 +60,7 @@ class list_controller extends base
 
 		// Generate ideas
 		$ideas = $this->ideas->get_ideas(0, $sort, $sort_direction, $where);
-		$this->assign_template_vars('ideas', $ideas);
+		$this->assign_template_block_vars('ideas', $ideas);
 
 		$statuses = array('new', 'in_progress', 'implemented', 'duplicate');
 		foreach ($statuses as $key => $statusText)

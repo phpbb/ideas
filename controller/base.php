@@ -90,7 +90,7 @@ abstract class base
 	 * @param string $block The template block var name
 	 * @param array  $rows  The Idea row data
 	 */
-	protected function assign_template_vars($block, $rows)
+	protected function assign_template_block_vars($block, $rows)
 	{
 		foreach ($rows as $row)
 		{
