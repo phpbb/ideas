@@ -35,7 +35,7 @@ class post_controller extends base
 
 		if ($this->user->data['user_id'] == ANONYMOUS)
 		{
-			throw new \phpbb\exception\http_exception(404, 'LOGGED_OUT');
+			throw new http_exception(404, 'LOGGED_OUT');
 		}
 
 		$mode = $this->request->variable('mode', '');

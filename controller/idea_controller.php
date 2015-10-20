@@ -334,21 +334,23 @@ class idea_controller extends base
 		// Find topic id if user requested a newer or older topic
 		if ($view && !$post_id)
 		{
-// 			if (!$forum_id)
-// 			{
-// 				$sql = 'SELECT forum_id
-// 					FROM ' . TOPICS_TABLE . "
-// 					WHERE topic_id = $topic_id";
-// 				$result = $db->sql_query($sql);
-// 				$forum_id = (int) $db->sql_fetchfield('forum_id');
-// 				$db->sql_freeresult($result);
-//
-// 				if (!$forum_id)
-// 				{
-// 					throw new http_exception(404, 'NO_TOPIC');
-// 				}
-// 			}
-//
+			/*
+			if (!$forum_id)
+			{
+				$sql = 'SELECT forum_id
+					FROM ' . TOPICS_TABLE . "
+					WHERE topic_id = $topic_id";
+				$result = $db->sql_query($sql);
+				$forum_id = (int) $db->sql_fetchfield('forum_id');
+				$db->sql_freeresult($result);
+
+				if (!$forum_id)
+				{
+					throw new http_exception(404, 'NO_TOPIC');
+				}
+			}
+			*/
+
 			if ($view == 'unread')
 			{
 				// Get topic tracking info
@@ -1895,7 +1897,6 @@ class idea_controller extends base
 			}
 		}
 		// now I have the urge to wash my hands :(
-
 
 		// Use Ideas breadcrumbs
 		$this->template->destroy_block_vars('navlinks');
