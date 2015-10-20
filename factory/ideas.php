@@ -205,35 +205,30 @@ class ideas
 	 */
 	public function get_idea($id)
 	{
-		$sql = 'SELECT *
-			FROM ' . $this->table_ideas . "
-			WHERE idea_id = $id";
+		$sql_array = array(
+			'SELECT'		=> 'i.*, d.duplicate_id, t.ticket_id, r.rfc_link',
+			'FROM'			=> array($this->table_ideas => 'i'),
+			'LEFT_JOIN'		=> array(
+				array(
+					'FROM'	=> array($this->table_duplicates => 'd'),
+					'ON'	=> 'i.idea_id = d.idea_id',
+				),
+				array(
+					'FROM'	=> array($this->table_tickets => 't'),
+					'ON'	=> 'i.idea_id = t.idea_id',
+				),
+				array(
+					'FROM'	=> array($this->table_rfcs => 'r'),
+					'ON'	=> 'i.idea_id = r.idea_id',
+				),
+			),
+			'WHERE'			=> 'i.idea_id = ' . (int) $id,
+		);
+
+		$sql = $this->db->sql_build_query('SELECT', $sql_array);
 		$result = $this->db->sql_query_limit($sql, 1);
 		$row = $this->db->sql_fetchrow($result);
 		$this->db->sql_freeresult($result);
-
-		if ($row === false)
-		{
-			return null;
-		}
-
-		$sql = 'SELECT duplicate_id
-			FROM ' . $this->table_duplicates . "
-			WHERE idea_id = $id";
-		$this->db->sql_query_limit($sql, 1);
-		$row['duplicate_id'] = $this->db->sql_fetchfield('duplicate_id');
-
-		$sql = 'SELECT ticket_id
-			FROM ' . $this->table_tickets . "
-			WHERE idea_id = $id";
-		$this->db->sql_query_limit($sql, 1);
-		$row['ticket_id'] = $this->db->sql_fetchfield('ticket_id');
-
-		$sql = 'SELECT rfc_link
-			FROM ' . $this->table_rfcs . "
-			WHERE idea_id = $id";
-		$this->db->sql_query_limit($sql, 1);
-		$row['rfc_link'] = $this->db->sql_fetchfield('rfc_link');
 
 		return $row;
 	}
