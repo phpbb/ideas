@@ -29,53 +29,17 @@ class index_controller extends base
 			throw new http_exception(404, 'IDEAS_NOT_AVAILABLE');
 		}
 
-		$rows = $this->ideas->get_ideas(self::IDEAS, 'date', 'DESC');
-		foreach ($rows as $row)
-		{
-			$this->template->assign_block_vars('latest_ideas', array(
-				'ID'		=> $row['idea_id'],
-				'LINK'		=> $this->link_helper->get_idea_link($row['idea_id']),
-				'TITLE'		=> $row['idea_title'],
-				'AUTHOR'	=> $this->link_helper->get_user_link($row['idea_author']),
-				'DATE'		=> $this->user->format_date($row['idea_date']),
-				'READ'      => $row['read'],
-				'VOTES_UP'	=> $row['idea_votes_up'],
-				'VOTES_DOWN'=> $row['idea_votes_down'],
-				'POINTS'    => $row['idea_votes_up'] - $row['idea_votes_down'],
-			));
-		}
+		// Generate latest ideas
+		$ideas = $this->ideas->get_ideas(self::IDEAS, 'date', 'DESC');
+		$this->assign_template_vars('latest_ideas', $ideas);
 
-		$rows = $this->ideas->get_ideas(self::IDEAS, 'top', 'DESC');
-		foreach ($rows as $row)
-		{
-			$this->template->assign_block_vars('top_ideas', array(
-				'ID'		=> $row['idea_id'],
-				'LINK'		=> $this->link_helper->get_idea_link($row['idea_id']),
-				'TITLE'		=> $row['idea_title'],
-				'AUTHOR'	=> $this->link_helper->get_user_link($row['idea_author']),
-				'DATE'		=> $this->user->format_date($row['idea_date']),
-				'READ'      => $row['read'],
-				'VOTES_UP'	=> $row['idea_votes_up'],
-				'VOTES_DOWN'=> $row['idea_votes_down'],
-				'POINTS'    => $row['idea_votes_up'] - $row['idea_votes_down'],
-			));
-		}
+		// Generate top ideas
+		$ideas = $this->ideas->get_ideas(self::IDEAS, 'top', 'DESC');
+		$this->assign_template_vars('top_ideas', $ideas);
 
-		$rows = $this->ideas->get_ideas(self::IDEAS, 'date', 'DESC', 'idea_status = 3');
-		foreach ($rows as $row)
-		{
-			$this->template->assign_block_vars('implemented_ideas', array(
-				'ID'		=> $row['idea_id'],
-				'LINK'		=> $this->link_helper->get_idea_link($row['idea_id']),
-				'TITLE'		=> $row['idea_title'],
-				'AUTHOR'	=> $this->link_helper->get_user_link($row['idea_author']),
-				'DATE'		=> $this->user->format_date($row['idea_date']),
-				'READ'      => $row['read'],
-				'VOTES_UP'	=> $row['idea_votes_up'],
-				'VOTES_DOWN'=> $row['idea_votes_down'],
-				'POINTS'    => $row['idea_votes_up'] - $row['idea_votes_down'],
-			));
-		}
+		// Generate recently implemented
+		$ideas = $this->ideas->get_ideas(self::IDEAS, 'date', 'DESC', 'idea_status = 3');
+		$this->assign_template_vars('implemented_ideas', $ideas);
 
 		$this->template->assign_vars(array(
 			'U_VIEW_TOP'		=> $this->link_helper->get_list_link('top'),

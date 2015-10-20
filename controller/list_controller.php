@@ -58,23 +58,9 @@ class list_controller extends base
 			$status_name = $this->ideas->get_status_from_id($status);
 		}
 
-		$returned_ideas = $this->ideas->get_ideas(0, $sort, $sort_direction, $where);
-
-		foreach ($returned_ideas as $idea)
-		{
-			$this->template->assign_block_vars('ideas', array(
-				'ID'			=> $idea['idea_id'],
-				'LINK'			=> $this->link_helper->get_idea_link($idea['idea_id']),
-				'TITLE'			=> $idea['idea_title'],
-				'AUTHOR'		=> $this->link_helper->get_user_link($idea['idea_author']),
-				'DATE'			=> $this->user->format_date($idea['idea_date']),
-				'READ'          => $idea['read'],
-				'VOTES_UP'	    => $idea['idea_votes_up'],
-				'VOTES_DOWN'    => $idea['idea_votes_down'],
-				'POINTS'        => $idea['idea_votes_up'] - $idea['idea_votes_down'],
-				'STATUS'		=> $idea['idea_status'], // For icons
-			));
-		}
+		// Generate ideas
+		$ideas = $this->ideas->get_ideas(0, $sort, $sort_direction, $where);
+		$this->assign_template_vars('ideas', $ideas);
 
 		$statuses = array('new', 'in_progress', 'implemented', 'duplicate');
 		foreach ($statuses as $key => $statusText)
