@@ -209,7 +209,7 @@
 				if (res) {
 					if (value) {
 						$obj.ticketLink.text(value)
-							.attr('href', 'http://tracker.phpbb.com/browse/' + value)
+							.attr('href', 'https://tracker.phpbb.com/browse/' + value)
 							.show();
 					}
 
