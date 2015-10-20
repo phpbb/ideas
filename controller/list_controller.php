@@ -97,7 +97,7 @@ class list_controller extends base
 		}
 
 		$this->template->assign_vars(array(
-			'U_POST_ACTION'		=> $this->helper->route('ideas_list_controller'),
+			'U_POST_ACTION'		=> $this->helper->route('phpbb_ideas_list_controller'),
 			'SORT_DIRECTION'	=> $sort_direction,
 			'STATUS_NAME'       => $status_name ?: $this->user->lang('ALL_IDEAS'),
 		));
@@ -105,11 +105,11 @@ class list_controller extends base
 		// Assign breadcrumb template vars
 		$this->template->assign_block_vars_array('navlinks', array(
 			array(
-				'U_VIEW_FORUM'	=> $this->helper->route('ideas_index_controller'),
+				'U_VIEW_FORUM'	=> $this->helper->route('phpbb_ideas_index_controller'),
 				'FORUM_NAME'	=> $this->user->lang('IDEAS'),
 			),
 			array(
-				'U_VIEW_FORUM'	=> $this->helper->route('ideas_list_controller'),
+				'U_VIEW_FORUM'	=> $this->helper->route('phpbb_ideas_list_controller'),
 				'FORUM_NAME'	=> $status_name ?: $this->user->lang('ALL_IDEAS'),
 			),
 		));

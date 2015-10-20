@@ -81,12 +81,12 @@ class index_controller extends base
 			'U_VIEW_TOP'		=> $this->link_helper->get_list_link('top'),
 			'U_VIEW_LATEST'		=> $this->link_helper->get_list_link('new'),
 			'U_VIEW_IMPLEMENTED'=> $this->link_helper->get_list_link('implemented'),
-			'U_POST_ACTION'		=> $this->helper->route('ideas_post_controller'),
+			'U_POST_ACTION'		=> $this->helper->route('phpbb_ideas_post_controller'),
 		));
 
 		// Assign breadcrumb template vars
 		$this->template->assign_block_vars('navlinks', array(
-			'U_VIEW_FORUM'		=> $this->helper->route('ideas_index_controller'),
+			'U_VIEW_FORUM'		=> $this->helper->route('phpbb_ideas_index_controller'),
 			'FORUM_NAME'		=> $this->user->lang('IDEAS'),
 		));
 

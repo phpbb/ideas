@@ -46,12 +46,12 @@ class linkhelper
 		$params = ($mode) ? array_merge($params, array('mode' => $mode)) : $params;
 		$params = ($hash) ? array_merge($params, array('hash' => generate_link_hash("{$mode}_{$idea_id}"))) : $params;
 
-		return $this->helper->route('ideas_idea_controller', $params);
+		return $this->helper->route('phpbb_ideas_idea_controller', $params);
 	}
 
 	public function get_list_link($sort = 'date')
 	{
-		return $this->helper->route('ideas_list_controller', array(
+		return $this->helper->route('phpbb_ideas_list_controller', array(
 			'sort'	=> $sort
 		));
 	}
