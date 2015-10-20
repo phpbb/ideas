@@ -591,7 +591,7 @@ class ideas
 		$this->vote($idea, $this->user->data['user_id'], 1);
 
 		// Submit topic
-		$bbcode = '[url=' . $this->helper->route('ideas_idea_controller', array('idea_id' => $idea_id), true, false, UrlGeneratorInterface::ABSOLUTE_URL) . "]{$title}[/url]";
+		$bbcode = '[url=' . $this->helper->route('phpbb_ideas_idea_controller', array('idea_id' => $idea_id), true, false, UrlGeneratorInterface::ABSOLUTE_URL) . "]{$title}[/url]";
 		$desc .= "\n\n----------\n\n" . $this->user->lang('VIEW_IDEA_AT', $bbcode);
 		$bbcode = '[url=' . generate_board_url() . '/' . append_sid("memberlist.{$this->php_ext}", array('u' => $user_id, 'mode' => 'viewprofile')) . "]{$username}[/url]";
 		$desc .= "\n\n" . $this->user->lang('IDEA_POSTER', $bbcode);

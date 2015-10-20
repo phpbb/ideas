@@ -113,7 +113,7 @@ class idea_controller extends base
 				include($this->root_path . 'includes/functions_admin.' . $this->php_ext);
 				$this->ideas->delete($idea_id, $idea['topic_id']);
 
-				$redirect = $this->helper->route('ideas_index_controller');
+				$redirect = $this->helper->route('phpbb_ideas_index_controller');
 				$message = $this->user->lang('IDEA_DELETED') . '<br /><br />' . $this->user->lang('RETURN_IDEAS', '<a href="' . $redirect . '">', '</a>');
 				meta_refresh(3, $redirect);
 				trigger_error($message); // trigger error needed for data-ajax
@@ -274,7 +274,7 @@ class idea_controller extends base
 			'IDEA_VOTES_DOWN'	=> $idea['idea_votes_down'],
 			'IDEA_POINTS'		=> $this->user->lang('VIEW_VOTES', $points),
 			'IDEA_STATUS'		=> $this->ideas->get_status_from_id($idea['idea_status']),
-			'IDEA_STATUS_LINK'	=> $this->helper->route('ideas_list_controller', array('status' => $idea['idea_status'])),
+			'IDEA_STATUS_LINK'	=> $this->helper->route('phpbb_ideas_list_controller', array('status' => $idea['idea_status'])),
 
 			'IDEA_DUPLICATE'	=> $idea['duplicate_id'],
 			'IDEA_RFC'			=> $idea['rfc_link'],
@@ -709,7 +709,7 @@ class idea_controller extends base
 		$params = ($start != 0) ? array_merge($params, array('start' => $start)) : $params;
 		$params = (strlen($u_sort_param)) ? array_merge($params, explode('=', $u_sort_param)) : $params;
 		$params = ($highlight_match) ? array_merge($params, array('hilit' => $highlight)) : $params;
-		$viewtopic_url = $this->helper->route('ideas_idea_controller', $params);
+		$viewtopic_url = $this->helper->route('phpbb_ideas_idea_controller', $params);
 
 		// Are we watching this topic?
 		$s_watching_topic = array(
@@ -885,7 +885,7 @@ class idea_controller extends base
 		$params = array('idea_id' => $idea_id);
 		$params = (strlen($u_sort_param)) ? array_merge($params, explode('=', $u_sort_param)) : $params;
 		$params = ($highlight_match) ? array_merge($params, array('hilit' => $highlight)) : $params;
-		$this->pagination->generate_template_pagination($this->helper->route('ideas_idea_controller', $params), 'pagination', 'start', $total_posts, $this->config['posts_per_page'], $start);
+		$this->pagination->generate_template_pagination($this->helper->route('phpbb_ideas_idea_controller', $params), 'pagination', 'start', $total_posts, $this->config['posts_per_page'], $start);
 
 		// Send vars to template
 		$this->template->assign_vars(array(
@@ -926,7 +926,7 @@ class idea_controller extends base
 			'S_SELECT_SORT_KEY' 	=> $s_sort_key,
 			'S_SELECT_SORT_DAYS' 	=> $s_limit_days,
 			'S_SINGLE_MODERATOR'	=> (!empty($forum_moderators[$forum_id]) && sizeof($forum_moderators[$forum_id]) > 1) ? false : true,
-			'S_TOPIC_ACTION' 		=> $this->helper->route('ideas_idea_controller', array('idea_id' => $idea_id, 'start' => $start)),
+			'S_TOPIC_ACTION' 		=> $this->helper->route('phpbb_ideas_idea_controller', array('idea_id' => $idea_id, 'start' => $start)),
 			'S_MOD_ACTION' 			=> $s_quickmod_action,
 
 			'L_RETURN_TO_FORUM'		=> $this->user->lang('RETURN_TO', $topic_data['forum_name']),
@@ -945,8 +945,8 @@ class idea_controller extends base
 			'U_VIEW_TOPIC' 			=> $viewtopic_url,
 			'U_CANONICAL'			=> generate_board_url() . '/' . append_sid("viewtopic.{$this->php_ext}", "t=$topic_id" . (($start) ? "&amp;start=$start" : ''), true, ''),
 			'U_VIEW_FORUM' 			=> append_sid("{$this->root_path}viewforum.$this->php_ext", 'f=' . $forum_id),
-			'U_VIEW_OLDER_TOPIC'	=> $this->helper->route('ideas_idea_controller', array('idea_id' => $idea_id, 'view' => 'previous')),
-			'U_VIEW_NEWER_TOPIC'	=> $this->helper->route('ideas_idea_controller', array('idea_id' => $idea_id, 'view' => 'next')),
+			'U_VIEW_OLDER_TOPIC'	=> $this->helper->route('phpbb_ideas_idea_controller', array('idea_id' => $idea_id, 'view' => 'previous')),
+			'U_VIEW_NEWER_TOPIC'	=> $this->helper->route('phpbb_ideas_idea_controller', array('idea_id' => $idea_id, 'view' => 'next')),
 			'U_PRINT_TOPIC'			=> false,
 			'U_EMAIL_TOPIC'			=> false,
 
@@ -1685,7 +1685,7 @@ class idea_controller extends base
 				'U_MCP_REPORT'		=> ($this->auth->acl_get('m_report', $forum_id)) ? append_sid("{$this->root_path}mcp.$this->php_ext", 'i=reports&amp;mode=report_details&amp;f=' . $forum_id . '&amp;p=' . $row['post_id'], true, $this->user->session_id) : '',
 				'U_MCP_APPROVE'		=> ($this->auth->acl_get('m_approve', $forum_id)) ? append_sid("{$this->root_path}mcp.$this->php_ext", 'i=queue&amp;mode=approve_details&amp;f=' . $forum_id . '&amp;p=' . $row['post_id'], true, $this->user->session_id) : '',
 				'U_MCP_RESTORE'		=> ($this->auth->acl_get('m_approve', $forum_id)) ? append_sid("{$this->root_path}mcp.{$this->php_ext}", 'i=queue&amp;mode=' . (($topic_data['topic_visibility'] != ITEM_DELETED) ? 'deleted_posts' : 'deleted_topics') . '&amp;f=' . $forum_id . '&amp;p=' . $row['post_id'], true, $this->user->session_id) : '',
-				'U_MINI_POST'		=> $this->helper->route('ideas_idea_controller', array_merge(array('idea_id' => $idea_id, '#' => "p{$row['post_id']}"), (($topic_data['topic_type'] == POST_GLOBAL) ? array('f' => $forum_id) : array()))),
+				'U_MINI_POST'		=> $this->helper->route('phpbb_ideas_idea_controller', array_merge(array('idea_id' => $idea_id, '#' => "p{$row['post_id']}"), (($topic_data['topic_type'] == POST_GLOBAL) ? array('f' => $forum_id) : array()))),
 				'U_NEXT_POST_ID'	=> ($i < $i_total && isset($rowset[$post_list[$i + 1]])) ? $rowset[$post_list[$i + 1]]['post_id'] : '',
 				'U_PREV_POST_ID'	=> $prev_post_id,
 				'U_NOTES'			=> ($this->auth->acl_getf_global('m_')) ? append_sid("{$this->root_path}mcp.$this->php_ext", 'i=notes&amp;mode=user_notes&amp;u=' . $poster_id, true, $this->user->session_id) : '',
@@ -1828,7 +1828,7 @@ class idea_controller extends base
 			else if (isset($topic_tracking_info[$topic_id]) && $topic_data['topic_last_post_time'] > $topic_tracking_info[$topic_id])
 			{
 				$this->template->assign_vars(array(
-					'U_VIEW_UNREAD_POST'	=> $this->helper->route('ideas_idea_controller', array('idea_id' => $idea_id, 'view' => 'unread', '#' => 'unread')),
+					'U_VIEW_UNREAD_POST'	=> $this->helper->route('phpbb_ideas_idea_controller', array('idea_id' => $idea_id, 'view' => 'unread', '#' => 'unread')),
 				));
 			}
 		}
@@ -1846,7 +1846,7 @@ class idea_controller extends base
 			else if (!$last_page)
 			{
 				$this->template->assign_vars(array(
-					'U_VIEW_UNREAD_POST'	=> $this->helper->route('ideas_idea_controller', array('idea_id' => $idea_id, 'view' => 'unread', '#' => 'unread')),
+					'U_VIEW_UNREAD_POST'	=> $this->helper->route('phpbb_ideas_idea_controller', array('idea_id' => $idea_id, 'view' => 'unread', '#' => 'unread')),
 				));
 			}
 		}
@@ -1898,7 +1898,7 @@ class idea_controller extends base
 		// Use Ideas breadcrumbs
 		$this->template->destroy_block_vars('navlinks');
 		$this->template->assign_block_vars('navlinks', array(
-			'U_VIEW_FORUM'		=> $this->helper->route('ideas_index_controller'),
+			'U_VIEW_FORUM'		=> $this->helper->route('phpbb_ideas_index_controller'),
 			'FORUM_NAME'		=> $this->user->lang('IDEAS'),
 		));
 
