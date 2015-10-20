@@ -152,9 +152,11 @@
 
 			$.get(url, {rfc: value}, function(res) {
 				if (res) {
-					$obj.rfcLink.text(value)
-						.attr('href', value)
-						.show();
+					if (value) {
+						$obj.rfcLink.text(value)
+							.attr('href', value)
+							.show();
+					}
 
 					$this.hide();
 
@@ -205,9 +207,11 @@
 
 			$.get(url, {ticket: value && info[1]}, function(res) {
 				if (res) {
-					$obj.ticketLink.text(value)
-						.attr('href', 'http://tracker.phpbb.com/browse/' + value)
-						.show();
+					if (value) {
+						$obj.ticketLink.text(value)
+							.attr('href', 'http://tracker.phpbb.com/browse/' + value)
+							.show();
+					}
 
 					$this.hide();
 

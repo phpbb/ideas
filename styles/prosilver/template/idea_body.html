@@ -117,7 +117,7 @@
 			<dt style="width: 15%" class="duplicatetoggle">{L_DUPLICATE}:</dt>
 			<dd class="duplicatetoggle">
 
-				<a id="duplicatelink" data-link="{U_IDEA_DUPLICATE}" <!-- IF IDEA_DUPLICATE -->href="{U_IDEA_DUPLICATE}">{L_VIEW_DUPLICATE}<!-- ELSE -->style="display:none" data-l-msg="{L_VIEW_DUPLICATE}"><!-- ENDIF --></a>
+				<a id="duplicatelink" data-link="{U_IDEA_DUPLICATE}" data-l-msg="{L_VIEW_DUPLICATE}" <!-- IF IDEA_DUPLICATE -->href="{U_IDEA_DUPLICATE}">{L_VIEW_DUPLICATE}<!-- ELSE -->style="display:none"><!-- ENDIF --></a>
 
 				<!-- IF S_IS_MOD -->
 				<a href="{U_EDIT_DUPLICATE}" id="duplicateedit">{L_SET}</a>
@@ -128,9 +128,9 @@
 			<!-- IF U_DELETE_IDEA or S_CAN_EDIT -->
 			<dt style="width: 15%">{L_MOD_IDEA}:</dt>
 			<dd>
-				<!-- IF U_DELETE_IDEA --><a href="{U_DELETE_IDEA}" data-ajax="true" data-refresh="true"><i class="fa fa-trash-o"></i> {L_DELETE}</a> &nbsp; <!-- ENDIF -->
-				<!-- IF S_CAN_EDIT --><a href="{U_EDIT_TITLE}" id="titleedit"><i class="fa fa-pencil"></i> {L_TITLE_EDIT}</a> &nbsp; <!-- ENDIF -->
-				<a href="{U_IDEA_TOPIC}"><i class="fa fa-file"></i> {L_IDEA_TOPIC}</a>
+				<!-- IF U_DELETE_IDEA --><a href="{U_DELETE_IDEA}" data-ajax="true" data-refresh="true"><i class="fa fa-fw fa-trash-o"></i>{L_DELETE}</a>&nbsp;<!-- ENDIF -->
+				<!-- IF S_CAN_EDIT --><a href="{U_EDIT_TITLE}" id="titleedit"><i class="fa fa-fw fa-pencil"></i>{L_TITLE_EDIT}</a>&nbsp;<!-- ENDIF -->
+				<a href="{U_IDEA_TOPIC}"><i class="fa fa-fw fa-file"></i>{L_IDEA_TOPIC}</a>
 			</dd>
 			<!-- ENDIF -->
 		</dl>

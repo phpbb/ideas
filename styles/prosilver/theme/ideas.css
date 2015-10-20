@@ -93,3 +93,5 @@ dd.topics {
 .voteslist ul, .voteslist ul li { list-style: none; }
 
 .view-all, .view-all:hover { color: #536482; }
+
+#duplicatelink { margin: 0 5px 0 0; }
