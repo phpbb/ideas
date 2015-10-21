@@ -242,8 +242,8 @@ class ideas
 	public function get_status_from_id($id)
 	{
 		$sql = 'SELECT status_name
-			FROM ' . $this->table_statuses . "
-			WHERE status_id = $id";
+			FROM ' . $this->table_statuses . '
+			WHERE status_id = ' . (int) $id;
 		$result = $this->db->sql_query_limit($sql, 1);
 		$row = $this->db->sql_fetchrow($result);
 		$this->db->sql_freeresult($result);
