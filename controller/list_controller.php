@@ -11,19 +11,10 @@
 namespace phpbb\ideas\controller;
 
 use \phpbb\exception\http_exception;
+use phpbb\ideas\factory\ideas;
 
 class list_controller extends base
 {
-	const SORT_NEW = 'new';
-	const SORT_TOP = 'top';
-	const SORT_IMPLEMENTED = 'implemented';
-	const SORT_AUTHOR = 'author';
-	const SORT_DATE = 'date';
-	const SORT_ID = 'id';
-	const SORT_SCORE = 'score';
-	const SORT_TITLE = 'title';
-	const SORT_VOTES = 'votes';
-
 	/**
 	 * Controller for /list/{sort}
 	 *
@@ -39,21 +30,21 @@ class list_controller extends base
 		}
 
 		// Build the breadcrumb off the $sort parameter
-		$breadcrumb = (in_array($sort, array(self::SORT_NEW, self::SORT_TOP, self::SORT_IMPLEMENTED)) ? $sort : array());
+		$breadcrumb = (in_array($sort, array(ideas::SORT_NEW, ideas::SORT_TOP, ideas::SORT_IMPLEMENTED)) ? $sort : array());
 
-		if ($sort === self::SORT_NEW)
+		if ($sort === ideas::SORT_NEW)
 		{
-			$sort = self::SORT_DATE;
+			$sort = ideas::SORT_DATE;
 		}
 
 		$sort_direction = ($this->request->variable('sd', 'd')) === 'd' ? 'DESC' : 'ASC';
 		$status = $this->request->variable('status', 0);
-		$author = $this->request->variable(self::SORT_AUTHOR, 0);
+		$author = $this->request->variable(ideas::SORT_AUTHOR, 0);
 
-		if ($sort === self::SORT_IMPLEMENTED)
+		if ($sort === ideas::SORT_IMPLEMENTED)
 		{
 			$status = 3;
-			$sort = self::SORT_DATE;
+			$sort = ideas::SORT_DATE;
 		}
 
 		$where = $status ? "idea_status = $status" : 'idea_status != 4 AND idea_status != 3 AND idea_status != 5';
@@ -62,7 +53,7 @@ class list_controller extends base
 			$where .= " && idea_author = $author";
 		}
 
-		if ($sort == self::SORT_TOP)
+		if ($sort == ideas::SORT_TOP)
 		{
 			$status_name = $this->user->lang('TOP_IDEAS');
 		}
@@ -85,7 +76,7 @@ class list_controller extends base
 			));
 		}
 
-		$sorts = array(self::SORT_AUTHOR, self::SORT_DATE, self::SORT_ID, self::SORT_SCORE, self::SORT_TITLE, self::SORT_TOP, self::SORT_VOTES);
+		$sorts = array(ideas::SORT_AUTHOR, ideas::SORT_DATE, ideas::SORT_ID, ideas::SORT_SCORE, ideas::SORT_TITLE, ideas::SORT_TOP, ideas::SORT_VOTES);
 		foreach ($sorts as $sortBy)
 		{
 			$this->template->assign_block_vars('sortby', array(

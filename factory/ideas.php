@@ -19,6 +19,16 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class ideas
 {
+	const SORT_AUTHOR = 'author';
+	const SORT_DATE = 'date';
+	const SORT_ID = 'id';
+	const SORT_IMPLEMENTED = 'implemented';
+	const SORT_NEW = 'new';
+	const SORT_SCORE = 'score';
+	const SORT_TITLE = 'title';
+	const SORT_TOP = 'top';
+	const SORT_VOTES = 'votes';
+
 	/* @var config */
 	protected $config;
 
@@ -101,31 +111,31 @@ class ideas
 	{
 		switch (strtolower($sort))
 		{
-			case 'author':
+			case self::SORT_AUTHOR:
 				$sortby = 'idea_author ' . $sort_direction;
 				break;
 
-			case 'date':
+			case self::SORT_DATE:
 				$sortby = 'idea_date ' . $sort_direction;
 				break;
 
-			case 'id':
+			case self::SORT_ID:
 				$sortby = 'idea_id ' . $sort_direction;
 				break;
 
-			case 'score':
+			case self::SORT_SCORE:
 				$sortby = 'idea_votes_up - idea_votes_down ' . $sort_direction;
 				break;
 
-			case 'title':
+			case self::SORT_TITLE:
 				$sortby = 'idea_title ' . $sort_direction;
 				break;
 
-			case 'votes':
+			case self::SORT_VOTES:
 				$sortby = 'idea_votes_up + idea_votes_down ' . $sort_direction;
 				break;
 
-			case 'top':
+			case self::SORT_TOP:
 				// Special case!
 				$sortby = 'TOP';
 				break;
