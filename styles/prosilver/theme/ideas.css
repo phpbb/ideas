@@ -31,24 +31,13 @@ dd.topics {
 	list-style-type: none;
 }
 
-#rfceditinput {
+.ideainput {
 	display: none;
-	width: 360px;
+	width: 300px;
 }
 
-#ticketeditinput {
-	display: none;
-	width: 160px;
-}
-
-#duplicateeditinput {
-	display: none;
-	width: 360px;
-}
-
-#titleeditinput {
-	display: none;
-	width: 320px;
+.ideamodbtn {
+	margin: 0 5px 0 0;
 }
 
 .minivoteup, .minivotedown {
@@ -93,5 +82,3 @@ dd.topics {
 .voteslist ul, .voteslist ul li { list-style: none; }
 
 .view-all, .view-all:hover { color: #536482; }
-
-#duplicatelink { margin: 0 5px 0 0; }
