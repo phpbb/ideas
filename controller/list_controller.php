@@ -14,6 +14,16 @@ use \phpbb\exception\http_exception;
 
 class list_controller extends base
 {
+	const SORT_NEW = 'new';
+	const SORT_TOP = 'top';
+	const SORT_IMPLEMENTED = 'implemented';
+	const SORT_AUTHOR = 'author';
+	const SORT_DATE = 'date';
+	const SORT_ID = 'id';
+	const SORT_SCORE = 'score';
+	const SORT_TITLE = 'title';
+	const SORT_VOTES = 'votes';
+
 	/**
 	 * Controller for /list/{sort}
 	 *
@@ -28,19 +38,22 @@ class list_controller extends base
 			throw new http_exception(404, 'IDEAS_NOT_AVAILABLE');
 		}
 
-		if ($sort === 'new')
+		// Build the breadcrumb off the $sort parameter
+		$breadcrumb = (in_array($sort, array(self::SORT_NEW, self::SORT_TOP, self::SORT_IMPLEMENTED)) ? $sort : array());
+
+		if ($sort === self::SORT_NEW)
 		{
-			$sort = 'date';
+			$sort = self::SORT_DATE;
 		}
 
 		$sort_direction = ($this->request->variable('sd', 'd')) === 'd' ? 'DESC' : 'ASC';
 		$status = $this->request->variable('status', 0);
-		$author = $this->request->variable('author', 0);
+		$author = $this->request->variable(self::SORT_AUTHOR, 0);
 
-		if ($sort === 'implemented')
+		if ($sort === self::SORT_IMPLEMENTED)
 		{
 			$status = 3;
-			$sort = 'date';
+			$sort = self::SORT_DATE;
 		}
 
 		$where = $status ? "idea_status = $status" : 'idea_status != 4 AND idea_status != 3 AND idea_status != 5';
@@ -49,7 +62,7 @@ class list_controller extends base
 			$where .= " && idea_author = $author";
 		}
 
-		if ($sort == 'top')
+		if ($sort == self::SORT_TOP)
 		{
 			$status_name = $this->user->lang('TOP_IDEAS');
 		}
@@ -72,7 +85,7 @@ class list_controller extends base
 			));
 		}
 
-		$sorts = array('author', 'date', 'id', 'score', 'title', 'top', 'votes');
+		$sorts = array(self::SORT_AUTHOR, self::SORT_DATE, self::SORT_ID, self::SORT_SCORE, self::SORT_TITLE, self::SORT_TOP, self::SORT_VOTES);
 		foreach ($sorts as $sortBy)
 		{
 			$this->template->assign_block_vars('sortby', array(
@@ -90,13 +103,15 @@ class list_controller extends base
 		));
 
 		// Assign breadcrumb template vars
+		$breadcrumb_params = ($breadcrumb) ? array('sort' => $breadcrumb) : array();
+		$breadcrumb_params = array_merge($breadcrumb_params, (($status) ? array('status' => $status) : array()));
 		$this->template->assign_block_vars_array('navlinks', array(
 			array(
 				'U_VIEW_FORUM'	=> $this->helper->route('ideas_index_controller'),
 				'FORUM_NAME'	=> $this->user->lang('IDEAS'),
 			),
 			array(
-				'U_VIEW_FORUM'	=> $this->helper->route('ideas_list_controller'),
+				'U_VIEW_FORUM'	=> $this->helper->route('ideas_list_controller', $breadcrumb_params),
 				'FORUM_NAME'	=> $status_name ?: $this->user->lang('ALL_IDEAS'),
 			),
 		));
