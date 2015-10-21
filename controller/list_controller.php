@@ -84,6 +84,7 @@ class list_controller extends base
 
 		$this->template->assign_vars(array(
 			'U_POST_ACTION'		=> $this->helper->route('ideas_list_controller'),
+			'U_NEW_IDEA_ACTION'	=> $this->helper->route('ideas_post_controller'),
 			'SORT_DIRECTION'	=> $sort_direction,
 			'STATUS_NAME'       => $status_name ?: $this->user->lang('ALL_IDEAS'),
 		));
