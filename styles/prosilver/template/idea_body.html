@@ -81,8 +81,8 @@
 		<dt style="width: 15%">{L_STATUS}:</dt>
 		<dd>
 			<a href="{IDEA_STATUS_LINK}">{IDEA_STATUS}</a>
-			<!-- IF .statuses -->&nbsp; Change to: <select id="status" data-url="{U_CHANGE_STATUS}">
-				<option value="-">---</option>
+			<!-- IF .statuses -->&nbsp; <select id="status" data-url="{U_CHANGE_STATUS}">
+				<option value="-">{L_CHANGE_STATUS}</option>
 				<!-- BEGIN statuses --><option value="{statuses.ID}">{statuses.NAME}</option><!-- END statuses -->
 			</select><!-- ENDIF -->
 		</dd>

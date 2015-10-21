@@ -24,6 +24,7 @@ $lang = array_merge($lang, array(
 	'ALL_IDEAS'				=> 'All ideas',
 	'ALREADY_VOTED'			=> 'You have already voted on this idea.',
 
+	'CHANGE_STATUS'			=> 'Change status',
 	'CREATE_IDEA'			=> 'Create new idea',
 
 	'DATE'					=> 'Date',
