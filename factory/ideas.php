@@ -180,7 +180,7 @@ class ideas
 				FROM ' . TOPICS_TABLE . '
 				WHERE ' . $this->db->sql_in_set('topic_id', $topic_ids);
 			$result = $this->db->sql_query($sql);
-			while (($last_time = $this->db->sql_fetchrow($result)))
+			while ($last_time = $this->db->sql_fetchrow($result))
 			{
 				$last_times[$last_time['topic_id']] = $last_time['topic_last_post_time'];
 			}
