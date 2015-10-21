@@ -10,7 +10,7 @@
 
 namespace phpbb\ideas\migrations;
 
-class m4_update_data extends \phpbb\db\migration\migration
+class m4_update_statuses extends \phpbb\db\migration\migration
 {
 	public function effectively_installed()
 	{
