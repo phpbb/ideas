@@ -28,6 +28,11 @@ class ideas
 	const SORT_TITLE = 'title';
 	const SORT_TOP = 'top';
 	const SORT_VOTES = 'votes';
+	const STATUS_NEW = 1;
+	const STATUS_PROGRESS = 2;
+	const STATUS_IMPLEMENTED = 3;
+	const STATUS_DUPLICATE = 4;
+	const STATUS_INVALID = 5;
 
 	/* @var config */
 	protected $config;

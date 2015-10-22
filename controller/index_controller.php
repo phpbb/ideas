@@ -10,7 +10,8 @@
 
 namespace phpbb\ideas\controller;
 
-use \phpbb\exception\http_exception;
+use phpbb\exception\http_exception;
+use phpbb\ideas\factory\ideas;
 
 class index_controller extends base
 {
@@ -38,7 +39,7 @@ class index_controller extends base
 		$this->assign_template_block_vars('top_ideas', $ideas);
 
 		// Generate recently implemented
-		$ideas = $this->ideas->get_ideas(self::IDEAS, 'date', 'DESC', 'idea_status = 3');
+		$ideas = $this->ideas->get_ideas(self::IDEAS, 'date', 'DESC', ideas::STATUS_IMPLEMENTED);
 		$this->assign_template_block_vars('implemented_ideas', $ideas);
 
 		$this->template->assign_vars(array(

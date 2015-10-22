@@ -10,7 +10,7 @@
 
 namespace phpbb\ideas\controller;
 
-use \phpbb\exception\http_exception;
+use phpbb\exception\http_exception;
 use phpbb\ideas\factory\ideas;
 
 class list_controller extends base
@@ -43,7 +43,7 @@ class list_controller extends base
 
 		if ($sort === ideas::SORT_IMPLEMENTED)
 		{
-			$status = 3;
+			$status = ideas::STATUS_IMPLEMENTED;
 			$sort = ideas::SORT_DATE;
 		}
 
