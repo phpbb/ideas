@@ -311,12 +311,13 @@ class ideas
 	 *
 	 * @param int    $idea_id   ID of the idea to be updated.
 	 * @param string $duplicate Idea ID of duplicate.
+	 * @return bool True if set, false if invalid.
 	 */
 	public function set_duplicate($idea_id, $duplicate)
 	{
 		if ($duplicate && !is_numeric($duplicate))
 		{
-			return; // Don't bother informing user, probably an attempted hacker
+			return false;
 		}
 
 		$this->delete_idea_data($idea_id, 'table_duplicates');
@@ -327,6 +328,8 @@ class ideas
 		);
 
 		$this->insert_idea_data($sql_ary, 'table_duplicates');
+
+		return true;
 	}
 
 	/**
@@ -334,13 +337,14 @@ class ideas
 	 *
 	 * @param int    $idea_id ID of the idea to be updated.
 	 * @param string $rfc     Link to the RFC.
+	 * @return bool True if set, false if invalid.
 	 */
 	public function set_rfc($idea_id, $rfc)
 	{
 		$match = '/^https?:\/\/area51\.phpbb\.com\/phpBB\/viewtopic\.php/';
 		if ($rfc && !preg_match($match, $rfc))
 		{
-			return; // Don't bother informing user, probably an attempted hacker
+			return false;
 		}
 
 		$this->delete_idea_data($idea_id, 'table_rfcs');
@@ -351,6 +355,8 @@ class ideas
 		);
 
 		$this->insert_idea_data($sql_ary, 'table_rfcs');
+
+		return true;
 	}
 
 	/**
@@ -358,12 +364,13 @@ class ideas
 	 *
 	 * @param int    $idea_id ID of the idea to be updated.
 	 * @param string $ticket  Ticket ID.
+	 * @return bool True if set, false if invalid.
 	 */
 	public function set_ticket($idea_id, $ticket)
 	{
 		if ($ticket && !is_numeric($ticket))
 		{
-			return; // Don't bother informing user, probably an attempted hacker
+			return false;
 		}
 
 		$this->delete_idea_data($idea_id, 'table_tickets');
@@ -374,6 +381,8 @@ class ideas
 		);
 
 		$this->insert_idea_data($sql_ary, 'table_tickets');
+
+		return true;
 	}
 
 	/**
@@ -382,11 +391,11 @@ class ideas
 	 * @param int    $idea_id ID of the idea to be updated.
 	 * @param string $title   New title.
 	 *
-	 * @return boolean False if invalid length.
+	 * @return boolean True if updated, false if invalid length.
 	 */
 	public function set_title($idea_id, $title)
 	{
-		if (strlen($title) < 6 || strlen($title) > 64)
+		if (utf8_clean_string($title) === '' || utf8_strlen($title) > 64)
 		{
 			return false;
 		}
@@ -557,19 +566,19 @@ class ideas
 	public function submit($title, $desc, $user_id)
 	{
 		$error = array();
-		if (strlen($title) < 6)
+		if (utf8_clean_string($title) === '')
 		{
 			$error[] = $this->user->lang['TITLE_TOO_SHORT'];
 		}
-		if (strlen($desc) < 5)
-		{
-			$error[] = $this->user->lang['DESC_TOO_SHORT'];
-		}
-		if (strlen($title) > 64)
+		if (utf8_strlen($title) > 64)
 		{
 			$error[] = $this->user->lang['TITLE_TOO_LONG'];
 		}
-		if (strlen($desc) > 9900)
+		if (utf8_strlen($desc) < $this->config['min_post_chars'])
+		{
+			$error[] = $this->user->lang['DESC_TOO_SHORT'];
+		}
+		if (utf8_strlen($desc) > $this->config['max_post_chars'])
 		{
 			$error[] = $this->user->lang['DESC_TOO_LONG'];
 		}

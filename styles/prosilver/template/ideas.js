@@ -304,7 +304,7 @@
 				url = $obj.titleEdit.attr('href'),
 				value = $this.val();
 
-			if (value.length < 6 || value.length > 64) {
+			if (value.length < 1 || value.length > 64) {
 				phpbb.alert($this.attr('data-l-err'), $this.attr('data-l-msg'));
 				return;
 			}

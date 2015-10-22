@@ -84,9 +84,9 @@ $lang = array_merge($lang, array(
 	'TICKET_ERROR_DUP'		=> 'Please post the ID of the ticket.',
 	'TITLE'					=> 'Title',
 	'TITLE_EDIT'            => 'Edit title',
-	'TITLE_EDIT_ERROR'		=> 'Title must be between 6 and 64 characters.',
-	'TITLE_TOO_LONG'		=> 'Title must be under 64 characters long.',
-	'TITLE_TOO_SHORT'		=> 'Title must be 6 characters long.',
+	'TITLE_EDIT_ERROR'		=> 'Subject must be between 1 and 64 characters.',
+	'TITLE_TOO_LONG'		=> 'Subject must be under 64 characters long.',
+	'TITLE_TOO_SHORT'		=> 'You must specify a subject when posting a new idea.',
 	'TOP'                   => 'Top',
 	'TOP_IDEAS'				=> 'Top Ideas',
 
