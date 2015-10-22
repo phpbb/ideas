@@ -119,43 +119,43 @@ class ideas
 		{
 			case self::SORT_AUTHOR:
 				$sortby = 'idea_author ' . $sort_direction;
-				break;
+			break;
 
 			case self::SORT_DATE:
 				$sortby = 'idea_date ' . $sort_direction;
-				break;
+			break;
 
 			case self::SORT_ID:
 				$sortby = 'idea_id ' . $sort_direction;
-				break;
+			break;
 
 			case self::SORT_SCORE:
 				$sortby = 'idea_votes_up - idea_votes_down ' . $sort_direction;
-				break;
+			break;
 
 			case self::SORT_TITLE:
 				$sortby = 'idea_title ' . $sort_direction;
-				break;
+			break;
 
 			case self::SORT_VOTES:
 				$sortby = 'idea_votes_up + idea_votes_down ' . $sort_direction;
-				break;
+			break;
 
 			case self::SORT_TOP:
 				// Special case!
 				$sortby = 'TOP';
-				break;
+			break;
 
 			default:
 				// Special case!
 				$sortby = 'ALL';
-				break;
+			break;
 		}
 
 		// If we have a $status value or array lets use it,
 		// otherwise lets exclude implemented, invalid and duplicate by default
 		$status = (!empty($status)) ? $this->db->sql_in_set('idea_status', $status) : $this->db->sql_in_set(
-			'idea_status', array(self::STATUS_IMPLEMENTED, self::STATUS_DUPLICATE, self::STATUS_INVALID
+			'idea_status', array(self::STATUS_IMPLEMENTED, self::STATUS_DUPLICATE, self::STATUS_INVALID,
 		), true);
 
 		// Prepend $status to our $where clause
@@ -295,7 +295,7 @@ class ideas
 	 * Updates the status of an idea.
 	 *
 	 * @param int $idea_id The ID of the idea.
-	 * @param int $status The ID of the status.
+	 * @param int $status  The ID of the status.
 	 */
 	public function change_status($idea_id, $status)
 	{
@@ -309,7 +309,7 @@ class ideas
 	/**
 	 * Sets the ID of the duplicate for an idea.
 	 *
-	 * @param int $idea_id ID of the idea to be updated.
+	 * @param int    $idea_id   ID of the idea to be updated.
 	 * @param string $duplicate Idea ID of duplicate.
 	 */
 	public function set_duplicate($idea_id, $duplicate)
@@ -332,8 +332,8 @@ class ideas
 	/**
 	 * Sets the RFC link of an idea.
 	 *
-	 * @param int $idea_id ID of the idea to be updated.
-	 * @param string $rfc Link to the RFC.
+	 * @param int    $idea_id ID of the idea to be updated.
+	 * @param string $rfc     Link to the RFC.
 	 */
 	public function set_rfc($idea_id, $rfc)
 	{
@@ -356,8 +356,8 @@ class ideas
 	/**
 	 * Sets the ticket ID of an idea.
 	 *
-	 * @param int $idea_id ID of the idea to be updated.
-	 * @param string $ticket Ticket ID.
+	 * @param int    $idea_id ID of the idea to be updated.
+	 * @param string $ticket  Ticket ID.
 	 */
 	public function set_ticket($idea_id, $ticket)
 	{
@@ -379,8 +379,8 @@ class ideas
 	/**
 	 * Sets the title of an idea.
 	 *
-	 * @param int $idea_id ID of the idea to be updated.
-	 * @param string $title New title.
+	 * @param int    $idea_id ID of the idea to be updated.
+	 * @param string $title   New title.
 	 *
 	 * @return boolean False if invalid length.
 	 */
@@ -392,7 +392,7 @@ class ideas
 		}
 
 		$sql_ary = array(
-			'idea_title' => $title
+			'idea_title' => $title,
 		);
 
 		$this->update_idea_data($sql_ary, $idea_id, 'table_ideas');
@@ -405,9 +405,9 @@ class ideas
 	/**
 	 * Submits a vote on an idea.
 	 *
-	 * @param array $idea The idea returned by get_idea().
-	 * @param int $user_id The ID of the user voting.
-	 * @param boolean $value Up or down?
+	 * @param array   $idea    The idea returned by get_idea().
+	 * @param int     $user_id The ID of the user voting.
+	 * @param boolean $value   Up or down?
 	 *
 	 * @return array Array of information.
 	 */
@@ -548,9 +548,9 @@ class ideas
 	/**
 	 * Submits a new idea.
 	 *
-	 * @param string $title The title of the idea.
-	 * @param string $desc The description of the idea.
-	 * @param int $user_id The ID of the author.
+	 * @param string $title   The title of the idea.
+	 * @param string $desc    The description of the idea.
+	 * @param int    $user_id The ID of the author.
 	 *
 	 * @return array|int Either an array of errors, or the ID of the new idea.
 	 */
@@ -670,7 +670,7 @@ class ideas
 	/**
 	 * Deletes an idea and the topic to go with it.
 	 *
-	 * @param int $id The ID of the idea to be deleted.
+	 * @param int $id       The ID of the idea to be deleted.
 	 * @param int $topic_id The ID of the idea topic. Optional, but preferred.
 	 *
 	 * @return boolean Whether the idea was deleted or not.

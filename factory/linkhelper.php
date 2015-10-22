@@ -36,8 +36,8 @@ class linkhelper
 	 * Optionally add mode and hash URL arguments.
 	 *
 	 * @param int    $idea_id int The ID of the idea.
-	 * @param string $mode        The mode argument (vote, delete, etc.)
-	 * @param bool   $hash        Add a link hash
+	 * @param string $mode    The mode argument (vote, delete, etc.)
+	 * @param bool   $hash    Add a link hash
 	 * @return string The route
 	 */
 	public function get_idea_link($idea_id, $mode = '', $hash = false)
@@ -52,7 +52,7 @@ class linkhelper
 	public function get_list_link($sort = 'date')
 	{
 		return $this->helper->route('phpbb_ideas_list_controller', array(
-			'sort'	=> $sort
+			'sort' => $sort,
 		));
 	}
 
