@@ -106,13 +106,14 @@ class ideas
 	 * Returns an array of ideas. Defaults to ten ideas ordered by date
 	 * excluding duplicate or rejected ideas.
 	 *
-	 * @param int $number The number of ideas to return.
-	 * @param string $sort Thing to sort by.
-	 * @param string $sort_direction ASC / DESC.
-	 * @param string $where SQL WHERE query.
+	 * @param int       $number         The number of ideas to return.
+	 * @param string    $sort           Thing to sort by.
+	 * @param string    $sort_direction ASC / DESC.
+	 * @param array|int $status         The id of the status(es) to load
+	 * @param string    $where          SQL WHERE query.
 	 * @return array Array of row data
 	 */
-	public function get_ideas($number = 10, $sort = 'date', $sort_direction = 'DESC', $where = 'idea_status != 4 AND idea_status != 3 AND idea_status != 5')
+	public function get_ideas($number = 10, $sort = 'date', $sort_direction = 'DESC', $status = array(), $where = '')
 	{
 		switch (strtolower($sort))
 		{
@@ -150,6 +151,15 @@ class ideas
 				$sortby = 'ALL';
 				break;
 		}
+
+		// If we have a $status value or array lets use it,
+		// otherwise lets exclude implemented, invalid and duplicate by default
+		$status = (!empty($status)) ? $this->db->sql_in_set('idea_status', $status) : $this->db->sql_in_set(
+			'idea_status', array(self::STATUS_IMPLEMENTED, self::STATUS_DUPLICATE, self::STATUS_INVALID
+		), true);
+
+		// Prepend $status to our $where clause
+		$where = $status . (($where) ? ' AND ' . $where : '');
 
 		if ($sortby !== 'TOP' && $sortby !== 'ALL')
 		{

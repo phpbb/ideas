@@ -47,11 +47,7 @@ class list_controller extends base
 			$sort = ideas::SORT_DATE;
 		}
 
-		$where = $status ? "idea_status = $status" : 'idea_status != 4 AND idea_status != 3 AND idea_status != 5';
-		if ($author)
-		{
-			$where .= " && idea_author = $author";
-		}
+		$where = ($author) ? "idea_author = $author" : '';
 
 		if ($sort == ideas::SORT_TOP)
 		{
@@ -63,7 +59,7 @@ class list_controller extends base
 		}
 
 		// Generate ideas
-		$ideas = $this->ideas->get_ideas(0, $sort, $sort_direction, $where);
+		$ideas = $this->ideas->get_ideas(0, $sort, $sort_direction, $status, $where);
 		$this->assign_template_block_vars('ideas', $ideas);
 
 		$statuses = $this->ideas->get_statuses();
