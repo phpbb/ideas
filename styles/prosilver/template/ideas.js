@@ -105,7 +105,7 @@
 				status: $this.val()
 			};
 
-		if (data.status === '-') {
+		if (!data.status) {
 			return;
 		}
 
