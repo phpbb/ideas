@@ -299,10 +299,11 @@ class ideas
 	 */
 	public function change_status($idea_id, $status)
 	{
-		$sql = 'UPDATE ' . $this->table_ideas . '
-			SET idea_status = ' . (int) $status . '
-			WHERE idea_id = ' . (int) $idea_id;
-		$this->db->sql_query($sql);
+		$sql_ary = array(
+			'idea_status' => (int) $status,
+		);
+
+		$this->update_idea_data($sql_ary, $idea_id, 'table_ideas');
 	}
 
 	/**
@@ -391,13 +392,10 @@ class ideas
 		}
 
 		$sql_ary = array(
-			'idea_title'    => $title
+			'idea_title' => $title
 		);
 
-		$sql = 'UPDATE ' . $this->table_ideas . '
-			SET ' . $this->db->sql_build_array('UPDATE', $sql_ary) . '
-			WHERE idea_id = ' . $idea_id;
-		$this->db->sql_query($sql);
+		$this->update_idea_data($sql_ary, $idea_id, 'table_ideas');
 
 		$this->log->add('mod', $this->user->data['user_id'], $this->user->ip, 'ACP_IDEA_TITLE_EDITED_LOG', time(), array($idea_id));
 
@@ -457,11 +455,12 @@ class ideas
 					$idea['idea_votes_down']++;
 				}
 
-				$sql = 'UPDATE ' . $this->table_ideas . '
-					SET idea_votes_up = ' . $idea['idea_votes_up'] . ',
-						idea_votes_down = ' . $idea['idea_votes_down'] . '
-					WHERE idea_id = ' . $idea['idea_id'];
-				$this->db->sql_query($sql);
+				$sql_ary = array(
+					'idea_votes_up'	    => $idea['idea_votes_up'],
+					'idea_votes_down'	=> $idea['idea_votes_down'],
+				);
+
+				$this->update_idea_data($sql_ary, $idea['idea_id'], 'table_ideas');
 			}
 
 			return array(
@@ -489,10 +488,7 @@ class ideas
 			'idea_votes_down'	=> $idea['idea_votes_down'],
 		);
 
-		$sql = 'UPDATE ' . $this->table_ideas . '
-			SET ' . $this->db->sql_build_array('UPDATE', $sql_ary) . '
-			WHERE idea_id = ' . $idea['idea_id'];
-		$this->db->sql_query($sql);
+		$this->update_idea_data($sql_ary, $idea['idea_id'], 'table_ideas');
 
 		return array(
 			'message'	    => $this->user->lang('VOTE_SUCCESS'),
@@ -510,20 +506,21 @@ class ideas
 			WHERE idea_id = {$idea['idea_id']}
 				AND user_id = $user_id";
 		$this->db->sql_query_limit($sql, 1);
-		if ($result = $this->db->sql_fetchrow())
+		if ($row = $this->db->sql_fetchrow())
 		{
 			$sql = 'DELETE FROM ' . $this->table_votes . '
 				WHERE idea_id = ' . (int) $idea['idea_id'] . '
 					AND user_id = ' . (int) $user_id;
 			$this->db->sql_query($sql);
 
-			$idea['idea_votes_' . ($result['vote_value'] == 1 ? 'up' : 'down')]--;
+			$idea['idea_votes_' . ($row['vote_value'] == 1 ? 'up' : 'down')]--;
 
-			$sql = 'UPDATE ' . $this->table_ideas . '
-				SET idea_votes_up = ' . $idea['idea_votes_up'] . ',
-					idea_votes_down = ' . $idea['idea_votes_down'] . '
-				WHERE idea_id = ' . $idea['idea_id'];
-			$this->db->sql_query($sql);
+			$sql_ary = array(
+				'idea_votes_up'	    => $idea['idea_votes_up'],
+				'idea_votes_down'	=> $idea['idea_votes_down'],
+			);
+
+			$this->update_idea_data($sql_ary, $idea['idea_id'], 'table_ideas');
 		}
 
 		return array(
@@ -668,10 +665,11 @@ class ideas
 		$this->user->data = $tmpdata;
 
 		// Edit topic ID into idea; both should link to each other
-		$sql = 'UPDATE ' . $this->table_ideas . '
-			SET topic_id = ' . $data['topic_id'] . '
-			WHERE idea_id = ' . $idea_id;
-		$this->db->sql_query($sql);
+		$sql_ary = array(
+			'topic_id' => $data['topic_id'],
+		);
+
+		$this->update_idea_data($sql_ary, $idea_id, 'table_ideas');
 
 		return $idea_id;
 	}
@@ -713,7 +711,7 @@ class ideas
 	/**
 	 * Helper method for inserting new idea data
 	 *
-	 * @param array $data   The array of data to insert
+	 * @param array  $data  The array of data to insert
 	 * @param string $table The name of the table
 	 * @return int The ID of the inserted row
 	 */
@@ -727,9 +725,24 @@ class ideas
 	}
 
 	/**
+	 * Helper method for updating idea data
+	 *
+	 * @param array  $data  The array of data to insert
+	 * @param int    $id    The ID of the idea
+	 * @param string $table The name of the table
+	 */
+	protected function update_idea_data(array $data, $id, $table)
+	{
+		$sql = 'UPDATE ' . $this->{$table} . '
+			SET ' . $this->db->sql_build_array('UPDATE', $data) . '
+			WHERE idea_id = ' . (int) $id;
+		$this->db->sql_query($sql);
+	}
+
+	/**
 	 * Helper method for deleting idea data
 	 *
-	 * @param int $id       The ID of the idea
+	 * @param int    $id    The ID of the idea
 	 * @param string $table The name of the table
 	 * @return bool True if idea was deleted, false otherwise
 	 */
