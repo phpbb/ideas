@@ -421,20 +421,13 @@ class ideas
 
 		// Check whether user has already voted - update if they have
 		$sql = 'SELECT idea_id, vote_value
-			FROM ' . $this->table_votes . "
-			WHERE idea_id = {$idea['idea_id']}
-				AND user_id = $user_id";
+			FROM ' . $this->table_votes . '
+			WHERE idea_id = ' . (int) $idea['idea_id'] . '
+				AND user_id = ' . (int) $user_id;
 		$this->db->sql_query_limit($sql, 1);
-		if ($this->db->sql_fetchrow())
+		if ($row = $this->db->sql_fetchrow())
 		{
-			$sql = 'SELECT vote_value
-				FROM ' . $this->table_votes . '
-				WHERE user_id = ' . (int) $user_id . '
-					AND idea_id = ' . (int) $idea['idea_id'];
-			$this->db->sql_query($sql);
-			$old_value = $this->db->sql_fetchfield('vote_value');
-
-			if ($old_value != $value)
+			if ($row['vote_value'] != $value)
 			{
 				$sql = 'UPDATE ' . $this->table_votes . '
 					SET vote_value = ' . $value . '
