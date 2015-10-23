@@ -568,19 +568,19 @@ class ideas
 		$error = array();
 		if (utf8_clean_string($title) === '')
 		{
-			$error[] = $this->user->lang['TITLE_TOO_SHORT'];
+			$error[] = $this->user->lang('TITLE_TOO_SHORT');
 		}
 		if (utf8_strlen($title) > 64)
 		{
-			$error[] = $this->user->lang['TITLE_TOO_LONG'];
+			$error[] = $this->user->lang('TITLE_TOO_LONG');
 		}
 		if (utf8_strlen($desc) < $this->config['min_post_chars'])
 		{
-			$error[] = $this->user->lang['DESC_TOO_SHORT'];
+			$error[] = $this->user->lang('TOO_FEW_CHARS');
 		}
 		if (utf8_strlen($desc) > $this->config['max_post_chars'])
 		{
-			$error[] = $this->user->lang['DESC_TOO_LONG'];
+			$error[] = $this->user->lang('TOO_MANY_CHARS');
 		}
 
 		if (count($error))

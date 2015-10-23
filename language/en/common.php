@@ -29,8 +29,6 @@ $lang = array_merge($lang, array(
 
 	'DATE'					=> 'Date',
 	'DESC'					=> 'Description',
-	'DESC_TOO_LONG'			=> 'Description must be under 10,000 characters long.',
-	'DESC_TOO_SHORT'		=> 'Description must be at least 5 characters long.',
 	'DUPLICATE'				=> 'Duplicate',
 
 	'EDIT'					=> 'Edit',
