@@ -31,24 +31,13 @@ dd.topics {
 	list-style-type: none;
 }
 
-#rfceditinput {
+.ideainput {
 	display: none;
-	width: 360px;
+	width: 300px;
 }
 
-#ticketeditinput {
-	display: none;
-	width: 160px;
-}
-
-#duplicateeditinput {
-	display: none;
-	width: 360px;
-}
-
-#titleeditinput {
-	display: none;
-	width: 320px;
+.ideamodbtn {
+	margin: 0 5px 0 0;
 }
 
 .minivoteup, .minivotedown {

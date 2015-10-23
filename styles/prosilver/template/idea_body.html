@@ -3,7 +3,7 @@
 
 <!-- INCLUDE overall_header.html -->
 
-<h2>{L_VIEWING_IDEA} - <span id="ideatitle">{IDEA_TITLE}</span><input type="text" id="titleeditinput" value="{IDEA_TITLE}" data-l-err="{L_ERROR}" data-l-msg="{L_TITLE_EDIT_ERROR}" /></h2>
+<h2>{L_VIEWING_IDEA} - <span id="ideatitle">{IDEA_TITLE}</span><input type="text" id="titleeditinput" class="ideainput" value="{IDEA_TITLE}" data-l-err="{L_ERROR}" data-l-msg="{L_TITLE_EDIT_ERROR}" /></h2>
 
 <div class="action-bar bar-top">
 	<!-- EVENT viewtopic_buttons_top_before -->
@@ -93,11 +93,11 @@
 			<!-- IF IDEA_RFC or S_CAN_EDIT -->
 			<dt style="width: 15%">{L_RFC}:</dt>
 			<dd>
-				<a id="rfclink" href="{IDEA_RFC}"<!-- IF not IDEA_RFC --> style="display:none"<!-- ENDIF -->>{IDEA_RFC}</a>
+				<a id="rfclink" class="ideamodbtn" href="{IDEA_RFC}"<!-- IF not IDEA_RFC --> style="display:none"<!-- ENDIF -->>{IDEA_RFC}</a>
 
 				<!-- IF S_CAN_EDIT -->
 				<a href="{U_EDIT_RFC}" id="rfcedit" data-l-add="{L_ADD}" data-l-edit="{L_EDIT}"><!-- IF IDEA_RFC -->{L_EDIT}<!-- ELSE -->{L_ADD}<!-- ENDIF --></a>
-				<input type="text" id="rfceditinput" value="{IDEA_RFC}" data-l-err="{L_ERROR}" data-l-msg="{L_RFC_ERROR}" />
+				<input type="text" id="rfceditinput" class="ideainput" value="{IDEA_RFC}" data-l-err="{L_ERROR}" data-l-msg="{L_RFC_ERROR}" />
 				<!-- ENDIF -->
 			</dd>
 			<!-- ENDIF -->
@@ -105,11 +105,11 @@
 			<dt style="width: 15%">{L_TICKET}:</dt>
 			<dd>
 
-				<a id="ticketlink" <!-- IF IDEA_TICKET -->href="https://tracker.phpbb.com/browse/PHPBB3-{IDEA_TICKET}">PHPBB3-{IDEA_TICKET}<!-- ELSE -->style="display:none"><!-- ENDIF --></a>
+				<a id="ticketlink" class="ideamodbtn" <!-- IF IDEA_TICKET -->href="https://tracker.phpbb.com/browse/PHPBB3-{IDEA_TICKET}">PHPBB3-{IDEA_TICKET}<!-- ELSE -->style="display:none"><!-- ENDIF --></a>
 
 				<!-- IF S_CAN_EDIT -->
 				<a href="{U_EDIT_TICKET}" id="ticketedit" data-l-add="{L_ADD}" data-l-edit="{L_EDIT}"><!-- IF IDEA_TICKET -->{L_EDIT}<!-- ELSE -->{L_ADD}<!-- ENDIF --></a>
-				<input type="text" id="ticketeditinput"<!-- IF IDEA_TICKET --> value="PHPBB3-{IDEA_TICKET}"<!-- ENDIF --> placeholder="PHPBB3-#####" data-l-err="{L_ERROR}" data-l-msg="{L_TICKET_ERROR}" />
+				<input type="text" id="ticketeditinput" class="ideainput"<!-- IF IDEA_TICKET --> value="PHPBB3-{IDEA_TICKET}"<!-- ENDIF --> placeholder="PHPBB3-#####" data-l-err="{L_ERROR}" data-l-msg="{L_TICKET_ERROR}" />
 				<!-- ENDIF -->
 			</dd>
 			<!-- ENDIF -->
@@ -117,20 +117,20 @@
 			<dt style="width: 15%" class="duplicatetoggle">{L_DUPLICATE}:</dt>
 			<dd class="duplicatetoggle">
 
-				<a id="duplicatelink" data-link="{U_IDEA_DUPLICATE}" <!-- IF IDEA_DUPLICATE -->href="{U_IDEA_DUPLICATE}">{L_VIEW_DUPLICATE}<!-- ELSE -->style="display:none" data-l-msg="{L_VIEW_DUPLICATE}"><!-- ENDIF --></a>
+				<a id="duplicatelink" class="ideamodbtn" data-link="{U_IDEA_DUPLICATE}" data-l-msg="{L_VIEW_DUPLICATE}" <!-- IF IDEA_DUPLICATE -->href="{U_IDEA_DUPLICATE}">{L_VIEW_DUPLICATE}<!-- ELSE -->style="display:none"><!-- ENDIF --></a>
 
 				<!-- IF S_IS_MOD -->
 				<a href="{U_EDIT_DUPLICATE}" id="duplicateedit">{L_SET}</a>
-				<input type="text" id="duplicateeditinput"<!-- IF IDEA_DUPLICATE --> value="{IDEA_DUPLICATE}"<!-- ENDIF --> placeholder="###" data-l-err="{L_ERROR}" data-l-msg="{L_TICKET_ERROR_DUP}" />
+				<input type="text" id="duplicateeditinput" class="ideainput"<!-- IF IDEA_DUPLICATE --> value="{IDEA_DUPLICATE}"<!-- ENDIF --> placeholder="###" data-l-err="{L_ERROR}" data-l-msg="{L_TICKET_ERROR_DUP}" />
 				<!-- ENDIF -->
 			</dd>
 			<!-- ENDIF -->
 			<!-- IF U_DELETE_IDEA or S_CAN_EDIT -->
 			<dt style="width: 15%">{L_MOD_IDEA}:</dt>
 			<dd>
-				<!-- IF U_DELETE_IDEA --><a href="{U_DELETE_IDEA}" data-ajax="true" data-refresh="true"><i class="fa fa-trash-o"></i> {L_DELETE}</a> &nbsp; <!-- ENDIF -->
-				<!-- IF S_CAN_EDIT --><a href="{U_EDIT_TITLE}" id="titleedit"><i class="fa fa-pencil"></i> {L_TITLE_EDIT}</a> &nbsp; <!-- ENDIF -->
-				<a href="{U_IDEA_TOPIC}"><i class="fa fa-file"></i> {L_IDEA_TOPIC}</a>
+				<!-- IF U_DELETE_IDEA --><a href="{U_DELETE_IDEA}" data-ajax="true" data-refresh="true"><i class="fa fa-fw fa-trash-o"></i>{L_DELETE}</a>&nbsp;<!-- ENDIF -->
+				<!-- IF S_CAN_EDIT --><a href="{U_EDIT_TITLE}" id="titleedit"><i class="fa fa-fw fa-pencil"></i>{L_TITLE_EDIT}</a>&nbsp;<!-- ENDIF -->
+				<a href="{U_IDEA_TOPIC}"><i class="fa fa-fw fa-file"></i>{L_IDEA_TOPIC}</a>
 			</dd>
 			<!-- ENDIF -->
 		</dl>
