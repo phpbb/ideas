@@ -261,7 +261,7 @@
 				if (res) {
 					if (value) {
 						var msg = $obj.duplicateLink.attr('data-l-msg');
-						var link = $obj.duplicateLink.attr('data-link').replace(/(^.*\/)(\d)$/, '$1');
+						var link = $obj.duplicateLink.attr('data-link').replace(/^(.*\/)(\d+)$/, '$1');
 
 						$obj.duplicateLink
 							.text(msg)
