@@ -55,7 +55,7 @@ class post_controller extends base
 			}
 			else
 			{
-				redirect($this->helper->route('ideas_idea_controller', array('idea_id' => $submit)));
+				redirect($this->helper->route('phpbb_ideas_idea_controller', array('idea_id' => $submit)));
 			}
 		}
 
@@ -63,19 +63,19 @@ class post_controller extends base
 		generate_smilies('inline', 0);
 
 		$this->template->assign_vars(array(
-			'S_POST_ACTION'		=> $this->helper->route('ideas_post_controller', array('mode' => 'submit')),
+			'S_POST_ACTION'		=> $this->helper->route('phpbb_ideas_post_controller', array('mode' => 'submit')),
 			'TITLE'				=> $title,
 		));
 
 		// Assign breadcrumb template vars
 		$this->template->assign_block_vars_array('navlinks', array(
 			array(
-				'U_VIEW_FORUM'	=> $this->helper->route('ideas_index_controller'),
+				'U_VIEW_FORUM'	=> $this->helper->route('phpbb_ideas_index_controller'),
 				'FORUM_NAME'	=> $this->language->lang('IDEAS'),
 			),
 			array(
-				'U_VIEW_FORUM'	=> $this->helper->route('ideas_post_controller'),
-				  'FORUM_NAME'	=> $this->language->lang('POST_IDEA'),
+				'U_VIEW_FORUM'	=> $this->helper->route('phpbb_ideas_post_controller'),
+				'FORUM_NAME'	=> $this->language->lang('POST_IDEA'),
 			),
 		));
 

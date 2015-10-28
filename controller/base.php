@@ -89,4 +89,29 @@ abstract class base
 	{
 		return (bool) $this->config['ideas_forum_id'] && (bool) $this->config['ideas_poster_id'];
 	}
+
+	/**
+	 * Assign idea lists template variables
+	 *
+	 * @param string $block The template block var name
+	 * @param array  $rows  The Idea row data
+	 */
+	protected function assign_template_block_vars($block, $rows)
+	{
+		foreach ($rows as $row)
+		{
+			$this->template->assign_block_vars($block, array(
+				'ID'         => $row['idea_id'],
+				'LINK'       => $this->link_helper->get_idea_link($row['idea_id']),
+				'TITLE'      => $row['idea_title'],
+				'AUTHOR'     => $this->link_helper->get_user_link($row['idea_author']),
+				'DATE'       => $this->user->format_date($row['idea_date']),
+				'READ'       => $row['read'],
+				'VOTES_UP'   => $row['idea_votes_up'],
+				'VOTES_DOWN' => $row['idea_votes_down'],
+				'POINTS'     => $row['idea_votes_up'] - $row['idea_votes_down'],
+				'STATUS'     => $row['idea_status'], // for status icons (not currently implemented)
+			));
+		}
+	}
 }

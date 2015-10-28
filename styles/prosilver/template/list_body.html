@@ -4,6 +4,14 @@
 
 <h2>{STATUS_NAME}</h2>
 
+<!-- IF S_USER_LOGGED_IN -->
+	<div class="action-bar top">
+		<a href="{U_POST_ACTION}" class="button" title="{L_NEW_IDEA}">
+			<span>{L_NEW_IDEA}</span><i class="icon fa-lightbulb-o fa-fw" aria-hidden="true"></i>
+		</a>
+	</div>
+<!-- ENDIF -->
+
 <!-- BEGIN ideas -->
 	<!-- IF ideas.S_FIRST_ROW  -->
 		<div class="forumbg">
@@ -65,14 +73,6 @@
 		<!-- ENDIF -->
 	</fieldset>
 </form>
-
-<!-- IF S_USER_LOGGED_IN -->
-	<div class="action-bar top">
-		<a href="{U_POST_ACTION}" class="button" title="{L_NEW_IDEA}">
-			<span>{L_NEW_IDEA}</span><i class="icon fa-lightbulb-o fa-fw" aria-hidden="true"></i>
-		</a>
-	</div>
-<!-- ENDIF -->
 
 <br />
 

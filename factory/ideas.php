@@ -20,6 +20,21 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class ideas
 {
+	const SORT_AUTHOR = 'author';
+	const SORT_DATE = 'date';
+	const SORT_ID = 'id';
+	const SORT_IMPLEMENTED = 'implemented';
+	const SORT_NEW = 'new';
+	const SORT_SCORE = 'score';
+	const SORT_TITLE = 'title';
+	const SORT_TOP = 'top';
+	const SORT_VOTES = 'votes';
+	const STATUS_NEW = 1;
+	const STATUS_PROGRESS = 2;
+	const STATUS_IMPLEMENTED = 3;
+	const STATUS_DUPLICATE = 4;
+	const STATUS_INVALID = 5;
+
 	/* @var config */
 	protected $config;
 
@@ -97,50 +112,60 @@ class ideas
 	 * Returns an array of ideas. Defaults to ten ideas ordered by date
 	 * excluding duplicate or rejected ideas.
 	 *
-	 * @param int $number The number of ideas to return.
-	 * @param string $sort Thing to sort by.
-	 * @param string $sort_direction ASC / DESC.
-	 * @param string $where SQL WHERE query.
+	 * @param int       $number         The number of ideas to return.
+	 * @param string    $sort           Thing to sort by.
+	 * @param string    $sort_direction ASC / DESC.
+	 * @param array|int $status         The id of the status(es) to load
+	 * @param string    $where          SQL WHERE query.
 	 * @return array Array of row data
 	 */
-	public function get_ideas($number = 10, $sort = 'date', $sort_direction = 'DESC', $where = 'idea_status != 4 AND idea_status != 3 AND idea_status != 5')
+	public function get_ideas($number = 10, $sort = 'date', $sort_direction = 'DESC', $status = array(), $where = '')
 	{
 		switch (strtolower($sort))
 		{
-			case 'author':
+			case self::SORT_AUTHOR:
 				$sortby = 'idea_author ' . $sort_direction;
-				break;
+			break;
 
-			case 'date':
+			case self::SORT_DATE:
 				$sortby = 'idea_date ' . $sort_direction;
-				break;
+			break;
 
-			case 'id':
+			case self::SORT_ID:
 				$sortby = 'idea_id ' . $sort_direction;
-				break;
+			break;
 
-			case 'score':
+			case self::SORT_SCORE:
 				$sortby = 'idea_votes_up - idea_votes_down ' . $sort_direction;
-				break;
+			break;
 
-			case 'title':
+			case self::SORT_TITLE:
 				$sortby = 'idea_title ' . $sort_direction;
-				break;
+			break;
 
-			case 'votes':
+			case self::SORT_VOTES:
 				$sortby = 'idea_votes_up + idea_votes_down ' . $sort_direction;
-				break;
+			break;
 
-			case 'top':
+			case self::SORT_TOP:
 				// Special case!
 				$sortby = 'TOP';
-				break;
+			break;
 
 			default:
 				// Special case!
 				$sortby = 'ALL';
-				break;
+			break;
 		}
+
+		// If we have a $status value or array lets use it,
+		// otherwise lets exclude implemented, invalid and duplicate by default
+		$status = (!empty($status)) ? $this->db->sql_in_set('idea_status', $status) : $this->db->sql_in_set(
+			'idea_status', array(self::STATUS_IMPLEMENTED, self::STATUS_DUPLICATE, self::STATUS_INVALID,
+		), true);
+
+		// Prepend $status to our $where clause
+		$where = $status . (($where) ? ' AND ' . $where : '');
 
 		if ($sortby !== 'TOP' && $sortby !== 'ALL')
 		{
@@ -186,7 +211,7 @@ class ideas
 				FROM ' . TOPICS_TABLE . '
 				WHERE ' . $this->db->sql_in_set('topic_id', $topic_ids);
 			$result = $this->db->sql_query($sql);
-			while (($last_time = $this->db->sql_fetchrow($result)))
+			while ($last_time = $this->db->sql_fetchrow($result))
 			{
 				$last_times[$last_time['topic_id']] = $last_time['topic_last_post_time'];
 			}
@@ -211,35 +236,30 @@ class ideas
 	 */
 	public function get_idea($id)
 	{
-		$sql = 'SELECT *
-			FROM ' . $this->table_ideas . "
-			WHERE idea_id = $id";
+		$sql_array = array(
+			'SELECT'		=> 'i.*, d.duplicate_id, t.ticket_id, r.rfc_link',
+			'FROM'			=> array($this->table_ideas => 'i'),
+			'LEFT_JOIN'		=> array(
+				array(
+					'FROM'	=> array($this->table_duplicates => 'd'),
+					'ON'	=> 'i.idea_id = d.idea_id',
+				),
+				array(
+					'FROM'	=> array($this->table_tickets => 't'),
+					'ON'	=> 'i.idea_id = t.idea_id',
+				),
+				array(
+					'FROM'	=> array($this->table_rfcs => 'r'),
+					'ON'	=> 'i.idea_id = r.idea_id',
+				),
+			),
+			'WHERE'			=> 'i.idea_id = ' . (int) $id,
+		);
+
+		$sql = $this->db->sql_build_query('SELECT', $sql_array);
 		$result = $this->db->sql_query_limit($sql, 1);
 		$row = $this->db->sql_fetchrow($result);
 		$this->db->sql_freeresult($result);
-
-		if ($row === false)
-		{
-			return null;
-		}
-
-		$sql = 'SELECT duplicate_id
-			FROM ' . $this->table_duplicates . "
-			WHERE idea_id = $id";
-		$this->db->sql_query_limit($sql, 1);
-		$row['duplicate_id'] = $this->db->sql_fetchfield('duplicate_id');
-
-		$sql = 'SELECT ticket_id
-			FROM ' . $this->table_tickets . "
-			WHERE idea_id = $id";
-		$this->db->sql_query_limit($sql, 1);
-		$row['ticket_id'] = $this->db->sql_fetchfield('ticket_id');
-
-		$sql = 'SELECT rfc_link
-			FROM ' . $this->table_rfcs . "
-			WHERE idea_id = $id";
-		$this->db->sql_query_limit($sql, 1);
-		$row['rfc_link'] = $this->db->sql_fetchfield('rfc_link');
 
 		return $row;
 	}
@@ -253,8 +273,8 @@ class ideas
 	public function get_status_from_id($id)
 	{
 		$sql = 'SELECT status_name
-			FROM ' . $this->table_statuses . "
-			WHERE status_id = $id";
+			FROM ' . $this->table_statuses . '
+			WHERE status_id = ' . (int) $id;
 		$result = $this->db->sql_query_limit($sql, 1);
 		$row = $this->db->sql_fetchrow($result);
 		$this->db->sql_freeresult($result);
@@ -281,27 +301,29 @@ class ideas
 	 * Updates the status of an idea.
 	 *
 	 * @param int $idea_id The ID of the idea.
-	 * @param int $status The ID of the status.
+	 * @param int $status  The ID of the status.
 	 */
 	public function change_status($idea_id, $status)
 	{
-		$sql = 'UPDATE ' . $this->table_ideas . '
-			SET idea_status = ' . (int) $status . '
-			WHERE idea_id = ' . (int) $idea_id;
-		$this->db->sql_query($sql);
+		$sql_ary = array(
+			'idea_status' => (int) $status,
+		);
+
+		$this->update_idea_data($sql_ary, $idea_id, 'table_ideas');
 	}
 
 	/**
 	 * Sets the ID of the duplicate for an idea.
 	 *
-	 * @param int $idea_id ID of the idea to be updated.
+	 * @param int    $idea_id   ID of the idea to be updated.
 	 * @param string $duplicate Idea ID of duplicate.
+	 * @return bool True if set, false if invalid.
 	 */
 	public function set_duplicate($idea_id, $duplicate)
 	{
 		if ($duplicate && !is_numeric($duplicate))
 		{
-			return; // Don't bother informing user, probably an attempted hacker
+			return false;
 		}
 
 		$this->delete_idea_data($idea_id, 'table_duplicates');
@@ -312,20 +334,23 @@ class ideas
 		);
 
 		$this->insert_idea_data($sql_ary, 'table_duplicates');
+
+		return true;
 	}
 
 	/**
 	 * Sets the RFC link of an idea.
 	 *
-	 * @param int $idea_id ID of the idea to be updated.
-	 * @param string $rfc Link to the RFC.
+	 * @param int    $idea_id ID of the idea to be updated.
+	 * @param string $rfc     Link to the RFC.
+	 * @return bool True if set, false if invalid.
 	 */
 	public function set_rfc($idea_id, $rfc)
 	{
 		$match = '/^https?:\/\/area51\.phpbb\.com\/phpBB\/viewtopic\.php/';
 		if ($rfc && !preg_match($match, $rfc))
 		{
-			return; // Don't bother informing user, probably an attempted hacker
+			return false;
 		}
 
 		$this->delete_idea_data($idea_id, 'table_rfcs');
@@ -336,19 +361,22 @@ class ideas
 		);
 
 		$this->insert_idea_data($sql_ary, 'table_rfcs');
+
+		return true;
 	}
 
 	/**
 	 * Sets the ticket ID of an idea.
 	 *
-	 * @param int $idea_id ID of the idea to be updated.
-	 * @param string $ticket Ticket ID.
+	 * @param int    $idea_id ID of the idea to be updated.
+	 * @param string $ticket  Ticket ID.
+	 * @return bool True if set, false if invalid.
 	 */
 	public function set_ticket($idea_id, $ticket)
 	{
 		if ($ticket && !is_numeric($ticket))
 		{
-			return; // Don't bother informing user, probably an attempted hacker
+			return false;
 		}
 
 		$this->delete_idea_data($idea_id, 'table_tickets');
@@ -359,31 +387,30 @@ class ideas
 		);
 
 		$this->insert_idea_data($sql_ary, 'table_tickets');
+
+		return true;
 	}
 
 	/**
 	 * Sets the title of an idea.
 	 *
-	 * @param int $idea_id ID of the idea to be updated.
-	 * @param string $title New title.
+	 * @param int    $idea_id ID of the idea to be updated.
+	 * @param string $title   New title.
 	 *
-	 * @return boolean False if invalid length.
+	 * @return boolean True if updated, false if invalid length.
 	 */
 	public function set_title($idea_id, $title)
 	{
-		if (strlen($title) < 6 || strlen($title) > 64)
+		if (utf8_clean_string($title) === '' || utf8_strlen($title) > 64)
 		{
 			return false;
 		}
 
 		$sql_ary = array(
-			'idea_title'    => $title
+			'idea_title' => $title,
 		);
 
-		$sql = 'UPDATE ' . $this->table_ideas . '
-			SET ' . $this->db->sql_build_array('UPDATE', $sql_ary) . '
-			WHERE idea_id = ' . $idea_id;
-		$this->db->sql_query($sql);
+		$this->update_idea_data($sql_ary, $idea_id, 'table_ideas');
 
 		$this->log->add('mod', $this->user->data['user_id'], $this->user->ip, 'ACP_IDEA_TITLE_EDITED_LOG', time(), array($idea_id));
 
@@ -393,9 +420,9 @@ class ideas
 	/**
 	 * Submits a vote on an idea.
 	 *
-	 * @param array $idea The idea returned by get_idea().
-	 * @param int $user_id The ID of the user voting.
-	 * @param boolean $value Up or down?
+	 * @param array   $idea    The idea returned by get_idea().
+	 * @param int     $user_id The ID of the user voting.
+	 * @param boolean $value   Up or down?
 	 *
 	 * @return array Array of information.
 	 */
@@ -409,20 +436,13 @@ class ideas
 
 		// Check whether user has already voted - update if they have
 		$sql = 'SELECT idea_id, vote_value
-			FROM ' . $this->table_votes . "
-			WHERE idea_id = {$idea['idea_id']}
-				AND user_id = $user_id";
+			FROM ' . $this->table_votes . '
+			WHERE idea_id = ' . (int) $idea['idea_id'] . '
+				AND user_id = ' . (int) $user_id;
 		$this->db->sql_query_limit($sql, 1);
-		if ($this->db->sql_fetchrow())
+		if ($row = $this->db->sql_fetchrow())
 		{
-			$sql = 'SELECT vote_value
-				FROM ' . $this->table_votes . '
-				WHERE user_id = ' . (int) $user_id . '
-					AND idea_id = ' . (int) $idea['idea_id'];
-			$this->db->sql_query($sql);
-			$old_value = $this->db->sql_fetchfield('vote_value');
-
-			if ($old_value != $value)
+			if ($row['vote_value'] != $value)
 			{
 				$sql = 'UPDATE ' . $this->table_votes . '
 					SET vote_value = ' . $value . '
@@ -443,11 +463,12 @@ class ideas
 					$idea['idea_votes_down']++;
 				}
 
-				$sql = 'UPDATE ' . $this->table_ideas . '
-					SET idea_votes_up = ' . $idea['idea_votes_up'] . ',
-						idea_votes_down = ' . $idea['idea_votes_down'] . '
-					WHERE idea_id = ' . $idea['idea_id'];
-				$this->db->sql_query($sql);
+				$sql_ary = array(
+					'idea_votes_up'	    => $idea['idea_votes_up'],
+					'idea_votes_down'	=> $idea['idea_votes_down'],
+				);
+
+				$this->update_idea_data($sql_ary, $idea['idea_id'], 'table_ideas');
 			}
 
 			return array(
@@ -475,10 +496,7 @@ class ideas
 			'idea_votes_down'	=> $idea['idea_votes_down'],
 		);
 
-		$sql = 'UPDATE ' . $this->table_ideas . '
-			SET ' . $this->db->sql_build_array('UPDATE', $sql_ary) . '
-			WHERE idea_id = ' . $idea['idea_id'];
-		$this->db->sql_query($sql);
+		$this->update_idea_data($sql_ary, $idea['idea_id'], 'table_ideas');
 
 		return array(
 			'message'	    => $this->language->lang('VOTE_SUCCESS'),
@@ -496,20 +514,21 @@ class ideas
 			WHERE idea_id = {$idea['idea_id']}
 				AND user_id = $user_id";
 		$this->db->sql_query_limit($sql, 1);
-		if ($result = $this->db->sql_fetchrow())
+		if ($row = $this->db->sql_fetchrow())
 		{
 			$sql = 'DELETE FROM ' . $this->table_votes . '
 				WHERE idea_id = ' . (int) $idea['idea_id'] . '
 					AND user_id = ' . (int) $user_id;
 			$this->db->sql_query($sql);
 
-			$idea['idea_votes_' . ($result['vote_value'] == 1 ? 'up' : 'down')]--;
+			$idea['idea_votes_' . ($row['vote_value'] == 1 ? 'up' : 'down')]--;
 
-			$sql = 'UPDATE ' . $this->table_ideas . '
-				SET idea_votes_up = ' . $idea['idea_votes_up'] . ',
-					idea_votes_down = ' . $idea['idea_votes_down'] . '
-				WHERE idea_id = ' . $idea['idea_id'];
-			$this->db->sql_query($sql);
+			$sql_ary = array(
+				'idea_votes_up'	    => $idea['idea_votes_up'],
+				'idea_votes_down'	=> $idea['idea_votes_down'],
+			);
+
+			$this->update_idea_data($sql_ary, $idea['idea_id'], 'table_ideas');
 		}
 
 		return array(
@@ -544,30 +563,30 @@ class ideas
 	/**
 	 * Submits a new idea.
 	 *
-	 * @param string $title The title of the idea.
-	 * @param string $desc The description of the idea.
-	 * @param int $user_id The ID of the author.
+	 * @param string $title   The title of the idea.
+	 * @param string $desc    The description of the idea.
+	 * @param int    $user_id The ID of the author.
 	 *
 	 * @return array|int Either an array of errors, or the ID of the new idea.
 	 */
 	public function submit($title, $desc, $user_id)
 	{
 		$error = array();
-		if (strlen($title) < 6)
+		if (utf8_clean_string($title) === '')
 		{
 			$error[] = $this->language->lang('TITLE_TOO_SHORT');
 		}
-		if (strlen($desc) < 5)
-		{
-			$error[] = $this->language->lang('DESC_TOO_SHORT');
-		}
-		if (strlen($title) > 64)
+		if (utf8_strlen($title) > 64)
 		{
 			$error[] = $this->language->lang('TITLE_TOO_LONG');
 		}
-		if (strlen($desc) > 9900)
+		if (utf8_strlen($desc) < $this->config['min_post_chars'])
 		{
-			$error[] = $this->language->lang('DESC_TOO_LONG');
+			$error[] = $this->language->lang('TOO_FEW_CHARS');
+		}
+		if (utf8_strlen($desc) > $this->config['max_post_chars'])
+		{
+			$error[] = $this->language->lang('TOO_MANY_CHARS');
 		}
 
 		if (count($error))
@@ -597,7 +616,7 @@ class ideas
 		$this->vote($idea, $this->user->data['user_id'], 1);
 
 		// Submit topic
-		$bbcode = '[url=' . $this->helper->route('ideas_idea_controller', array('idea_id' => $idea_id), true, false, UrlGeneratorInterface::ABSOLUTE_URL) . "]{$title}[/url]";
+		$bbcode = '[url=' . $this->helper->route('phpbb_ideas_idea_controller', array('idea_id' => $idea_id), true, false, UrlGeneratorInterface::ABSOLUTE_URL) . "]{$title}[/url]";
 		$desc .= "\n\n----------\n\n" . $this->language->lang('VIEW_IDEA_AT', $bbcode);
 		$bbcode = '[url=' . generate_board_url() . '/' . append_sid("memberlist.{$this->php_ext}", array('u' => $user_id, 'mode' => 'viewprofile')) . "]{$username}[/url]";
 		$desc .= "\n\n" . $this->language->lang('IDEA_POSTER', $bbcode);
@@ -654,10 +673,11 @@ class ideas
 		$this->user->data = $tmpdata;
 
 		// Edit topic ID into idea; both should link to each other
-		$sql = 'UPDATE ' . $this->table_ideas . '
-			SET topic_id = ' . $data['topic_id'] . '
-			WHERE idea_id = ' . $idea_id;
-		$this->db->sql_query($sql);
+		$sql_ary = array(
+			'topic_id' => $data['topic_id'],
+		);
+
+		$this->update_idea_data($sql_ary, $idea_id, 'table_ideas');
 
 		return $idea_id;
 	}
@@ -665,7 +685,7 @@ class ideas
 	/**
 	 * Deletes an idea and the topic to go with it.
 	 *
-	 * @param int $id The ID of the idea to be deleted.
+	 * @param int $id       The ID of the idea to be deleted.
 	 * @param int $topic_id The ID of the idea topic. Optional, but preferred.
 	 *
 	 * @return boolean Whether the idea was deleted or not.
@@ -699,7 +719,7 @@ class ideas
 	/**
 	 * Helper method for inserting new idea data
 	 *
-	 * @param array $data   The array of data to insert
+	 * @param array  $data  The array of data to insert
 	 * @param string $table The name of the table
 	 * @return int The ID of the inserted row
 	 */
@@ -713,9 +733,24 @@ class ideas
 	}
 
 	/**
+	 * Helper method for updating idea data
+	 *
+	 * @param array  $data  The array of data to insert
+	 * @param int    $id    The ID of the idea
+	 * @param string $table The name of the table
+	 */
+	protected function update_idea_data(array $data, $id, $table)
+	{
+		$sql = 'UPDATE ' . $this->{$table} . '
+			SET ' . $this->db->sql_build_array('UPDATE', $data) . '
+			WHERE idea_id = ' . (int) $id;
+		$this->db->sql_query($sql);
+	}
+
+	/**
 	 * Helper method for deleting idea data
 	 *
-	 * @param int $id       The ID of the idea
+	 * @param int    $id    The ID of the idea
 	 * @param string $table The name of the table
 	 * @return bool True if idea was deleted, false otherwise
 	 */
