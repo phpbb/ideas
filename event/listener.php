@@ -67,8 +67,30 @@ class listener implements EventSubscriberInterface
 	static public function getSubscribedEvents()
 	{
 		return array(
+			'core.viewtopic_modify_post_row'	=> 'clean_message',
 			'core.viewtopic_modify_page_title'	=> 'load_idea',
 		);
+	}
+
+	public function clean_message($event)
+	{
+		if ($event['row']['forum_id'] != $this->config['ideas_forum_id'])
+		{
+			return;
+		}
+
+		if ($event['topic_data']['topic_first_post_id'] == $event['row']['post_id'])
+		{
+			$post_row = $event['post_row'];
+			$message = $post_row['MESSAGE'];
+
+			// This freakish looking regex pattern should
+			// remove the ideas link-backs from the message.
+			$message = preg_replace('/(<br[^>]*>\\n?)\\1-{10}\\1\\1.*/s', '', $message);
+
+			$post_row['MESSAGE'] = $message;
+			$event['post_row'] = $post_row;
+		}
 	}
 
 	public function load_idea($event)
@@ -155,10 +177,5 @@ class listener implements EventSubscriberInterface
 			'U_VIEW_FORUM'		=> $this->helper->route('ideas_index_controller'),
 			'FORUM_NAME'		=> $this->user->lang('IDEAS'),
 		));
-
-		// TODO: What to do about this?
-		// This freakish looking regex pattern should
-		// remove the ideas link-backs from the message.
-		//$message = preg_replace('/(<br[^>]*>\\n?)\\1-{10}\\1\\1.*/s', '', $message);
 	}
 }
