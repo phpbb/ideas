@@ -10,7 +10,8 @@
 
 namespace phpbb\ideas\controller;
 
-use \phpbb\exception\http_exception;
+use phpbb\exception\http_exception;
+use phpbb\ideas\factory\ideas;
 
 class list_controller extends base
 {
@@ -28,28 +29,27 @@ class list_controller extends base
 			throw new http_exception(404, 'IDEAS_NOT_AVAILABLE');
 		}
 
-		if ($sort === 'new')
+		// Build the breadcrumb off the $sort parameter
+		$breadcrumb = (in_array($sort, array(ideas::SORT_NEW, ideas::SORT_TOP, ideas::SORT_IMPLEMENTED)) ? $sort : array());
+
+		if ($sort === ideas::SORT_NEW)
 		{
-			$sort = 'date';
+			$sort = ideas::SORT_DATE;
 		}
 
 		$sort_direction = ($this->request->variable('sd', 'd')) === 'd' ? 'DESC' : 'ASC';
 		$status = $this->request->variable('status', 0);
-		$author = $this->request->variable('author', 0);
+		$author = $this->request->variable(ideas::SORT_AUTHOR, 0);
 
-		if ($sort === 'implemented')
+		if ($sort === ideas::SORT_IMPLEMENTED)
 		{
-			$status = 3;
-			$sort = 'date';
+			$status = ideas::STATUS_IMPLEMENTED;
+			$sort = ideas::SORT_DATE;
 		}
 
-		$where = $status ? "idea_status = $status" : 'idea_status != 4 AND idea_status != 3 AND idea_status != 5';
-		if ($author)
-		{
-			$where .= " && idea_author = $author";
-		}
+		$where = ($author) ? "idea_author = $author" : '';
 
-		if ($sort == 'top')
+		if ($sort == ideas::SORT_TOP)
 		{
 			$status_name = $this->user->lang('TOP_IDEAS');
 		}
@@ -58,35 +58,21 @@ class list_controller extends base
 			$status_name = $this->ideas->get_status_from_id($status);
 		}
 
-		$returned_ideas = $this->ideas->get_ideas(0, $sort, $sort_direction, $where);
+		// Generate ideas
+		$ideas = $this->ideas->get_ideas(0, $sort, $sort_direction, $status, $where);
+		$this->assign_template_block_vars('ideas', $ideas);
 
-		foreach ($returned_ideas as $idea)
-		{
-			$this->template->assign_block_vars('ideas', array(
-				'ID'			=> $idea['idea_id'],
-				'LINK'			=> $this->link_helper->get_idea_link($idea['idea_id']),
-				'TITLE'			=> $idea['idea_title'],
-				'AUTHOR'		=> $this->link_helper->get_user_link($idea['idea_author']),
-				'DATE'			=> $this->user->format_date($idea['idea_date']),
-				'READ'          => $idea['read'],
-				'VOTES_UP'	    => $idea['idea_votes_up'],
-				'VOTES_DOWN'    => $idea['idea_votes_down'],
-				'POINTS'        => $idea['idea_votes_up'] - $idea['idea_votes_down'],
-				'STATUS'		=> $idea['idea_status'], // For icons
-			));
-		}
-
-		$statuses = array('new', 'in_progress', 'implemented', 'duplicate');
-		foreach ($statuses as $key => $statusText)
+		$statuses = $this->ideas->get_statuses();
+		foreach ($statuses as $status_row)
 		{
 			$this->template->assign_block_vars('status', array(
-				'VALUE'		=> $key + 1,
-				'TEXT'		=> $this->user->lang[strtoupper($statusText)],
-				'SELECTED'	=> $status == $key + 1,
+				'VALUE'		=> $status_row['status_id'],
+				'TEXT'		=> $this->user->lang($status_row['status_name']),
+				'SELECTED'	=> $status == $status_row['status_id'],
 			));
 		}
 
-		$sorts = array('author', 'date', 'id', 'score', 'title', 'top', 'votes');
+		$sorts = array(ideas::SORT_AUTHOR, ideas::SORT_DATE, ideas::SORT_ID, ideas::SORT_SCORE, ideas::SORT_TITLE, ideas::SORT_TOP, ideas::SORT_VOTES);
 		foreach ($sorts as $sortBy)
 		{
 			$this->template->assign_block_vars('sortby', array(
@@ -98,18 +84,21 @@ class list_controller extends base
 
 		$this->template->assign_vars(array(
 			'U_POST_ACTION'		=> $this->helper->route('phpbb_ideas_list_controller'),
+			'U_NEW_IDEA_ACTION'	=> $this->helper->route('phpbb_ideas_post_controller'),
 			'SORT_DIRECTION'	=> $sort_direction,
 			'STATUS_NAME'       => $status_name ?: $this->user->lang('ALL_IDEAS'),
 		));
 
 		// Assign breadcrumb template vars
+		$breadcrumb_params = ($breadcrumb) ? array('sort' => $breadcrumb) : array();
+		$breadcrumb_params = array_merge($breadcrumb_params, (($status) ? array('status' => $status) : array()));
 		$this->template->assign_block_vars_array('navlinks', array(
 			array(
 				'U_VIEW_FORUM'	=> $this->helper->route('phpbb_ideas_index_controller'),
 				'FORUM_NAME'	=> $this->user->lang('IDEAS'),
 			),
 			array(
-				'U_VIEW_FORUM'	=> $this->helper->route('phpbb_ideas_list_controller'),
+				'U_VIEW_FORUM'	=> $this->helper->route('phpbb_ideas_list_controller', $breadcrumb_params),
 				'FORUM_NAME'	=> $status_name ?: $this->user->lang('ALL_IDEAS'),
 			),
 		));

@@ -4,6 +4,14 @@
 
 <h2>{STATUS_NAME}</h2>
 
+<!-- IF S_USER_LOGGED_IN -->
+<div class="action-bar top">
+	<div class="buttons">
+		<a href="{U_NEW_IDEA_ACTION}" class="button icon-button new-idea" title="{L_NEW_IDEA}">{L_NEW_IDEA}</a>
+	</div>
+</div>
+<!-- ENDIF -->
+
 <!-- INCLUDE idealist_body.html -->
 
 <form action="{U_POST_ACTION}" method="get">
@@ -26,13 +34,5 @@
 		<!-- ENDIF -->
 	</fieldset>
 </form>
-
-<!-- IF S_USER_LOGGED_IN -->
-	<div class="action-bar top">
-		<div class="buttons">
-			<a href="{U_POST_ACTION}" class="button icon-button new-idea" title="{L_NEW_IDEA}">{L_NEW_IDEA}</a>
-		</div>
-	</div>
-<!-- ENDIF -->
 
 <!-- INCLUDE overall_footer.html -->

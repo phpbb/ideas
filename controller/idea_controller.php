@@ -135,8 +135,7 @@ class idea_controller extends base
 					if ($mod && check_link_hash($hash, "{$mode}_{$idea_id}"))
 					{
 						$duplicate = $this->request->variable('duplicate', 0);
-						$this->ideas->set_duplicate($idea['idea_id'], $duplicate);
-						$result = true;
+						$result = $this->ideas->set_duplicate($idea['idea_id'], $duplicate);
 					}
 					else
 					{
@@ -145,7 +144,7 @@ class idea_controller extends base
 				break;
 
 				case 'removevote':
-					if ($idea['idea_status'] == 3 || $idea['idea_status'] == 4 || !check_link_hash($hash, "{$mode}_{$idea_id}"))
+					if ($idea['idea_status'] == ideas::STATUS_IMPLEMENTED || $idea['idea_status'] == ideas::STATUS_DUPLICATE || !check_link_hash($hash, "{$mode}_{$idea_id}"))
 					{
 						return false;
 					}
@@ -164,8 +163,7 @@ class idea_controller extends base
 					if (($own || $mod) && check_link_hash($hash, "{$mode}_{$idea_id}"))
 					{
 						$rfc = $this->request->variable('rfc', '');
-						$this->ideas->set_rfc($idea['idea_id'], $rfc);
-						$result = true;
+						$result = $this->ideas->set_rfc($idea['idea_id'], $rfc);
 					}
 					else
 					{
@@ -189,8 +187,7 @@ class idea_controller extends base
 					if (($own || $mod) && check_link_hash($hash, "{$mode}_{$idea_id}"))
 					{
 						$ticket = $this->request->variable('ticket', 0);
-						$this->ideas->set_ticket($idea['idea_id'], $ticket);
-						$result = true;
+						$result = $this->ideas->set_ticket($idea['idea_id'], $ticket);
 					}
 					else
 					{
@@ -202,8 +199,7 @@ class idea_controller extends base
 					if (($own || $mod) && check_link_hash($hash, "{$mode}_{$idea_id}"))
 					{
 						$title = $this->request->variable('title', '');
-						$this->ideas->set_title($idea['idea_id'], $title);
-						$result = true;
+						$result = $this->ideas->set_title($idea['idea_id'], $title);
 					}
 					else
 					{
@@ -212,7 +208,7 @@ class idea_controller extends base
 				break;
 
 				case 'vote':
-					if ($idea['idea_status'] == 3 || $idea['idea_status'] == 4 || !check_link_hash($hash, "{$mode}_{$idea_id}"))
+					if ($idea['idea_status'] == ideas::STATUS_IMPLEMENTED || $idea['idea_status'] == ideas::STATUS_DUPLICATE || !check_link_hash($hash, "{$mode}_{$idea_id}"))
 					{
 						return false;
 					}
@@ -258,7 +254,7 @@ class idea_controller extends base
 		$idea_topic_link = append_sid("{$this->root_path}viewtopic.{$this->php_ext}", 't=' . $idea['topic_id']);
 
 		$can_vote = true;
-		if ($idea['idea_status'] == 3 || $idea['idea_status'] == 4 || !$this->auth->acl_get('f_vote', (int) $this->config['ideas_forum_id']))
+		if ($idea['idea_status'] == ideas::STATUS_IMPLEMENTED || $idea['idea_status'] == ideas::STATUS_DUPLICATE || !$this->auth->acl_get('f_vote', (int) $this->config['ideas_forum_id']))
 		{
 			$can_vote = false;
 		}

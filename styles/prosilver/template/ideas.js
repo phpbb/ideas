@@ -105,7 +105,7 @@
 				status: $this.val()
 			};
 
-		if (data.status === '-') {
+		if (!data.status) {
 			return;
 		}
 
@@ -261,7 +261,7 @@
 				if (res) {
 					if (value) {
 						var msg = $obj.duplicateLink.attr('data-l-msg');
-						var link = $obj.duplicateLink.attr('data-link').replace(/(^.*\/)(\d)$/, '$1');
+						var link = $obj.duplicateLink.attr('data-link').replace(/^(.*\/)(\d+)$/, '$1');
 
 						$obj.duplicateLink
 							.text(msg)
@@ -304,7 +304,7 @@
 				url = $obj.titleEdit.attr('href'),
 				value = $this.val();
 
-			if (value.length < 6 || value.length > 64) {
+			if (value.length < 1 || value.length > 64) {
 				phpbb.alert($this.attr('data-l-err'), $this.attr('data-l-msg'));
 				return;
 			}
