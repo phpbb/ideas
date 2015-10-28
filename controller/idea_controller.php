@@ -32,6 +32,9 @@ class idea_controller extends base
 	/** @var config */
 	protected $config;
 
+	/** @var array of idea data */
+	protected $data;
+
 	/**
 	 * @param \phpbb\auth\auth                  $auth
 	 * @param \phpbb\config\config              $config
@@ -65,26 +68,35 @@ class idea_controller extends base
 			throw new http_exception(404, 'IDEAS_NOT_AVAILABLE');
 		}
 
-		$mode = $this->request->variable('mode', '');
-		$vote = $this->request->variable('v', 1);
-		$hash = $this->request->variable('hash', '');
-		$status = $this->request->variable('status', 0);
-		$idea = $this->ideas->get_idea($idea_id);
-
-		if (!$idea)
+		$this->data = $this->ideas->get_idea($idea_id);
+		if (!$this->data)
 		{
 			throw new http_exception(404, 'IDEA_NOT_FOUND');
 		}
 
-		$mod = $this->auth->acl_get('m_', (int) $this->config['ideas_forum_id']);
-		$own = $idea['idea_author'] === $this->user->data['user_id'];
+		$mode = $this->request->variable('mode', '');
+		if ($this->request->is_ajax() && !empty($mode))
+		{
+			$result = call_user_func(array($this, $mode));
 
-		if ($mode === 'delete' && ($mod || ($own && $this->auth->acl_get('f_delete', (int) $this->config['ideas_forum_id']))))
+			return new \Symfony\Component\HttpFoundation\JsonResponse($result);
+		}
+
+		$url = reapply_sid(generate_board_url() .
+			"/viewtopic.{$this->php_ext}?f={$this->config['ideas_forum_id']}&t={$this->data['topic_id']}"
+		);
+
+		return new RedirectResponse($url);
+	}
+
+	public function delete()
+	{
+		if ($this->is_mod() || ($this->is_own() && $this->auth->acl_get('f_delete', (int) $this->config['ideas_forum_id'])))
 		{
 			if (confirm_box(true))
 			{
 				include($this->root_path . 'includes/functions_admin.' . $this->php_ext);
-				$this->ideas->delete($idea_id, $idea['topic_id']);
+				$this->ideas->delete($this->data['idea_id'], $this->data['topic_id']);
 
 				$redirect = $this->helper->route('phpbb_ideas_index_controller');
 				$message = $this->language->lang('IDEA_DELETED') . '<br /><br />' . $this->language->lang('RETURN_IDEAS', '<a href="' . $redirect . '">', '</a>');
@@ -97,14 +109,14 @@ class idea_controller extends base
 					false,
 					$this->language->lang('CONFIRM_OPERATION'),
 					build_hidden_fields(array(
-						'idea_id' => $idea_id,
+						'idea_id' => $this->data['idea_id'],
 						'mode' => 'delete',
 					)),
 					'confirm_body.html',
 					$this->helper->route(
 						'ideas_idea_controller',
 						array(
-							'idea_id' => $idea_id,
+							'idea_id' => $this->data['idea_id'],
 							'mode'    => 'delete',
 						),
 						true,
@@ -114,112 +126,117 @@ class idea_controller extends base
 				);
 			}
 		}
+	}
 
-		if ($this->request->is_ajax() && !empty($mode))
+	public function duplicate()
+	{
+		if ($this->is_mod() && check_link_hash($this->get_hash(), "duplicate_{$this->data['idea_id']}"))
 		{
-			switch ($mode)
-			{
-				case 'duplicate':
-					if ($mod && check_link_hash($hash, "{$mode}_{$idea_id}"))
-					{
-						$duplicate = $this->request->variable('duplicate', 0);
-						$result = $this->ideas->set_duplicate($idea['idea_id'], $duplicate);
-					}
-					else
-					{
-						$result = false;
-					}
-				break;
-
-				case 'removevote':
-					if ($idea['idea_status'] == ideas::STATUS_IMPLEMENTED || $idea['idea_status'] == ideas::STATUS_DUPLICATE || !check_link_hash($hash, "{$mode}_{$idea_id}"))
-					{
-						return false;
-					}
-
-					if ($this->auth->acl_get('f_vote', (int) $this->config['ideas_forum_id']))
-					{
-						$result = $this->ideas->remove_vote($idea, $this->user->data['user_id']);
-					}
-					else
-					{
-						$result = $this->language->lang('NO_AUTH_OPERATION');
-					}
-				break;
-
-				case 'rfc':
-					if (($own || $mod) && check_link_hash($hash, "{$mode}_{$idea_id}"))
-					{
-						$rfc = $this->request->variable('rfc', '');
-						$result = $this->ideas->set_rfc($idea['idea_id'], $rfc);
-					}
-					else
-					{
-						$result = false;
-					}
-				break;
-
-				case 'status':
-					if ($status && $mod && check_link_hash($hash, "{$mode}_{$idea_id}"))
-					{
-						$this->ideas->change_status($idea['idea_id'], $status);
-						$result = true;
-					}
-					else
-					{
-						$result = false;
-					}
-				break;
-
-				case 'ticket':
-					if (($own || $mod) && check_link_hash($hash, "{$mode}_{$idea_id}"))
-					{
-						$ticket = $this->request->variable('ticket', 0);
-						$result = $this->ideas->set_ticket($idea['idea_id'], $ticket);
-					}
-					else
-					{
-						$result = false;
-					}
-				break;
-
-				case 'title':
-					if (($own || $mod) && check_link_hash($hash, "{$mode}_{$idea_id}"))
-					{
-						$title = $this->request->variable('title', '');
-						$result = $this->ideas->set_title($idea['idea_id'], $title);
-					}
-					else
-					{
-						$result = false;
-					}
-				break;
-
-				case 'vote':
-					if ($idea['idea_status'] == ideas::STATUS_IMPLEMENTED || $idea['idea_status'] == ideas::STATUS_DUPLICATE || !check_link_hash($hash, "{$mode}_{$idea_id}"))
-					{
-						return false;
-					}
-
-					if ($this->auth->acl_get('f_vote', (int) $this->config['ideas_forum_id']))
-					{
-						$result = $this->ideas->vote($idea, $this->user->data['user_id'], $vote);
-					}
-					else
-					{
-						$result = $this->language->lang('NO_AUTH_OPERATION');
-					}
-				break;
-
-				default:
-					$result = '?';
-				break;
-			}
-
-			return new \Symfony\Component\HttpFoundation\JsonResponse($result);
+			$duplicate = $this->request->variable('duplicate', 0);
+			return $this->ideas->set_duplicate($this->data['idea_id'], $duplicate);
 		}
 
-		$url = generate_board_url() . "/viewtopic.$this->php_ext?f={$this->config['ideas_forum_id']}&t={$idea['topic_id']}";
-		return new RedirectResponse($url);
+		return false;
+	}
+
+	public function removevote()
+	{
+		if ($this->data['idea_status'] == ideas::STATUS_IMPLEMENTED || $this->data['idea_status'] == ideas::STATUS_DUPLICATE || !check_link_hash($this->get_hash(), "removevote_{$this->data['idea_id']}"))
+		{
+			return false;
+		}
+
+		if ($this->auth->acl_get('f_vote', (int) $this->config['ideas_forum_id']))
+		{
+			$result = $this->ideas->remove_vote($this->data, $this->user->data['user_id']);
+		}
+		else
+		{
+			$result = $this->language->lang('NO_AUTH_OPERATION');
+		}
+
+		return $result;
+	}
+
+	public function rfc()
+	{
+		if (($this->is_own() || $this->is_mod()) && check_link_hash($this->get_hash(), "rfc_{$this->data['idea_id']}"))
+		{
+			$rfc = $this->request->variable('rfc', '');
+			return $this->ideas->set_rfc($this->data['idea_id'], $rfc);
+		}
+
+		return false;
+	}
+
+	public function status()
+	{
+		$status = $this->request->variable('status', 0);
+
+		if ($status && $this->is_mod() && check_link_hash($this->get_hash(), "status_{$this->data['idea_id']}"))
+		{
+			$this->ideas->change_status($this->data['idea_id'], $status);
+			return true;
+		}
+
+		return false;
+	}
+
+	public function ticket()
+	{
+		if (($this->is_own() || $this->is_mod()) && check_link_hash($this->get_hash(), "ticket_{$this->data['idea_id']}"))
+		{
+			$ticket = $this->request->variable('ticket', 0);
+			return $this->ideas->set_ticket($this->data['idea_id'], $ticket);
+		}
+
+		return false;
+	}
+
+	public function title()
+	{
+		if (($this->is_own() || $this->is_mod()) && check_link_hash($this->get_hash(), "title_{$this->data['idea_id']}"))
+		{
+			$title = $this->request->variable('title', '');
+			return $this->ideas->set_title($this->data['idea_id'], $title);
+		}
+
+		return false;
+	}
+
+	public function vote()
+	{
+		$vote = $this->request->variable('v', 1);
+
+		if ($this->data['idea_status'] == ideas::STATUS_IMPLEMENTED || $this->data['idea_status'] == ideas::STATUS_DUPLICATE || !check_link_hash($this->get_hash(), "vote_{$this->data['idea_id']}"))
+		{
+			return false;
+		}
+
+		if ($this->auth->acl_get('f_vote', (int) $this->config['ideas_forum_id']))
+		{
+			$result = $this->ideas->vote($this->data, $this->user->data['user_id'], $vote);
+		}
+		else
+		{
+			$result = $this->language->lang('NO_AUTH_OPERATION');
+		}
+
+		return $result;
+	}
+
+	protected function get_hash()
+	{
+		return $this->request->variable('hash', '');
+	}
+
+	protected function is_mod()
+	{
+		return $this->auth->acl_get('m_', (int) $this->config['ideas_forum_id']);
+	}
+
+	protected function is_own()
+	{
+		return $this->data['idea_author'] === $this->user->data['user_id'];
 	}
 }
