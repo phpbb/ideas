@@ -8,7 +8,7 @@
 			ESC: 27
 		},
 		$obj = {
-			ideaTitle: $('#ideatitle'),
+			ideaTitle: $('.topic-title > a'),
 			duplicateEdit: $('#duplicateedit'),
 			duplicateEditInput: $('#duplicateeditinput'),
 			duplicateLink: $('#duplicatelink'),

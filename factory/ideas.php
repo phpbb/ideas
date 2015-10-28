@@ -264,6 +264,18 @@ class ideas
 		return $row;
 	}
 
+	public function get_idea_by_topic_id($id)
+	{
+		$sql = 'SELECT idea_id
+			FROM ' . $this->table_ideas . '
+			WHERE topic_id = ' . (int) $id;
+		$result = $this->db->sql_query_limit($sql, 1);
+		$idea_id = $this->db->sql_fetchfield('idea_id');
+		$this->db->sql_freeresult($result);
+
+		return $this->get_idea($idea_id);
+	}
+
 	/**
 	 * Returns the status name from the status ID specified.
 	 *
@@ -604,22 +616,22 @@ class ideas
 
 		$idea_id = $this->insert_idea_data($sql_ary, 'table_ideas');
 
-		$sql = 'SELECT username
-			FROM ' . USERS_TABLE . '
-			WHERE user_id = ' . $user_id;
-		$result = $this->db->sql_query_limit($sql, 1);
-		$username = $this->db->sql_fetchfield('username');
-		$this->db->sql_freeresult($result);
+//		$sql = 'SELECT username
+//			FROM ' . USERS_TABLE . '
+//			WHERE user_id = ' . $user_id;
+//		$result = $this->db->sql_query_limit($sql, 1);
+//		$username = $this->db->sql_fetchfield('username');
+//		$this->db->sql_freeresult($result);
 
 		// Initial vote
 		$idea = $this->get_idea($idea_id);
 		$this->vote($idea, $this->user->data['user_id'], 1);
 
 		// Submit topic
-		$bbcode = '[url=' . $this->helper->route('phpbb_ideas_idea_controller', array('idea_id' => $idea_id), true, false, UrlGeneratorInterface::ABSOLUTE_URL) . "]{$title}[/url]";
-		$desc .= "\n\n----------\n\n" . $this->language->lang('VIEW_IDEA_AT', $bbcode);
-		$bbcode = '[url=' . generate_board_url() . '/' . append_sid("memberlist.{$this->php_ext}", array('u' => $user_id, 'mode' => 'viewprofile')) . "]{$username}[/url]";
-		$desc .= "\n\n" . $this->language->lang('IDEA_POSTER', $bbcode);
+// 		$bbcode = '[url=' . $this->helper->route('phpbb_ideas_idea_controller', array('idea_id' => $idea_id), true, false, UrlGeneratorInterface::ABSOLUTE_URL) . "]{$title}[/url]";
+// 		$desc .= "\n\n----------\n\n" . $this->language->lang('VIEW_IDEA_AT', $bbcode);
+// 		$bbcode = '[url=' . generate_board_url() . '/' . append_sid("memberlist.{$this->php_ext}", array('u' => $user_id, 'mode' => 'viewprofile')) . "]{$username}[/url]";
+// 		$desc .= "\n\n" . $this->language->lang('IDEA_POSTER', $bbcode);
 
 		$uid = $bitfield = $options = '';
 		generate_text_for_storage($desc, $uid, $bitfield, $options, true, true, true);
