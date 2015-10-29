@@ -11,6 +11,7 @@
 namespace phpbb\ideas\controller;
 
 use \phpbb\exception\http_exception;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class post_controller extends base
 {
@@ -55,7 +56,7 @@ class post_controller extends base
 			}
 			else
 			{
-				redirect($this->helper->route('phpbb_ideas_idea_controller', array('idea_id' => $submit)));
+				return new RedirectResponse($this->helper->route('phpbb_ideas_idea_controller', array('idea_id' => $submit)));
 			}
 		}
 

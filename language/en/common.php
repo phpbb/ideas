@@ -39,7 +39,6 @@ $lang = array_merge($lang, array(
 	'IDEA_DELETED'			=> 'Idea successfully deleted.',
 	'IDEA_LIST'				=> 'Idea List',
 	'IDEA_NOT_FOUND'		=> 'Idea not found',
-	'IDEA_TOPIC'            => 'Idea topic',
 	'IDEA_POSTER'           => 'Posted by %s', // Warning: submitted to db
 	'IDEAS_HOME'			=> 'Ideas Home',
 	'IDEAS_TITLE'			=> 'phpBB Ideas',

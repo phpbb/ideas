@@ -2,6 +2,20 @@ imports:
     - { resource: tables.yml }
 
 services:
+    phpbb.ideas.listener:
+        class: phpbb\ideas\event\listener
+        arguments:
+            - @auth
+            - @config
+            - @controller.helper
+            - @phpbb.ideas.ideas
+            - @language
+            - @phpbb.ideas.linkhelper
+            - @template
+            - @user
+        tags:
+            - { name: event.listener }
+
     phpbb.ideas.controller.base:
         abstract: true
         arguments:
@@ -32,16 +46,11 @@ services:
         class: phpbb\ideas\controller\idea_controller
         arguments:
             - @auth
-            - @cache
             - @config
-            - @content.visibility
-            - @profilefields.manager
-            - @dbal.conn
             - @controller.helper
             - @phpbb.ideas.ideas
             - @language
             - @phpbb.ideas.linkhelper
-            - @pagination
             - @request
             - @template
             - @user
@@ -53,7 +62,6 @@ services:
         arguments:
             - @config
             - @dbal.conn
-            - @controller.helper
             - @language
             - @log
             - @user
@@ -63,7 +71,6 @@ services:
             - %tables.ideas_statuses%
             - %tables.ideas_tickets%
             - %tables.ideas_votes%
-            - %core.php_ext%
 
     phpbb.ideas.linkhelper:
         class: phpbb\ideas\factory\linkhelper
