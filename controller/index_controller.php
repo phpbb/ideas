@@ -15,13 +15,13 @@ use phpbb\ideas\factory\ideas;
 
 class index_controller extends base
 {
-	const IDEAS = 5;
+	const NUM_IDEAS = 5;
 
 	/**
 	 * Controller for /ideas
 	 *
-	 * @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
 	 * @throws http_exception
+	 * @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
 	 */
 	public function index()
 	{
@@ -31,15 +31,15 @@ class index_controller extends base
 		}
 
 		// Generate latest ideas
-		$ideas = $this->ideas->get_ideas(self::IDEAS, 'date', 'DESC');
+		$ideas = $this->ideas->get_ideas(self::NUM_IDEAS, 'date', 'DESC');
 		$this->assign_template_block_vars('latest_ideas', $ideas);
 
 		// Generate top ideas
-		$ideas = $this->ideas->get_ideas(self::IDEAS, 'top', 'DESC');
+		$ideas = $this->ideas->get_ideas(self::NUM_IDEAS, 'top', 'DESC');
 		$this->assign_template_block_vars('top_ideas', $ideas);
 
 		// Generate recently implemented
-		$ideas = $this->ideas->get_ideas(self::IDEAS, 'date', 'DESC', ideas::STATUS_IMPLEMENTED);
+		$ideas = $this->ideas->get_ideas(self::NUM_IDEAS, 'date', 'DESC', ideas::STATUS_IMPLEMENTED);
 		$this->assign_template_block_vars('implemented_ideas', $ideas);
 
 		$this->template->assign_vars(array(
@@ -52,9 +52,9 @@ class index_controller extends base
 		// Assign breadcrumb template vars
 		$this->template->assign_block_vars('navlinks', array(
 			'U_VIEW_FORUM'		=> $this->helper->route('phpbb_ideas_index_controller'),
-			'FORUM_NAME'		=> $this->user->lang('IDEAS'),
+			'FORUM_NAME'		=> $this->language->lang('IDEAS'),
 		));
 
-		return $this->helper->render('index_body.html', $this->user->lang('IDEAS_HOME'));
+		return $this->helper->render('index_body.html', $this->language->lang('IDEAS_HOME'));
 	}
 }

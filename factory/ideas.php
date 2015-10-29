@@ -11,11 +11,10 @@
 namespace phpbb\ideas\factory;
 
 use phpbb\config\config;
-use phpbb\controller\helper;
 use phpbb\db\driver\driver_interface;
+use phpbb\language\language;
 use phpbb\log\log;
 use phpbb\user;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class ideas
 {
@@ -40,8 +39,8 @@ class ideas
 	/* @var driver_interface */
 	protected $db;
 
-	/* @var helper */
-	protected $helper;
+	/** @var language */
+	protected $language;
 
 	/** @var log */
 	protected $log;
@@ -67,13 +66,10 @@ class ideas
 	/** @var string */
 	protected $table_votes;
 
-	/** @var string */
-	protected $php_ext;
-
 	/**
 	 * @param config           $config
 	 * @param driver_interface $db
-	 * @param helper           $helper
+	 * @param language         $language
 	 * @param log              $log
 	 * @param user             $user
 	 * @param string           $table_ideas
@@ -82,13 +78,12 @@ class ideas
 	 * @param string           $table_statuses
 	 * @param string           $table_tickets
 	 * @param string           $table_votes
-	 * @param string           $php_ext
 	 */
-	public function __construct(config $config, driver_interface $db, helper $helper, log $log, user $user, $table_ideas, $table_duplicates, $table_rfcs, $table_statuses, $table_tickets, $table_votes, $php_ext)
+	public function __construct(config $config, driver_interface $db, language $language, log $log, user $user, $table_ideas, $table_duplicates, $table_rfcs, $table_statuses, $table_tickets, $table_votes)
 	{
 		$this->config = $config;
 		$this->db = $db;
-		$this->helper = $helper;
+		$this->language = $language;
 		$this->log = $log;
 		$this->user = $user;
 
@@ -98,8 +93,6 @@ class ideas
 		$this->table_statuses = $table_statuses;
 		$this->table_tickets = $table_tickets;
 		$this->table_votes = $table_votes;
-
-		$this->php_ext = $php_ext;
 	}
 
 	/**
@@ -111,6 +104,7 @@ class ideas
 	 * @param string    $sort_direction ASC / DESC.
 	 * @param array|int $status         The id of the status(es) to load
 	 * @param string    $where          SQL WHERE query.
+	 *
 	 * @return array Array of row data
 	 */
 	public function get_ideas($number = 10, $sort = 'date', $sort_direction = 'DESC', $status = array(), $where = '')
@@ -259,9 +253,29 @@ class ideas
 	}
 
 	/**
+	 * Returns an idea specified by its topic ID.
+	 *
+	 * @param int $id The ID of the idea to return.
+	 *
+	 * @return array The idea
+	 */
+	public function get_idea_by_topic_id($id)
+	{
+		$sql = 'SELECT idea_id
+			FROM ' . $this->table_ideas . '
+			WHERE topic_id = ' . (int) $id;
+		$result = $this->db->sql_query_limit($sql, 1);
+		$idea_id = $this->db->sql_fetchfield('idea_id');
+		$this->db->sql_freeresult($result);
+
+		return $this->get_idea($idea_id);
+	}
+
+	/**
 	 * Returns the status name from the status ID specified.
 	 *
 	 * @param int $id ID of the status.
+	 *
 	 * @return string The status name.
 	 */
 	public function get_status_from_id($id)
@@ -273,7 +287,7 @@ class ideas
 		$row = $this->db->sql_fetchrow($result);
 		$this->db->sql_freeresult($result);
 
-		return $this->user->lang($row['status_name']);
+		return $this->language->lang($row['status_name']);
 	}
 
 	/**
@@ -296,6 +310,8 @@ class ideas
 	 *
 	 * @param int $idea_id The ID of the idea.
 	 * @param int $status  The ID of the status.
+	 *
+	 * @return null
 	 */
 	public function change_status($idea_id, $status)
 	{
@@ -311,6 +327,7 @@ class ideas
 	 *
 	 * @param int    $idea_id   ID of the idea to be updated.
 	 * @param string $duplicate Idea ID of duplicate.
+	 *
 	 * @return bool True if set, false if invalid.
 	 */
 	public function set_duplicate($idea_id, $duplicate)
@@ -337,6 +354,7 @@ class ideas
 	 *
 	 * @param int    $idea_id ID of the idea to be updated.
 	 * @param string $rfc     Link to the RFC.
+	 *
 	 * @return bool True if set, false if invalid.
 	 */
 	public function set_rfc($idea_id, $rfc)
@@ -364,6 +382,7 @@ class ideas
 	 *
 	 * @param int    $idea_id ID of the idea to be updated.
 	 * @param string $ticket  Ticket ID.
+	 *
 	 * @return bool True if set, false if invalid.
 	 */
 	public function set_ticket($idea_id, $ticket)
@@ -466,7 +485,7 @@ class ideas
 			}
 
 			return array(
-				'message'	    => $this->user->lang('UPDATED_VOTE'),
+				'message'	    => $this->language->lang('UPDATED_VOTE'),
 				'votes_up'	    => $idea['idea_votes_up'],
 				'votes_down'	=> $idea['idea_votes_down'],
 				'points'        => $idea['idea_votes_up'] - $idea['idea_votes_down']
@@ -493,13 +512,21 @@ class ideas
 		$this->update_idea_data($sql_ary, $idea['idea_id'], 'table_ideas');
 
 		return array(
-			'message'	    => $this->user->lang('VOTE_SUCCESS'),
+			'message'	    => $this->language->lang('VOTE_SUCCESS'),
 			'votes_up'	    => $idea['idea_votes_up'],
 			'votes_down'	=> $idea['idea_votes_down'],
 			'points'        => $idea['idea_votes_up'] - $idea['idea_votes_down']
 		);
 	}
 
+	/**
+	 * Remove a user's vote from an idea
+	 *
+	 * @param array   $idea    The idea returned by get_idea().
+	 * @param int     $user_id The ID of the user voting.
+	 *
+	 * @return array Array of information.
+	 */
 	public function remove_vote(&$idea, $user_id)
 	{
 		// Only change something if user has already voted
@@ -526,7 +553,7 @@ class ideas
 		}
 
 		return array(
-			'message'	    => $this->user->lang('UPDATED_VOTE'),
+			'message'	    => $this->language->lang('UPDATED_VOTE'),
 			'votes_up'	    => $idea['idea_votes_up'],
 			'votes_down'	=> $idea['idea_votes_down'],
 			'points'        => $idea['idea_votes_up'] - $idea['idea_votes_down']
@@ -537,6 +564,7 @@ class ideas
 	 * Returns voter info on an idea.
 	 *
 	 * @param int $id ID of the idea.
+	 *
 	 * @return array Array of row data
 	 */
 	public function get_voters($id)
@@ -568,19 +596,19 @@ class ideas
 		$error = array();
 		if (utf8_clean_string($title) === '')
 		{
-			$error[] = $this->user->lang('TITLE_TOO_SHORT');
+			$error[] = $this->language->lang('TITLE_TOO_SHORT');
 		}
 		if (utf8_strlen($title) > 64)
 		{
-			$error[] = $this->user->lang('TITLE_TOO_LONG');
+			$error[] = $this->language->lang('TITLE_TOO_LONG');
 		}
 		if (utf8_strlen($desc) < $this->config['min_post_chars'])
 		{
-			$error[] = $this->user->lang('TOO_FEW_CHARS');
+			$error[] = $this->language->lang('TOO_FEW_CHARS');
 		}
 		if (utf8_strlen($desc) > $this->config['max_post_chars'])
 		{
-			$error[] = $this->user->lang('TOO_MANY_CHARS');
+			$error[] = $this->language->lang('TOO_MANY_CHARS');
 		}
 
 		if (count($error))
@@ -598,22 +626,9 @@ class ideas
 
 		$idea_id = $this->insert_idea_data($sql_ary, 'table_ideas');
 
-		$sql = 'SELECT username
-			FROM ' . USERS_TABLE . '
-			WHERE user_id = ' . $user_id;
-		$result = $this->db->sql_query_limit($sql, 1);
-		$username = $this->db->sql_fetchfield('username');
-		$this->db->sql_freeresult($result);
-
 		// Initial vote
 		$idea = $this->get_idea($idea_id);
 		$this->vote($idea, $this->user->data['user_id'], 1);
-
-		// Submit topic
-		$bbcode = '[url=' . $this->helper->route('phpbb_ideas_idea_controller', array('idea_id' => $idea_id), true, false, UrlGeneratorInterface::ABSOLUTE_URL) . "]{$title}[/url]";
-		$desc .= "\n\n----------\n\n" . $this->user->lang('VIEW_IDEA_AT', $bbcode);
-		$bbcode = '[url=' . generate_board_url() . '/' . append_sid("memberlist.{$this->php_ext}", array('u' => $user_id, 'mode' => 'viewprofile')) . "]{$username}[/url]";
-		$desc .= "\n\n" . $this->user->lang('IDEA_POSTER', $bbcode);
 
 		$uid = $bitfield = $options = '';
 		generate_text_for_storage($desc, $uid, $bitfield, $options, true, true, true);
@@ -715,6 +730,7 @@ class ideas
 	 *
 	 * @param array  $data  The array of data to insert
 	 * @param string $table The name of the table
+	 *
 	 * @return int The ID of the inserted row
 	 */
 	protected function insert_idea_data(array $data, $table)
@@ -732,6 +748,8 @@ class ideas
 	 * @param array  $data  The array of data to insert
 	 * @param int    $id    The ID of the idea
 	 * @param string $table The name of the table
+	 *
+	 * @return null
 	 */
 	protected function update_idea_data(array $data, $id, $table)
 	{
@@ -746,6 +764,7 @@ class ideas
 	 *
 	 * @param int    $id    The ID of the idea
 	 * @param string $table The name of the table
+	 *
 	 * @return bool True if idea was deleted, false otherwise
 	 */
 	protected function delete_idea_data($id, $table)

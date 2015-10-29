@@ -18,6 +18,9 @@ class ideas_module
 	/** @var \phpbb\db\driver\driver_interface */
 	protected $db;
 
+	/** @var \phpbb\language\language */
+	protected $language;
+
 	/** @var \phpbb\log\log */
 	protected $log;
 
@@ -42,12 +45,18 @@ class ideas_module
 	/** @var string */
 	public $u_action;
 
+	/**
+	 * Constructor
+	 *
+	 * @access public
+	 */
 	public function __construct()
 	{
-		global $config, $db, $phpbb_log, $request, $template, $user, $phpbb_root_path, $phpEx;
+		global $config, $db, $phpbb_container, $phpbb_log, $request, $template, $user, $phpbb_root_path, $phpEx;
 
 		$this->config = $config;
 		$this->db = $db;
+		$this->language = $phpbb_container->get('language');
 		$this->log = $phpbb_log;
 		$this->request = $request;
 		$this->template = $template;
@@ -56,7 +65,7 @@ class ideas_module
 		$this->php_ext = $phpEx;
 
 		// Add the phpBB Ideas ACP lang file
-		$this->user->add_lang_ext('phpbb/ideas', 'phpbb_ideas_acp');
+		$this->language->add_lang('phpbb_ideas_acp', 'phpbb/ideas');
 
 		// Load a template from adm/style for our ACP page
 		$this->tpl_name = 'acp_phpbb_ideas';
@@ -97,7 +106,7 @@ class ideas_module
 		{
 			if (!check_form_key($form_name))
 			{
-				$errors[] = $this->user->lang['FORM_INVALID'];
+				$errors[] = $this->language->lang('FORM_INVALID');
 			}
 
 			// Check if selected user exists
@@ -110,7 +119,7 @@ class ideas_module
 
 			if (!$user_id)
 			{
-				$errors[] = $this->user->lang['NO_USER'];
+				$errors[] = $this->language->lang('NO_USER');
 			}
 			else
 			{
@@ -146,7 +155,7 @@ class ideas_module
 			// Add option settings change action to the admin log
 			$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'ACP_PHPBB_IDEAS_SETTINGS_LOG');
 
-			trigger_error($this->user->lang['ACP_PHPBB_IDEAS_SETTINGS_CHANGED'] . adm_back_link($this->u_action));
+			trigger_error($this->language->lang('ACP_PHPBB_IDEAS_SETTINGS_CHANGED') . adm_back_link($this->u_action));
 		}
 
 		// Output relevant page
@@ -163,9 +172,9 @@ class ideas_module
 
 			$this->template->assign_block_vars('options', array(
 				'KEY'			=> $config_key,
-				'TITLE'			=> $this->user->lang($vars['lang']),
+				'TITLE'			=> $this->language->lang($vars['lang']),
 				'S_EXPLAIN'		=> $vars['explain'],
-				'TITLE_EXPLAIN'	=> ($vars['explain']) ? $this->user->lang($vars['lang'] . '_EXPLAIN') : '',
+				'TITLE_EXPLAIN'	=> ($vars['explain']) ? $this->language->lang($vars['lang'] . '_EXPLAIN') : '',
 				'CONTENT'		=> $content,
 			));
 		}
@@ -179,17 +188,33 @@ class ideas_module
 		));
 	}
 
+	/**
+	 * Generate ideas forum select options
+	 *
+	 * @param mixed $value The method value
+	 * @param mixed $key   The method key
+	 * @return string Select menu HTML code
+	 * @access public
+	 */
 	public function select_ideas_forum($value, $key)
 	{
 		$ideas_forum_id = (int) $this->config['ideas_forum_id'];
 		$s_forums_list = '<select id="' . $key . '" name="config[' . $key . ']">';
-		$s_forums_list .= '<option value="0"' . ((!$ideas_forum_id) ? ' selected="selected"' : '') . '>' . $this->user->lang('ACP_NO_FORUM_SELECTED') . '</option>';
+		$s_forums_list .= '<option value="0"' . ((!$ideas_forum_id) ? ' selected="selected"' : '') . '>' . $this->language->lang('ACP_NO_FORUM_SELECTED') . '</option>';
 		$forum_list = make_forum_select($ideas_forum_id, false, true, true);
 		$s_forums_list .= $forum_list . '</select>';
 
 		return $s_forums_list;
 	}
 
+	/**
+	 * Generate ideas user input field
+	 *
+	 * @param mixed $value The method value
+	 * @param mixed $key   The method key
+	 * @return string Input field HTML code
+	 * @access public
+	 */
 	public function select_ideas_topics_poster($value, $key)
 	{
 		$ideas_poster_id = (int) $this->config['ideas_poster_id'];

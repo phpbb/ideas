@@ -11,14 +11,15 @@
 namespace phpbb\ideas\controller;
 
 use \phpbb\exception\http_exception;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class post_controller extends base
 {
 	/**
 	 * Controller for /post
 	 *
-	 * @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
 	 * @throws http_exception
+	 * @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
 	 */
 	public function post()
 	{
@@ -31,7 +32,7 @@ class post_controller extends base
 		include($this->root_path . 'includes/functions_display.' . $this->php_ext);
 		include($this->root_path . 'includes/message_parser.' . $this->php_ext);
 
-		$this->user->add_lang('posting');
+		$this->language->add_lang('posting');
 
 		if ($this->user->data['user_id'] == ANONYMOUS)
 		{
@@ -55,7 +56,7 @@ class post_controller extends base
 			}
 			else
 			{
-				redirect($this->helper->route('phpbb_ideas_idea_controller', array('idea_id' => $submit)));
+				return new RedirectResponse($this->helper->route('phpbb_ideas_idea_controller', array('idea_id' => $submit)));
 			}
 		}
 
@@ -71,14 +72,14 @@ class post_controller extends base
 		$this->template->assign_block_vars_array('navlinks', array(
 			array(
 				'U_VIEW_FORUM'	=> $this->helper->route('phpbb_ideas_index_controller'),
-				'FORUM_NAME'	=> $this->user->lang('IDEAS'),
+				'FORUM_NAME'	=> $this->language->lang('IDEAS'),
 			),
 			array(
 				'U_VIEW_FORUM'	=> $this->helper->route('phpbb_ideas_post_controller'),
-				  'FORUM_NAME'	=> $this->user->lang('POST_IDEA'),
+				'FORUM_NAME'	=> $this->language->lang('POST_IDEA'),
 			),
 		));
 
-		return $this->helper->render('idea_new.html', $this->user->lang('NEW_IDEA'));
+		return $this->helper->render('idea_new.html', $this->language->lang('NEW_IDEA'));
 	}
 }

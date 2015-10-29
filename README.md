@@ -1,6 +1,8 @@
 # phpBB Ideas
 
-phpBB Ideas is an ideas centre for phpBB. It is based on [WordPress ideas](http://wordpress.org/extend/ideas/), and allows users to suggest and vote on "ideas" that would help improve and enhance phpBB.
+phpBB Ideas is an ideas centre for phpBB 3.2. It is based on [WordPress ideas](http://wordpress.org/extend/ideas/), and allows users to suggest and vote on "ideas" that would help improve and enhance phpBB.
+
+[![Build Status](https://travis-ci.org/phpbb/phpbb-ideas.png)](https://travis-ci.org/phpbb/phpbb-ideas)
 
 ## Installation
 

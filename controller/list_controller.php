@@ -19,8 +19,8 @@ class list_controller extends base
 	 * Controller for /list/{sort}
 	 *
 	 * @param $sort string The direction to sort in.
-	 * @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
 	 * @throws http_exception
+	 * @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
 	 */
 	public function ideas_list($sort)
 	{
@@ -51,7 +51,7 @@ class list_controller extends base
 
 		if ($sort == ideas::SORT_TOP)
 		{
-			$status_name = $this->user->lang('TOP_IDEAS');
+			$status_name = $this->language->lang('TOP_IDEAS');
 		}
 		else
 		{
@@ -67,7 +67,7 @@ class list_controller extends base
 		{
 			$this->template->assign_block_vars('status', array(
 				'VALUE'		=> $status_row['status_id'],
-				'TEXT'		=> $this->user->lang($status_row['status_name']),
+				'TEXT'		=> $this->language->lang($status_row['status_name']),
 				'SELECTED'	=> $status == $status_row['status_id'],
 			));
 		}
@@ -77,7 +77,7 @@ class list_controller extends base
 		{
 			$this->template->assign_block_vars('sortby', array(
 				'VALUE'		=> $sortBy,
-				'TEXT'		=> $this->user->lang[strtoupper($sortBy)],
+				'TEXT'		=> $this->language->lang(strtoupper($sortBy)),
 				'SELECTED'	=> $sortBy == $sort,
 			));
 		}
@@ -86,7 +86,7 @@ class list_controller extends base
 			'U_POST_ACTION'		=> $this->helper->route('phpbb_ideas_list_controller'),
 			'U_NEW_IDEA_ACTION'	=> $this->helper->route('phpbb_ideas_post_controller'),
 			'SORT_DIRECTION'	=> $sort_direction,
-			'STATUS_NAME'       => $status_name ?: $this->user->lang('ALL_IDEAS'),
+			'STATUS_NAME'       => $status_name ?: $this->language->lang('ALL_IDEAS'),
 		));
 
 		// Assign breadcrumb template vars
@@ -95,14 +95,14 @@ class list_controller extends base
 		$this->template->assign_block_vars_array('navlinks', array(
 			array(
 				'U_VIEW_FORUM'	=> $this->helper->route('phpbb_ideas_index_controller'),
-				'FORUM_NAME'	=> $this->user->lang('IDEAS'),
+				'FORUM_NAME'	=> $this->language->lang('IDEAS'),
 			),
 			array(
 				'U_VIEW_FORUM'	=> $this->helper->route('phpbb_ideas_list_controller', $breadcrumb_params),
-				'FORUM_NAME'	=> $status_name ?: $this->user->lang('ALL_IDEAS'),
+				'FORUM_NAME'	=> $status_name ?: $this->language->lang('ALL_IDEAS'),
 			),
 		));
 
-		return $this->helper->render('list_body.html', $this->user->lang('IDEA_LIST'));
+		return $this->helper->render('list_body.html', $this->language->lang('IDEA_LIST'));
 	}
 }

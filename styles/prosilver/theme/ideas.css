@@ -31,28 +31,14 @@ dd.topics {
 	list-style-type: none;
 }
 
-#rfceditinput {
+.ideainput {
 	display: none;
-	width: 360px;
+	width: 300px;
 }
 
-#ticketeditinput {
-	display: none;
-	width: 160px;
+.ideamodbtn {
+	margin: 0 5px 0 0;
 }
-
-#duplicateeditinput {
-	display: none;
-	width: 360px;
-}
-
-#titleeditinput {
-	display: none;
-	width: 320px;
-}
-
-.new-idea:before { background: url(images/new-idea.png); }
-.new-idea:hover:before { background-position: 0 -20px; }
 
 .minivoteup, .minivotedown {
 	width: 65px;
