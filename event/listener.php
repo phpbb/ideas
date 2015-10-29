@@ -150,7 +150,6 @@ class listener implements EventSubscriberInterface
 			$idea['idea_status'] != ideas::STATUS_DUPLICATE &&
 			$this->auth->acl_get('f_vote', (int) $this->config['ideas_forum_id']) &&
 			$event['topic_data']['topic_status'] != ITEM_LOCKED);
-		$delete_posts = $mod || ($own && $this->auth->acl_get('f_delete', (int) $this->config['ideas_forum_id']));
 
 		$this->template->assign_vars(array(
 			'IDEA_ID'			=> $idea['idea_id'],
@@ -174,7 +173,7 @@ class listener implements EventSubscriberInterface
 			'S_CAN_EDIT'		=> $mod || $own,
 			'S_CAN_VOTE'		=> $can_vote,
 
-			'U_DELETE_IDEA'		=> ($delete_posts) ? $this->link_helper->get_idea_link($idea['idea_id'], 'delete') : false,
+			'U_DELETE_IDEA'		=> $this->link_helper->get_idea_link($idea['idea_id'], 'delete'),
 			'U_CHANGE_STATUS'	=> $this->link_helper->get_idea_link($idea['idea_id'], 'status', true),
 			'U_EDIT_DUPLICATE'	=> $this->link_helper->get_idea_link($idea['idea_id'], 'duplicate', true),
 			'U_EDIT_RFC'		=> $this->link_helper->get_idea_link($idea['idea_id'], 'rfc', true),

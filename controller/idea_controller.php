@@ -93,7 +93,7 @@ class idea_controller extends base
 	 */
 	public function delete()
 	{
-		if ($this->is_mod() || ($this->is_own() && $this->auth->acl_get('f_delete', (int) $this->config['ideas_forum_id'])))
+		if ($this->is_mod())
 		{
 			if (confirm_box(true))
 			{
