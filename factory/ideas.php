@@ -425,6 +425,13 @@ class ideas
 
 		$this->update_idea_data($sql_ary, $idea_id, 'table_ideas');
 
+		// We also need to update the topic's title
+		$idea = $this->get_idea($idea_id);
+		$sql = 'UPDATE ' . TOPICS_TABLE . "
+			SET topic_title='" . $this->db->sql_escape($title) . "'
+			WHERE topic_id=" . (int) $idea['topic_id'];
+		$this->db->sql_query($sql);
+
 		$this->log->add('mod', $this->user->data['user_id'], $this->user->ip, 'ACP_IDEA_TITLE_EDITED_LOG', time(), array($idea_id));
 
 		return true;
