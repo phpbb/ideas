@@ -28,9 +28,6 @@ class idea_controller extends base
 	/** @var auth */
 	protected $auth;
 
-	/** @var config */
-	protected $config;
-
 	/** @var array of idea data */
 	protected $data;
 
@@ -119,7 +116,7 @@ class idea_controller extends base
 					)),
 					'confirm_body.html',
 					$this->helper->route(
-						'ideas_idea_controller',
+						'phpbb_ideas_idea_controller',
 						array(
 							'idea_id' => $this->data['idea_id'],
 							'mode'    => 'delete',

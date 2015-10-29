@@ -62,7 +62,6 @@ services:
         arguments:
             - @config
             - @dbal.conn
-            - @controller.helper
             - @language
             - @log
             - @user
@@ -72,7 +71,6 @@ services:
             - %tables.ideas_statuses%
             - %tables.ideas_tickets%
             - %tables.ideas_votes%
-            - %core.php_ext%
 
     phpbb.ideas.linkhelper:
         class: phpbb\ideas\factory\linkhelper

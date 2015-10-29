@@ -77,7 +77,7 @@ class listener implements EventSubscriberInterface
 	{
 		return array(
 			'core.viewtopic_modify_post_row'	=> 'clean_message',
-			'core.viewtopic_modify_page_title'	=> 'load_idea',
+			'core.viewtopic_modify_page_title'	=> 'show_idea',
 		);
 	}
 
@@ -109,7 +109,6 @@ class listener implements EventSubscriberInterface
 		}
 	}
 
-	public function load_idea($event)
 	/**
 	 * Show the idea related to the current topic
 	 *
@@ -117,6 +116,7 @@ class listener implements EventSubscriberInterface
 	 * @return null
 	 * @access public
 	 */
+	public function show_idea($event)
 	{
 		if ($event['forum_id'] != $this->config['ideas_forum_id'])
 		{
