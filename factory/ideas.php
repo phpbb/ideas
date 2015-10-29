@@ -11,12 +11,10 @@
 namespace phpbb\ideas\factory;
 
 use phpbb\config\config;
-use phpbb\controller\helper;
 use phpbb\db\driver\driver_interface;
 use phpbb\language\language;
 use phpbb\log\log;
 use phpbb\user;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class ideas
 {
@@ -40,9 +38,6 @@ class ideas
 
 	/* @var driver_interface */
 	protected $db;
-
-	/* @var helper */
-	protected $helper;
 
 	/** @var language */
 	protected $language;
@@ -71,13 +66,9 @@ class ideas
 	/** @var string */
 	protected $table_votes;
 
-	/** @var string */
-	protected $php_ext;
-
 	/**
 	 * @param config           $config
 	 * @param driver_interface $db
-	 * @param helper           $helper
 	 * @param language         $language
 	 * @param log              $log
 	 * @param user             $user
@@ -87,13 +78,11 @@ class ideas
 	 * @param string           $table_statuses
 	 * @param string           $table_tickets
 	 * @param string           $table_votes
-	 * @param string           $php_ext
 	 */
-	public function __construct(config $config, driver_interface $db, helper $helper, language $language, log $log, user $user, $table_ideas, $table_duplicates, $table_rfcs, $table_statuses, $table_tickets, $table_votes, $php_ext)
+	public function __construct(config $config, driver_interface $db, language $language, log $log, user $user, $table_ideas, $table_duplicates, $table_rfcs, $table_statuses, $table_tickets, $table_votes)
 	{
 		$this->config = $config;
 		$this->db = $db;
-		$this->helper = $helper;
 		$this->language = $language;
 		$this->log = $log;
 		$this->user = $user;
@@ -104,8 +93,6 @@ class ideas
 		$this->table_statuses = $table_statuses;
 		$this->table_tickets = $table_tickets;
 		$this->table_votes = $table_votes;
-
-		$this->php_ext = $php_ext;
 	}
 
 	/**
@@ -639,22 +626,9 @@ class ideas
 
 		$idea_id = $this->insert_idea_data($sql_ary, 'table_ideas');
 
-//		$sql = 'SELECT username
-//			FROM ' . USERS_TABLE . '
-//			WHERE user_id = ' . $user_id;
-//		$result = $this->db->sql_query_limit($sql, 1);
-//		$username = $this->db->sql_fetchfield('username');
-//		$this->db->sql_freeresult($result);
-
 		// Initial vote
 		$idea = $this->get_idea($idea_id);
 		$this->vote($idea, $this->user->data['user_id'], 1);
-
-		// Submit topic
-// 		$bbcode = '[url=' . $this->helper->route('phpbb_ideas_idea_controller', array('idea_id' => $idea_id), true, false, UrlGeneratorInterface::ABSOLUTE_URL) . "]{$title}[/url]";
-// 		$desc .= "\n\n----------\n\n" . $this->language->lang('VIEW_IDEA_AT', $bbcode);
-// 		$bbcode = '[url=' . generate_board_url() . '/' . append_sid("memberlist.{$this->php_ext}", array('u' => $user_id, 'mode' => 'viewprofile')) . "]{$username}[/url]";
-// 		$desc .= "\n\n" . $this->language->lang('IDEA_POSTER', $bbcode);
 
 		$uid = $bitfield = $options = '';
 		generate_text_for_storage($desc, $uid, $bitfield, $options, true, true, true);
