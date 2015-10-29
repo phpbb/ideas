@@ -123,7 +123,7 @@ class listener implements EventSubscriberInterface
 			return;
 		}
 
-		$idea = $this->ideas->get_idea($event['topic_data']['topic_id'], true);
+		$idea = $this->ideas->get_idea_by_topic_id($event['topic_data']['topic_id']);
 
 		if (!$idea)
 		{

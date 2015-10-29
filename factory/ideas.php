@@ -218,12 +218,11 @@ class ideas
 	/**
 	 * Returns the specified idea.
 	 *
-	 * @param int  $id    The ID of the idea to return.
-	 * @param bool $topic Get the idea by its topic ID.
+	 * @param int $id The ID of the idea to return.
 	 *
 	 * @return array The idea.
 	 */
-	public function get_idea($id, $topic = false)
+	public function get_idea($id)
 	{
 		$sql_array = array(
 			'SELECT'		=> 'i.*, d.duplicate_id, t.ticket_id, r.rfc_link',
@@ -242,7 +241,7 @@ class ideas
 					'ON'	=> 'i.idea_id = r.idea_id',
 				),
 			),
-			'WHERE'			=> 'i.' . (($topic) ? 'topic_id' : 'idea_id') . ' = ' . (int) $id,
+			'WHERE'			=> 'i.idea_id = ' . (int) $id,
 		);
 
 		$sql = $this->db->sql_build_query('SELECT', $sql_array);
@@ -251,6 +250,25 @@ class ideas
 		$this->db->sql_freeresult($result);
 
 		return $row;
+	}
+
+	/**
+	 * Returns an idea specified by its topic ID.
+	 *
+	 * @param int $id The ID of the idea to return.
+	 *
+	 * @return array The idea
+	 */
+	public function get_idea_by_topic_id($id)
+	{
+		$sql = 'SELECT idea_id
+			FROM ' . $this->table_ideas . '
+			WHERE topic_id = ' . (int) $id;
+		$result = $this->db->sql_query_limit($sql, 1);
+		$idea_id = $this->db->sql_fetchfield('idea_id');
+		$this->db->sql_freeresult($result);
+
+		return $this->get_idea($idea_id);
 	}
 
 	/**
