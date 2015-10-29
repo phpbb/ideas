@@ -70,6 +70,9 @@ class listener implements EventSubscriberInterface
 		$this->language->add_lang('common', 'phpbb/ideas');
 	}
 
+	/**
+	 * @inheritDoc
+	 */
 	static public function getSubscribedEvents()
 	{
 		return array(
@@ -78,6 +81,13 @@ class listener implements EventSubscriberInterface
 		);
 	}
 
+	/**
+	 * Clean obsolete link-backs from idea topics
+	 *
+	 * @param $event
+	 * @return null
+	 * @access public
+	 */
 	public function clean_message($event)
 	{
 		if ($event['row']['forum_id'] != $this->config['ideas_forum_id'])
@@ -100,6 +110,13 @@ class listener implements EventSubscriberInterface
 	}
 
 	public function load_idea($event)
+	/**
+	 * Show the idea related to the current topic
+	 *
+	 * @param $event
+	 * @return null
+	 * @access public
+	 */
 	{
 		if ($event['forum_id'] != $this->config['ideas_forum_id'])
 		{

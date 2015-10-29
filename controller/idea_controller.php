@@ -88,6 +88,12 @@ class idea_controller extends base
 		return new RedirectResponse($url);
 	}
 
+	/**
+	 * Delete action (deletes an idea via confirm dialog)
+	 *
+	 * @return null
+	 * @access public
+	 */
 	public function delete()
 	{
 		if ($this->is_mod() || ($this->is_own() && $this->auth->acl_get('f_delete', (int) $this->config['ideas_forum_id'])))
@@ -127,6 +133,12 @@ class idea_controller extends base
 		}
 	}
 
+	/**
+	 * Duplicate action (sets an idea's duplicate link)
+	 *
+	 * @return bool True if set, false if not
+	 * @access public
+	 */
 	public function duplicate()
 	{
 		if ($this->is_mod() && check_link_hash($this->get_hash(), "duplicate_{$this->data['idea_id']}"))
@@ -138,6 +150,12 @@ class idea_controller extends base
 		return false;
 	}
 
+	/**
+	 * Remove vote action (remove a user's vote from an idea)
+	 *
+	 * @return mixed Array of vote data, an error message, or false if failed
+	 * @access public
+	 */
 	public function removevote()
 	{
 		if ($this->data['idea_status'] == ideas::STATUS_IMPLEMENTED || $this->data['idea_status'] == ideas::STATUS_DUPLICATE || !check_link_hash($this->get_hash(), "removevote_{$this->data['idea_id']}"))
@@ -157,6 +175,12 @@ class idea_controller extends base
 		return $result;
 	}
 
+	/**
+	 * RFC action (sets an idea's rfc link)
+	 *
+	 * @return bool True if set, false if not
+	 * @access public
+	 */
 	public function rfc()
 	{
 		if (($this->is_own() || $this->is_mod()) && check_link_hash($this->get_hash(), "rfc_{$this->data['idea_id']}"))
@@ -168,6 +192,12 @@ class idea_controller extends base
 		return false;
 	}
 
+	/**
+	 * Status action (sets an idea's status)
+	 *
+	 * @return bool True if set, false if not
+	 * @access public
+	 */
 	public function status()
 	{
 		$status = $this->request->variable('status', 0);
@@ -181,6 +211,12 @@ class idea_controller extends base
 		return false;
 	}
 
+	/**
+	 * Ticket action (sets an idea's ticket link)
+	 *
+	 * @return bool True if set, false if not
+	 * @access public
+	 */
 	public function ticket()
 	{
 		if (($this->is_own() || $this->is_mod()) && check_link_hash($this->get_hash(), "ticket_{$this->data['idea_id']}"))
@@ -192,6 +228,12 @@ class idea_controller extends base
 		return false;
 	}
 
+	/**
+	 * Title action (sets an idea's title)
+	 *
+	 * @return bool True if set, false if not
+	 * @access public
+	 */
 	public function title()
 	{
 		if (($this->is_own() || $this->is_mod()) && check_link_hash($this->get_hash(), "title_{$this->data['idea_id']}"))
@@ -203,6 +245,12 @@ class idea_controller extends base
 		return false;
 	}
 
+	/**
+	 * Vote action (sets an idea's vote)
+	 *
+	 * @return mixed Array of vote data, an error message, or false if failed
+	 * @access public
+	 */
 	public function vote()
 	{
 		$vote = $this->request->variable('v', 1);
@@ -224,16 +272,34 @@ class idea_controller extends base
 		return $result;
 	}
 
+	/**
+	 * Get a hash query parameter
+	 *
+	 * @return string The hash
+	 * @access protected
+	 */
 	protected function get_hash()
 	{
 		return $this->request->variable('hash', '');
 	}
 
+	/**
+	 * Does the user have moderator privileges?
+	 *
+	 * @return bool
+	 * @access protected
+	 */
 	protected function is_mod()
 	{
 		return $this->auth->acl_get('m_', (int) $this->config['ideas_forum_id']);
 	}
 
+	/**
+	 * Is the user the author of the idea?
+	 *
+	 * @return bool
+	 * @access protected
+	 */
 	protected function is_own()
 	{
 		return $this->data['idea_author'] === $this->user->data['user_id'];
