@@ -15,6 +15,7 @@ use phpbb\config\config;
 use phpbb\controller\helper;
 use phpbb\ideas\factory\ideas;
 use phpbb\ideas\factory\linkhelper;
+use phpbb\language\language;
 use phpbb\template\template;
 use phpbb\user;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -33,6 +34,9 @@ class listener implements EventSubscriberInterface
 	/* @var ideas */
 	protected $ideas;
 
+	/** @var language */
+	protected $language;
+
 	/* @var linkhelper */
 	protected $link_helper;
 
@@ -43,25 +47,27 @@ class listener implements EventSubscriberInterface
 	protected $user;
 
 	/**
-	 * @param \phpbb\auth\auth                  $auth
-	 * @param \phpbb\config\config              $config
-	 * @param \phpbb\controller\helper          $helper
-	 * @param \phpbb\ideas\factory\ideas        $ideas
-	 * @param \phpbb\ideas\factory\linkhelper   $link_helper
-	 * @param \phpbb\template\template          $template
-	 * @param \phpbb\user                       $user
+	 * @param \phpbb\auth\auth                $auth
+	 * @param \phpbb\config\config            $config
+	 * @param \phpbb\controller\helper        $helper
+	 * @param \phpbb\ideas\factory\ideas      $ideas
+	 * @param \phpbb\language\language        $language
+	 * @param \phpbb\ideas\factory\linkhelper $link_helper
+	 * @param \phpbb\template\template        $template
+	 * @param \phpbb\user                     $user
 	 */
-	public function __construct(auth $auth, config $config, helper $helper, ideas $ideas, linkhelper $link_helper, template $template, user $user)
+	public function __construct(auth $auth, config $config, helper $helper, ideas $ideas, language $language, linkhelper $link_helper, template $template, user $user)
 	{
 		$this->auth = $auth;
 		$this->config = $config;
 		$this->helper = $helper;
 		$this->ideas = $ideas;
+		$this->language = $language;
 		$this->link_helper = $link_helper;
 		$this->template = $template;
 		$this->user = $user;
 
-		$this->user->add_lang_ext('phpbb/ideas', 'common');
+		$this->language->add_lang('common', 'phpbb/ideas');
 	}
 
 	static public function getSubscribedEvents()
@@ -117,13 +123,16 @@ class listener implements EventSubscriberInterface
 			{
 				$this->template->assign_block_vars('statuses', array(
 					'ID'	=> $status['status_id'],
-					'NAME'	=> $this->user->lang($status['status_name']),
+					'NAME'	=> $this->language->lang($status['status_name']),
 				));
 			}
 		}
 
 		$points = $idea['idea_votes_up'] - $idea['idea_votes_down'];
-		$can_vote = (bool) ($idea['idea_status'] != 3 && $idea['idea_status'] != 4 && $this->auth->acl_get('f_vote', (int) $this->config['ideas_forum_id']) && $event['topic_data']['topic_status'] != ITEM_LOCKED);
+		$can_vote = (bool) ($idea['idea_status'] != ideas::STATUS_IMPLEMENTED &&
+			$idea['idea_status'] != ideas::STATUS_DUPLICATE &&
+			$this->auth->acl_get('f_vote', (int) $this->config['ideas_forum_id']) &&
+			$event['topic_data']['topic_status'] != ITEM_LOCKED);
 		$delete_posts = $mod || ($own && $this->auth->acl_get('f_delete', (int) $this->config['ideas_forum_id']));
 
 		$this->template->assign_vars(array(
@@ -134,9 +143,9 @@ class listener implements EventSubscriberInterface
 			'IDEA_VOTES'		=> $idea['idea_votes_up'] + $idea['idea_votes_down'],
 			'IDEA_VOTES_UP'		=> $idea['idea_votes_up'],
 			'IDEA_VOTES_DOWN'	=> $idea['idea_votes_down'],
-			'IDEA_POINTS'		=> $this->user->lang('VIEW_VOTES', $points),
+			'IDEA_POINTS'		=> $this->language->lang('VIEW_VOTES', $points),
 			'IDEA_STATUS'		=> $this->ideas->get_status_from_id($idea['idea_status']),
-			'IDEA_STATUS_LINK'	=> $this->helper->route('ideas_list_controller', array('status' => $idea['idea_status'])),
+			'IDEA_STATUS_LINK'	=> $this->helper->route('phpbb_ideas_list_controller', array('status' => $idea['idea_status'])),
 
 			'IDEA_DUPLICATE'	=> $idea['duplicate_id'],
 			'IDEA_RFC'			=> $idea['rfc_link'],
@@ -174,8 +183,8 @@ class listener implements EventSubscriberInterface
 		// Use Ideas breadcrumbs
 		$this->template->destroy_block_vars('navlinks');
 		$this->template->assign_block_vars('navlinks', array(
-			'U_VIEW_FORUM'		=> $this->helper->route('ideas_index_controller'),
-			'FORUM_NAME'		=> $this->user->lang('IDEAS'),
+			'U_VIEW_FORUM'		=> $this->helper->route('phpbb_ideas_index_controller'),
+			'FORUM_NAME'		=> $this->language->lang('IDEAS'),
 		));
 	}
 }

@@ -17,7 +17,6 @@ use phpbb\exception\http_exception;
 use phpbb\ideas\factory\ideas;
 use phpbb\ideas\factory\linkhelper;
 use phpbb\language\language;
-use phpbb\pagination;
 use phpbb\request\request;
 use phpbb\template\template;
 use phpbb\user;
@@ -50,7 +49,7 @@ class idea_controller extends base
 	 */
 	public function __construct(auth $auth, config $config, helper $helper, ideas $ideas, language $language, linkhelper $link_helper, request $request, template $template, user $user, $root_path, $php_ext)
 	{
-		parent::__construct($config, $helper, $ideas, $link_helper, $request, $template, $user, $root_path, $php_ext);
+		parent::__construct($config, $helper, $ideas, $language, $link_helper, $request, $template, $user, $root_path, $php_ext);
 		$this->auth = $auth;
 	}
 

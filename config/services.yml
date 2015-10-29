@@ -9,6 +9,7 @@ services:
             - @config
             - @controller.helper
             - @phpbb.ideas.ideas
+            - @language
             - @phpbb.ideas.linkhelper
             - @template
             - @user
