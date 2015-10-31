@@ -93,11 +93,12 @@ class ideas_module
 		$display_vars = array(
 			'ideas_forum_id'	=> array('lang' => 'ACP_IDEAS_FORUM_ID',	'validate' => 'string',	'type' => 'custom', 'method' => 'select_ideas_forum', 'explain' => true),
 			'ideas_poster_id'	=> array('lang' => 'ACP_IDEAS_POSTER_ID',	'validate' => 'string',	'type' => 'custom', 'method' => 'select_ideas_topics_poster', 'explain' => true),
+			'ideas_forum_setup'	=> array('lang' => 'ACP_IDEAS_FORUM_SETUP',	'validate' => 'bool',	'type' => 'custom', 'method' => 'set_ideas_forum_permissions', 'explain' => true),
 		);
 
 		$this->new_config = $this->config;
 		$cfg_array = ($this->request->is_set('config')) ? $this->request->variable('config', array('' => ''), true) : $this->new_config;
-		$submit = $this->request->is_set('submit');
+		$submit = $this->request->is_set('submit') || $this->request->is_set_post('ideas_forum_setup');
 
 		// We validate the complete config if wished
 		validate_config_vars($display_vars, $cfg_array, $errors);
@@ -152,6 +153,42 @@ class ideas_module
 
 		if ($submit)
 		{
+			if ($this->request->is_set_post('ideas_forum_setup') && (int) $this->config['ideas_forum_id'])
+			{
+				if (!class_exists('auth_admin'))
+				{
+					include($this->phpbb_root_path . 'includes/acp/auth.' . $this->php_ext);
+				}
+				$auth_admin = new \auth_admin();
+
+				$ug_type = 'group';
+				$forum_id = (int) $this->config['ideas_forum_id'];
+
+				// get the REGISTERED usergroup ID
+				$sql = 'SELECT group_id
+					FROM ' . GROUPS_TABLE . "
+					WHERE group_name = '" . $this->db->sql_escape('REGISTERED') . "'";
+				$this->db->sql_query($sql);
+				$group_id = (int) $this->db->sql_fetchfield('group_id');
+
+				// Get 'f_' local REGISTERED users group permissions array for the ideas forum
+				// Default undefined permissions to ACL_NO
+				$hold_ary = $auth_admin->get_mask('set', false, $group_id, $forum_id, 'f_', 'local', ACL_NO);
+				$auth_settings = $hold_ary[$group_id][$forum_id];
+
+				// Set 'Can start new topics' permissions to 'Never' for the ideas forum
+				$auth_settings['f_post'] = ACL_NEVER;
+
+				// Update the permission set...
+				$auth_admin->acl_set($ug_type, $forum_id, $group_id, $auth_settings);
+
+				// Disable auto-pruning for ideas forum
+				$sql = 'UPDATE ' . FORUMS_TABLE . '
+					SET ' . $this->db->sql_build_array('UPDATE', array('enable_prune' => false)) . '
+					WHERE forum_id = ' . $forum_id;
+				$this->db->sql_query($sql);
+			}
+
 			// Add option settings change action to the admin log
 			$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'ACP_PHPBB_IDEAS_SETTINGS_LOG');
 
@@ -227,5 +264,10 @@ class ideas_module
 		$tpl = '<input id="' . $key . '" type="text" size="45" maxlength="255" name="config[' . $key . ']" value="' . $username . '" />';
 
 		return $tpl;
+	}
+
+	public function set_ideas_forum_permissions($value, $key)
+	{
+		return '<input class="button2" type="submit" id="' . $key . '" name="' . $key . '" value="' . $this->user->lang['ACP_IDEAS_FORUM_SETUP'] . '" />';
 	}
 }
