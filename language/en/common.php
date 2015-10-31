@@ -32,7 +32,7 @@ $lang = array_merge($lang, array(
 	'DUPLICATE'				=> 'Duplicate',
 
 	'EDIT'					=> 'Edit',
-	'ENABLE_JS'             => 'Please enable JavaScript to use phpBB Ideas correctly',
+	'ENABLE_JS'             => 'Please enable JavaScript in your browser to use phpBB Ideas effectively.',
 
 	'ID'					=> 'ID',
 	'IDEAS'					=> 'Ideas',
