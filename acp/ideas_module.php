@@ -98,18 +98,22 @@ class ideas_module
 
 		$this->new_config = $this->config;
 		$cfg_array = ($this->request->is_set('config')) ? $this->request->variable('config', array('' => ''), true) : $this->new_config;
-		$submit = $this->request->is_set('submit') || $this->request->is_set_post('ideas_forum_setup');
+		$submit = $this->request->is_set_post('submit');
+		$submit_forum_setup = $this->request->is_set_post('ideas_forum_setup');
 
 		// We validate the complete config if wished
 		validate_config_vars($display_vars, $cfg_array, $errors);
 
-		if ($submit)
+		if ($submit || $submit_forum_setup)
 		{
 			if (!check_form_key($form_name))
 			{
 				$errors[] = $this->language->lang('FORM_INVALID');
 			}
+		}
 
+		if ($submit)
+		{
 			// Check if selected user exists
 			$sql = 'SELECT user_id
 				FROM ' . USERS_TABLE . "
@@ -129,10 +133,10 @@ class ideas_module
 			}
 		}
 
-		// Do not write values if there is an errors
+		// Do not write values if there are errors
 		if (sizeof($errors))
 		{
-			$submit = false;
+			$submit = $submit_forum_setup = false;
 		}
 
 		// We go through the display_vars to make sure no one is trying to set variables he/she is not allowed to
@@ -151,9 +155,9 @@ class ideas_module
 			}
 		}
 
-		if ($submit)
+		if ($submit || $submit_forum_setup)
 		{
-			if ($this->request->is_set_post('ideas_forum_setup') && (int) $this->config['ideas_forum_id'])
+			if ($submit_forum_setup && (int) $this->config['ideas_forum_id'])
 			{
 				if (!class_exists('auth_admin'))
 				{
@@ -266,6 +270,14 @@ class ideas_module
 		return $tpl;
 	}
 
+	/**
+	 * Generate ideas forum setup submit button
+	 *
+	 * @param mixed $value The method value
+	 * @param mixed $key   The method key
+	 * @return string Input field HTML code
+	 * @access public
+	 */
 	public function set_ideas_forum_permissions($value, $key)
 	{
 		return '<input class="button2" type="submit" id="' . $key . '" name="' . $key . '" value="' . $this->user->lang['ACP_IDEAS_FORUM_SETUP'] . '" />';
