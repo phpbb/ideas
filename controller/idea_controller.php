@@ -10,45 +10,15 @@
 
 namespace phpbb\ideas\controller;
 
-use phpbb\auth\auth;
-use phpbb\config\config;
-use phpbb\controller\helper;
 use phpbb\exception\http_exception;
 use phpbb\ideas\factory\ideas;
-use phpbb\ideas\factory\linkhelper;
-use phpbb\language\language;
-use phpbb\request\request;
-use phpbb\template\template;
-use phpbb\user;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class idea_controller extends base
 {
-	/** @var auth */
-	protected $auth;
-
 	/** @var array of idea data */
 	protected $data;
-
-	/**
-	 * @param \phpbb\auth\auth                  $auth
-	 * @param \phpbb\config\config              $config
-	 * @param \phpbb\controller\helper          $helper
-	 * @param \phpbb\ideas\factory\ideas        $ideas
-	 * @param \phpbb\language\language          $language
-	 * @param \phpbb\ideas\factory\linkhelper   $link_helper
-	 * @param \phpbb\request\request            $request
-	 * @param \phpbb\template\template          $template
-	 * @param \phpbb\user                       $user
-	 * @param string                            $root_path
-	 * @param string                            $php_ext
-	 */
-	public function __construct(auth $auth, config $config, helper $helper, ideas $ideas, language $language, linkhelper $link_helper, request $request, template $template, user $user, $root_path, $php_ext)
-	{
-		parent::__construct($config, $helper, $ideas, $language, $link_helper, $request, $template, $user, $root_path, $php_ext);
-		$this->auth = $auth;
-	}
 
 	/**
 	 * Controller for /idea/{idea_id}
