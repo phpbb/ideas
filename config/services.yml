@@ -19,6 +19,7 @@ services:
     phpbb.ideas.controller.base:
         abstract: true
         arguments:
+            - @auth
             - @config
             - @controller.helper
             - @phpbb.ideas.ideas
@@ -44,18 +45,7 @@ services:
 
     phpbb.ideas.idea_controller:
         class: phpbb\ideas\controller\idea_controller
-        arguments:
-            - @auth
-            - @config
-            - @controller.helper
-            - @phpbb.ideas.ideas
-            - @language
-            - @phpbb.ideas.linkhelper
-            - @request
-            - @template
-            - @user
-            - %core.root_path%
-            - %core.php_ext%
+        parent: phpbb.ideas.controller.base
 
     phpbb.ideas.ideas:
         class: phpbb\ideas\factory\ideas
