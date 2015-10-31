@@ -48,7 +48,7 @@ class list_controller extends base
 			$sort = ideas::SORT_DATE;
 		}
 
-		$where = ($author) ? 'idea_author = ' (int) $author : '';
+		$where = ($author) ? 'idea_author = ' . (int) $author : '';
 
 		if ($sort == ideas::SORT_TOP)
 		{
