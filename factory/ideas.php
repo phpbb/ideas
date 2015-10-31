@@ -170,7 +170,7 @@ class ideas
 			$this->db->sql_freeresult($result);
 
 			// Set the total number of ideas for pagination
-			$this->set_idea_count($num_ideas);
+			$this->idea_count =$num_ideas;
 		}
 
 		if ($sortby !== 'TOP' && $sortby !== 'ALL')
@@ -809,15 +809,5 @@ class ideas
 	public function get_idea_count()
 	{
 		return $this->idea_count;
-	}
-
-	/**
-	 * Store an idea count
-	 *
-	 * @param int $idea_count Count of ideas
-	 */
-	public function set_idea_count($idea_count)
-	{
-		$this->idea_count = (int) $idea_count;
 	}
 }
