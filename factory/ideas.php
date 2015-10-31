@@ -805,7 +805,7 @@ class ideas
 	 * Get the stored idea count
 	 *
 	 * @return int Count of ideas
- 	 */
+	 */
 	public function get_idea_count()
 	{
 		return $this->idea_count;
