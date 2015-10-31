@@ -25,6 +25,7 @@ services:
             - @phpbb.ideas.ideas
             - @language
             - @phpbb.ideas.linkhelper
+            - @pagination
             - @request
             - @template
             - @user

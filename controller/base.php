@@ -16,6 +16,7 @@ use phpbb\controller\helper;
 use phpbb\ideas\factory\ideas;
 use phpbb\ideas\factory\linkhelper;
 use phpbb\language\language;
+use phpbb\pagination;
 use phpbb\request\request;
 use phpbb\template\template;
 use phpbb\user;
@@ -40,6 +41,9 @@ abstract class base
 	/* @var linkhelper */
 	protected $link_helper;
 
+	/** @var pagination */
+	protected $pagination;
+
 	/* @var request */
 	protected $request;
 
@@ -62,13 +66,14 @@ abstract class base
 	 * @param ideas      $ideas
 	 * @param language   $language
 	 * @param linkhelper $link_helper
+	 * @param pagination $pagination
 	 * @param request    $request
 	 * @param template   $template
 	 * @param user       $user
 	 * @param string     $root_path
 	 * @param string     $php_ext
 	 */
-	public function __construct(auth $auth, config $config, helper $helper, ideas $ideas, language $language, linkhelper $link_helper, request $request, template $template, user $user, $root_path, $php_ext)
+	public function __construct(auth $auth, config $config, helper $helper, ideas $ideas, language $language, linkhelper $link_helper, pagination $pagination, request $request, template $template, user $user, $root_path, $php_ext)
 	{
 		$this->auth = $auth;
 		$this->config = $config;
@@ -76,6 +81,7 @@ abstract class base
 		$this->ideas = $ideas;
 		$this->language = $language;
 		$this->link_helper = $link_helper;
+		$this->pagination = $pagination;
 		$this->request = $request;
 		$this->template = $template;
 		$this->user = $user;

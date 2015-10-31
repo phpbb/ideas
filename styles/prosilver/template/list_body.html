@@ -53,6 +53,7 @@
 		</div>
 	</div>
 <!-- END ideas -->
+
 <form method="post" action="{U_POST_ACTION}">
 	<fieldset class="display-options">
 		<!-- IF not S_IS_BOT -->
@@ -73,6 +74,18 @@
 		<!-- ENDIF -->
 	</fieldset>
 </form>
+<hr />
+
+<div class="action-bar bar-bottom">
+	<div class="pagination">
+		{TOTAL_IDEAS}
+		<!-- IF .pagination -->
+			<!-- INCLUDE pagination.html -->
+		<!-- ELSE -->
+			&bull; {PAGE_NUMBER}
+		<!-- ENDIF -->
+	</div>
+</div>
 
 <br />
 

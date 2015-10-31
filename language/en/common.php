@@ -86,6 +86,10 @@ $lang = array_merge($lang, array(
 	'TITLE_TOO_SHORT'		=> 'You must specify a subject when posting a new idea.',
 	'TOP'                   => 'Top',
 	'TOP_IDEAS'				=> 'Top Ideas',
+	'TOTAL_IDEAS'			=> array(
+		1	=> '%d idea',
+		2	=> '%d ideas',
+	),
 
 	'UPDATED_VOTE'			=> 'Successfully updated vote',
 
