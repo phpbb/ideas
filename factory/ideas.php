@@ -66,6 +66,9 @@ class ideas
 	/** @var string */
 	protected $table_votes;
 
+	/** @var int */
+	protected $idea_count;
+
 	/**
 	 * @param config           $config
 	 * @param driver_interface $db
@@ -104,10 +107,11 @@ class ideas
 	 * @param string    $sort_direction ASC / DESC.
 	 * @param array|int $status         The id of the status(es) to load
 	 * @param string    $where          SQL WHERE query.
+	 * @param int       $start          Start value for pagination
 	 *
 	 * @return array Array of row data
 	 */
-	public function get_ideas($number = 10, $sort = 'date', $sort_direction = 'DESC', $status = array(), $where = '')
+	public function get_ideas($number = 10, $sort = 'date', $sort_direction = 'DESC', $status = array(), $where = '', $start = 0)
 	{
 		switch (strtolower($sort))
 		{
@@ -155,6 +159,20 @@ class ideas
 		// Prepend $status to our $where clause
 		$where = $status . (($where) ? ' AND ' . $where : '');
 
+		// Count the total number of ideas for pagination
+		if ($number >= $this->config['posts_per_page'])
+		{
+			$sql = 'SELECT COUNT(idea_id) as num_ideas
+				FROM ' . $this->table_ideas . "
+				WHERE $where";
+			$result = $this->db->sql_query($sql);
+			$num_ideas = (int) $this->db->sql_fetchfield('num_ideas');
+			$this->db->sql_freeresult($result);
+
+			// Set the total number of ideas for pagination
+			$this->set_idea_count($num_ideas);
+		}
+
 		if ($sortby !== 'TOP' && $sortby !== 'ALL')
 		{
 			$sql = 'SELECT *
@@ -172,16 +190,16 @@ class ideas
 			// YEEEEEEEEAAAAAAAAAAAAAHHHHHHH
 			// From http://evanmiller.org/how-not-to-sort-by-average-rating.html
 			$sql = 'SELECT *,
-					((idea_votes_up + 1.9208) / (idea_votes_up + idea_votes_down) -
-	                1.96 * SQRT((idea_votes_up * idea_votes_down) / (idea_votes_up + idea_votes_down) + 0.9604) /
-	                (idea_votes_up + idea_votes_down)) / (1 + 3.8416 / (idea_votes_up + idea_votes_down))
-	                AS ci_lower_bound
-       			FROM ' . $this->table_ideas . "
-       			WHERE $where
+				((idea_votes_up + 1.9208) / (idea_votes_up + idea_votes_down) -
+	            1.96 * SQRT((idea_votes_up * idea_votes_down) / (idea_votes_up + idea_votes_down) + 0.9604) /
+	            (idea_votes_up + idea_votes_down)) / (1 + 3.8416 / (idea_votes_up + idea_votes_down))
+	            AS ci_lower_bound
+       				FROM ' . $this->table_ideas . "
+       				WHERE $where
        			ORDER BY ci_lower_bound " . $sort_direction;
 		}
 
-		$result = $this->db->sql_query_limit($sql, $number);
+		$result = $this->db->sql_query_limit($sql, $number, $start);
 		$rows = $this->db->sql_fetchrowset($result);
 		$this->db->sql_freeresult($result);
 
@@ -781,5 +799,25 @@ class ideas
 		$this->db->sql_query($sql);
 
 		return (bool) $this->db->sql_affectedrows();
+	}
+
+	/**
+	 * Get the stored idea count
+	 *
+	 * @return int Count of ideas
+ 	 */
+	public function get_idea_count()
+	{
+		return $this->idea_count;
+	}
+
+	/**
+	 * Store an idea count
+	 *
+	 * @param int $idea_count Count of ideas
+	 */
+	public function set_idea_count($idea_count)
+	{
+		$this->idea_count = (int) $idea_count;
 	}
 }

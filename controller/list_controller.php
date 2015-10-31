@@ -40,6 +40,7 @@ class list_controller extends base
 		$sort_direction = ($this->request->variable('sd', 'd')) === 'd' ? 'DESC' : 'ASC';
 		$status = $this->request->variable('status', 0);
 		$author = $this->request->variable(ideas::SORT_AUTHOR, 0);
+		$start = $this->request->variable('start', 0);
 
 		if ($sort === ideas::SORT_IMPLEMENTED)
 		{
@@ -59,7 +60,7 @@ class list_controller extends base
 		}
 
 		// Generate ideas
-		$ideas = $this->ideas->get_ideas(0, $sort, $sort_direction, $status, $where);
+		$ideas = $this->ideas->get_ideas($this->config['posts_per_page'], $sort, $sort_direction, $status, $where, $start);
 		$this->assign_template_block_vars('ideas', $ideas);
 
 		$statuses = $this->ideas->get_statuses();
@@ -87,6 +88,7 @@ class list_controller extends base
 			'U_NEW_IDEA_ACTION'	=> $this->helper->route('phpbb_ideas_post_controller'),
 			'SORT_DIRECTION'	=> $sort_direction,
 			'STATUS_NAME'       => $status_name ?: $this->language->lang('ALL_IDEAS'),
+			'TOTAL_IDEAS'       => $this->language->lang('TOTAL_IDEAS', $this->ideas->get_idea_count()),
 		));
 
 		// Assign breadcrumb template vars
@@ -102,6 +104,16 @@ class list_controller extends base
 				'FORUM_NAME'	=> $status_name ?: $this->language->lang('ALL_IDEAS'),
 			),
 		));
+
+		// Generate template pagination
+		$this->pagination->generate_template_pagination(
+			$this->helper->route('phpbb_ideas_list_controller', $breadcrumb_params),
+			'pagination',
+			'start',
+			$this->ideas->get_idea_count(),
+			$this->config['posts_per_page'],
+			$start
+		);
 
 		return $this->helper->render('list_body.html', $this->language->lang('IDEA_LIST'));
 	}
