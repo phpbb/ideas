@@ -450,7 +450,7 @@ class ideas
 			WHERE topic_id=" . (int) $idea['topic_id'];
 		$this->db->sql_query($sql);
 
-		$this->log->add('mod', $this->user->data['user_id'], $this->user->ip, 'ACP_IDEA_TITLE_EDITED_LOG', time(), array($idea_id));
+		$this->log->add('mod', $this->user->data['user_id'], $this->user->ip, 'ACP_PHPBB_IDEAS_TITLE_EDITED_LOG', time(), array($idea_id));
 
 		return true;
 	}
