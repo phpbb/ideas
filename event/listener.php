@@ -76,9 +76,27 @@ class listener implements EventSubscriberInterface
 	static public function getSubscribedEvents()
 	{
 		return array(
+			'core.viewforum_get_topic_data'		=> 'ideas_forum_redirect',
 			'core.viewtopic_modify_post_row'	=> 'clean_message',
 			'core.viewtopic_modify_page_title'	=> 'show_idea',
 		);
+	}
+
+	/**
+	 * Redirect users from the forum to the Ideas centre
+	 *
+	 * @param $event
+	 * @return null
+	 * @access public
+	 */
+	public function ideas_forum_redirect($event)
+	{
+		if ($event['forum_id'] == $this->config['ideas_forum_id'])
+		{
+			// Use the custom base url if set, otherwise default to normal routing
+			$url = ($this->config['ideas_base_url']) ? $this->config['ideas_base_url'] : $this->helper->route('phpbb_ideas_index_controller');
+			redirect($url);
+		}
 	}
 
 	/**
