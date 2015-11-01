@@ -63,9 +63,22 @@ class post_controller extends base
 		display_custom_bbcodes();
 		generate_smilies('inline', 0);
 
+		// BBCode, Smilies, Images URL, and Flash statuses
+		$bbcode_status	= (bool) $this->config['allow_bbcode'] && $this->auth->acl_get('f_bbcode', $this->config['ideas_forum_id']);
+		$smilies_status	= (bool) $this->config['allow_smilies'] && $this->auth->acl_get('f_smilies', $this->config['ideas_forum_id']);
+		$img_status		= (bool) $bbcode_status && $this->auth->acl_get('f_img', $this->config['ideas_forum_id']);
+		$url_status		= (bool) $this->config['allow_post_links'];
+		$flash_status	= (bool) $bbcode_status && $this->auth->acl_get('f_flash', $this->config['ideas_forum_id']) && $this->config['allow_post_flash'];
+
 		$this->template->assign_vars(array(
-			'S_POST_ACTION'		=> $this->helper->route('phpbb_ideas_post_controller', array('mode' => 'submit')),
 			'TITLE'				=> $title,
+			'S_POST_ACTION'		=> $this->helper->route('phpbb_ideas_post_controller', array('mode' => 'submit')),
+			'S_BBCODE_ALLOWED'	=> $bbcode_status,
+			'S_SMILIES_ALLOWED'	=> $smilies_status,
+			'S_LINKS_ALLOWED'	=> $url_status,
+			'S_BBCODE_IMG'		=> $img_status,
+			'S_BBCODE_FLASH'	=> $flash_status,
+			'S_BBCODE_QUOTE'	=> true,
 		));
 
 		// Assign breadcrumb template vars
