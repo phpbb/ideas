@@ -94,6 +94,7 @@ class ideas_module
 			'legend1'	=> 'ACP_PHPBB_IDEAS_SETTINGS',
 				'ideas_forum_id'	=> array('lang' => 'ACP_IDEAS_FORUM_ID',	'validate' => 'string',	'type' => 'custom', 'method' => 'select_ideas_forum', 'explain' => true),
 				'ideas_poster_id'	=> array('lang' => 'ACP_IDEAS_POSTER_ID',	'validate' => 'string',	'type' => 'custom', 'method' => 'select_ideas_topics_poster', 'explain' => true),
+				'ideas_base_url'	=> array('lang' => 'ACP_IDEAS_BASE_URL',	'validate' => 'string',	'type' => 'text:45:255', 'explain' => true),
 		);
 
 		// Display forum setup utility button only if the forum is set

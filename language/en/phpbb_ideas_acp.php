@@ -30,5 +30,7 @@ $lang = array_merge($lang, array(
 	'ACP_IDEAS_POSTER_ID_EXPLAIN'	=> 'Enter a username for the Idea-bot that will post Ideas topics into the forum.',
 	'ACP_IDEAS_SETTINGS_UPDATED'	=> 'phpBB Ideas settings updated.',
 	'ACP_IDEAS_UTILITIES'			=> 'Ideas utilities',
+	'ACP_IDEAS_BASE_URL'			=> 'Ideas base URL (optional)',
+	'ACP_IDEAS_BASE_URL_EXPLAIN'	=> 'Enter the full URL to Ideas, e.g.: <samp>http://www.phpbb.com/ideas</samp>. This should only be set if your board has custom routing configurations that prevent Ideas from working as expected.',
 	'ACP_PHPBB_IDEAS_EXPLAIN'		=> 'Here you can configure phpBB Ideas extension. phpBB Ideas is an ideas centre for phpBB. It allows users to suggest and vote on ideas that would help to improve and enhance phpBB.',
 ));
