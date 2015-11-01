@@ -91,9 +91,11 @@ class ideas_module
 		$errors = array();
 
 		$display_vars = array(
-			'ideas_forum_id'	=> array('lang' => 'ACP_IDEAS_FORUM_ID',	'validate' => 'string',	'type' => 'custom', 'method' => 'select_ideas_forum', 'explain' => true),
-			'ideas_poster_id'	=> array('lang' => 'ACP_IDEAS_POSTER_ID',	'validate' => 'string',	'type' => 'custom', 'method' => 'select_ideas_topics_poster', 'explain' => true),
-			'ideas_forum_setup'	=> array('lang' => 'ACP_IDEAS_FORUM_SETUP',	'validate' => 'bool',	'type' => 'custom', 'method' => 'set_ideas_forum_permissions', 'explain' => true),
+			'legend1'	=> 'ACP_PHPBB_IDEAS_SETTINGS',
+				'ideas_forum_id'	=> array('lang' => 'ACP_IDEAS_FORUM_ID',	'validate' => 'string',	'type' => 'custom', 'method' => 'select_ideas_forum', 'explain' => true),
+				'ideas_poster_id'	=> array('lang' => 'ACP_IDEAS_POSTER_ID',	'validate' => 'string',	'type' => 'custom', 'method' => 'select_ideas_topics_poster', 'explain' => true),
+			'legend2'	=> 'ACP_PHPBB_IDEAS_SETUP_UTILITIES',
+				'ideas_forum_setup'	=> array('lang' => 'ACP_IDEAS_FORUM_SETUP',	'validate' => 'bool',	'type' => 'custom', 'method' => 'set_ideas_forum_permissions', 'explain' => true),
 		);
 
 		$this->new_config = $this->config;
@@ -110,10 +112,12 @@ class ideas_module
 			{
 				$errors[] = $this->language->lang('FORM_INVALID');
 			}
-		}
 
-		if ($submit)
-		{
+			if ($submit_forum_setup && (int) $this->config['ideas_forum_id'] == 0)
+			{
+				$errors[] = $this->language->lang('ACP_NO_FORUM_SELECTED') . '.';
+			}
+
 			// Check if selected user exists
 			$sql = 'SELECT user_id
 				FROM ' . USERS_TABLE . "
@@ -142,7 +146,7 @@ class ideas_module
 		// We go through the display_vars to make sure no one is trying to set variables he/she is not allowed to
 		foreach ($display_vars as $config_name => $null)
 		{
-			if (!isset($cfg_array[$config_name]))
+			if (!isset($cfg_array[$config_name]) || strpos($config_name, 'legend') !== false)
 			{
 				continue;
 			}
@@ -157,7 +161,7 @@ class ideas_module
 
 		if ($submit || $submit_forum_setup)
 		{
-			if ($submit_forum_setup && (int) $this->config['ideas_forum_id'])
+			if ($submit_forum_setup)
 			{
 				if (!class_exists('auth_admin'))
 				{
@@ -165,7 +169,6 @@ class ideas_module
 				}
 				$auth_admin = new \auth_admin();
 
-				$ug_type = 'group';
 				$forum_id = (int) $this->config['ideas_forum_id'];
 
 				// get the REGISTERED usergroup ID
@@ -184,17 +187,23 @@ class ideas_module
 				$auth_settings['f_post'] = ACL_NEVER;
 
 				// Update the permission set...
-				$auth_admin->acl_set($ug_type, $forum_id, $group_id, $auth_settings);
+				$auth_admin->acl_set('group', $forum_id, $group_id, $auth_settings);
 
 				// Disable auto-pruning for ideas forum
 				$sql = 'UPDATE ' . FORUMS_TABLE . '
 					SET ' . $this->db->sql_build_array('UPDATE', array('enable_prune' => false)) . '
 					WHERE forum_id = ' . $forum_id;
 				$this->db->sql_query($sql);
+
+				// Add forum setup action to the admin log
+				$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'ACP_PHPBB_IDEAS_FORUM_SETUP_LOG');
 			}
 
-			// Add option settings change action to the admin log
-			$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'ACP_PHPBB_IDEAS_SETTINGS_LOG');
+			if ($submit)
+			{
+				// Add option settings change action to the admin log
+				$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'ACP_PHPBB_IDEAS_SETTINGS_LOG');
+			}
 
 			trigger_error($this->language->lang('ACP_PHPBB_IDEAS_SETTINGS_CHANGED') . adm_back_link($this->u_action));
 		}
@@ -202,6 +211,20 @@ class ideas_module
 		// Output relevant page
 		foreach ($display_vars as $config_key => $vars)
 		{
+			if (!is_array($vars) && strpos($config_key, 'legend') === false)
+			{
+				continue;
+			}
+
+			if (strpos($config_key, 'legend') !== false)
+			{
+				$this->template->assign_block_vars('options', array(
+					'S_LEGEND'		=> true,
+					'LEGEND'		=> $this->language->lang($vars))
+				);
+				continue;
+			}
+
 			$type = explode(':', $vars['type']);
 
 			$content = build_cfg_template($type, $config_key, $this->new_config, $config_key, $vars);
@@ -280,6 +303,6 @@ class ideas_module
 	 */
 	public function set_ideas_forum_permissions($value, $key)
 	{
-		return '<input class="button2" type="submit" id="' . $key . '" name="' . $key . '" value="' . $this->user->lang['ACP_IDEAS_FORUM_SETUP'] . '" />';
+		return '<input class="button2" type="submit" id="' . $key . '" name="' . $key . '" value="' . $this->language->lang('RUN') . '" />';
 	}
 }

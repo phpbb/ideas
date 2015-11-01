@@ -21,9 +21,9 @@ if (empty($lang) || !is_array($lang))
 $lang = array_merge($lang, array(
 	// ACP module
 	'ACP_IDEAS_FORUM_ID'			=> 'Ideas forum',
-	'ACP_IDEAS_FORUM_ID_EXPLAIN'	=> 'Select the forum that Ideas topics will be posted to.',
-	'ACP_IDEAS_FORUM_SETUP'			=> 'Apply ideas forum settings',
-	'ACP_IDEAS_FORUM_SETUP_EXPLAIN'	=> 'Registered usergroup will not be able to start new topics in Ideas forum. Additionally, auto-pruning will be disabled for it.',
+	'ACP_IDEAS_FORUM_ID_EXPLAIN'	=> 'Select the forum that Ideas topics will be posted to. Once done, apply Ideas forum setup clicking the appropriate button below.',
+	'ACP_IDEAS_FORUM_SETUP'			=> 'Set up the Ideas forum',
+	'ACP_IDEAS_FORUM_SETUP_EXPLAIN'	=> 'Sets up the Ideas forum. Users will not be able to start new topics. Additionally, auto-pruning will be disabled.<br />Note: you have to select the Ideas forum first.',
 	'ACP_IDEAS_POSTER_ID'			=> 'Ideas user bot',
 	'ACP_IDEAS_POSTER_ID_EXPLAIN'	=> 'Enter a username for the Idea-bot that will post Ideas topics into the forum.',
 	'ACP_NO_FORUM_SELECTED'			=> 'No forum selected',
