@@ -611,12 +611,12 @@ class ideas
 	 * Submits a new idea.
 	 *
 	 * @param string $title   The title of the idea.
-	 * @param string $desc    The description of the idea.
+	 * @param string $message    The description of the idea.
 	 * @param int    $user_id The ID of the author.
 	 *
 	 * @return array|int Either an array of errors, or the ID of the new idea.
 	 */
-	public function submit($title, $desc, $user_id)
+	public function submit($title, $message, $user_id)
 	{
 		$error = array();
 		if (utf8_clean_string($title) === '')
@@ -627,11 +627,11 @@ class ideas
 		{
 			$error[] = $this->language->lang('TITLE_TOO_LONG');
 		}
-		if (utf8_strlen($desc) < $this->config['min_post_chars'])
+		if (utf8_strlen($message) < $this->config['min_post_chars'])
 		{
 			$error[] = $this->language->lang('TOO_FEW_CHARS');
 		}
-		if (utf8_strlen($desc) > $this->config['max_post_chars'])
+		if (utf8_strlen($message) > $this->config['max_post_chars'])
 		{
 			$error[] = $this->language->lang('TOO_MANY_CHARS');
 		}
@@ -656,7 +656,7 @@ class ideas
 		$this->vote($idea, $this->user->data['user_id'], 1);
 
 		$uid = $bitfield = $options = '';
-		generate_text_for_storage($desc, $uid, $bitfield, $options, true, true, true);
+		generate_text_for_storage($message, $uid, $bitfield, $options, true, true, true);
 
 		$data = array(
 			'forum_id'			=> (int) $this->config['ideas_forum_id'],
@@ -669,8 +669,8 @@ class ideas
 			'enable_urls'		=> true,
 			'enable_sig'		=> true,
 
-			'message'			=> $desc,
-			'message_md5'		=> md5($desc),
+			'message'			=> $message,
+			'message_md5'		=> md5($message),
 
 			'bbcode_bitfield'	=> $bitfield,
 			'bbcode_uid'		=> $uid,
