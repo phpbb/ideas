@@ -55,6 +55,6 @@ class index_controller extends base
 			'FORUM_NAME'		=> $this->language->lang('IDEAS'),
 		));
 
-		return $this->helper->render('index_body.html', $this->language->lang('IDEAS_HOME'));
+		return $this->helper->render('index_body.html', $this->language->lang('IDEAS_TITLE'));
 	}
 }

@@ -41,17 +41,17 @@ class post_controller extends base
 
 		$mode = $this->request->variable('mode', '');
 		$title = $this->request->variable('title', '');
-		$desc = $this->request->variable('desc', '', true);
+		$message = $this->request->variable('message', '', true);
 
 		if ($mode === 'submit')
 		{
-			$submit = $this->ideas->submit($title, $desc, $this->user->data['user_id']);
+			$submit = $this->ideas->submit($title, $message, $this->user->data['user_id']);
 
 			if (is_array($submit))
 			{
 				$this->template->assign_vars(array(
 					'ERROR'		=> implode('<br />', $submit),
-					'DESC'		=> $desc,
+					'MESSAGE'	=> $message,
 				));
 			}
 			else
@@ -76,7 +76,7 @@ class post_controller extends base
 			),
 			array(
 				'U_VIEW_FORUM'	=> $this->helper->route('phpbb_ideas_post_controller'),
-				'FORUM_NAME'	=> $this->language->lang('POST_IDEA'),
+				'FORUM_NAME'	=> $this->language->lang('NEW_IDEA'),
 			),
 		));
 
