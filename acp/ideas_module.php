@@ -94,9 +94,16 @@ class ideas_module
 			'legend1'	=> 'ACP_PHPBB_IDEAS_SETTINGS',
 				'ideas_forum_id'	=> array('lang' => 'ACP_IDEAS_FORUM_ID',	'validate' => 'string',	'type' => 'custom', 'method' => 'select_ideas_forum', 'explain' => true),
 				'ideas_poster_id'	=> array('lang' => 'ACP_IDEAS_POSTER_ID',	'validate' => 'string',	'type' => 'custom', 'method' => 'select_ideas_topics_poster', 'explain' => true),
-			'legend2'	=> 'ACP_PHPBB_IDEAS_SETUP_UTILITIES',
-				'ideas_forum_setup'	=> array('lang' => 'ACP_IDEAS_FORUM_SETUP',	'validate' => 'bool',	'type' => 'custom', 'method' => 'set_ideas_forum_permissions', 'explain' => true),
 		);
+
+		// Display forum setup utility button only if the forum is set
+		if (!empty($this->config['ideas_forum_id']))
+		{
+			$display_vars = array_merge($display_vars, array(
+				'legend2'	=> 'ACP_PHPBB_IDEAS_SETUP_UTILITIES',
+					'ideas_forum_setup'	=> array('lang' => 'ACP_IDEAS_FORUM_SETUP',	'validate' => 'bool',	'type' => 'custom', 'method' => 'set_ideas_forum_permissions', 'explain' => true),
+			));
+		}
 
 		$this->new_config = $this->config;
 		$cfg_array = ($this->request->is_set('config')) ? $this->request->variable('config', array('' => ''), true) : $this->new_config;
@@ -112,13 +119,11 @@ class ideas_module
 			{
 				$errors[] = $this->language->lang('FORM_INVALID');
 			}
+		}
 
-			if ($submit_forum_setup && (int) $this->config['ideas_forum_id'] == 0)
-			{
-				$errors[] = $this->language->lang('ACP_NO_FORUM_SELECTED') . '.';
-			}
-
-			// Check if selected user exists
+		// Check if selected user exists
+		if ($submit)
+		{
 			$sql = 'SELECT user_id
 				FROM ' . USERS_TABLE . "
 				WHERE username_clean = '" . $this->db->sql_escape(utf8_clean_string($cfg_array['ideas_poster_id'])) . "'";
@@ -134,6 +139,49 @@ class ideas_module
 			{
 				// If selected user does exist, reassign the config value to its ID
 				$cfg_array['ideas_poster_id'] = $user_id;
+			}
+		}
+
+		// Check if Ideas forum is selected and apply relevant settings if it is
+		if ($submit_forum_setup)
+		{
+			if (empty($this->config['ideas_forum_id']))
+			{
+				trigger_error($this->language->lang('ACP_NO_FORUM_SELECTED') . '.' . adm_back_link($this->u_action));
+			}
+			else
+			{
+				if (!class_exists('auth_admin'))
+				{
+					include($this->phpbb_root_path . 'includes/acp/auth.' . $this->php_ext);
+				}
+				$auth_admin = new \auth_admin();
+
+				$forum_id = (int) $this->config['ideas_forum_id'];
+
+				// Get the REGISTERED usergroup ID
+				$sql = 'SELECT group_id
+					FROM ' . GROUPS_TABLE . "
+					WHERE group_name = '" . $this->db->sql_escape('REGISTERED') . "'";
+				$this->db->sql_query($sql);
+				$group_id = (int) $this->db->sql_fetchfield('group_id');
+
+				// Get 'f_' local REGISTERED users group permissions array for the ideas forum
+				// Default undefined permissions to ACL_NO
+				$hold_ary = $auth_admin->get_mask('set', false, $group_id, $forum_id, 'f_', 'local', ACL_NO);
+				$auth_settings = $hold_ary[$group_id][$forum_id];
+
+				// Set 'Can start new topics' permissions to 'Never' for the ideas forum
+				$auth_settings['f_post'] = ACL_NEVER;
+
+				// Update the registered usergroup  permissions for selected Ideas forum...
+				$auth_admin->acl_set('group', $forum_id, $group_id, $auth_settings);
+
+				// Disable auto-pruning for ideas forum
+				$sql = 'UPDATE ' . FORUMS_TABLE . '
+					SET ' . $this->db->sql_build_array('UPDATE', array('enable_prune' => false)) . '
+					WHERE forum_id = ' . $forum_id;
+				$this->db->sql_query($sql);
 			}
 		}
 
@@ -159,50 +207,19 @@ class ideas_module
 			}
 		}
 
+		// Submit relevant log entries and output success message
 		if ($submit || $submit_forum_setup)
 		{
-			if ($submit_forum_setup)
-			{
-				if (!class_exists('auth_admin'))
-				{
-					include($this->phpbb_root_path . 'includes/acp/auth.' . $this->php_ext);
-				}
-				$auth_admin = new \auth_admin();
-
-				$forum_id = (int) $this->config['ideas_forum_id'];
-
-				// get the REGISTERED usergroup ID
-				$sql = 'SELECT group_id
-					FROM ' . GROUPS_TABLE . "
-					WHERE group_name = '" . $this->db->sql_escape('REGISTERED') . "'";
-				$this->db->sql_query($sql);
-				$group_id = (int) $this->db->sql_fetchfield('group_id');
-
-				// Get 'f_' local REGISTERED users group permissions array for the ideas forum
-				// Default undefined permissions to ACL_NO
-				$hold_ary = $auth_admin->get_mask('set', false, $group_id, $forum_id, 'f_', 'local', ACL_NO);
-				$auth_settings = $hold_ary[$group_id][$forum_id];
-
-				// Set 'Can start new topics' permissions to 'Never' for the ideas forum
-				$auth_settings['f_post'] = ACL_NEVER;
-
-				// Update the permission set...
-				$auth_admin->acl_set('group', $forum_id, $group_id, $auth_settings);
-
-				// Disable auto-pruning for ideas forum
-				$sql = 'UPDATE ' . FORUMS_TABLE . '
-					SET ' . $this->db->sql_build_array('UPDATE', array('enable_prune' => false)) . '
-					WHERE forum_id = ' . $forum_id;
-				$this->db->sql_query($sql);
-
-				// Add forum setup action to the admin log
-				$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'ACP_PHPBB_IDEAS_FORUM_SETUP_LOG');
-			}
-
 			if ($submit)
 			{
 				// Add option settings change action to the admin log
 				$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'ACP_PHPBB_IDEAS_SETTINGS_LOG');
+			}
+
+			if ($submit_forum_setup)
+			{
+				// Add forum setup action to the admin log
+				$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'ACP_PHPBB_IDEAS_FORUM_SETUP_LOG');
 			}
 
 			trigger_error($this->language->lang('ACP_PHPBB_IDEAS_SETTINGS_CHANGED') . adm_back_link($this->u_action));
