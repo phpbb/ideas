@@ -49,7 +49,7 @@
 <!-- BEGINELSE -->
 	<div class="panel">
 		<div class="inner">
-			<strong>{L_NO_IDEAS}</strong>
+			<strong>{L_NO_IDEAS_DISPLAY}</strong>
 		</div>
 	</div>
 <!-- END ideas -->
@@ -57,7 +57,7 @@
 <form method="post" action="{U_POST_ACTION}">
 	<fieldset class="display-options">
 		<!-- IF not S_IS_BOT -->
-		<label>{L_SHOW_W_STATUS} <select name="status" id="st">
+		<label>{L_SHOW_W_STATUS}{L_COLON} <select name="status" id="st">
 		<option value="0">{L_ALL_IDEAS}</option>
 		<!-- BEGIN status --><option value="{status.VALUE}"<!-- IF status.SELECTED --> selected="selected"<!-- ENDIF -->>{status.TEXT}</option><!-- END status -->
 		</select></label>

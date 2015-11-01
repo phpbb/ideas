@@ -15,15 +15,21 @@
 
 <form id="acp_phpbb_ideas_settings" method="post" action="{U_ACTION}">
 
-<fieldset>
-	<legend>{L_ACP_PHPBB_IDEAS_SETTINGS}</legend>
-	<!-- BEGIN options -->
-			<dl>
-				<dt><label for="{options.KEY}">{options.TITLE}{L_COLON}</label><!-- IF options.S_EXPLAIN --><br /><span>{options.TITLE_EXPLAIN}</span><!-- ENDIF --></dt>
-				<dd>{options.CONTENT}</dd>
-				<!-- IF options.KEY == 'ideas_poster_id' --><dd>[ <a href="{U_FIND_USERNAME}" onclick="find_username(this.href); return false;">{L_FIND_USERNAME}</a> ]</dd><!-- ENDIF -->
-			</dl>
-	<!-- END options -->
+<!-- BEGIN options -->
+	<!-- IF options.S_LEGEND -->
+		<!-- IF not options.S_FIRST_ROW -->
+			</fieldset>
+		<!-- ENDIF -->
+		<fieldset>
+			<legend>{options.LEGEND}</legend>
+	<!-- ELSE -->
+		<dl>
+			<dt><label for="{options.KEY}">{options.TITLE}{L_COLON}</label><!-- IF options.S_EXPLAIN --><br /><span>{options.TITLE_EXPLAIN}</span><!-- ENDIF --></dt>
+			<dd>{options.CONTENT}</dd>
+			<!-- IF options.KEY == 'ideas_poster_id' --><dd>[ <a href="{U_FIND_USERNAME}" onclick="find_username(this.href); return false;">{L_FIND_USERNAME}</a> ]</dd><!-- ENDIF -->
+		</dl>
+	<!-- ENDIF -->
+<!-- END options -->
 </fieldset>
 
 <fieldset class="submit-buttons">

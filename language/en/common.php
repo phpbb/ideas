@@ -19,16 +19,13 @@ if (empty($lang) || !is_array($lang))
 }
 
 $lang = array_merge($lang, array(
-	'ACCEPTED'				=> 'Accepted',
 	'ADD'					=> 'Add',
 	'ALL_IDEAS'				=> 'All ideas',
 	'ALREADY_VOTED'			=> 'You have already voted on this idea.',
 
 	'CHANGE_STATUS'			=> 'Change status',
-	'CREATE_IDEA'			=> 'Create new idea',
 
 	'DATE'					=> 'Date',
-	'DESC'					=> 'Description',
 	'DUPLICATE'				=> 'Duplicate',
 
 	'EDIT'					=> 'Edit',
@@ -40,7 +37,6 @@ $lang = array_merge($lang, array(
 	'IDEA_LIST'				=> 'Idea List',
 	'IDEA_NOT_FOUND'		=> 'Idea not found',
 	'IDEA_POSTER'           => 'Posted by %s', // Warning: submitted to db
-	'IDEAS_HOME'			=> 'Ideas Home',
 	'IDEAS_TITLE'			=> 'phpBB Ideas',
 	'IDEAS_NOT_AVAILABLE'	=> 'Ideas is not available at this time.',
 	'IMPLEMENTED'           => 'Implemented',
@@ -54,18 +50,15 @@ $lang = array_merge($lang, array(
 	'LATEST_IDEAS'			=> 'Latest Ideas',
 	'LOGGED_OUT'			=> 'You must be logged in to do this.',
 
-	'MERGED'				=> 'Merged',
 	'MOD_IDEA'				=> 'Moderate idea',
 
 	'NEW'					=> 'New',
 	'NEW_IDEA'				=> 'New Idea',
-	'NO_IDEAS'				=> 'No ideas',
 	'NO_IDEAS_DISPLAY'		=> 'There are no ideas to display.',
 
-	'POST_IDEA'				=> 'Post idea',
+	'POST_IDEA'				=> 'Post a new idea',
 
 	'RATING'                => 'Rating',
-	'REJECTED'				=> 'Rejected',
 	'REMOVE_VOTE'			=> 'Remove vote',
 	'RETURN_IDEAS'			=> '%sReturn to Ideas%s',
 	'RFC'					=> 'RFC',
@@ -73,7 +66,7 @@ $lang = array_merge($lang, array(
 
 	'SET'                   => 'Set',
 	'SCORE'                 => 'Score',
-	'SHOW_W_STATUS'			=> 'Display ideas with status:',
+	'SHOW_W_STATUS'			=> 'Display ideas with status',
 	'STATUS'				=> 'Status',
 
 	'TICKET'				=> 'Ticket',
@@ -98,7 +91,6 @@ $lang = array_merge($lang, array(
 	'VIEW_IDEA'				=> 'View Idea',
 	'VIEW_IDEA_AT'          => 'View idea at: %s', // Warning: submitted to db
 	'VIEW_VOTES'            => '%s point(s). Click to view votes',
-	'VIEWING_IDEA'			=> 'Viewing Idea',
 	'VOTE'					=> 'Vote',
 	'VOTE_DOWN'				=> 'Vote Down',
 	'VOTE_ERROR'			=> 'An error occurred',

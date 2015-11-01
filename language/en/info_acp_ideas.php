@@ -24,6 +24,7 @@ $lang = array_merge($lang, array(
 	'ACP_PHPBB_IDEAS_SETTINGS'	=> 'Ideas settings',
 
 	// ACP Logs
-	'ACP_IDEA_TITLE_EDITED_LOG'			=> '<strong>Idea title edited</strong><br />» phpBB Ideas ID #%s',
-	'ACP_PHPBB_IDEAS_SETTINGS_LOG'		=> '<strong>phpBB Ideas settings changed</strong>',
+	'ACP_PHPBB_IDEAS_SETTINGS_LOG'		=> '<strong>phpBB Ideas settings updated</strong>',
+	'ACP_PHPBB_IDEAS_FORUM_SETUP_LOG'	=> '<strong>phpBB Ideas forum setup applied</strong>',
+	'ACP_PHPBB_IDEAS_TITLE_EDITED_LOG'	=> '<strong>Idea title edited</strong><br />» phpBB Ideas ID #%s',
 ));
