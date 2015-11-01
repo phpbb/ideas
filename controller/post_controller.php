@@ -76,7 +76,7 @@ class post_controller extends base
 			),
 			array(
 				'U_VIEW_FORUM'	=> $this->helper->route('phpbb_ideas_post_controller'),
-				'FORUM_NAME'	=> $this->language->lang('POST_IDEA'),
+				'FORUM_NAME'	=> $this->language->lang('NEW_IDEA'),
 			),
 		));
 
