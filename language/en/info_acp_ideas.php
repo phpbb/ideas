@@ -22,10 +22,9 @@ $lang = array_merge($lang, array(
 	// ACP module
 	'ACP_PHPBB_IDEAS'			=> 'phpBB Ideas',
 	'ACP_PHPBB_IDEAS_SETTINGS'	=> 'Ideas settings',
-	'ACP_PHPBB_IDEAS_SETUP_UTILITIES'	=> 'Ideas setup utilities',
 
 	// ACP Logs
-	'ACP_IDEA_TITLE_EDITED_LOG'			=> '<strong>Idea title edited</strong><br />» phpBB Ideas ID #%s',
-	'ACP_PHPBB_IDEAS_SETTINGS_LOG'		=> '<strong>phpBB Ideas settings changed</strong>',
+	'ACP_PHPBB_IDEAS_SETTINGS_LOG'		=> '<strong>phpBB Ideas settings updated</strong>',
 	'ACP_PHPBB_IDEAS_FORUM_SETUP_LOG'	=> '<strong>phpBB Ideas forum setup applied</strong>',
+	'ACP_PHPBB_IDEAS_TITLE_EDITED_LOG'	=> '<strong>Idea title edited</strong><br />» phpBB Ideas ID #%s',
 ));

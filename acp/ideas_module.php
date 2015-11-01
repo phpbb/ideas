@@ -100,7 +100,7 @@ class ideas_module
 		if (!empty($this->config['ideas_forum_id']))
 		{
 			$display_vars = array_merge($display_vars, array(
-				'legend2'	=> 'ACP_PHPBB_IDEAS_SETUP_UTILITIES',
+				'legend2'	=> 'ACP_IDEAS_UTILITIES',
 					'ideas_forum_setup'	=> array('lang' => 'ACP_IDEAS_FORUM_SETUP',	'validate' => 'bool',	'type' => 'custom', 'method' => 'set_ideas_forum_permissions', 'explain' => true),
 			));
 		}
@@ -147,7 +147,7 @@ class ideas_module
 		{
 			if (empty($this->config['ideas_forum_id']))
 			{
-				trigger_error($this->language->lang('ACP_NO_FORUM_SELECTED') . '.' . adm_back_link($this->u_action));
+				trigger_error($this->language->lang('ACP_IDEAS_NO_FORUM') . '.' . adm_back_link($this->u_action));
 			}
 			else
 			{
@@ -210,19 +210,11 @@ class ideas_module
 		// Submit relevant log entries and output success message
 		if ($submit || $submit_forum_setup)
 		{
-			if ($submit)
-			{
-				// Add option settings change action to the admin log
-				$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'ACP_PHPBB_IDEAS_SETTINGS_LOG');
-			}
+			$message = ($submit_forum_setup) ? 'FORUM_SETUP' : 'SETTINGS';
 
-			if ($submit_forum_setup)
-			{
-				// Add forum setup action to the admin log
-				$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'ACP_PHPBB_IDEAS_FORUM_SETUP_LOG');
-			}
+			$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, "ACP_PHPBB_IDEAS_{$message}_LOG");
 
-			trigger_error($this->language->lang('ACP_PHPBB_IDEAS_SETTINGS_CHANGED') . adm_back_link($this->u_action));
+			trigger_error($this->language->lang("ACP_IDEAS_{$message}_UPDATED") . adm_back_link($this->u_action));
 		}
 
 		// Output relevant page
@@ -281,7 +273,7 @@ class ideas_module
 	{
 		$ideas_forum_id = (int) $this->config['ideas_forum_id'];
 		$s_forums_list = '<select id="' . $key . '" name="config[' . $key . ']">';
-		$s_forums_list .= '<option value="0"' . ((!$ideas_forum_id) ? ' selected="selected"' : '') . '>' . $this->language->lang('ACP_NO_FORUM_SELECTED') . '</option>';
+		$s_forums_list .= '<option value="0"' . ((!$ideas_forum_id) ? ' selected="selected"' : '') . '>' . $this->language->lang('ACP_IDEAS_NO_FORUM') . '</option>';
 		$forum_list = make_forum_select($ideas_forum_id, false, true, true);
 		$s_forums_list .= $forum_list . '</select>';
 
