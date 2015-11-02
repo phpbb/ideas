@@ -31,7 +31,7 @@ class list_controller extends base
 
 		// Overwrite the $sort parameter if the url contains a sort query.
 		// This is needed with the sort by options form at the footer of the list.
-		$sort = ($this->request->is_set('sort')) ? $this->request->variable('sort', '') : $sort;
+		$sort = ($this->request->is_set('sort')) ? $this->request->variable('sort', 'new') : $sort;
 
 		// Build the breadcrumb off the $sort parameter
 		$breadcrumb = (in_array($sort, array(ideas::SORT_NEW, ideas::SORT_TOP, ideas::SORT_IMPLEMENTED)) ? $sort : array());
