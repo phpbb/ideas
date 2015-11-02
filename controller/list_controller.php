@@ -29,6 +29,10 @@ class list_controller extends base
 			throw new http_exception(404, 'IDEAS_NOT_AVAILABLE');
 		}
 
+		// Overwrite the $sort parameter if the url contains a sort query.
+		// This is needed with the sort by options form at the footer of the list.
+		$sort = ($this->request->is_set('sort')) ? $this->request->variable('sort', '') : $sort;
+
 		// Build the breadcrumb off the $sort parameter
 		$breadcrumb = (in_array($sort, array(ideas::SORT_NEW, ideas::SORT_TOP, ideas::SORT_IMPLEMENTED)) ? $sort : array());
 
