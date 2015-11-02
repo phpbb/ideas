@@ -128,7 +128,7 @@ class ideas
 			break;
 
 			case self::SORT_SCORE:
-				$sortby = 'idea_votes_up - idea_votes_down ' . $sort_direction;
+				$sortby = 'CAST(idea_votes_up AS SIGNED) - CAST(idea_votes_down AS SIGNED) ' . $sort_direction;
 			break;
 
 			case self::SORT_TITLE:
