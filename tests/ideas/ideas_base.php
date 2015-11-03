@@ -8,11 +8,11 @@
 *
 */
 
-namespace phpbb\ideas\tests;
+namespace phpbb\ideas\tests\ideas;
 
-require_once dirname(__FILE__) . '/../../../../includes/functions.php';
+require_once dirname(__FILE__) . '/../../../../../includes/functions.php';
 
-class ideas_test extends \phpbb_database_test_case
+class ideas_base extends \phpbb_database_test_case
 {
 	static protected function setup_extensions()
 	{
@@ -36,7 +36,7 @@ class ideas_test extends \phpbb_database_test_case
 
 	public function getDataSet()
 	{
-		return $this->createXMLDataSet(dirname(__FILE__) . '/fixtures/ideas.xml');
+		return $this->createXMLDataSet(dirname(__FILE__) . '/../fixtures/ideas.xml');
 	}
 
 	public function setUp()
@@ -61,7 +61,7 @@ class ideas_test extends \phpbb_database_test_case
 			->getMock();
 	}
 
-	protected function get_ideas()
+	protected function get_ideas_object()
 	{
 		return new \phpbb\ideas\factory\ideas(
 			$this->config,
@@ -75,37 +75,6 @@ class ideas_test extends \phpbb_database_test_case
 			'phpbb_ideas_statuses',
 			'phpbb_ideas_tickets',
 			'phpbb_ideas_votes'
-		);
-	}
-
-	/**
-	 * @dataProvider get_ideas_data
-	 */
-	public function test_get_ideas($number, $sort, $sort_direction, $status, $where, $start, $expected)
-	{
-		$ideas = $this->get_ideas();
-
-		$result = $ideas->get_ideas($number, $sort, $sort_direction, $status, $where, $start);
-
-		$this->assertEquals($expected, $result);
-	}
-
-	public function get_ideas_data()
-	{
-		return array(
-			array(10, 'score', 'DESC',  array(), '',  0, array(
-				array(
-					'idea_id' => 1,
-					'idea_author' => 2,
-					'idea_title' => 'Idea test title #1',
-					'idea_date' => 1446267172,
-					'idea_votes_up' => 0,
-					'idea_votes_down' => 1,
-					'idea_status' => 1,
-					'topic_id' => 1,
-					'read' => true,
-				),
-			)),
 		);
 	}
 }
