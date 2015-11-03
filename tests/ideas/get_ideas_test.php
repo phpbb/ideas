@@ -10,7 +10,7 @@
 
 namespace phpbb\ideas\tests\ideas;
 
-class ideas_test extends ideas_base
+class get_ideas_test extends ideas_base
 {
 	/**
 	 * @var array Default argument values for get_ideas()
