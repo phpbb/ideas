@@ -249,6 +249,24 @@ class ideas_test extends ideas_base
 				),
 				array(1),
 			),
+
+			// sorted by default (similar to score), ascending, open ideas only
+			array(
+				array(
+					'sort' => '',
+					'sort_direction' => 'ASC',
+				),
+				array(2, 3, 1),
+			),
+
+			// sorted by default (similar to score), descending, open ideas only
+			array(
+				array(
+					'sort' => '',
+					'sort_direction' => 'DESC',
+				),
+				array(1, 3, 2),
+			),
 		);
 	}
 }
