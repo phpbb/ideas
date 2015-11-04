@@ -111,6 +111,7 @@ class list_controller extends base
 		));
 
 		// Assign breadcrumb template vars
+		$status = (is_array($status)) ? -1 : $status;
 		$breadcrumb_params = ($breadcrumb) ? array('sort' => $breadcrumb) : array();
 		$breadcrumb_params = array_merge($breadcrumb_params, (($status) ? array('status' => $status) : array()));
 		$this->template->assign_block_vars_array('navlinks', array(
