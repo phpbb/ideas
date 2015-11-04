@@ -20,7 +20,6 @@ class ideas
 {
 	const SORT_AUTHOR = 'author';
 	const SORT_DATE = 'date';
-	const SORT_ID = 'id';
 	const SORT_IMPLEMENTED = 'implemented';
 	const SORT_NEW = 'new';
 	const SORT_SCORE = 'score';
@@ -121,10 +120,6 @@ class ideas
 
 			case self::SORT_DATE:
 				$sortby = 'idea_date ' . $sort_direction;
-			break;
-
-			case self::SORT_ID:
-				$sortby = 'idea_id ' . $sort_direction;
 			break;
 
 			case self::SORT_SCORE:
