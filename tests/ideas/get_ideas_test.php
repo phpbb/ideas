@@ -45,7 +45,7 @@ class get_ideas_test extends ideas_base
 		$ideas = $this->get_ideas_object();
 
 		// Call get_ideas() with the test data
-		$results = $ideas->get_ideas($number, $sort, $sort_direction, $status, $where, $start);
+		$results = $ideas->get_ideas($number, $sort, $sort_direction, $status, $start);
 
 		// Get an array of the ideas IDs returned
 		$ideas_ids = array();

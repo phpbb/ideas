@@ -105,12 +105,11 @@ class ideas
 	 * @param string    $sort           Thing to sort by.
 	 * @param string    $sort_direction ASC / DESC.
 	 * @param array|int $status         The id of the status(es) to load
-	 * @param string    $where          SQL WHERE query.
 	 * @param int       $start          Start value for pagination
 	 *
 	 * @return array Array of row data
 	 */
-	public function get_ideas($number = 10, $sort = 'date', $sort_direction = 'DESC', $status = array(), $where = '', $start = 0)
+	public function get_ideas($number = 10, $sort = 'date', $sort_direction = 'DESC', $status = array(), $start = 0)
 	{
 		switch (strtolower($sort))
 		{
@@ -147,12 +146,9 @@ class ideas
 
 		// If we have a $status value or array lets use it,
 		// otherwise lets exclude implemented, invalid and duplicate by default
-		$status = (!empty($status)) ? $this->db->sql_in_set('idea_status', $status) : $this->db->sql_in_set(
+		$where = (!empty($status)) ? $this->db->sql_in_set('idea_status', $status) : $this->db->sql_in_set(
 			'idea_status', array(self::STATUS_IMPLEMENTED, self::STATUS_DUPLICATE, self::STATUS_INVALID,
 		), true);
-
-		// Prepend $status to our $where clause
-		$where = $status . (($where) ? ' AND ' . $where : '');
 
 		if ($sortby === 'TOP')
 		{

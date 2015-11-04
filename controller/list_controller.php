@@ -18,7 +18,7 @@ class list_controller extends base
 	/**
 	 * Controller for /list/{sort}
 	 *
-	 * @param $sort string The direction to sort in.
+	 * @param $sort string The type of list to show (new|top|implemented)
 	 * @throws http_exception
 	 * @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
 	 */
@@ -31,7 +31,6 @@ class list_controller extends base
 
 		$sort_direction = $this->request->variable('sd', 'd');
 		$status = $this->request->variable('status', 0);
-		$author = $this->request->variable(ideas::SORT_AUTHOR, 0);
 		$start = $this->request->variable('start', 0);
 
 		// Overwrite the $sort parameter if the url contains a sort query.
@@ -77,11 +76,8 @@ class list_controller extends base
 			$status_name = $this->language->lang('ALL_IDEAS');
 		}
 
-		// if sort by author, we need to set a where statement for it
-		$where = ($author) ? 'idea_author = ' . (int) $author : '';
-
 		// Generate ideas
-		$ideas = $this->ideas->get_ideas($this->config['posts_per_page'], $sort, $sort_direction, $status, $where, $start);
+		$ideas = $this->ideas->get_ideas($this->config['posts_per_page'], $sort, $sort_direction, $status, $start);
 		$this->assign_template_block_vars('ideas', $ideas);
 
 		// Build the status form menu
