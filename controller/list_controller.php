@@ -34,17 +34,17 @@ class list_controller extends base
 		$author = $this->request->variable(ideas::SORT_AUTHOR, 0);
 		$start = $this->request->variable('start', 0);
 
-		// Store original query params for use in pagination later
-		$u_sort = $sort ?: null;
-		$u_status = $status ?: null;
-		$u_sort_direction = $sort_direction ?: null;
-
-		// convert the sort direction to ASC or DESC
-		$sort_direction = ($sort_direction === 'd') ? 'DESC' : 'ASC';
-
 		// Overwrite the $sort parameter if the url contains a sort query.
 		// This is needed with the sort by options form at the footer of the list.
 		$sort = ($this->request->is_set('sort')) ? $this->request->variable('sort', ideas::SORT_NEW) : $sort;
+
+		// Store original query params for use in pagination later
+		$u_sort = $sort;
+		$u_status = $status;
+		$u_sort_direction = $sort_direction;
+
+		// convert the sort direction to ASC or DESC
+		$sort_direction = ($sort_direction === 'd') ? 'DESC' : 'ASC';
 
 		// If sort by "new" we really use date
 		if ($sort === ideas::SORT_NEW)
@@ -123,9 +123,9 @@ class list_controller extends base
 		// Generate template pagination
 		$this->pagination->generate_template_pagination(
 			$this->helper->route('phpbb_ideas_list_controller', array(
-				'sort' => $u_sort,
-				'status' => $u_status,
-				'sd' => $u_sort_direction
+				'sort' => $u_sort ?: null,
+				'status' => $u_status ?: null,
+				'sd' => $u_sort_direction ?: null,
 			)),
 			'pagination',
 			'start',
