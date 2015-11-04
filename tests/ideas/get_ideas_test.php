@@ -160,24 +160,6 @@ class get_ideas_test extends ideas_base
 				array(1, 2, 3),
 			),
 
-			// sorted by id, ascending, open ideas only
-			array(
-				array(
-					'sort' => 'id',
-					'sort_direction' => 'ASC',
-				),
-				array(1, 2, 3),
-			),
-
-			// sorted by id, descending, open ideas only
-			array(
-				array(
-					'sort' => 'id',
-					'sort_direction' => 'DESC',
-				),
-				array(3, 2, 1),
-			),
-
 			// sorted by score, ascending, open ideas only
 			array(
 				array(
