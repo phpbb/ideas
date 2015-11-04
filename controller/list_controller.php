@@ -63,6 +63,21 @@ class list_controller extends base
 			$status_name = $this->ideas->get_status_from_id($status);
 		}
 
+		// For special case where we want to request ALL ideas,
+		// including the statuses normally hidden from lists.
+		if ($status === -1)
+		{
+			$status = array(
+				ideas::STATUS_NEW,
+				ideas::STATUS_PROGRESS,
+				ideas::STATUS_IMPLEMENTED,
+				ideas::STATUS_INVALID,
+				ideas::STATUS_DUPLICATE,
+			);
+
+			$status_name = $this->language->lang('ALL_IDEAS');
+		}
+
 		// Generate ideas
 		$ideas = $this->ideas->get_ideas($this->config['posts_per_page'], $sort, $sort_direction, $status, $where, $start);
 		$this->assign_template_block_vars('ideas', $ideas);
