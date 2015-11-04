@@ -159,6 +159,11 @@ class ideas
 		// Prepend $status to our $where clause
 		$where = $status . (($where) ? ' AND ' . $where : '');
 
+		if ($sortby === 'TOP')
+		{
+			$where .= ' AND idea_votes_up > idea_votes_down';
+		}
+
 		// Count the total number of ideas for pagination
 		if ($number >= $this->config['posts_per_page'])
 		{
@@ -182,11 +187,6 @@ class ideas
 		}
 		else
 		{
-			if ($sortby === 'TOP')
-			{
-				$where .= ' AND idea_votes_up > idea_votes_down';
-			}
-
 			// YEEEEEEEEAAAAAAAAAAAAAHHHHHHH
 			// From http://evanmiller.org/how-not-to-sort-by-average-rating.html
 			$sql = 'SELECT *,
