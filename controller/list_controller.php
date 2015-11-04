@@ -38,7 +38,7 @@ class list_controller extends base
 		// This is needed with the sort by options form at the footer of the list.
 		$sort = ($this->request->is_set('sort')) ? $this->request->variable('sort', ideas::SORT_NEW) : $sort;
 
-		// Store original query params for use in pagination later
+		// Store original query params for use in breadcrumbs & pagination
 		$u_sort = $sort;
 		$u_status = $status;
 		$u_sort_direction = $sort_direction;
@@ -106,6 +106,7 @@ class list_controller extends base
 			));
 		}
 
+		// Build general list page template output
 		$this->template->assign_vars(array(
 			'U_POST_ACTION'		=> $this->helper->route('phpbb_ideas_list_controller'),
 			'U_NEW_IDEA_ACTION'	=> $this->helper->route('phpbb_ideas_post_controller'),
@@ -114,19 +115,28 @@ class list_controller extends base
 			'TOTAL_IDEAS'       => $this->language->lang('TOTAL_IDEAS', $this->ideas->get_idea_count()),
 		));
 
+		// Recreate the url parameters for the current list
+		$params = array(
+			'sort' => $u_sort ?: null,
+			'status' => $u_status ?: null,
+			'sd' => $u_sort_direction ?: null,
+		);
+
 		// Assign breadcrumb template vars
-		$this->template->assign_block_vars('navlinks', array(
-			'U_VIEW_FORUM'	=> $this->helper->route('phpbb_ideas_index_controller'),
-			'FORUM_NAME'	=> $this->language->lang('IDEAS'),
+		$this->template->assign_block_vars_array('navlinks', array(
+			array(
+				'U_VIEW_FORUM'	=> $this->helper->route('phpbb_ideas_index_controller'),
+				'FORUM_NAME'	=> $this->language->lang('IDEAS'),
+			),
+			array(
+				'U_VIEW_FORUM'	=> $this->helper->route('phpbb_ideas_list_controller', $params),
+				'FORUM_NAME'	=> $status_name ?: $this->language->lang('OPEN_IDEAS'),
+			),
 		));
 
 		// Generate template pagination
 		$this->pagination->generate_template_pagination(
-			$this->helper->route('phpbb_ideas_list_controller', array(
-				'sort' => $u_sort ?: null,
-				'status' => $u_status ?: null,
-				'sd' => $u_sort_direction ?: null,
-			)),
+			$this->helper->route('phpbb_ideas_list_controller', $params),
 			'pagination',
 			'start',
 			$this->ideas->get_idea_count(),
