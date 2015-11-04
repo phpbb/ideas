@@ -56,6 +56,8 @@ $lang = array_merge($lang, array(
 	'NEW_IDEA'				=> 'New Idea',
 	'NO_IDEAS_DISPLAY'		=> 'There are no ideas to display.',
 
+	'OPEN_IDEAS'			=> 'Open ideas',
+
 	'POST_IDEA'				=> 'Post a new idea',
 
 	'RATING'                => 'Rating',

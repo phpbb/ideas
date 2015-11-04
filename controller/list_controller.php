@@ -106,7 +106,7 @@ class list_controller extends base
 			'U_POST_ACTION'		=> $this->helper->route('phpbb_ideas_list_controller'),
 			'U_NEW_IDEA_ACTION'	=> $this->helper->route('phpbb_ideas_post_controller'),
 			'SORT_DIRECTION'	=> $sort_direction,
-			'STATUS_NAME'       => $status_name ?: $this->language->lang('ALL_IDEAS'),
+			'STATUS_NAME'       => $status_name ?: $this->language->lang('OPEN_IDEAS'),
 			'TOTAL_IDEAS'       => $this->language->lang('TOTAL_IDEAS', $this->ideas->get_idea_count()),
 		));
 
@@ -120,7 +120,7 @@ class list_controller extends base
 			),
 			array(
 				'U_VIEW_FORUM'	=> $this->helper->route('phpbb_ideas_list_controller', $breadcrumb_params),
-				'FORUM_NAME'	=> $status_name ?: $this->language->lang('ALL_IDEAS'),
+				'FORUM_NAME'	=> $status_name ?: $this->language->lang('OPEN_IDEAS'),
 			),
 		));
 
