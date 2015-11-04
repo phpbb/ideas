@@ -35,9 +35,9 @@ class list_controller extends base
 		$start = $this->request->variable('start', 0);
 
 		// Store original query params for use in pagination later
-		$u_sort = $sort;
-		$u_status = $status;
-		$u_sort_direction = $sort_direction;
+		$u_sort = $sort ?: null;
+		$u_status = $status ?: null;
+		$u_sort_direction = $sort_direction ?: null;
 
 		// convert the sort direction to ASC or DESC
 		$sort_direction = ($sort_direction === 'd') ? 'DESC' : 'ASC';
@@ -120,14 +120,13 @@ class list_controller extends base
 			'FORUM_NAME'	=> $this->language->lang('IDEAS'),
 		));
 
-		// Rebuild query parameters from original values
-		$params = ($u_sort) ? array('sort' => $u_sort) : array();
-		$params = array_merge($params, (($u_status) ? array('status' => $u_status) : array()));
-		$params = array_merge($params, (($u_sort_direction) ? array('sd' => $u_sort_direction) : array()));
-
 		// Generate template pagination
 		$this->pagination->generate_template_pagination(
-			$this->helper->route('phpbb_ideas_list_controller', $params),
+			$this->helper->route('phpbb_ideas_list_controller', array(
+				'sort' => $u_sort,
+				'status' => $u_status,
+				'sd' => $u_sort_direction
+			)),
 			'pagination',
 			'start',
 			$this->ideas->get_idea_count(),
