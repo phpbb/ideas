@@ -26,6 +26,7 @@ matrix:
     - php: hhvm
       env: DB=mysqli
   allow_failures:
+    - env: DB=sqlite3
     - php: hhvm
   fast_finish: true
 
