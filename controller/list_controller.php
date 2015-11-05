@@ -51,7 +51,7 @@ class list_controller extends base
 			$sort = ideas::SORT_DATE;
 		}
 
-		// if sort by implemented, sort ideas with status implemented by date
+		// if sort by "implemented", sort ideas with status implemented by date
 		if ($sort === ideas::SORT_IMPLEMENTED)
 		{
 			$status = ideas::STATUS_IMPLEMENTED;
@@ -59,7 +59,7 @@ class list_controller extends base
 		}
 
 		// Set the status name for displaying in the template
-		$status_name = ($sort == ideas::SORT_TOP) ? $this->language->lang('TOP_IDEAS') : $this->ideas->get_status_from_id($status);
+		$status_name = (!$status && $sort == ideas::SORT_TOP) ? $this->language->lang('TOP_IDEAS') : $this->ideas->get_status_from_id($status);
 
 		// For special case where we want to request ALL ideas,
 		// including the statuses normally hidden from lists.
