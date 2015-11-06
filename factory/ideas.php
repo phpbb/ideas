@@ -293,10 +293,15 @@ class ideas
 	 *
 	 * @param int $id ID of the status.
 	 *
-	 * @return string The status name.
+	 * @return string|int The status name if it exists, false otherwise.
 	 */
 	public function get_status_from_id($id)
 	{
+		if (!$id)
+		{
+			return false;
+		}
+
 		$statuses = array_flip(self::$statuses);
 		return $this->language->lang($statuses[$id]);
 	}

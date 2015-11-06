@@ -63,12 +63,12 @@ class list_controller extends base
 		$ideas = $this->ideas->get_ideas($this->config['posts_per_page'], $sort, $sort_direction, $status, $where, $start);
 		$this->assign_template_block_vars('ideas', $ideas);
 
-		foreach (ideas::$statuses as $status_name => $status_id)
+		foreach (ideas::$statuses as $statuses_name => $statuses_id)
 		{
 			$this->template->assign_block_vars('status', array(
-				'VALUE'		=> $status_id,
-				'TEXT'		=> $this->language->lang($status_name),
-				'SELECTED'	=> $status == $status_id,
+				'VALUE'		=> $statuses_id,
+				'TEXT'		=> $this->language->lang($statuses_name),
+				'SELECTED'	=> $status == $statuses_id,
 			));
 		}
 
