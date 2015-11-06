@@ -44,7 +44,7 @@ class list_controller extends base
 
 		if ($sort === ideas::SORT_IMPLEMENTED)
 		{
-			$status = ideas::STATUS_IMPLEMENTED;
+			$status = ideas::$statuses['IMPLEMENTED'];
 			$sort = ideas::SORT_DATE;
 		}
 
@@ -63,13 +63,12 @@ class list_controller extends base
 		$ideas = $this->ideas->get_ideas($this->config['posts_per_page'], $sort, $sort_direction, $status, $where, $start);
 		$this->assign_template_block_vars('ideas', $ideas);
 
-		$statuses = $this->ideas->get_statuses();
-		foreach ($statuses as $status_row)
+		foreach (ideas::$statuses as $status_name => $status_id)
 		{
 			$this->template->assign_block_vars('status', array(
-				'VALUE'		=> $status_row['status_id'],
-				'TEXT'		=> $this->language->lang($status_row['status_name']),
-				'SELECTED'	=> $status == $status_row['status_id'],
+				'VALUE'		=> $status_id,
+				'TEXT'		=> $this->language->lang($status_name),
+				'SELECTED'	=> $status == $status_id,
 			));
 		}
 

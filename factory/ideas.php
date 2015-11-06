@@ -27,11 +27,15 @@ class ideas
 	const SORT_TITLE = 'title';
 	const SORT_TOP = 'top';
 	const SORT_VOTES = 'votes';
-	const STATUS_NEW = 1;
-	const STATUS_PROGRESS = 2;
-	const STATUS_IMPLEMENTED = 3;
-	const STATUS_DUPLICATE = 4;
-	const STATUS_INVALID = 5;
+
+	/** @var array Idea status names and IDs */
+	static $statuses = array(
+		'NEW'			=> 1,
+		'IN_PROGRESS'	=> 2,
+		'IMPLEMENTED'	=> 3,
+		'DUPLICATE'		=> 4,
+		'INVALID'		=> 5,
+	);
 
 	/* @var config */
 	protected $config;
@@ -58,9 +62,6 @@ class ideas
 	protected $table_rfcs;
 
 	/** @var string */
-	protected $table_statuses;
-
-	/** @var string */
 	protected $table_tickets;
 
 	/** @var string */
@@ -78,11 +79,10 @@ class ideas
 	 * @param string           $table_ideas
 	 * @param string           $table_duplicates
 	 * @param string           $table_rfcs
-	 * @param string           $table_statuses
 	 * @param string           $table_tickets
 	 * @param string           $table_votes
 	 */
-	public function __construct(config $config, driver_interface $db, language $language, log $log, user $user, $table_ideas, $table_duplicates, $table_rfcs, $table_statuses, $table_tickets, $table_votes)
+	public function __construct(config $config, driver_interface $db, language $language, log $log, user $user, $table_ideas, $table_duplicates, $table_rfcs, $table_tickets, $table_votes)
 	{
 		$this->config = $config;
 		$this->db = $db;
@@ -93,7 +93,6 @@ class ideas
 		$this->table_ideas = $table_ideas;
 		$this->table_duplicates = $table_duplicates;
 		$this->table_rfcs = $table_rfcs;
-		$this->table_statuses = $table_statuses;
 		$this->table_tickets = $table_tickets;
 		$this->table_votes = $table_votes;
 	}
@@ -153,7 +152,7 @@ class ideas
 		// If we have a $status value or array lets use it,
 		// otherwise lets exclude implemented, invalid and duplicate by default
 		$status = (!empty($status)) ? $this->db->sql_in_set('idea_status', $status) : $this->db->sql_in_set(
-			'idea_status', array(self::STATUS_IMPLEMENTED, self::STATUS_DUPLICATE, self::STATUS_INVALID,
+			'idea_status', array(self::$statuses['IMPLEMENTED'], self::$statuses['DUPLICATE'], self::$statuses['INVALID'],
 		), true);
 
 		// Prepend $status to our $where clause
@@ -298,29 +297,8 @@ class ideas
 	 */
 	public function get_status_from_id($id)
 	{
-		$sql = 'SELECT status_name
-			FROM ' . $this->table_statuses . '
-			WHERE status_id = ' . (int) $id;
-		$result = $this->db->sql_query_limit($sql, 1);
-		$row = $this->db->sql_fetchrow($result);
-		$this->db->sql_freeresult($result);
-
-		return $this->language->lang($row['status_name']);
-	}
-
-	/**
-	 * Returns all statuses.
-	 *
-	 * @return Array of statuses.
-	 */
-	public function get_statuses()
-	{
-		$sql = 'SELECT * FROM ' . $this->table_statuses;
-		$result = $this->db->sql_query($sql);
-		$rows = $this->db->sql_fetchrowset($result);
-		$this->db->sql_freeresult($result);
-
-		return $rows;
+		$statuses = array_flip(self::$statuses);
+		return $this->language->lang($statuses[$id]);
 	}
 
 	/**

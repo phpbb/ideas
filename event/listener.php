@@ -153,19 +153,18 @@ class listener implements EventSubscriberInterface
 
 		if ($mod)
 		{
-			$statuses = $this->ideas->get_statuses();
-			foreach ($statuses as $status)
+			foreach (ideas::$statuses as $status_name => $status_id)
 			{
 				$this->template->assign_block_vars('statuses', array(
-					'ID'	=> $status['status_id'],
-					'NAME'	=> $this->language->lang($status['status_name']),
+					'ID'	=> $status_id,
+					'NAME'	=> $this->language->lang($status_name),
 				));
 			}
 		}
 
 		$points = $idea['idea_votes_up'] - $idea['idea_votes_down'];
-		$can_vote = (bool) ($idea['idea_status'] != ideas::STATUS_IMPLEMENTED &&
-			$idea['idea_status'] != ideas::STATUS_DUPLICATE &&
+		$can_vote = (bool) ($idea['idea_status'] != ideas::$statuses['IMPLEMENTED'] &&
+			$idea['idea_status'] != ideas::$statuses['DUPLICATE'] &&
 			$this->auth->acl_get('f_vote', (int) $this->config['ideas_forum_id']) &&
 			$event['topic_data']['topic_status'] != ITEM_LOCKED);
 

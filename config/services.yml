@@ -59,7 +59,6 @@ services:
             - %tables.ideas_ideas%
             - %tables.ideas_duplicates%
             - %tables.ideas_rfcs%
-            - %tables.ideas_statuses%
             - %tables.ideas_tickets%
             - %tables.ideas_votes%
 

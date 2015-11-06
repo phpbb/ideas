@@ -125,7 +125,7 @@ class idea_controller extends base
 	 */
 	public function removevote()
 	{
-		if ($this->data['idea_status'] == ideas::STATUS_IMPLEMENTED || $this->data['idea_status'] == ideas::STATUS_DUPLICATE || !check_link_hash($this->get_hash(), "removevote_{$this->data['idea_id']}"))
+		if ($this->data['idea_status'] == ideas::$statuses['IMPLEMENTED'] || $this->data['idea_status'] == ideas::$statuses['DUPLICATE'] || !check_link_hash($this->get_hash(), "removevote_{$this->data['idea_id']}"))
 		{
 			return false;
 		}
@@ -222,7 +222,7 @@ class idea_controller extends base
 	{
 		$vote = $this->request->variable('v', 1);
 
-		if ($this->data['idea_status'] == ideas::STATUS_IMPLEMENTED || $this->data['idea_status'] == ideas::STATUS_DUPLICATE || !check_link_hash($this->get_hash(), "vote_{$this->data['idea_id']}"))
+		if ($this->data['idea_status'] == ideas::$statuses['IMPLEMENTED'] || $this->data['idea_status'] == ideas::$statuses['DUPLICATE'] || !check_link_hash($this->get_hash(), "vote_{$this->data['idea_id']}"))
 		{
 			return false;
 		}
