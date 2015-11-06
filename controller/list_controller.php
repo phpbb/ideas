@@ -29,13 +29,14 @@ class list_controller extends base
 			throw new http_exception(404, 'IDEAS_NOT_AVAILABLE');
 		}
 
-		$sort_direction = $this->request->variable('sd', 'd');
-		$status = $this->request->variable('status', 0);
-		$start = $this->request->variable('start', 0);
-
 		// Overwrite the $sort parameter if the url contains a sort query.
 		// This is needed with the sort by options form at the footer of the list.
 		$sort = ($this->request->is_set('sort')) ? $this->request->variable('sort', ideas::SORT_NEW) : $sort;
+
+		// Get additional query values the url may contain
+		$sort_direction = $this->request->variable('sd', 'd');
+		$status = $this->request->variable('status', 0);
+		$start = $this->request->variable('start', 0);
 
 		// Store original query params for use in breadcrumbs & pagination
 		$u_sort = $sort;
@@ -113,9 +114,9 @@ class list_controller extends base
 
 		// Recreate the url parameters for the current list
 		$params = array(
-			'sort' => $u_sort ?: null,
-			'status' => $u_status ?: null,
-			'sd' => $u_sort_direction ?: null,
+			'sort'		=> $u_sort ?: null,
+			'status'	=> $u_status ?: null,
+			'sd'		=> $u_sort_direction ?: null,
 		);
 
 		// Assign breadcrumb template vars
