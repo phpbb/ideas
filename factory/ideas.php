@@ -174,7 +174,7 @@ class ideas
 			$sql = 'SELECT *
 				FROM ' . $this->table_ideas . "
 				WHERE $where
-				ORDER BY $sortby";
+				ORDER BY " . $this->db->sql_escape($sortby);
 		}
 		else
 		{
@@ -187,7 +187,7 @@ class ideas
 	            AS ci_lower_bound
        				FROM ' . $this->table_ideas . "
        				WHERE $where
-       			ORDER BY ci_lower_bound " . $sort_direction;
+       			ORDER BY ci_lower_bound " . $this->db->sql_escape($sort_direction);
 		}
 
 		$result = $this->db->sql_query_limit($sql, $number, $start);
