@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dataset>
+	<table name="phpbb_ideas_ideas">
+		<column>idea_id</column>
+		<column>idea_author</column>
+		<column>idea_title</column>
+		<column>idea_date</column>
+		<column>idea_votes_up</column>
+		<column>idea_votes_down</column>
+		<column>idea_status</column>
+		<column>topic_id</column>
+		<row>
+			<value>1</value>
+			<value>2</value>
+			<value>Foo Idea #1 New with 3 up votes</value>
+			<value>1439999999</value>
+			<value>3</value>
+			<value>0</value>
+			<value>1</value>
+			<value>1</value>
+		</row>
+		<row>
+			<value>2</value>
+			<value>4</value>
+			<value>Bar Idea #2 New with 1 down vote</value>
+			<value>1439999998</value>
+			<value>0</value>
+			<value>1</value>
+			<value>1</value>
+			<value>2</value>
+		</row>
+		<row>
+			<value>3</value>
+			<value>3</value>
+			<value>Foo Idea #3 In Progress with 1 up and 1 down vote</value>
+			<value>1439999997</value>
+			<value>1</value>
+			<value>1</value>
+			<value>2</value>
+			<value>3</value>
+		</row>
+		<row>
+			<value>4</value>
+			<value>2</value>
+			<value>Bar Idea #4 Implemented with 0 votes</value>
+			<value>1439999996</value>
+			<value>0</value>
+			<value>0</value>
+			<value>3</value>
+			<value>4</value>
+		</row>
+	</table>
+	<table name="phpbb_ideas_votes">
+		<column>idea_id</column>
+		<column>user_id</column>
+		<column>vote_value</column>
+		<row>
+			<value>1</value>
+			<value>2</value>
+			<value>1</value>
+		</row>
+		<row>
+			<value>1</value>
+			<value>3</value>
+			<value>1</value>
+		</row>
+		<row>
+			<value>1</value>
+			<value>4</value>
+			<value>1</value>
+		</row>
+		<row>
+			<value>2</value>
+			<value>2</value>
+			<value>0</value>
+		</row>
+		<row>
+			<value>3</value>
+			<value>2</value>
+			<value>1</value>
+		</row>
+		<row>
+			<value>3</value>
+			<value>3</value>
+			<value>0</value>
+		</row>
+	</table>
+	<table name="phpbb_ideas_duplicates">
+		<column>idea_id</column>
+		<column>duplicate_id</column>
+		<row>
+			<value>1</value>
+			<value>1</value>
+		</row>
+	</table>
+	<table name="phpbb_ideas_rfcs">
+		<column>idea_id</column>
+		<column>rfc_link</column>
+		<row>
+			<value>1</value>
+			<value></value>
+		</row>
+	</table>
+	<table name="phpbb_ideas_tickets">
+		<column>idea_id</column>
+		<column>ticket_id</column>
+		<row>
+			<value>1</value>
+			<value>1234</value>
+		</row>
+	</table>
+	<table name="phpbb_ideas_statuses">
+		<column>status_id</column>
+		<column>status_name</column>
+		<row>
+			<value>1</value>
+			<value>NEW</value>
+		</row>
+		<row>
+			<value>2</value>
+			<value>IN_PROGRESS</value>
+		</row>
+		<row>
+			<value>3</value>
+			<value>IMPLEMENTED</value>
+		</row>
+		<row>
+			<value>4</value>
+			<value>DUPLICATE</value>
+		</row>
+		<row>
+			<value>5</value>
+			<value>INVALID</value>
+		</row>
+	</table>
+</dataset>

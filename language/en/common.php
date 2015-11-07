@@ -56,6 +56,8 @@ $lang = array_merge($lang, array(
 	'NEW_IDEA'				=> 'New Idea',
 	'NO_IDEAS_DISPLAY'		=> 'There are no ideas to display.',
 
+	'OPEN_IDEAS'			=> 'Open ideas',
+
 	'POST_IDEA'				=> 'Post a new idea',
 
 	'RATING'                => 'Rating',
@@ -90,6 +92,9 @@ $lang = array_merge($lang, array(
 	'VIEW_DUPLICATE'		=> 'View duplicate',
 	'VIEW_IDEA'				=> 'View Idea',
 	'VIEW_IDEA_AT'          => 'View idea at: %s', // Warning: submitted to db
+	'VIEW_IMPLEMENTED'		=> 'View all implemented ideas',
+	'VIEW_LATEST'			=> 'View all open ideas',
+	'VIEW_TOP'				=> 'View all top rated ideas',
 	'VIEW_VOTES'            => '%s point(s). Click to view votes',
 	'VOTE'					=> 'Vote',
 	'VOTE_DOWN'				=> 'Vote Down',
