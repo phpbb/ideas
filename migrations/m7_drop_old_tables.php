@@ -10,7 +10,7 @@
 
 namespace phpbb\ideas\migrations;
 
-class m6_drop_status extends \phpbb\db\migration\migration
+class m7_drop_old_tables extends \phpbb\db\migration\migration
 {
 	public function effectively_installed()
 	{
@@ -19,7 +19,7 @@ class m6_drop_status extends \phpbb\db\migration\migration
 
 	static public function depends_on()
 	{
-		return array('\phpbb\ideas\migrations\m4_update_statuses');
+		return array('\phpbb\ideas\migrations\m6_migrate_old_tables');
 	}
 
 	public function update_schema()
@@ -27,6 +27,9 @@ class m6_drop_status extends \phpbb\db\migration\migration
 		return array(
 			'drop_tables'	=> array(
 				$this->table_prefix . 'ideas_statuses',
+				$this->table_prefix . 'ideas_tickets',
+				$this->table_prefix . 'ideas_rfcs',
+				$this->table_prefix . 'ideas_duplicates',
 			),
 		);
 	}
