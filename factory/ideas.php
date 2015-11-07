@@ -255,13 +255,7 @@ class ideas
 	 */
 	public function get_status_from_id($id)
 	{
-		if (!$id)
-		{
-			return false;
-		}
-
-		$statuses = array_flip(self::$statuses);
-		return $this->language->lang($statuses[$id]);
+		return $this->language->lang(array_search($id, self::$statuses));
 	}
 
 	/**
