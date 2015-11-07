@@ -260,7 +260,7 @@ class ideas
 	 *
 	 * @param int $id ID of the status.
 	 *
-	 * @return string|int The status name if it exists, false otherwise.
+	 * @return string|bool The status name if it exists, false otherwise.
 	 */
 	public function get_status_from_id($id)
 	{
