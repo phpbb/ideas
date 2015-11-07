@@ -70,10 +70,6 @@ class ideas_base extends \phpbb_database_test_case
 			$this->log,
 			$this->user,
 			'phpbb_ideas_ideas',
-			'phpbb_ideas_duplicates',
-			'phpbb_ideas_rfcs',
-			'phpbb_ideas_statuses',
-			'phpbb_ideas_tickets',
 			'phpbb_ideas_votes'
 		);
 	}
