@@ -76,13 +76,18 @@ class m6_migrate_old_tables extends \phpbb\db\migration\migration
 		$this->db->sql_freeresult($result);
 
 		$this->db->sql_transaction('begin');
-		foreach ($data as $idea_id => $value)
+
+		if (sizeof($data))
 		{
-			$sql = 'UPDATE ' . $this->table_prefix . "ideas_ideas
-				SET $item = '" . $this->db->sql_escape($value) . "'
-				WHERE idea_id = " . (int) $idea_id;
-			$this->db->sql_query($sql);
+			foreach ($data as $idea_id => $value)
+			{
+				$sql = 'UPDATE ' . $this->table_prefix . "ideas_ideas
+					SET $item = '" . $this->db->sql_escape($value) . "'
+					WHERE idea_id = " . (int) $idea_id;
+				$this->db->sql_query($sql);
+			}
 		}
+
 		$this->db->sql_transaction('commit');
 	}
 }
