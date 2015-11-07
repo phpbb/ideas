@@ -62,16 +62,22 @@ class m6_migrate_old_tables extends \phpbb\db\migration\migration
 		$this->move_table_data('ideas_tickets', 'ticket_id');
 	}
 
-	public function move_table_data($table_name, $item)
+	/**
+	 * Move data into the ideas table
+	 *
+	 * @param string $table  The name of the old table to get data from
+	 * @param string $column The name of the column to get data from
+	 */
+	public function move_table_data($table, $column)
 	{
 		$data = array();
 
 		$sql = 'SELECT *
-			FROM ' . $this->table_prefix . $table_name;
+			FROM ' . $this->table_prefix . $table;
 		$result = $this->db->sql_query($sql);
 		while ($row = $this->db->sql_fetchrow($result))
 		{
-			$data[$row['idea_id']] = $row[$item];
+			$data[$row['idea_id']] = $row[$column];
 		}
 		$this->db->sql_freeresult($result);
 
@@ -82,7 +88,7 @@ class m6_migrate_old_tables extends \phpbb\db\migration\migration
 			foreach ($data as $idea_id => $value)
 			{
 				$sql = 'UPDATE ' . $this->table_prefix . "ideas_ideas
-					SET $item = '" . $this->db->sql_escape($value) . "'
+					SET $column = '" . $this->db->sql_escape($value) . "'
 					WHERE idea_id = " . (int) $idea_id;
 				$this->db->sql_query($sql);
 			}
