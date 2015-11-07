@@ -68,16 +68,18 @@
 			</dd>
 			<!-- ENDIF -->
 			<!-- IF IDEA_DUPLICATE or S_IS_MOD -->
-			<dt style="width: 15%" class="duplicatetoggle">{L_DUPLICATE}{L_COLON}</dt>
-			<dd class="duplicatetoggle">
+			<div class="duplicatetoggle" {% if IDEA_STATUS != lang('DUPLICATE') %}style="display:none"{% endif %}>
+				<dt style="width: 15%">{L_DUPLICATE}{L_COLON}</dt>
+				<dd>
 
-				<a id="duplicatelink" class="ideamodbtn" data-link="{U_IDEA_DUPLICATE}" data-l-msg="{L_VIEW_DUPLICATE}" <!-- IF IDEA_DUPLICATE -->href="{U_IDEA_DUPLICATE}">{L_VIEW_DUPLICATE}<!-- ELSE -->style="display:none"><!-- ENDIF --></a>
+					<a id="duplicatelink" class="ideamodbtn" data-link="{U_IDEA_DUPLICATE}" data-l-msg="{L_VIEW_DUPLICATE}" <!-- IF IDEA_DUPLICATE -->href="{U_IDEA_DUPLICATE}">{L_VIEW_DUPLICATE}<!-- ELSE -->style="display:none"><!-- ENDIF --></a>
 
-				<!-- IF S_IS_MOD -->
-				<a href="{U_EDIT_DUPLICATE}" id="duplicateedit">{L_SET}</a>
-				<input type="text" id="duplicateeditinput" class="ideainput"<!-- IF IDEA_DUPLICATE --> value="{IDEA_DUPLICATE}"<!-- ENDIF --> placeholder="###" data-l-err="{L_ERROR}" data-l-msg="{L_TICKET_ERROR_DUP}" />
-				<!-- ENDIF -->
-			</dd>
+					<!-- IF S_IS_MOD -->
+					<a href="{U_EDIT_DUPLICATE}" id="duplicateedit">{L_SET}</a>
+					<input type="text" id="duplicateeditinput" class="ideainput"<!-- IF IDEA_DUPLICATE --> value="{IDEA_DUPLICATE}"<!-- ENDIF --> placeholder="###" data-l-err="{L_ERROR}" data-l-msg="{L_TICKET_ERROR_DUP}" />
+					<!-- ENDIF -->
+				</dd>
+			</div>
 			<!-- ENDIF -->
 			<!-- IF S_IS_MOD -->
 			<dt style="width: 15%">{L_MOD_IDEA}{L_COLON}</dt>

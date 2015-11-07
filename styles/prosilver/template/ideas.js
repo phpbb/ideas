@@ -235,11 +235,6 @@
 		}
 	});
 
-	// Hide duplicate column if status is not duplicate
-	if (!idea_is_duplicate()) {
-		$obj.duplicateToggle.hide();
-	}
-
 	$obj.duplicateEdit.on('click', function(e) {
 		e.preventDefault();
 
