@@ -15,8 +15,6 @@ matrix:
       env: DB=mariadb
     - php: 5.4
       env: DB=postgres
-    - php: 5.4
-      env: DB=sqlite3
     - php: 5.5
       env: DB=mysqli
     - php: 5.6
@@ -26,7 +24,6 @@ matrix:
     - php: hhvm
       env: DB=mysqli
   allow_failures:
-    - env: DB=sqlite3
     - php: hhvm
   fast_finish: true
 
