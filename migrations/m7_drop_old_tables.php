@@ -37,11 +37,41 @@ class m7_drop_old_tables extends \phpbb\db\migration\migration
 	public function revert_schema()
 	{
 		return array(
-			'drop_tables'	=> array(
-				$this->table_prefix . 'ideas_statuses',
-				$this->table_prefix . 'ideas_tickets',
-				$this->table_prefix . 'ideas_rfcs',
-				$this->table_prefix . 'ideas_duplicates',
+			'add_tables'	=> array(
+				$this->table_prefix . 'ideas_statuses' => array(
+					'COLUMNS'	=> array(
+						'status_id'			=> array('UINT', 0),
+						'status_name'		=> array('VCHAR', ''),
+					),
+					'PRIMARY_KEY'			=> 'status_id',
+				),
+				$this->table_prefix . 'ideas_tickets' => array(
+					'COLUMNS'	=> array(
+						'idea_id'			=> array('UINT', 0),
+						'ticket_id'			=> array('UINT', 0),
+					),
+					'KEYS'					=> array(
+						'ticket_key' 		=> array('INDEX', array('idea_id', 'ticket_id')),
+					),
+				),
+				$this->table_prefix . 'ideas_rfcs' => array(
+					'COLUMNS'	=> array(
+						'idea_id'			=> array('UINT', 0),
+						'rfc_link'			=> array('VCHAR', ''),
+					),
+					'KEYS'					=> array(
+						'rfc_key'			=> array('INDEX', array('idea_id', 'rfc_link')),
+					),
+				),
+				$this->table_prefix . 'ideas_duplicates' => array(
+					'COLUMNS'	=> array(
+						'idea_id'			=> array('UINT', 0),
+						'duplicate_id'		=> array('UINT', 0),
+					),
+					'KEYS'					=> array(
+						'dupe_key'			=> array('INDEX', array('idea_id', 'duplicate_id')),
+					),
+				),
 			),
 		);
 	}
