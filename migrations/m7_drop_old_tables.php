@@ -33,4 +33,16 @@ class m7_drop_old_tables extends \phpbb\db\migration\migration
 			),
 		);
 	}
+
+	public function revert_schema()
+	{
+		return array(
+			'drop_tables'	=> array(
+				$this->table_prefix . 'ideas_statuses',
+				$this->table_prefix . 'ideas_tickets',
+				$this->table_prefix . 'ideas_rfcs',
+				$this->table_prefix . 'ideas_duplicates',
+			),
+		);
+	}
 }
