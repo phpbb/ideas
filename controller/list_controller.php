@@ -81,35 +81,17 @@ class list_controller extends base
 		$ideas = $this->ideas->get_ideas($this->config['posts_per_page'], $sort, $sort_direction, $status, $start);
 		$this->assign_template_block_vars('ideas', $ideas);
 
-		// Build the status form menu
-		$statuses = $this->ideas->get_statuses();
-		foreach ($statuses as $status_row)
-		{
-			$this->template->assign_block_vars('status', array(
-				'VALUE'		=> $status_row['status_id'],
-				'TEXT'		=> $this->language->lang($status_row['status_name']),
-				'SELECTED'	=> $u_status == $status_row['status_id'],
-			));
-		}
-
-		// Build the sort by menu
-		$sortables = array(ideas::SORT_AUTHOR, ideas::SORT_DATE, ideas::SORT_SCORE, ideas::SORT_TITLE, ideas::SORT_TOP, ideas::SORT_VOTES);
-		foreach ($sortables as $sortable)
-		{
-			$this->template->assign_block_vars('sortby', array(
-				'VALUE'		=> $sortable,
-				'TEXT'		=> $this->language->lang(strtoupper($sortable)),
-				'SELECTED'	=> $sortable == $sort,
-			));
-		}
-
-		// Build general list page template output
+		// Build list page template output
 		$this->template->assign_vars(array(
 			'U_POST_ACTION'		=> $this->helper->route('phpbb_ideas_list_controller'),
 			'U_NEW_IDEA_ACTION'	=> $this->helper->route('phpbb_ideas_post_controller'),
-			'SORT_DIRECTION'	=> $sort_direction,
-			'STATUS_NAME'       => $status_name ?: $this->language->lang('OPEN_IDEAS'),
 			'TOTAL_IDEAS'       => $this->language->lang('TOTAL_IDEAS', $this->ideas->get_idea_count()),
+			'STATUS_NAME'       => $status_name ?: $this->language->lang('OPEN_IDEAS'),
+			'STATUS_ARY'		=> $this->ideas->get_statuses(),
+			'STATUS'			=> $u_status,
+			'SORT_ARY'			=> array(ideas::SORT_AUTHOR, ideas::SORT_DATE, ideas::SORT_SCORE, ideas::SORT_TITLE, ideas::SORT_TOP, ideas::SORT_VOTES),
+			'SORT'				=> $sort,
+			'SORT_DIRECTION'	=> $sort_direction,
 		));
 
 		// Recreate the url parameters for the current list
