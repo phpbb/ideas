@@ -37,7 +37,7 @@
 			$obj.voteUp.first().html('<span>' + message.votes_up + '</span>');
 			$obj.voteDown.first().html('<span>' + message.votes_down + '</span>');
 			$obj.votes.hide().text(function() {
-				return $(this).attr('data-l-msg').replace('%s', message.points);
+				return message.points + ' ' + $(this).attr('data-l-msg');
 			});
 			$obj.successVoted.text(message.message)
 				.show()

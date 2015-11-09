@@ -1,6 +1,8 @@
 a.votes {
 	font-weight: bold;
 	display: inline-block;
+	border-radius: 4px;
+	padding: 6px;
 }
 
 a.dead {
