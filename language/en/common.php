@@ -60,6 +60,7 @@ $lang = array_merge($lang, array(
 	'OPEN_IDEAS'			=> 'Open ideas',
 
 	'POST_IDEA'				=> 'Post a new idea',
+	'POSTING_NEW_IDEA'		=> 'Posting a new idea',
 
 	'RATING'                => 'Rating',
 	'REMOVE_VOTE'			=> 'Remove my vote',
@@ -100,6 +101,7 @@ $lang = array_merge($lang, array(
 	'VIEW_IMPLEMENTED'		=> 'View all implemented ideas',
 	'VIEW_LATEST'			=> 'View all open ideas',
 	'VIEW_TOP'				=> 'View all top rated ideas',
+	'VIEWING_IDEAS'			=> 'Viewing Ideas',
 	'VOTE'					=> 'Vote',
 	'VOTE_DOWN'				=> 'Vote Down',
 	'VOTE_ERROR'			=> 'An error occurred',

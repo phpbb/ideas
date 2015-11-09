@@ -13,6 +13,7 @@ services:
             - @phpbb.ideas.linkhelper
             - @template
             - @user
+            - %core.php_ext%
         tags:
             - { name: event.listener }
 
