@@ -16,22 +16,22 @@
 				<div class="rating">
 					<a <!-- IF S_CAN_VOTE-->href="{U_IDEA_VOTE}"<!-- ENDIF --> class="minivoteup <!-- IF S_CAN_VOTE-->voteup<!-- ELSE -->dead<!-- ENDIF -->" title="{L_VOTE_UP}" data-l-err="{L_ERROR}" data-l-msg="{L_VOTE_ERROR}{L_COLON}"><span>{IDEA_VOTES_UP}</span></a> &nbsp;
 					<a <!-- IF S_CAN_VOTE-->href="{U_IDEA_VOTE}"<!-- ENDIF --> class="minivotedown <!-- IF S_CAN_VOTE-->votedown<!-- ELSE -->dead<!-- ENDIF -->" title="{L_VOTE_DOWN}" data-l-err="{L_ERROR}" data-l-msg="{L_VOTE_ERROR}{L_COLON}"><span>{IDEA_VOTES_DOWN}</span></a>
-					<a href="#" class="votes" data-l-msg="«{L_VIEW_VOTES}»">«{IDEA_POINTS}»</a> <span class="successvoted" data-l-err="{L_VOTE_FAIL}"></span>
+					<a href="#" class="votes bg3" data-l-msg="{L_CLICK_TO_VIEW}">{IDEA_POINTS} {L_CLICK_TO_VIEW}</a> <span class="successvoted" data-l-err="{L_VOTE_FAIL}"></span>
 				</div>
 				<div class="clear"></div>
 				<div class="voteslist bg3">
 					<ul>
 						<!-- IF .votes_up -->
 						<li>
-							<strong>&#x25B2;{L_COLON}</strong> <!-- BEGIN votes_up -->{votes_up.USER}<!-- IF not votes_up.S_LAST_ROW -->, <!-- ENDIF --><!-- END votes_up -->
+							<i class="fa fa-fw fa-thumbs-up"></i> <!-- BEGIN votes_up -->{votes_up.USER}<!-- IF not votes_up.S_LAST_ROW -->, <!-- ENDIF --><!-- END votes_up -->
 						</li>
-						<!-- BEGIN votes_up --><!-- IF votes_up.S_VOTED and S_CAN_VOTE --><li><a href="{U_REMOVE_VOTE}" class="removevote" data-l-err="{L_ERROR}" data-l-msg="{L_VOTE_ERROR}{L_COLON}">{L_REMOVE_VOTE}</a></li><!-- ENDIF --><!-- END votes_up -->
+						<!-- BEGIN votes_up --><!-- IF votes_up.S_VOTED and S_CAN_VOTE --><li><i class="fa fa-fw fa-times"></i> <a href="{U_REMOVE_VOTE}" class="removevote" data-l-err="{L_ERROR}" data-l-msg="{L_VOTE_ERROR}{L_COLON}">{L_REMOVE_VOTE}</a></li><!-- ENDIF --><!-- END votes_up -->
 						<!-- ENDIF -->
 						<!-- IF .votes_down -->
 						<li>
-							<strong>&#x25BC;{L_COLON}</strong> <!-- BEGIN votes_down -->{votes_down.USER}<!-- IF not votes_down.S_LAST_ROW -->, <!-- ENDIF --><!-- END votes_down -->
+							<i class="fa fa-fw fa-thumbs-down"></i> <!-- BEGIN votes_down -->{votes_down.USER}<!-- IF not votes_down.S_LAST_ROW -->, <!-- ENDIF --><!-- END votes_down -->
 						</li>
-						<!-- BEGIN votes_down --><!-- IF votes_down.S_VOTED and S_CAN_VOTE --><li><a href="{U_REMOVE_VOTE}" class="removevote" data-l-err="{L_ERROR}" data-l-msg="{L_VOTE_ERROR}{L_COLON}">{L_REMOVE_VOTE}</a></li><!-- ENDIF --><!-- END votes_down -->
+						<!-- BEGIN votes_down --><!-- IF votes_down.S_VOTED and S_CAN_VOTE --><li><i class="fa fa-fw fa-times"></i> <a href="{U_REMOVE_VOTE}" class="removevote" data-l-err="{L_ERROR}" data-l-msg="{L_VOTE_ERROR}{L_COLON}">{L_REMOVE_VOTE}</a></li><!-- ENDIF --><!-- END votes_down -->
 						<!-- ENDIF -->
 					</ul>
 				</div>
