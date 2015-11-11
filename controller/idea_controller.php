@@ -52,6 +52,9 @@ class idea_controller extends base
 			"/viewtopic.{$this->php_ext}?f={$this->config['ideas_forum_id']}&t={$this->data['topic_id']}"
 		);
 
+		// Make sure no &amp;'s are in the url, this will break the redirect
+		$url = str_replace('&amp;', '&', $url);
+
 		return new RedirectResponse($url);
 	}
 
