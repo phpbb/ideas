@@ -48,8 +48,9 @@ class idea_controller extends base
 			return new \Symfony\Component\HttpFoundation\JsonResponse($result);
 		}
 
-		$url = reapply_sid(generate_board_url() .
-			"/viewtopic.{$this->php_ext}?f={$this->config['ideas_forum_id']}&t={$this->data['topic_id']}"
+		$url = append_sid(generate_board_url() . "/viewtopic.{$this->php_ext}",
+			array('f' => $this->config['ideas_forum_id'], 't' => $this->data['topic_id']),
+			false
 		);
 
 		return new RedirectResponse($url);
