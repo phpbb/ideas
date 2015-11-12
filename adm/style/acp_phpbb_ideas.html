@@ -13,7 +13,7 @@
 	</div>
 <!-- ENDIF -->
 
-<form id="acp_phpbb_ideas_settings" method="post" action="{U_ACTION}">
+<form id="acp_phpbb_ideas_settings" method="post" action="{U_ACTION}" data-ajax="true">
 
 <!-- BEGIN options -->
 	<!-- IF options.S_LEGEND -->
@@ -28,16 +28,17 @@
 			<dd>{options.CONTENT}</dd>
 			<!-- IF options.KEY == 'ideas_poster_id' --><dd>[ <a href="{U_FIND_USERNAME}" onclick="find_username(this.href); return false;">{L_FIND_USERNAME}</a> ]</dd><!-- ENDIF -->
 		</dl>
+		<!-- IF options.KEY == 'ideas_base_url' -->
+			<fieldset class="submit-buttons">
+				<input class="button1" type="submit" id="submit" name="submit" value="{L_SUBMIT}" />&nbsp;
+				<input class="button2" type="reset" id="reset" name="reset" value="{L_RESET}" />
+				{S_FORM_TOKEN}
+			</fieldset>
+
+			</form>
+		<!-- ENDIF -->
 	<!-- ENDIF -->
 <!-- END options -->
 </fieldset>
-
-<fieldset class="submit-buttons">
-	<input class="button1" type="submit" id="submit" name="submit" value="{L_SUBMIT}" />&nbsp;
-	<input class="button2" type="reset" id="reset" name="reset" value="{L_RESET}" />
-	{S_FORM_TOKEN}
-</fieldset>
-
-</form>
 
 <!-- INCLUDE overall_footer.html -->

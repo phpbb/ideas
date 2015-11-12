@@ -114,7 +114,7 @@ class ideas_module
 		// We validate the complete config if wished
 		validate_config_vars($display_vars, $cfg_array, $errors);
 
-		if ($submit || $submit_forum_setup)
+		if ($submit)
 		{
 			if (!check_form_key($form_name))
 			{
@@ -144,7 +144,16 @@ class ideas_module
 		}
 
 		// Check if Ideas forum is selected and apply relevant settings if it is
-		if ($submit_forum_setup)
+		// But display the confirm box first
+		if ($submit_forum_setup && !confirm_box(true))
+		{
+			confirm_box(false, $this->language->lang('ACP_IDEAS_FORUM_SETUP_CONFIRM'), build_hidden_fields(array(
+				'i'			=> $id,
+				'mode'		=> $mode,
+				'ideas_forum_setup'	=> $submit_forum_setup,
+			)));
+		}
+		else if ($submit_forum_setup)
 		{
 			if (empty($this->config['ideas_forum_id']))
 			{
@@ -313,6 +322,9 @@ class ideas_module
 	 */
 	public function set_ideas_forum_permissions($value, $key)
 	{
-		return '<input class="button2" type="submit" id="' . $key . '" name="' . $key . '" value="' . $this->language->lang('RUN') . '" />';
+		return '
+			<form id="acp_phpbb_ideas_forum_setup" method="post" action="' . $this->u_action . '" data-ajax="true">
+				<input class="button2" type="submit" id="' . $key . '" name="' . $key . '" value="' . $this->language->lang('RUN') . '" />
+			</form>';
 	}
 }
