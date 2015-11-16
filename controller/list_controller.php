@@ -55,7 +55,7 @@ class list_controller extends base
 		// if sort by "implemented", sort ideas with status implemented by date
 		if ($sort === ideas::SORT_IMPLEMENTED)
 		{
-			$status = ideas::STATUS_IMPLEMENTED;
+			$status = ideas::$statuses['IMPLEMENTED'];
 			$sort = ideas::SORT_DATE;
 		}
 
@@ -66,14 +66,7 @@ class list_controller extends base
 		// including the statuses normally hidden from lists.
 		if ($status === -1)
 		{
-			$status = array(
-				ideas::STATUS_NEW,
-				ideas::STATUS_PROGRESS,
-				ideas::STATUS_IMPLEMENTED,
-				ideas::STATUS_INVALID,
-				ideas::STATUS_DUPLICATE,
-			);
-
+			$status = ideas::$statuses;
 			$status_name = $this->language->lang('ALL_IDEAS');
 		}
 
@@ -82,13 +75,12 @@ class list_controller extends base
 		$this->assign_template_block_vars('ideas', $ideas);
 
 		// Build the status form menu
-		$statuses = $this->ideas->get_statuses();
-		foreach ($statuses as $status_row)
+		foreach (ideas::$statuses as $statuses_name => $statuses_id)
 		{
 			$this->template->assign_block_vars('status', array(
-				'VALUE'		=> $status_row['status_id'],
-				'TEXT'		=> $this->language->lang($status_row['status_name']),
-				'SELECTED'	=> $u_status == $status_row['status_id'],
+				'VALUE'		=> $statuses_id,
+				'TEXT'		=> $this->language->lang($statuses_name),
+				'SELECTED'	=> $u_status == $statuses_id,
 			));
 		}
 

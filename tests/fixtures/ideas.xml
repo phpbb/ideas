@@ -9,6 +9,9 @@
 		<column>idea_votes_down</column>
 		<column>idea_status</column>
 		<column>topic_id</column>
+		<column>ticket_id</column>
+		<column>duplicate_id</column>
+		<column>rfc_link</column>
 		<row>
 			<value>1</value>
 			<value>2</value>
@@ -18,6 +21,9 @@
 			<value>0</value>
 			<value>1</value>
 			<value>1</value>
+			<value>1234</value>
+			<value>0</value>
+			<value></value>
 		</row>
 		<row>
 			<value>2</value>
@@ -28,6 +34,9 @@
 			<value>1</value>
 			<value>1</value>
 			<value>2</value>
+			<value>0</value>
+			<value>0</value>
+			<value></value>
 		</row>
 		<row>
 			<value>3</value>
@@ -38,6 +47,9 @@
 			<value>1</value>
 			<value>2</value>
 			<value>3</value>
+			<value>0</value>
+			<value>0</value>
+			<value></value>
 		</row>
 		<row>
 			<value>4</value>
@@ -48,6 +60,9 @@
 			<value>0</value>
 			<value>3</value>
 			<value>4</value>
+			<value>0</value>
+			<value>0</value>
+			<value></value>
 		</row>
 	</table>
 	<table name="phpbb_ideas_votes">
@@ -83,54 +98,6 @@
 			<value>3</value>
 			<value>3</value>
 			<value>0</value>
-		</row>
-	</table>
-	<table name="phpbb_ideas_duplicates">
-		<column>idea_id</column>
-		<column>duplicate_id</column>
-		<row>
-			<value>1</value>
-			<value>1</value>
-		</row>
-	</table>
-	<table name="phpbb_ideas_rfcs">
-		<column>idea_id</column>
-		<column>rfc_link</column>
-		<row>
-			<value>1</value>
-			<value></value>
-		</row>
-	</table>
-	<table name="phpbb_ideas_tickets">
-		<column>idea_id</column>
-		<column>ticket_id</column>
-		<row>
-			<value>1</value>
-			<value>1234</value>
-		</row>
-	</table>
-	<table name="phpbb_ideas_statuses">
-		<column>status_id</column>
-		<column>status_name</column>
-		<row>
-			<value>1</value>
-			<value>NEW</value>
-		</row>
-		<row>
-			<value>2</value>
-			<value>IN_PROGRESS</value>
-		</row>
-		<row>
-			<value>3</value>
-			<value>IMPLEMENTED</value>
-		</row>
-		<row>
-			<value>4</value>
-			<value>DUPLICATE</value>
-		</row>
-		<row>
-			<value>5</value>
-			<value>INVALID</value>
 		</row>
 	</table>
 </dataset>

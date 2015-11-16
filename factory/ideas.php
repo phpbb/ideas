@@ -26,11 +26,15 @@ class ideas
 	const SORT_TITLE = 'title';
 	const SORT_TOP = 'top';
 	const SORT_VOTES = 'votes';
-	const STATUS_NEW = 1;
-	const STATUS_PROGRESS = 2;
-	const STATUS_IMPLEMENTED = 3;
-	const STATUS_DUPLICATE = 4;
-	const STATUS_INVALID = 5;
+
+	/** @var array Idea status names and IDs */
+	static $statuses = array(
+		'NEW'			=> 1,
+		'IN_PROGRESS'	=> 2,
+		'IMPLEMENTED'	=> 3,
+		'DUPLICATE'		=> 4,
+		'INVALID'		=> 5,
+	);
 
 	/* @var config */
 	protected $config;
@@ -51,18 +55,6 @@ class ideas
 	protected $table_ideas;
 
 	/** @var string */
-	protected $table_duplicates;
-
-	/** @var string */
-	protected $table_rfcs;
-
-	/** @var string */
-	protected $table_statuses;
-
-	/** @var string */
-	protected $table_tickets;
-
-	/** @var string */
 	protected $table_votes;
 
 	/** @var int */
@@ -75,13 +67,9 @@ class ideas
 	 * @param log              $log
 	 * @param user             $user
 	 * @param string           $table_ideas
-	 * @param string           $table_duplicates
-	 * @param string           $table_rfcs
-	 * @param string           $table_statuses
-	 * @param string           $table_tickets
 	 * @param string           $table_votes
 	 */
-	public function __construct(config $config, driver_interface $db, language $language, log $log, user $user, $table_ideas, $table_duplicates, $table_rfcs, $table_statuses, $table_tickets, $table_votes)
+	public function __construct(config $config, driver_interface $db, language $language, log $log, user $user, $table_ideas, $table_votes)
 	{
 		$this->config = $config;
 		$this->db = $db;
@@ -90,10 +78,6 @@ class ideas
 		$this->user = $user;
 
 		$this->table_ideas = $table_ideas;
-		$this->table_duplicates = $table_duplicates;
-		$this->table_rfcs = $table_rfcs;
-		$this->table_statuses = $table_statuses;
-		$this->table_tickets = $table_tickets;
 		$this->table_votes = $table_votes;
 	}
 
@@ -147,7 +131,7 @@ class ideas
 		// If we have a $status value or array lets use it,
 		// otherwise lets exclude implemented, invalid and duplicate by default
 		$where = (!empty($status)) ? $this->db->sql_in_set('idea_status', $status) : $this->db->sql_in_set(
-			'idea_status', array(self::STATUS_IMPLEMENTED, self::STATUS_DUPLICATE, self::STATUS_INVALID,
+			'idea_status', array(self::$statuses['IMPLEMENTED'], self::$statuses['DUPLICATE'], self::$statuses['INVALID'],
 		), true);
 
 		if ($sortby === 'TOP')
@@ -233,27 +217,9 @@ class ideas
 	 */
 	public function get_idea($id)
 	{
-		$sql_array = array(
-			'SELECT'		=> 'i.*, d.duplicate_id, t.ticket_id, r.rfc_link',
-			'FROM'			=> array($this->table_ideas => 'i'),
-			'LEFT_JOIN'		=> array(
-				array(
-					'FROM'	=> array($this->table_duplicates => 'd'),
-					'ON'	=> 'i.idea_id = d.idea_id',
-				),
-				array(
-					'FROM'	=> array($this->table_tickets => 't'),
-					'ON'	=> 'i.idea_id = t.idea_id',
-				),
-				array(
-					'FROM'	=> array($this->table_rfcs => 'r'),
-					'ON'	=> 'i.idea_id = r.idea_id',
-				),
-			),
-			'WHERE'			=> 'i.idea_id = ' . (int) $id,
-		);
-
-		$sql = $this->db->sql_build_query('SELECT', $sql_array);
+		$sql = 'SELECT *
+			FROM ' . $this->table_ideas . '
+			WHERE idea_id = ' . (int) $id;
 		$result = $this->db->sql_query_limit($sql, 1);
 		$row = $this->db->sql_fetchrow($result);
 		$this->db->sql_freeresult($result);
@@ -285,33 +251,11 @@ class ideas
 	 *
 	 * @param int $id ID of the status.
 	 *
-	 * @return string The status name.
+	 * @return string|bool The status name if it exists, false otherwise.
 	 */
 	public function get_status_from_id($id)
 	{
-		$sql = 'SELECT status_name
-			FROM ' . $this->table_statuses . '
-			WHERE status_id = ' . (int) $id;
-		$result = $this->db->sql_query_limit($sql, 1);
-		$row = $this->db->sql_fetchrow($result);
-		$this->db->sql_freeresult($result);
-
-		return $this->language->lang($row['status_name']);
-	}
-
-	/**
-	 * Returns all statuses.
-	 *
-	 * @return Array of statuses.
-	 */
-	public function get_statuses()
-	{
-		$sql = 'SELECT * FROM ' . $this->table_statuses;
-		$result = $this->db->sql_query($sql);
-		$rows = $this->db->sql_fetchrowset($result);
-		$this->db->sql_freeresult($result);
-
-		return $rows;
+		return $this->language->lang(array_search($id, self::$statuses));
 	}
 
 	/**
@@ -346,14 +290,11 @@ class ideas
 			return false;
 		}
 
-		$this->delete_idea_data($idea_id, 'table_duplicates');
-
 		$sql_ary = array(
-			'idea_id'		=> (int) $idea_id,
 			'duplicate_id'	=> (int) $duplicate,
 		);
 
-		$this->insert_idea_data($sql_ary, 'table_duplicates');
+		$this->update_idea_data($sql_ary, $idea_id, 'table_ideas');
 
 		return true;
 	}
@@ -374,14 +315,11 @@ class ideas
 			return false;
 		}
 
-		$this->delete_idea_data($idea_id, 'table_rfcs');
-
 		$sql_ary = array(
-			'idea_id'	=> (int) $idea_id,
 			'rfc_link'	=> $rfc, // string is escaped by build_array()
 		);
 
-		$this->insert_idea_data($sql_ary, 'table_rfcs');
+		$this->update_idea_data($sql_ary, $idea_id, 'table_ideas');
 
 		return true;
 	}
@@ -401,14 +339,11 @@ class ideas
 			return false;
 		}
 
-		$this->delete_idea_data($idea_id, 'table_tickets');
-
 		$sql_ary = array(
-			'idea_id'	=> (int) $idea_id,
 			'ticket_id'	=> (int) $ticket,
 		);
 
-		$this->insert_idea_data($sql_ary, 'table_tickets');
+		$this->update_idea_data($sql_ary, $idea_id, 'table_ideas');
 
 		return true;
 	}
@@ -637,7 +572,7 @@ class ideas
 			'idea_title'		=> $title,
 			'idea_author'		=> $user_id,
 			'idea_date'			=> time(),
-			'topic_id'			=> 0
+			'topic_id'			=> 0,
 		);
 
 		$idea_id = $this->insert_idea_data($sql_ary, 'table_ideas');
@@ -731,12 +666,6 @@ class ideas
 
 		// Delete votes
 		$this->delete_idea_data($id, 'table_votes');
-
-		// Delete RFCS
-		$this->delete_idea_data($id, 'table_rfcs');
-
-		// Delete tickets
-		$this->delete_idea_data($id, 'table_tickets');
 
 		return $deleted;
 	}
