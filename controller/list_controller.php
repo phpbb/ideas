@@ -55,7 +55,7 @@ class list_controller extends base
 		// if sort by "implemented", sort ideas with status implemented by date
 		if ($sort === ideas::SORT_IMPLEMENTED)
 		{
-			$status = ideas::STATUS_IMPLEMENTED;
+			$status = ideas::$statuses['IMPLEMENTED'];
 			$sort = ideas::SORT_DATE;
 		}
 
@@ -66,14 +66,7 @@ class list_controller extends base
 		// including the statuses normally hidden from lists.
 		if ($status === -1)
 		{
-			$status = array(
-				ideas::STATUS_NEW,
-				ideas::STATUS_PROGRESS,
-				ideas::STATUS_IMPLEMENTED,
-				ideas::STATUS_INVALID,
-				ideas::STATUS_DUPLICATE,
-			);
-
+			$status = ideas::$statuses;
 			$status_name = $this->language->lang('ALL_IDEAS');
 		}
 
@@ -87,7 +80,7 @@ class list_controller extends base
 			'U_NEW_IDEA_ACTION'	=> $this->helper->route('phpbb_ideas_post_controller'),
 			'TOTAL_IDEAS'       => $this->language->lang('TOTAL_IDEAS', $this->ideas->get_idea_count()),
 			'STATUS_NAME'       => $status_name ?: $this->language->lang('OPEN_IDEAS'),
-			'STATUS_ARY'		=> $this->ideas->get_statuses(),
+			'STATUS_ARY'		=> ideas::$statuses,
 			'STATUS'			=> $u_status,
 			'SORT_ARY'			=> array(ideas::SORT_AUTHOR, ideas::SORT_DATE, ideas::SORT_SCORE, ideas::SORT_TITLE, ideas::SORT_TOP, ideas::SORT_VOTES),
 			'SORT'				=> $sort,

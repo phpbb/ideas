@@ -39,7 +39,7 @@ class index_controller extends base
 		$this->assign_template_block_vars('top_ideas', $ideas);
 
 		// Generate recently implemented
-		$ideas = $this->ideas->get_ideas(self::NUM_IDEAS, 'date', 'DESC', ideas::STATUS_IMPLEMENTED);
+		$ideas = $this->ideas->get_ideas(self::NUM_IDEAS, 'date', 'DESC', ideas::$statuses['IMPLEMENTED']);
 		$this->assign_template_block_vars('implemented_ideas', $ideas);
 
 		$this->template->assign_vars(array(

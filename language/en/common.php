@@ -24,6 +24,7 @@ $lang = array_merge($lang, array(
 	'ALREADY_VOTED'			=> 'You have already voted on this idea.',
 
 	'CHANGE_STATUS'			=> 'Change status',
+	'CLICK_TO_VIEW'			=> 'Click to view votes.',
 
 	'DATE'					=> 'Date',
 	'DUPLICATE'				=> 'Duplicate',
@@ -36,7 +37,6 @@ $lang = array_merge($lang, array(
 	'IDEA_DELETED'			=> 'Idea successfully deleted.',
 	'IDEA_LIST'				=> 'Idea List',
 	'IDEA_NOT_FOUND'		=> 'Idea not found',
-	'IDEA_POSTER'           => 'Posted by %s', // Warning: submitted to db
 	'IDEAS_TITLE'			=> 'phpBB Ideas',
 	'IDEAS_NOT_AVAILABLE'	=> 'Ideas is not available at this time.',
 	'IMPLEMENTED'           => 'Implemented',
@@ -59,9 +59,10 @@ $lang = array_merge($lang, array(
 	'OPEN_IDEAS'			=> 'Open ideas',
 
 	'POST_IDEA'				=> 'Post a new idea',
+	'POSTING_NEW_IDEA'		=> 'Posting a new idea',
 
 	'RATING'                => 'Rating',
-	'REMOVE_VOTE'			=> 'Remove vote',
+	'REMOVE_VOTE'			=> 'Remove my vote',
 	'RETURN_IDEAS'			=> '%sReturn to Ideas%s',
 	'RFC'					=> 'RFC',
 	'RFC_ERROR'				=> 'RFC must be a topic on Area51.',
@@ -85,17 +86,20 @@ $lang = array_merge($lang, array(
 		1	=> '%d idea',
 		2	=> '%d ideas',
 	),
+	'TOTAL_POINTS'			=> array(
+		1	=> '%s point.',
+		2	=> '%s points.',
+	),
 
 	'UPDATED_VOTE'			=> 'Successfully updated vote',
 
 	'VIEW_ALL'				=> 'View All',
 	'VIEW_DUPLICATE'		=> 'View duplicate',
 	'VIEW_IDEA'				=> 'View Idea',
-	'VIEW_IDEA_AT'          => 'View idea at: %s', // Warning: submitted to db
 	'VIEW_IMPLEMENTED'		=> 'View all implemented ideas',
 	'VIEW_LATEST'			=> 'View all open ideas',
 	'VIEW_TOP'				=> 'View all top rated ideas',
-	'VIEW_VOTES'            => '%s point(s). Click to view votes',
+	'VIEWING_IDEAS'			=> 'Viewing Ideas',
 	'VOTE'					=> 'Vote',
 	'VOTE_DOWN'				=> 'Vote Down',
 	'VOTE_ERROR'			=> 'An error occurred',

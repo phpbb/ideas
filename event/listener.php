@@ -46,6 +46,9 @@ class listener implements EventSubscriberInterface
 	/* @var user */
 	protected $user;
 
+	/** @var string */
+	protected $php_ext;
+
 	/**
 	 * @param \phpbb\auth\auth                $auth
 	 * @param \phpbb\config\config            $config
@@ -55,8 +58,9 @@ class listener implements EventSubscriberInterface
 	 * @param \phpbb\ideas\factory\linkhelper $link_helper
 	 * @param \phpbb\template\template        $template
 	 * @param \phpbb\user                     $user
+	 * @param string                          $php_ext
 	 */
-	public function __construct(auth $auth, config $config, helper $helper, ideas $ideas, language $language, linkhelper $link_helper, template $template, user $user)
+	public function __construct(auth $auth, config $config, helper $helper, ideas $ideas, language $language, linkhelper $link_helper, template $template, user $user, $php_ext)
 	{
 		$this->auth = $auth;
 		$this->config = $config;
@@ -66,6 +70,7 @@ class listener implements EventSubscriberInterface
 		$this->link_helper = $link_helper;
 		$this->template = $template;
 		$this->user = $user;
+		$this->php_ext = $php_ext;
 
 		$this->language->add_lang('common', 'phpbb/ideas');
 	}
@@ -76,9 +81,10 @@ class listener implements EventSubscriberInterface
 	static public function getSubscribedEvents()
 	{
 		return array(
-			'core.viewforum_get_topic_data'		=> 'ideas_forum_redirect',
-			'core.viewtopic_modify_post_row'	=> 'clean_message',
-			'core.viewtopic_modify_page_title'	=> 'show_idea',
+			'core.viewforum_get_topic_data'			=> 'ideas_forum_redirect',
+			'core.viewtopic_modify_post_row'		=> 'clean_message',
+			'core.viewtopic_modify_page_title'		=> 'show_idea',
+			'core.viewonline_overwrite_location'	=> 'viewonline_ideas',
 		);
 	}
 
@@ -153,19 +159,18 @@ class listener implements EventSubscriberInterface
 
 		if ($mod)
 		{
-			$statuses = $this->ideas->get_statuses();
-			foreach ($statuses as $status)
+			foreach (ideas::$statuses as $status_name => $status_id)
 			{
 				$this->template->assign_block_vars('statuses', array(
-					'ID'	=> $status['status_id'],
-					'NAME'	=> $this->language->lang($status['status_name']),
+					'ID'	=> $status_id,
+					'NAME'	=> $this->language->lang($status_name),
 				));
 			}
 		}
 
 		$points = $idea['idea_votes_up'] - $idea['idea_votes_down'];
-		$can_vote = (bool) ($idea['idea_status'] != ideas::STATUS_IMPLEMENTED &&
-			$idea['idea_status'] != ideas::STATUS_DUPLICATE &&
+		$can_vote = (bool) ($idea['idea_status'] != ideas::$statuses['IMPLEMENTED'] &&
+			$idea['idea_status'] != ideas::$statuses['DUPLICATE'] &&
 			$this->auth->acl_get('f_vote', (int) $this->config['ideas_forum_id']) &&
 			$event['topic_data']['topic_status'] != ITEM_LOCKED);
 
@@ -177,7 +182,7 @@ class listener implements EventSubscriberInterface
 			'IDEA_VOTES'		=> $idea['idea_votes_up'] + $idea['idea_votes_down'],
 			'IDEA_VOTES_UP'		=> $idea['idea_votes_up'],
 			'IDEA_VOTES_DOWN'	=> $idea['idea_votes_down'],
-			'IDEA_POINTS'		=> $this->language->lang('VIEW_VOTES', $points),
+			'IDEA_POINTS'		=> $this->language->lang('TOTAL_POINTS', $points),
 			'IDEA_STATUS'		=> $this->ideas->get_status_from_id($idea['idea_status']),
 			'IDEA_STATUS_LINK'	=> $this->helper->route('phpbb_ideas_list_controller', array('status' => $idea['idea_status'])),
 
@@ -220,5 +225,37 @@ class listener implements EventSubscriberInterface
 			'U_VIEW_FORUM'		=> $this->helper->route('phpbb_ideas_index_controller'),
 			'FORUM_NAME'		=> $this->language->lang('IDEAS'),
 		));
+	}
+
+	/**
+	 * Show users as viewing Ideas on Who Is Online page
+	 *
+	 * @param object $event The event object
+	 * @return null
+	 * @access public
+	 */
+	public function viewonline_ideas($event)
+	{
+		if ($event['on_page'][1] == 'app')
+		{
+			if (strrpos($event['row']['session_page'], 'app.' . $this->php_ext . '/ideas/post') === 0)
+			{
+				$event['location'] = $this->language->lang('POSTING_NEW_IDEA');
+				$event['location_url'] = $this->helper->route('phpbb_ideas_index_controller');
+			}
+			else if (strrpos($event['row']['session_page'], 'app.' . $this->php_ext . '/ideas') === 0)
+			{
+				$event['location'] = $this->language->lang('VIEWING_IDEAS');
+				$event['location_url'] = $this->helper->route('phpbb_ideas_index_controller');
+			}
+		}
+		else if ($event['on_page'][1] == 'viewtopic')
+		{
+			if ($event['row']['session_forum_id'] == $this->config['ideas_forum_id'])
+			{
+				$event['location'] = $this->language->lang('VIEWING_IDEAS');
+				$event['location_url'] = $this->helper->route('phpbb_ideas_index_controller');
+			}
+		}
 	}
 }

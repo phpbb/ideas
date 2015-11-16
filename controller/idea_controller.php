@@ -48,8 +48,9 @@ class idea_controller extends base
 			return new \Symfony\Component\HttpFoundation\JsonResponse($result);
 		}
 
-		$url = reapply_sid(generate_board_url() .
-			"/viewtopic.{$this->php_ext}?f={$this->config['ideas_forum_id']}&t={$this->data['topic_id']}"
+		$url = append_sid(generate_board_url() . "/viewtopic.{$this->php_ext}",
+			array('f' => $this->config['ideas_forum_id'], 't' => $this->data['topic_id']),
+			false
 		);
 
 		return new RedirectResponse($url);
@@ -125,7 +126,7 @@ class idea_controller extends base
 	 */
 	public function removevote()
 	{
-		if ($this->data['idea_status'] == ideas::STATUS_IMPLEMENTED || $this->data['idea_status'] == ideas::STATUS_DUPLICATE || !check_link_hash($this->get_hash(), "removevote_{$this->data['idea_id']}"))
+		if ($this->data['idea_status'] == ideas::$statuses['IMPLEMENTED'] || $this->data['idea_status'] == ideas::$statuses['DUPLICATE'] || !check_link_hash($this->get_hash(), "removevote_{$this->data['idea_id']}"))
 		{
 			return false;
 		}
@@ -222,7 +223,7 @@ class idea_controller extends base
 	{
 		$vote = $this->request->variable('v', 1);
 
-		if ($this->data['idea_status'] == ideas::STATUS_IMPLEMENTED || $this->data['idea_status'] == ideas::STATUS_DUPLICATE || !check_link_hash($this->get_hash(), "vote_{$this->data['idea_id']}"))
+		if ($this->data['idea_status'] == ideas::$statuses['IMPLEMENTED'] || $this->data['idea_status'] == ideas::$statuses['DUPLICATE'] || !check_link_hash($this->get_hash(), "vote_{$this->data['idea_id']}"))
 		{
 			return false;
 		}
