@@ -65,12 +65,12 @@ class admin_controller implements admin_interface
 	* @param string                            $php_ext              php_ext
 	* @access public
 	*/
-	public function __construct(\phpbb\config\config $config, \phpbb\db\driver\driver_interface $db, \phpbb\language\language $language, \phpbb\log\log $phpbb_log, \phpbb\request\request $request, \phpbb\template\template $template, \phpbb\user $user, $root_path, $php_ext)
+	public function __construct(\phpbb\config\config $config, \phpbb\db\driver\driver_interface $db, \phpbb\language\language $language, \phpbb\log\log $log, \phpbb\request\request $request, \phpbb\template\template $template, \phpbb\user $user, $root_path, $php_ext)
 	{
 		$this->config = $config;
 		$this->db = $db;
 		$this->language = $language;
-		$this->log = $phpbb_log;
+		$this->log = $log;
 		$this->request = $request;
 		$this->template = $template;
 		$this->user = $user;
@@ -81,6 +81,8 @@ class admin_controller implements admin_interface
 	/**
 	* Display the options a user can configure for this extension
 	*
+	* @param int $id		ACP module ID
+	* @param string $mode	ACP module mode
 	* @return null
 	* @access public
 	*/
@@ -192,9 +194,11 @@ class admin_controller implements admin_interface
 		}
 
 		// Do not write values if there are errors
-		if (sizeof($errors))
+		$num_errors = sizeof($errors);
+		if ($num_errors)
 		{
 			$submit = $submit_forum_setup = false;
+			$errors = implode('<br />', $errors);
 		}
 
 		// We go through the display_vars to make sure no one is trying to set variables he/she is not allowed to
@@ -222,11 +226,15 @@ class admin_controller implements admin_interface
 
 			trigger_error($this->language->lang("ACP_IDEAS_{$message}_UPDATED") . adm_back_link($this->u_action));
 		}
+		else if ($this->request->is_ajax() && $num_errors)
+		{
+			trigger_error($errors . adm_back_link($this->u_action));
+		}
 
 		// Output relevant page
 		$this->template->assign_vars(array(
-			'S_ERROR'	=> (bool) sizeof($errors),
-			'ERROR_MSG'	=> (sizeof($errors)) ? implode('<br />', $errors) : '',
+			'S_ERROR'	=> (bool) $num_errors,
+			'ERROR_MSG'	=> ($num_errors) ? $errors : '',
 
 			'IDEAS_POSTER'		=> $this->get_ideas_topics_poster(),
 			'IDEAS_BASE_URL'	=> ($this->config['ideas_base_url']) ?: '',
