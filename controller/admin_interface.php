@@ -28,12 +28,12 @@ interface admin_interface
 	public function display_options($id, $mode);
 
 	/**
-	 * Generate ideas forum select options
+	 * Check if Ideas bot user exists
 	 *
-	 * @return string Select menu HTML code
+	 * @return null
 	 * @access public
 	 */
-	public function select_ideas_forum();
+	public function check_ideas_topics_poster();
 
 	/**
 	 * Get ideas poster bot username
@@ -42,6 +42,34 @@ interface admin_interface
 	 * @access public
 	 */
 	public function get_ideas_topics_poster();
+
+	/**
+	 * Set configuration options
+	 *
+	 * @param array $display_vars  Array of config options to display
+	 * @param bool  $update_config Flag indicating if database should be updated
+	 * @return null
+	 * @access public
+	 */
+	public function set_config_options($display_vars = array(), $update_config = false);
+
+	/**
+	 * Set ideas forum options
+	 *
+	 * @param int $id		ACP module ID
+	 * @param string $mode	ACP module mode
+	 * @return  null
+	 * @access public
+	 */
+	public function set_ideas_forum_options($id, $mode);
+
+	/**
+	 * Generate ideas forum select options
+	 *
+	 * @return string Select menu HTML code
+	 * @access public
+	 */
+	public function select_ideas_forum();
 
 	/**
 	* Set page url
