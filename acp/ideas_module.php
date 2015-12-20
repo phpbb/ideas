@@ -33,16 +33,23 @@ class ideas_module
 		$this->page_title = 'ACP_PHPBB_IDEAS_SETTINGS';
 
 		$language = $phpbb_container->get('language');
-
-		// Add the phpBB Ideas ACP lang file
-		$language->add_lang('phpbb_ideas_acp', 'phpbb/ideas');
+		$request = $phpbb_container->get('request');
 
 		// Get an instance of the admin controller
 		$admin_controller = $phpbb_container->get('phpbb.ideas.admin.controller');
 
+		// Add the phpBB Ideas ACP lang file
+		$language->add_lang('phpbb_ideas_acp', 'phpbb/ideas');
+
 		// Make the $u_action url available in the admin controller
 		$admin_controller->set_page_url($this->u_action);
 
-		$admin_controller->display_options($id, $mode);
+		$admin_controller->display_options();
+
+		// Set Ideas forum  options and registered usergroup forum permissions
+		if ($request->is_set_post('ideas_forum_setup'))
+		{
+			$admin_controller->set_ideas_forum_options();
+		}
 	}
 }

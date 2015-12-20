@@ -13,7 +13,7 @@ namespace phpbb\ideas\controller;
 /**
  * Admin controller
  */
-class admin_controller implements admin_interface
+class admin_controller
 {
 	/** @var \phpbb\config\config */
 	protected $config;
@@ -36,20 +36,17 @@ class admin_controller implements admin_interface
 	/** @var \phpbb\user */
 	protected $user;
 
-	/** @var array */
-	protected $cfg_array = array();
-
-	/** @var array */
-	protected $errors = array();
-
-	/** @var array */
-	protected $new_config = array();
-
 	/** @var string */
 	protected $phpbb_root_path;
 
 	/** @var string */
 	protected $php_ext;
+
+	/** @var array */
+	protected $cfg_array = array();
+
+	/** @var array */
+	protected $new_config = array();
 
 	/** @var string */
 	public $u_action;
@@ -64,7 +61,7 @@ class admin_controller implements admin_interface
 	 * @param \phpbb\request\request            $request              Request object
 	 * @param \phpbb\template\template          $template             Template object
 	 * @param \phpbb\user                       $user                 User object
-	 * @param string                            $root_path            phpBB root path
+	 * @param string                            $phpbb_root_path      phpBB root path
 	 * @param string                            $php_ext              php_ext
 	 * @access public
 	 */
@@ -82,9 +79,12 @@ class admin_controller implements admin_interface
 	}
 
 	/**
-	 * {@inheritdoc}
+	 * Display the options a user can configure for this extension
+	 *
+	 * @return null
+	 * @access public
 	 */
-	public function display_options($id, $mode)
+	public function display_options()
 	{
 		// Create a form key for preventing CSRF attacks
 		add_form_key('acp_phpbb_ideas_settings');
@@ -95,16 +95,6 @@ class admin_controller implements admin_interface
 		// Check if selected user exists
 		$this->check_ideas_topics_poster();
 
-		// Set Ideas forum  options and registered usergroup forum permissions
-		$this->set_ideas_forum_options($id, $mode);
-
-		// Do not write values if there are errors
-		$num_errors = sizeof($this->errors);
-		if ($num_errors)
-		{
-			$errors = implode('<br />', $this->errors);
-		}
-
 		// Configuration options to list through
 		$display_vars = array(
 			'ideas_forum_id',
@@ -112,38 +102,26 @@ class admin_controller implements admin_interface
 			'ideas_base_url',
 			'ideas_forum_setup',
 		);
-		$this->set_config_options($display_vars, (bool) !$num_errors);
-
-		// Submit relevant log entries and output success message if any
-		$message = (($this->request->is_set_post('submit')) ?  'FORUM_SETUP' : ($this->request->is_set_post('ideas_forum_setup') ? 'SETTINGS' : ''));
-		if ((bool) !$num_errors && $message)
-		{
-			$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, "ACP_PHPBB_IDEAS_{$message}_LOG");
-			trigger_error($this->language->lang("ACP_IDEAS_{$message}_UPDATED") . adm_back_link($this->u_action));
-		}
-		else if ($this->request->is_ajax() && $num_errors)
-		{
-			trigger_error($errors . adm_back_link($this->u_action));
-		}
+		$this->set_config_options($display_vars);
 
 		// Output relevant page
 		$this->template->assign_vars(array(
-			'S_ERROR'	=> (bool) $num_errors,
-			'ERROR_MSG'	=> ($num_errors) ? $errors : '',
-
 			'IDEAS_POSTER'		=> $this->get_ideas_topics_poster(),
 			'IDEAS_BASE_URL'	=> ($this->config['ideas_base_url']) ?: '',
 
 			'S_FORUM_SELECT_BOX'	=> $this->select_ideas_forum(),
-			'S_IDEAS_FORUM_ID'	=> !empty($this->config['ideas_forum_id']),
+			'S_IDEAS_FORUM_ID'		=> !empty($this->config['ideas_forum_id']),
 
-			'U_ACTION'	=> $this->u_action,
+			'U_ACTION'			=> $this->u_action,
 			'U_FIND_USERNAME'	=> append_sid("{$this->phpbb_root_path}memberlist.{$this->php_ext}", 'mode=searchuser&amp;form=acp_phpbb_ideas_settings&amp;field=ideas_poster_id&amp;select_single=true'),
 		));
 	}
 
 	/**
-	 * {@inheritdoc}
+	 * Check if Ideas bot user exists
+	 *
+	 * @return null
+	 * @access public
 	 */
 	public function check_ideas_topics_poster()
 	{
@@ -151,7 +129,7 @@ class admin_controller implements admin_interface
 		{
 			if (!check_form_key('acp_phpbb_ideas_settings'))
 			{
-				$this->errors[] = $this->language->lang('FORM_INVALID');
+				trigger_error($this->language->lang('FORM_INVALID') . adm_back_link($this->u_action));
 			}
 
 			$sql = 'SELECT user_id
@@ -163,7 +141,7 @@ class admin_controller implements admin_interface
 
 			if (!$user_id)
 			{
-				$this->errors[] = $this->language->lang('NO_USER');
+				trigger_error($this->language->lang('NO_USER') . adm_back_link($this->u_action));
 			}
 			else
 			{
@@ -174,7 +152,10 @@ class admin_controller implements admin_interface
 	}
 
 	/**
-	 * {@inheritdoc}
+	 * Get ideas poster bot username
+	 *
+	 * @return string Ideas bot username
+	 * @access public
 	 */
 	public function get_ideas_topics_poster()
 	{
@@ -189,10 +170,16 @@ class admin_controller implements admin_interface
 	}
 
 	/**
-	 * {@inheritdoc}
+	 * Set configuration options
+	 *
+	 * @param array $display_vars  Array of config options to display
+	 * @return null
+	 * @access public
 	 */
-	public function set_config_options($display_vars = array(), $update_config = false)
+	public function set_config_options($display_vars = array())
 	{
+		$submit = $this->request->is_set_post('submit');
+
 		// We go through the display_vars to make sure no one is trying to set variables he/she is not allowed to
 		foreach ($display_vars as $config_name)
 		{
@@ -203,15 +190,24 @@ class admin_controller implements admin_interface
 
 			$this->new_config[$config_name] = $config_value = $this->cfg_array[$config_name];
 
-			if ($this->request->is_set_post('submit') && $update_config)
+			if ($submit)
 			{
 				$this->config->set($config_name, $config_value);
 			}
 		}
+
+		if ($submit)
+		{
+			$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'ACP_PHPBB_IDEAS_SETTINGS_LOG');
+			trigger_error($this->language->lang('ACP_IDEAS_SETTINGS_UPDATED') . adm_back_link($this->u_action));
+		}
 	}
 
 	/**
-	 * {@inheritdoc}
+	 * Generate ideas forum select options
+	 *
+	 * @return string Select menu HTML code
+	 * @access public
 	 */
 	public function select_ideas_forum()
 	{
@@ -225,69 +221,73 @@ class admin_controller implements admin_interface
 	}
 
 	/**
-	 * {@inheritdoc}
+	 * Set ideas forum options
+	 *
+	 * @return  null
+	 * @access public
 	 */
-	public function set_ideas_forum_options($id, $mode)
+	public function set_ideas_forum_options()
 	{
-		$submit_forum_setup = $this->request->is_set_post('ideas_forum_setup');
-		if ($submit_forum_setup)
+		// Check if Ideas forum is selected and apply relevant settings if it is
+		// But display the confirm box first
+		if (confirm_box(true))
 		{
-			// Check if Ideas forum is selected and apply relevant settings if it is
-			// But display the confirm box first
-			if (confirm_box(true))
+			if (empty($this->config['ideas_forum_id']))
 			{
-				if (empty($this->config['ideas_forum_id']))
-				{
-					$this->errors[] = $this->language->lang('ACP_IDEAS_NO_FORUM');
-				}
-				else
-				{
-					if (!class_exists('auth_admin'))
-					{
-						include($this->phpbb_root_path . 'includes/acp/auth.' . $this->php_ext);
-					}
-					$auth_admin = new \auth_admin();
-
-					$forum_id = (int) $this->config['ideas_forum_id'];
-
-					// Get the REGISTERED usergroup ID
-					$sql = 'SELECT group_id
-						FROM ' . GROUPS_TABLE . "
-						WHERE group_name = '" . $this->db->sql_escape('REGISTERED') . "'";
-					$this->db->sql_query($sql);
-					$group_id = (int) $this->db->sql_fetchfield('group_id');
-
-					// Get 'f_' local REGISTERED users group permissions array for the ideas forum
-					// Default undefined permissions to ACL_NO
-					$hold_ary = $auth_admin->get_mask('set', false, $group_id, $forum_id, 'f_', 'local', ACL_NO);
-					$auth_settings = $hold_ary[$group_id][$forum_id];
-
-					// Set 'Can start new topics' permissions to 'Never' for the ideas forum
-					$auth_settings['f_post'] = ACL_NEVER;
-
-					// Update the registered usergroup permissions for selected Ideas forum...
-					$auth_admin->acl_set('group', $forum_id, $group_id, $auth_settings);
-
-					// Disable auto-pruning for ideas forum
-					$sql = 'UPDATE ' . FORUMS_TABLE . '
-						SET ' . $this->db->sql_build_array('UPDATE', array('enable_prune' => false)) . '
-						WHERE forum_id = ' . $forum_id;
-					$this->db->sql_query($sql);
-				}
+				trigger_error($this->language->lang('ACP_IDEAS_NO_FORUM') . adm_back_link($this->u_action));
 			}
 			else
 			{
-				confirm_box(false, $this->language->lang('ACP_IDEAS_FORUM_SETUP_CONFIRM'), build_hidden_fields(array(
-					'i'			=> $id,
-					'mode'		=> $mode,
-					'ideas_forum_setup'	=> $submit_forum_setup,
-				)));
+				if (!class_exists('auth_admin'))
+				{
+					include($this->phpbb_root_path . 'includes/acp/auth.' . $this->php_ext);
+				}
+				$auth_admin = new \auth_admin();
+
+				$forum_id = (int) $this->config['ideas_forum_id'];
+
+				// Get the REGISTERED usergroup ID
+				$sql = 'SELECT group_id
+					FROM ' . GROUPS_TABLE . "
+					WHERE group_name = '" . $this->db->sql_escape('REGISTERED') . "'";
+				$this->db->sql_query($sql);
+				$group_id = (int) $this->db->sql_fetchfield('group_id');
+
+				// Get 'f_' local REGISTERED users group permissions array for the ideas forum
+				// Default undefined permissions to ACL_NO
+				$hold_ary = $auth_admin->get_mask('set', false, $group_id, $forum_id, 'f_', 'local', ACL_NO);
+				$auth_settings = $hold_ary[$group_id][$forum_id];
+
+				// Set 'Can start new topics' permissions to 'Never' for the ideas forum
+				$auth_settings['f_post'] = ACL_NEVER;
+
+				// Update the registered usergroup permissions for selected Ideas forum...
+				$auth_admin->acl_set('group', $forum_id, $group_id, $auth_settings);
+
+				// Disable auto-pruning for ideas forum
+				$sql = 'UPDATE ' . FORUMS_TABLE . '
+					SET ' . $this->db->sql_build_array('UPDATE', array('enable_prune' => false)) . '
+					WHERE forum_id = ' . $forum_id;
+				$this->db->sql_query($sql);
+
+				$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'ACP_PHPBB_IDEAS_FORUM_SETUP_LOG');
+				trigger_error($this->language->lang('ACP_IDEAS_FORUM_SETUP_UPDATED') . adm_back_link($this->u_action));
 			}
+		}
+		else
+		{
+			confirm_box(false, $this->language->lang('ACP_IDEAS_FORUM_SETUP_CONFIRM'), build_hidden_fields(array(
+				'ideas_forum_setup'	=> $this->request->is_set_post('ideas_forum_setup'),
+			)));
 		}
 	}
 
 	/**
-	 * {@inheritdoc}
+	 * Set page url
+	 *
+	 * @param string $u_action Custom form action
+	 * @return null
+	 * @access public
 	 */
 	public function set_page_url($u_action)
 	{
