@@ -6,7 +6,14 @@
 
 <p>{L_ACP_PHPBB_IDEAS_EXPLAIN}</p>
 
-<form id="acp_phpbb_ideas_settings" method="post" action="{U_ACTION}" data-ajax="true">
+<!-- IF S_ERROR -->
+	<div class="errorbox">
+		<h3>{L_WARNING}</h3>
+		<p>{ERROR_MSG}</p>
+	</div>
+<!-- ENDIF -->
+
+<form id="acp_phpbb_ideas_settings" method="post" action="{U_ACTION}">
 	<fieldset>
 		<legend>{L_ACP_PHPBB_IDEAS_SETTINGS}</legend>
 		<dl>

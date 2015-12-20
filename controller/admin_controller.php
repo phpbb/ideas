@@ -61,7 +61,7 @@ class admin_controller
 	 * @param \phpbb\request\request            $request              Request object
 	 * @param \phpbb\template\template          $template             Template object
 	 * @param \phpbb\user                       $user                 User object
-	 * @param string                            $phpbb_root_path      phpBB root path
+	 * @param string                            $root_path            phpBB root path
 	 * @param string                            $php_ext              php_ext
 	 * @access public
 	 */
@@ -89,24 +89,11 @@ class admin_controller
 		// Create a form key for preventing CSRF attacks
 		add_form_key('acp_phpbb_ideas_settings');
 
-		$this->new_config = $this->config;
-		$this->cfg_array = ($this->request->is_set('config')) ? $this->request->variable('config', array('' => ''), true) : $this->new_config;
-
-		// Check if selected user exists
-		$this->check_ideas_topics_poster();
-
-		// Configuration options to list through
-		$display_vars = array(
-			'ideas_forum_id',
-			'ideas_poster_id',
-			'ideas_base_url',
-			'ideas_forum_setup',
-		);
-		$this->set_config_options($display_vars);
+		$this->set_config_options();
 
 		// Output relevant page
 		$this->template->assign_vars(array(
-			'IDEAS_POSTER'		=> $this->get_ideas_topics_poster(),
+			'IDEAS_POSTER'		=> $this->get_ideas_topics_poster_username(),
 			'IDEAS_BASE_URL'	=> ($this->config['ideas_base_url']) ?: '',
 
 			'S_FORUM_SELECT_BOX'	=> $this->select_ideas_forum(),
@@ -118,30 +105,66 @@ class admin_controller
 	}
 
 	/**
-	 * Check if Ideas bot user exists
+	 * Get Ideas poster bot user ID
+	 *
+	 * @return int user_id Ideas bot user ID
+	 * @access protected
+	 */
+	protected function get_ideas_topics_poster_id()
+	{
+		$sql = 'SELECT user_id
+			FROM ' . USERS_TABLE . "
+			WHERE username_clean = '" . $this->db->sql_escape(utf8_clean_string($this->cfg_array['ideas_poster_id'])) . "'";
+		$result = $this->db->sql_query($sql);
+		$user_id = (int) $this->db->sql_fetchfield('user_id');
+		$this->db->sql_freeresult($result);
+
+		return $user_id;
+	}
+
+	/**
+	 * Get Ideas poster bot username
+	 *
+	 * @return string Ideas bot username
+	 * @access protected
+	 */
+	protected function get_ideas_topics_poster_username()
+	{
+		$sql = 'SELECT username FROM ' . USERS_TABLE . '
+			WHERE user_id = ' . (int) $this->config['ideas_poster_id'];
+		$this->db->sql_query($sql);
+		$username = $this->db->sql_fetchfield('username');
+
+		return ($username !== false) ? $username : '';
+	}
+
+	/**
+	 * Set configuration options
 	 *
 	 * @return null
-	 * @access public
+	 * @access protected
 	 */
-	public function check_ideas_topics_poster()
+	protected function set_config_options()
 	{
-		if ($this->request->is_set_post('submit'))
+		$errors = array();
+		$submit = $this->request->is_set_post('submit');
+
+		$this->new_config = $this->config;
+		$this->cfg_array = ($this->request->is_set('config')) ? $this->request->variable('config', array('' => ''), true) : $this->new_config;
+
+		if ($submit)
 		{
+			// Check the form for validity
 			if (!check_form_key('acp_phpbb_ideas_settings'))
 			{
-				trigger_error($this->language->lang('FORM_INVALID') . adm_back_link($this->u_action));
+				$errors[] = $this->language->lang('FORM_INVALID');
 			}
 
-			$sql = 'SELECT user_id
-				FROM ' . USERS_TABLE . "
-				WHERE username_clean = '" . $this->db->sql_escape(utf8_clean_string($this->cfg_array['ideas_poster_id'])) . "'";
-			$result = $this->db->sql_query($sql);
-			$user_id = (int) $this->db->sql_fetchfield('user_id');
-			$this->db->sql_freeresult($result);
-
+			// Check if selected user exists
+			$user_id = $this->get_ideas_topics_poster_id();
 			if (!$user_id)
 			{
-				trigger_error($this->language->lang('NO_USER') . adm_back_link($this->u_action));
+				$errors[] = $this->language->lang('NO_USER');
 			}
 			else
 			{
@@ -149,36 +172,21 @@ class admin_controller
 				$this->cfg_array['ideas_poster_id'] = $user_id;
 			}
 		}
-	}
 
-	/**
-	 * Get ideas poster bot username
-	 *
-	 * @return string Ideas bot username
-	 * @access public
-	 */
-	public function get_ideas_topics_poster()
-	{
-		$ideas_poster_id = (int) $this->config['ideas_poster_id'];
-		$sql = 'SELECT username FROM ' . USERS_TABLE . '
-			WHERE user_id = ' . $ideas_poster_id;
-		$this->db->sql_query($sql);
-		$username = $this->db->sql_fetchfield('username');
-		$username = ($username !== false) ? $username : '';
+		// Don't save settings if errors have occured
+		if (sizeof($errors))
+		{
+			$submit = false;
+			$this->cfg_array = $this->new_config;
+		}
 
-		return $username;
-	}
-
-	/**
-	 * Set configuration options
-	 *
-	 * @param array $display_vars  Array of config options to display
-	 * @return null
-	 * @access public
-	 */
-	public function set_config_options($display_vars = array())
-	{
-		$submit = $this->request->is_set_post('submit');
+		// Configuration options to list through
+		$display_vars = array(
+			'ideas_forum_id',
+			'ideas_poster_id',
+			'ideas_base_url',
+			'ideas_forum_setup',
+		);
 
 		// We go through the display_vars to make sure no one is trying to set variables he/she is not allowed to
 		foreach ($display_vars as $config_name)
@@ -201,15 +209,20 @@ class admin_controller
 			$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'ACP_PHPBB_IDEAS_SETTINGS_LOG');
 			trigger_error($this->language->lang('ACP_IDEAS_SETTINGS_UPDATED') . adm_back_link($this->u_action));
 		}
+
+		$this->template->assign_vars(array(
+			'S_ERROR'	=> (bool) sizeof($errors),
+			'ERROR_MSG'	=> (sizeof($errors)) ? implode('<br />', $errors) : '',
+		));
 	}
 
 	/**
 	 * Generate ideas forum select options
 	 *
 	 * @return string Select menu HTML code
-	 * @access public
+	 * @access protected
 	 */
-	public function select_ideas_forum()
+	protected function select_ideas_forum()
 	{
 		$ideas_forum_id = (int) $this->config['ideas_forum_id'];
 		$s_forums_list = '<select id="ideas_forum_id" name="config[ideas_forum_id]">';
@@ -234,45 +247,43 @@ class admin_controller
 		{
 			if (empty($this->config['ideas_forum_id']))
 			{
-				trigger_error($this->language->lang('ACP_IDEAS_NO_FORUM') . adm_back_link($this->u_action));
+				trigger_error($this->language->lang('ACP_IDEAS_NO_FORUM') . adm_back_link($this->u_action), E_USER_WARNING);
 			}
-			else
+
+			if (!class_exists('auth_admin'))
 			{
-				if (!class_exists('auth_admin'))
-				{
-					include($this->phpbb_root_path . 'includes/acp/auth.' . $this->php_ext);
-				}
-				$auth_admin = new \auth_admin();
-
-				$forum_id = (int) $this->config['ideas_forum_id'];
-
-				// Get the REGISTERED usergroup ID
-				$sql = 'SELECT group_id
-					FROM ' . GROUPS_TABLE . "
-					WHERE group_name = '" . $this->db->sql_escape('REGISTERED') . "'";
-				$this->db->sql_query($sql);
-				$group_id = (int) $this->db->sql_fetchfield('group_id');
-
-				// Get 'f_' local REGISTERED users group permissions array for the ideas forum
-				// Default undefined permissions to ACL_NO
-				$hold_ary = $auth_admin->get_mask('set', false, $group_id, $forum_id, 'f_', 'local', ACL_NO);
-				$auth_settings = $hold_ary[$group_id][$forum_id];
-
-				// Set 'Can start new topics' permissions to 'Never' for the ideas forum
-				$auth_settings['f_post'] = ACL_NEVER;
-
-				// Update the registered usergroup permissions for selected Ideas forum...
-				$auth_admin->acl_set('group', $forum_id, $group_id, $auth_settings);
-
-				// Disable auto-pruning for ideas forum
-				$sql = 'UPDATE ' . FORUMS_TABLE . '
-					SET ' . $this->db->sql_build_array('UPDATE', array('enable_prune' => false)) . '
-					WHERE forum_id = ' . $forum_id;
-				$this->db->sql_query($sql);
-
-				$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'ACP_PHPBB_IDEAS_FORUM_SETUP_LOG');
-				trigger_error($this->language->lang('ACP_IDEAS_FORUM_SETUP_UPDATED') . adm_back_link($this->u_action));
+				include($this->phpbb_root_path . 'includes/acp/auth.' . $this->php_ext);
 			}
+			$auth_admin = new \auth_admin();
+
+			$forum_id = (int) $this->config['ideas_forum_id'];
+
+			// Get the REGISTERED usergroup ID
+			$sql = 'SELECT group_id
+				FROM ' . GROUPS_TABLE . "
+				WHERE group_name = '" . $this->db->sql_escape('REGISTERED') . "'";
+			$this->db->sql_query($sql);
+			$group_id = (int) $this->db->sql_fetchfield('group_id');
+
+			// Get 'f_' local REGISTERED users group permissions array for the ideas forum
+			// Default undefined permissions to ACL_NO
+			$hold_ary = $auth_admin->get_mask('set', false, $group_id, $forum_id, 'f_', 'local', ACL_NO);
+			$auth_settings = $hold_ary[$group_id][$forum_id];
+
+			// Set 'Can start new topics' permissions to 'Never' for the ideas forum
+			$auth_settings['f_post'] = ACL_NEVER;
+
+			// Update the registered usergroup permissions for selected Ideas forum...
+			$auth_admin->acl_set('group', $forum_id, $group_id, $auth_settings);
+
+			// Disable auto-pruning for ideas forum
+			$sql = 'UPDATE ' . FORUMS_TABLE . '
+				SET ' . $this->db->sql_build_array('UPDATE', array('enable_prune' => false)) . '
+				WHERE forum_id = ' . $forum_id;
+			$this->db->sql_query($sql);
+
+			$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'ACP_PHPBB_IDEAS_FORUM_SETUP_LOG');
+			trigger_error($this->language->lang('ACP_IDEAS_FORUM_SETUP_UPDATED') . adm_back_link($this->u_action));
 		}
 		else
 		{

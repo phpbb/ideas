@@ -44,6 +44,7 @@ class ideas_module
 		// Make the $u_action url available in the admin controller
 		$admin_controller->set_page_url($this->u_action);
 
+		// Display/set ACP configuration settings
 		$admin_controller->display_options();
 
 		// Set Ideas forum  options and registered usergroup forum permissions
