@@ -45,9 +45,6 @@ class admin_controller
 	/** @var array */
 	protected $cfg_array = array();
 
-	/** @var array */
-	protected $new_config = array();
-
 	/** @var string */
 	public $u_action;
 
@@ -99,40 +96,6 @@ class admin_controller
 	}
 
 	/**
-	 * Get Ideas poster bot user ID
-	 *
-	 * @return int user_id Ideas bot user ID
-	 * @access protected
-	 */
-	protected function get_ideas_topics_poster_id()
-	{
-		$sql = 'SELECT user_id
-			FROM ' . USERS_TABLE . "
-			WHERE username_clean = '" . $this->db->sql_escape(utf8_clean_string($this->cfg_array['ideas_poster_id'])) . "'";
-		$result = $this->db->sql_query($sql);
-		$user_id = (int) $this->db->sql_fetchfield('user_id');
-		$this->db->sql_freeresult($result);
-
-		return $user_id;
-	}
-
-	/**
-	 * Get Ideas poster bot username
-	 *
-	 * @return string Ideas bot username
-	 * @access protected
-	 */
-	protected function get_ideas_topics_poster_username()
-	{
-		$sql = 'SELECT username FROM ' . USERS_TABLE . '
-			WHERE user_id = ' . (int) $this->config['ideas_poster_id'];
-		$this->db->sql_query($sql);
-		$username = $this->db->sql_fetchfield('username');
-
-		return ($username !== false) ? $username : '';
-	}
-
-	/**
 	 * Set configuration options
 	 *
 	 * @return null
@@ -145,12 +108,18 @@ class admin_controller
 		// This method is called on submit, so set flag to true initially
 		$submit = true;
 
-		$this->cfg_array = ($this->request->is_set('config')) ? $this->request->variable('config', array('' => ''), true) : $this->config;
+		$this->cfg_array = $this->request->variable('config', array('' => ''), true);
 
 		// Check the form for validity
 		if (!check_form_key('acp_phpbb_ideas_settings'))
 		{
 			$errors[] = $this->language->lang('FORM_INVALID');
+		}
+
+		// Check if Ideas forum is set
+		if (empty($this->cfg_array['ideas_forum_id']))
+		{
+			$errors[] = $this->language->lang('ACP_IDEAS_NO_FORUM');
 		}
 
 		// Check if selected user exists
@@ -164,7 +133,6 @@ class admin_controller
 		if (sizeof($errors))
 		{
 			$submit = false;
-			$this->cfg_array = $this->config;
 		}
 
 		if ($submit)
@@ -201,23 +169,6 @@ class admin_controller
 			'S_ERROR'	=> (bool) sizeof($errors),
 			'ERROR_MSG'	=> (sizeof($errors)) ? implode('<br />', $errors) : '',
 		));
-	}
-
-	/**
-	 * Generate ideas forum select options
-	 *
-	 * @return string Select menu HTML code
-	 * @access protected
-	 */
-	protected function select_ideas_forum()
-	{
-		$ideas_forum_id = (int) $this->config['ideas_forum_id'];
-		$s_forums_list = '<select id="ideas_forum_id" name="config[ideas_forum_id]">';
-		$s_forums_list .= '<option value="0"' . ((!$ideas_forum_id) ? ' selected="selected"' : '') . '>' . $this->language->lang('ACP_IDEAS_NO_FORUM') . '</option>';
-		$forum_list = make_forum_select($ideas_forum_id, false, true, true);
-		$s_forums_list .= $forum_list . '</select>';
-
-		return $s_forums_list;
 	}
 
 	/**
@@ -278,6 +229,57 @@ class admin_controller
 				'ideas_forum_setup'	=> $this->request->is_set_post('ideas_forum_setup'),
 			)));
 		}
+	}
+
+	/**
+	 * Get Ideas poster bot user ID
+	 *
+	 * @return int user_id Ideas bot user ID
+	 * @access protected
+	 */
+	protected function get_ideas_topics_poster_id()
+	{
+		$sql = 'SELECT user_id
+			FROM ' . USERS_TABLE . "
+			WHERE username_clean = '" . $this->db->sql_escape(utf8_clean_string($this->cfg_array['ideas_poster_id'])) . "'";
+		$result = $this->db->sql_query($sql);
+		$user_id = (int) $this->db->sql_fetchfield('user_id');
+		$this->db->sql_freeresult($result);
+
+		return $user_id;
+	}
+
+	/**
+	 * Get Ideas poster bot username
+	 *
+	 * @return string Ideas bot username
+	 * @access protected
+	 */
+	protected function get_ideas_topics_poster_username()
+	{
+		$sql = 'SELECT username FROM ' . USERS_TABLE . '
+			WHERE user_id = ' . (int) $this->config['ideas_poster_id'];
+		$this->db->sql_query($sql);
+		$username = $this->db->sql_fetchfield('username');
+
+		return ($username !== false) ? $username : '';
+	}
+
+	/**
+	 * Generate ideas forum select options
+	 *
+	 * @return string Select menu HTML code
+	 * @access protected
+	 */
+	protected function select_ideas_forum()
+	{
+		$ideas_forum_id = (int) $this->config['ideas_forum_id'];
+		$s_forums_list = '<select id="ideas_forum_id" name="config[ideas_forum_id]">';
+		$s_forums_list .= '<option value="0"' . ((!$ideas_forum_id) ? ' selected="selected"' : '') . '>' . $this->language->lang('ACP_IDEAS_NO_FORUM') . '</option>';
+		$forum_list = make_forum_select($ideas_forum_id, false, true, true);
+		$s_forums_list .= $forum_list . '</select>';
+
+		return $s_forums_list;
 	}
 
 	/**
