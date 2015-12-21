@@ -127,6 +127,11 @@ class admin_controller
 		if (sizeof($errors))
 		{
 			$submit = false;
+
+			$this->template->assign_vars(array(
+				'S_ERROR'	=> true,
+				'ERROR_MSG'	=> implode('<br />', $errors),
+			));
 		}
 
 		if ($submit)
@@ -158,11 +163,6 @@ class admin_controller
 			$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'ACP_PHPBB_IDEAS_SETTINGS_LOG');
 			trigger_error($this->language->lang('ACP_IDEAS_SETTINGS_UPDATED') . adm_back_link($this->u_action));
 		}
-
-		$this->template->assign_vars(array(
-			'S_ERROR'	=> (bool) sizeof($errors),
-			'ERROR_MSG'	=> (sizeof($errors)) ? implode('<br />', $errors) : '',
-		));
 	}
 
 	/**
