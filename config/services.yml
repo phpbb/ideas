@@ -17,6 +17,19 @@ services:
         tags:
             - { name: event.listener }
 
+    phpbb.ideas.admin.controller:
+        class: phpbb\ideas\controller\admin_controller
+        arguments:
+            - @config
+            - @dbal.conn
+            - @language
+            - @log
+            - @request
+            - @template
+            - @user
+            - %core.root_path%
+            - %core.php_ext%
+
     phpbb.ideas.controller.base:
         abstract: true
         arguments:
