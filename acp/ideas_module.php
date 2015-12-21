@@ -44,13 +44,23 @@ class ideas_module
 		// Make the $u_action url available in the admin controller
 		$admin_controller->set_page_url($this->u_action);
 
-		// Display/set ACP configuration settings
-		$admin_controller->display_options();
+		// Create a form key for preventing CSRF attacks
+		add_form_key('acp_phpbb_ideas_settings');
+
+		// Apply Ideas configuration settings
+		if ($request->is_set_post('submit'))
+		{
+			$admin_controller->set_config_options();
+		}
 
 		// Set Ideas forum  options and registered usergroup forum permissions
 		if ($request->is_set_post('ideas_forum_setup'))
 		{
 			$admin_controller->set_ideas_forum_options();
 		}
+
+		// Display/set ACP configuration settings
+		$admin_controller->display_options();
+
 	}
 }

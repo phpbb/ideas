@@ -86,12 +86,6 @@ class admin_controller
 	 */
 	public function display_options()
 	{
-		// Create a form key for preventing CSRF attacks
-		add_form_key('acp_phpbb_ideas_settings');
-
-		$this->set_config_options();
-
-		// Output relevant page
 		$this->template->assign_vars(array(
 			'IDEAS_POSTER'		=> $this->get_ideas_topics_poster_username(),
 			'IDEAS_BASE_URL'	=> ($this->config['ideas_base_url']) ?: '',
@@ -142,70 +136,63 @@ class admin_controller
 	 * Set configuration options
 	 *
 	 * @return null
-	 * @access protected
+	 * @access public
 	 */
-	protected function set_config_options()
+	public function set_config_options()
 	{
 		$errors = array();
-		$submit = $this->request->is_set_post('submit');
 
-		$this->new_config = $this->config;
-		$this->cfg_array = ($this->request->is_set('config')) ? $this->request->variable('config', array('' => ''), true) : $this->new_config;
+		// This method is called on submit, so set flag to true initially
+		$submit = true;
 
-		if ($submit)
+		$this->cfg_array = ($this->request->is_set('config')) ? $this->request->variable('config', array('' => ''), true) : $this->config;
+
+		// Check the form for validity
+		if (!check_form_key('acp_phpbb_ideas_settings'))
 		{
-			// Check the form for validity
-			if (!check_form_key('acp_phpbb_ideas_settings'))
-			{
-				$errors[] = $this->language->lang('FORM_INVALID');
-			}
+			$errors[] = $this->language->lang('FORM_INVALID');
+		}
 
-			// Check if selected user exists
-			$user_id = $this->get_ideas_topics_poster_id();
-			if (!$user_id)
-			{
-				$errors[] = $this->language->lang('NO_USER');
-			}
-			else
-			{
-				// If selected user does exist, reassign the config value to its ID
-				$this->cfg_array['ideas_poster_id'] = $user_id;
-			}
+		// Check if selected user exists
+		$user_id = $this->get_ideas_topics_poster_id();
+		if (!$user_id)
+		{
+			$errors[] = $this->language->lang('NO_USER');
 		}
 
 		// Don't save settings if errors have occured
 		if (sizeof($errors))
 		{
 			$submit = false;
-			$this->cfg_array = $this->new_config;
-		}
-
-		// Configuration options to list through
-		$display_vars = array(
-			'ideas_forum_id',
-			'ideas_poster_id',
-			'ideas_base_url',
-			'ideas_forum_setup',
-		);
-
-		// We go through the display_vars to make sure no one is trying to set variables he/she is not allowed to
-		foreach ($display_vars as $config_name)
-		{
-			if (!isset($this->cfg_array[$config_name]))
-			{
-				continue;
-			}
-
-			$this->new_config[$config_name] = $config_value = $this->cfg_array[$config_name];
-
-			if ($submit)
-			{
-				$this->config->set($config_name, $config_value);
-			}
+			$this->cfg_array = $this->config;
 		}
 
 		if ($submit)
 		{
+			// If selected user does exist, reassign the config value to its ID
+			$this->cfg_array['ideas_poster_id'] = $user_id;
+
+			// Configuration options to list through
+			$display_vars = array(
+				'ideas_forum_id',
+				'ideas_poster_id',
+				'ideas_base_url',
+				'ideas_forum_setup',
+			);
+
+			// We go through the display_vars to make sure no one is trying to set variables he/she is not allowed to
+			foreach ($display_vars as $config_name)
+			{
+				if (!isset($this->cfg_array[$config_name]))
+				{
+					continue;
+				}
+
+				if ($submit)
+				{
+					$this->config->set($config_name, $this->cfg_array[$config_name]);
+				}
+			}
 			$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'ACP_PHPBB_IDEAS_SETTINGS_LOG');
 			trigger_error($this->language->lang('ACP_IDEAS_SETTINGS_UPDATED') . adm_back_link($this->u_action));
 		}
