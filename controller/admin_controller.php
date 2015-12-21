@@ -116,12 +116,6 @@ class admin_controller
 			$errors[] = $this->language->lang('FORM_INVALID');
 		}
 
-		// Check if Ideas forum is set
-		if (empty($this->cfg_array['ideas_forum_id']))
-		{
-			$errors[] = $this->language->lang('ACP_IDEAS_NO_FORUM');
-		}
-
 		// Check if selected user exists
 		$user_id = $this->get_ideas_topics_poster_id();
 		if (!$user_id)
@@ -129,7 +123,7 @@ class admin_controller
 			$errors[] = $this->language->lang('NO_USER');
 		}
 
-		// Don't save settings if errors have occured
+		// Don't save settings if errors have occurred
 		if (sizeof($errors))
 		{
 			$submit = false;
