@@ -60,8 +60,8 @@
 			<label>
 				{{ lang('SHOW_W_STATUS') }}{{ lang('COLON') }} <select name="status" id="st">
 					<option value="-1">{{ lang('ALL_IDEAS') }}</option>
-					{% for status in STATUS_ARY %}
-						<option value="{{ status.status_id }}"{% if status.status_id == STATUS %} selected="selected"{% endif %}>{{ lang(status.status_name) }}</option>
+					{% for status, value in STATUS_ARY %}
+						<option value="{{ value }}"{% if value == STATUS %} selected="selected"{% endif %}>{{ lang(status) }}</option>
 					{% endfor %}
 				</select>
 			</label>
