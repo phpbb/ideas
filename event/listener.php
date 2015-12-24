@@ -159,13 +159,7 @@ class listener implements EventSubscriberInterface
 
 		if ($mod)
 		{
-			foreach (ideas::$statuses as $status_name => $status_id)
-			{
-				$this->template->assign_block_vars('statuses', array(
-					'ID'	=> $status_id,
-					'NAME'	=> $this->language->lang($status_name),
-				));
-			}
+			$this->template->assign_var('STATUS_ARY', ideas::$statuses);
 		}
 
 		$points = $idea['idea_votes_up'] - $idea['idea_votes_down'];
