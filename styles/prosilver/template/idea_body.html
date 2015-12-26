@@ -27,7 +27,7 @@
 								<i class="fa fa-fw fa-thumbs-up"></i>
 								{% for vote_up in votes_up %}
 									{{ vote_up.USER }}{% if not vote_up.S_LAST_ROW %}, {% endif %}
-									{% set S_VOTED = vote_up.S_VOTED %}
+									{% if vote_up.S_VOTED %}{% set S_VOTED = true %}{% endif %}
 								{% endfor %}
 							</li>
 						{% endif %}
@@ -36,7 +36,7 @@
 								<i class="fa fa-fw fa-thumbs-down"></i>
 								{% for vote_down in votes_down %}
 									{{ vote_down.USER }}{% if not vote_down.S_LAST_ROW %}, {% endif %}
-									{% set S_VOTED = vote_down.S_VOTED %}
+									{% if vote_down.S_VOTED %}{% set S_VOTED = true %}{% endif %}
 								{% endfor %}
 							</li>
 						{% endif %}
