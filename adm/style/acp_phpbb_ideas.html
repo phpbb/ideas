@@ -44,7 +44,7 @@
 		<dl>
 			<dt><label for="ideas_forum_setup">{{ lang('ACP_IDEAS_FORUM_SETUP') ~ lang('COLON') }}</label><br /><span>{{ lang('ACP_IDEAS_FORUM_SETUP_EXPLAIN') }}</span></dt>
 			<dd>
-				<input class="button2" type="submit" id="ideas_forum_setup" name="ideas_forum_setup" value="{{ lang('RUN') }}" {% if not S_IDEAS_FORUM_ID %}disabled{% endif %} />
+				<input class="button2" type="submit" id="ideas_forum_setup" name="ideas_forum_setup" value="{{ lang('RUN') }}" {{ not S_IDEAS_FORUM_ID ? 'disabled' }} />
 			</dd>
 		</dl>
 	</fieldset>

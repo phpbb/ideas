@@ -14,8 +14,8 @@
 			<dt style="width: 15%">{{ lang('RATING') ~ lang('COLON') }}</dt>
 			<dd>
 				<div class="rating">
-					<a {% if S_CAN_VOTE %}href="{{ U_IDEA_VOTE }}"{% endif %} class="minivoteup {% if S_CAN_VOTE %}voteup{% else %}dead{% endif %}" title="{{ lang('VOTE_UP') }}" data-l-err="{{ lang('ERROR') }}" data-l-msg="{{ lang('VOTE_ERROR') ~ lang('COLON') }}"><span>{{ IDEA_VOTES_UP }}</span></a> &nbsp;
-					<a {% if S_CAN_VOTE %}href="{{ U_IDEA_VOTE }}"{% endif %} class="minivotedown {% if S_CAN_VOTE %}votedown{% else %}dead{% endif %}" title="{{ lang('VOTE_DOWN') }}" data-l-err="{{ lang('ERROR') }}" data-l-msg="{{ lang('VOTE_ERROR') ~ lang('COLON') }}"><span>{{ IDEA_VOTES_DOWN }}</span></a>
+					<a {% if S_CAN_VOTE %}href="{{ U_IDEA_VOTE }}"{% endif %} class="minivoteup {{ S_CAN_VOTE ? 'voteup' : 'dead' }}" title="{{ lang('VOTE_UP') }}" data-l-err="{{ lang('ERROR') }}" data-l-msg="{{ lang('VOTE_ERROR') ~ lang('COLON') }}"><span>{{ IDEA_VOTES_UP }}</span></a> &nbsp;
+					<a {% if S_CAN_VOTE %}href="{{ U_IDEA_VOTE }}"{% endif %} class="minivotedown {{ S_CAN_VOTE ? 'votedown' : 'dead' }}" title="{{ lang('VOTE_DOWN') }}" data-l-err="{{ lang('ERROR') }}" data-l-msg="{{ lang('VOTE_ERROR') ~ lang('COLON') }}"><span>{{ IDEA_VOTES_DOWN }}</span></a>
 					<a href="#" class="votes bg3" data-l-msg="{{ lang('CLICK_TO_VIEW') }}">{{ lang('TOTAL_POINTS', IDEA_POINTS) }} {{ lang('CLICK_TO_VIEW') }}</a> <span class="successvoted" data-l-err="{{ lang('VOTE_FAIL') }}"></span>
 				</div>
 				<div class="clear"></div>

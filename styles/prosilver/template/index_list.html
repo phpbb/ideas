@@ -1,8 +1,8 @@
 <ul class="topiclist forums">
 	{% for idea in ideas %}
 		<li class="row">
-			<dl class="row-item topic_{% if not idea.READ %}un{% endif %}read">
-				<dt title="{% if idea.READ %}{{ lang('NO_UNREAD_POSTS') }}{% else %}{{ lang('UNREAD_POSTS') }}{% endif %}">
+			<dl class="row-item topic_{{ not idea.READ ? 'un' }}read">
+				<dt title="{{ lang(idea.READ ? 'NO_UNREAD_POSTS' : 'UNREAD_POSTS') }}">
 				<div class="list-inner">
 					<a href="{{ idea.LINK }}" class="forumtitle">{{ idea.TITLE }}</a><br />
 					{{ lang('POST_BY_AUTHOR') }} <strong>{{ idea.AUTHOR }}</strong> &raquo; {{ idea.DATE }}
