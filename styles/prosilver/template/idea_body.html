@@ -9,13 +9,13 @@
 <div class="panel">
 	<div class="inner">
 		<dl class="left-box details" style="width: 95%">
-			<dt style="width: 15%">{{ lang('AUTHOR') }}{{ lang('COLON') }}</dt> <dd><strong>{{ IDEA_AUTHOR }}</strong></dd>
-			<dt style="width: 15%">{{ lang('POSTED') }}{{ lang('COLON') }}</dt> <dd>{{ IDEA_DATE }}</dd>
-			<dt style="width: 15%">{{ lang('RATING') }}{{ lang('COLON') }}</dt>
+			<dt style="width: 15%">{{ lang('AUTHOR') ~ lang('COLON') }}</dt> <dd><strong>{{ IDEA_AUTHOR }}</strong></dd>
+			<dt style="width: 15%">{{ lang('POSTED') ~ lang('COLON') }}</dt> <dd>{{ IDEA_DATE }}</dd>
+			<dt style="width: 15%">{{ lang('RATING') ~ lang('COLON') }}</dt>
 			<dd>
 				<div class="rating">
-					<a {% if S_CAN_VOTE %}href="{{ U_IDEA_VOTE }}"{% endif %} class="minivoteup {% if S_CAN_VOTE %}voteup{% else %}dead{% endif %}" title="{{ lang('VOTE_UP') }}" data-l-err="{{ lang('ERROR') }}" data-l-msg="{{ lang('VOTE_ERROR') }}{{ lang('COLON') }}"><span>{{ IDEA_VOTES_UP }}</span></a> &nbsp;
-					<a {% if S_CAN_VOTE %}href="{{ U_IDEA_VOTE }}"{% endif %} class="minivotedown {% if S_CAN_VOTE %}votedown{% else %}dead{% endif %}" title="{{ lang('VOTE_DOWN') }}" data-l-err="{{ lang('ERROR') }}" data-l-msg="{{ lang('VOTE_ERROR') }}{{ lang('COLON') }}"><span>{{ IDEA_VOTES_DOWN }}</span></a>
+					<a {% if S_CAN_VOTE %}href="{{ U_IDEA_VOTE }}"{% endif %} class="minivoteup {% if S_CAN_VOTE %}voteup{% else %}dead{% endif %}" title="{{ lang('VOTE_UP') }}" data-l-err="{{ lang('ERROR') }}" data-l-msg="{{ lang('VOTE_ERROR') ~ lang('COLON') }}"><span>{{ IDEA_VOTES_UP }}</span></a> &nbsp;
+					<a {% if S_CAN_VOTE %}href="{{ U_IDEA_VOTE }}"{% endif %} class="minivotedown {% if S_CAN_VOTE %}votedown{% else %}dead{% endif %}" title="{{ lang('VOTE_DOWN') }}" data-l-err="{{ lang('ERROR') }}" data-l-msg="{{ lang('VOTE_ERROR') ~ lang('COLON') }}"><span>{{ IDEA_VOTES_DOWN }}</span></a>
 					<a href="#" class="votes bg3" data-l-msg="{{ lang('CLICK_TO_VIEW') }}">{{ lang('TOTAL_POINTS', IDEA_POINTS) }} {{ lang('CLICK_TO_VIEW') }}</a> <span class="successvoted" data-l-err="{{ lang('VOTE_FAIL') }}"></span>
 				</div>
 				<div class="clear"></div>
@@ -42,13 +42,13 @@
 						{% endif %}
 						{% if S_VOTED and S_CAN_VOTE %}
 							<li>
-								<i class="fa fa-fw fa-times"></i> <a href="{{ U_REMOVE_VOTE }}" class="removevote" data-l-err="{{ lang('ERROR') }}" data-l-msg="{{ lang('VOTE_ERROR') }}{{ lang('COLON') }}">{{ lang('REMOVE_VOTE') }}</a>
+								<i class="fa fa-fw fa-times"></i> <a href="{{ U_REMOVE_VOTE }}" class="removevote" data-l-err="{{ lang('ERROR') }}" data-l-msg="{{ lang('VOTE_ERROR') ~ lang('COLON') }}">{{ lang('REMOVE_VOTE') }}</a>
 							</li>
 						{% endif %}
 					</ul>
 				</div>
 			</dd>
-			<dt style="width: 15%">{{ lang('STATUS') }}{{ lang('COLON') }}</dt>
+			<dt style="width: 15%">{{ lang('STATUS') ~ lang('COLON') }}</dt>
 			<dd>
 				<a href="{{ IDEA_STATUS_LINK }}">{{ IDEA_STATUS }}</a>
 				{% if STATUS_ARY %}&nbsp; <select id="status" data-url="{{ U_CHANGE_STATUS }}">
@@ -57,7 +57,7 @@
 				</select>{% endif %}
 			</dd>
 			{% if IDEA_RFC or S_CAN_EDIT %}
-				<dt style="width: 15%">{{ lang('RFC') }}{{ lang('COLON') }}</dt>
+				<dt style="width: 15%">{{ lang('RFC') ~ lang('COLON') }}</dt>
 				<dd>
 					<a id="rfclink" class="ideamodbtn" href="{{ IDEA_RFC }}"{% if not IDEA_RFC %} style="display:none"{% endif %}>{{ IDEA_RFC }}</a>
 					{% if S_CAN_EDIT %}
@@ -67,7 +67,7 @@
 				</dd>
 			{% endif %}
 			{% if IDEA_TICKET or S_CAN_EDIT %}
-				<dt style="width: 15%">{{ lang('TICKET') }}{{ lang('COLON') }}</dt>
+				<dt style="width: 15%">{{ lang('TICKET') ~ lang('COLON') }}</dt>
 				<dd>
 					<a id="ticketlink" class="ideamodbtn" {% if IDEA_TICKET %}href="https://tracker.phpbb.com/browse/PHPBB3-{{ IDEA_TICKET }}">PHPBB3-{{ IDEA_TICKET }}{% else %}style="display:none">{% endif %}</a>
 					{% if S_CAN_EDIT %}
@@ -77,7 +77,7 @@
 				</dd>
 			{% endif %}
 			{% if IDEA_DUPLICATE or S_IS_MOD %}
-				<dt class="duplicatetoggle" style="width: 15%; {% if IDEA_STATUS != lang('DUPLICATE') %}display:none{% endif %}">{{ lang('DUPLICATE') }}{{ lang('COLON') }}</dt>
+				<dt class="duplicatetoggle" style="width: 15%; {% if IDEA_STATUS != lang('DUPLICATE') %}display:none{% endif %}">{{ lang('DUPLICATE') ~ lang('COLON') }}</dt>
 				<dd class="duplicatetoggle" {% if IDEA_STATUS != lang('DUPLICATE') %}style="display:none"{% endif %}>
 					<a id="duplicatelink" class="ideamodbtn" data-link="{{ U_IDEA_DUPLICATE }}" data-l-msg="{{ lang('VIEW_DUPLICATE') }}" {% if IDEA_DUPLICATE %}href="{{ U_IDEA_DUPLICATE }}">{{ lang('VIEW_DUPLICATE') }}{% else %}style="display:none">{% endif %}</a>
 					{% if S_IS_MOD %}
@@ -87,7 +87,7 @@
 				</dd>
 			{% endif %}
 			{% if S_IS_MOD %}
-				<dt style="width: 15%">{{ lang('MOD_IDEA') }}{{ lang('COLON') }}</dt>
+				<dt style="width: 15%">{{ lang('MOD_IDEA') ~ lang('COLON') }}</dt>
 				<dd>
 					<a href="{{ U_DELETE_IDEA }}" data-ajax="true" data-refresh="true"><i class="fa fa-fw fa-trash-o"></i>{{ lang('DELETE') }}</a>&nbsp;
 					<a href="{{ U_EDIT_TITLE }}" id="titleedit"><i class="fa fa-fw fa-pencil"></i>{{ lang('TITLE_EDIT') }}</a>

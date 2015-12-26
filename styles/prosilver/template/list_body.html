@@ -58,7 +58,7 @@
 	<fieldset class="display-options">
 		{% if not S_IS_BOT %}
 			<label>
-				{{ lang('SHOW_W_STATUS') }}{{ lang('COLON') }} <select name="status" id="st">
+				{{ lang('SHOW_W_STATUS') ~ lang('COLON') }} <select name="status" id="st">
 					<option value="-1">{{ lang('ALL_IDEAS') }}</option>
 					{% for status, id in STATUS_ARY %}
 						<option value="{{ id }}"{% if id == STATUS %} selected="selected"{% endif %}>{{ lang(status) }}</option>

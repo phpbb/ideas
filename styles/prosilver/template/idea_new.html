@@ -15,7 +15,7 @@
 			{% if ERROR %}<p class="error">{{ ERROR }}</p>{% endif %}
 
 			<dl style="clear: left;">
-				<dt><label for="title">{{ lang('SUBJECT') }}{{ lang('COLON') }}</label></dt>
+				<dt><label for="title">{{ lang('SUBJECT') ~ lang('COLON') }}</label></dt>
 				<dd><input type="text" name="title" id="title" size="45" tabindex="2" value="{{ TITLE }}" class="inputbox autowidth" /></dd>
 			</dl>
 
