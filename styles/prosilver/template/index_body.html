@@ -1,146 +1,71 @@
-<!-- INCLUDECSS @phpbb_ideas/ideas.css -->
+{% INCLUDECSS '@phpbb_ideas/ideas.css' %}
 
-<!-- INCLUDE overall_header.html -->
+{% include 'overall_header.html' %}
 
-<h2>{L_IDEAS_TITLE}</h2>
+<h2>{{ lang('IDEAS_TITLE') }}</h2>
 
-<!-- IF S_USER_LOGGED_IN -->
+{% if S_USER_LOGGED_IN %}
 	<div class="action-bar bar-top">
-		<a href="{U_POST_ACTION}" class="button" title="{L_NEW_IDEA}">
-			<span>{L_NEW_IDEA}</span><i class="icon fa-lightbulb-o fa-fw" aria-hidden="true"></i>
+		<a href="{{ U_POST_ACTION }}" class="button" title="{{ lang('NEW_IDEA') }}">
+			<span>{{ lang('NEW_IDEA') }}</span><i class="icon fa-lightbulb-o fa-fw" aria-hidden="true"></i>
 		</a>
 	</div>
-<!-- ENDIF -->
+{% endif %}
 
 <div class="forumbg">
 	<div class="inner">
 		<ul class="topiclist">
 			<li class="header">
 				<dl class="row-item">
-					<dt><div class="list-inner">{L_TOP_IDEAS}</div></dt>
-					<dd class="posts">{L_RATING}</dd>
+					<dt><div class="list-inner">{{ lang('TOP_IDEAS') }}</div></dt>
+					<dd class="posts">{{ lang('RATING') }}</dd>
 				</dl>
 			</li>
 		</ul>
-		<ul class="topiclist forums">
-			<!-- BEGIN top_ideas -->
-			<li class="row">
-				<dl class="row-item topic_<!-- IF not top_ideas.READ -->un<!-- ENDIF -->read">
-					<dt title="<!-- IF top_ideas.READ -->{L_NO_UNREAD_POSTS}<!-- ELSE -->{L_UNREAD_POSTS}<!-- ENDIF -->">
-					<div class="list-inner">
-						<a href="{top_ideas.LINK}" class="forumtitle">{top_ideas.TITLE}</a><br />
-						{L_POST_BY_AUTHOR} <strong>{top_ideas.AUTHOR}</strong> &raquo; {top_ideas.DATE}
-					</div>
-					</dt>
-
-					<dd class="topics">
-						<div class="minivoteup"><span>{top_ideas.VOTES_UP}</span></div>
-						<div class="minivotedown"><span>{top_ideas.VOTES_DOWN}</span></div>
-					</dd>
-				</dl>
-			</li>
-			<!-- BEGINELSE -->
-			<li>
-				<div class="panel">
-					<div class="inner">
-						<strong>{L_NO_IDEAS_DISPLAY}</strong>
-					</div>
-				</div>
-			</li>
-			<!-- END top_ideas -->
-		</ul>
+		{% set ideas = top_ideas %}
+		{% include 'index_list.html' %}
 	</div>
 </div>
-<!-- IF .top_ideas -->
-	<a class="button view-all" href="{U_VIEW_TOP}" title="{L_VIEW_TOP}">{L_VIEW_ALL}&hellip;</a>
-<!-- ENDIF -->
+{% if top_ideas %}
+	<a class="button view-all" href="{{ U_VIEW_TOP }}" title="{{ lang('VIEW_TOP') }}">{{ lang('VIEW_ALL') }}&hellip;</a>
+{% endif %}
 
 <div class="forumbg" style="margin-top: 10px">
 	<div class="inner">
 		<ul class="topiclist">
 			<li class="header">
 				<dl class="row-item">
-					<dt><div class="list-inner">{L_LATEST_IDEAS}</div></dt>
-					<dd class="posts">{L_RATING}</dd>
+					<dt><div class="list-inner">{{ lang('LATEST_IDEAS') }}</div></dt>
+					<dd class="posts">{{ lang('RATING') }}</dd>
 				</dl>
 			</li>
 		</ul>
-		<ul class="topiclist forums">
-			<!-- BEGIN latest_ideas -->
-			<li class="row">
-				<dl class="row-item topic_<!-- IF not latest_ideas.READ -->un<!-- ENDIF -->read">
-					<dt title="<!-- IF latest_ideas.READ -->{L_NO_UNREAD_POSTS}<!-- ELSE -->{L_UNREAD_POSTS}<!-- ENDIF -->">
-					<div class="list-inner">
-						<a href="{latest_ideas.LINK}" class="forumtitle">{latest_ideas.TITLE}</a><br />
-						{L_POST_BY_AUTHOR} <strong>{latest_ideas.AUTHOR}</strong> &raquo; {latest_ideas.DATE}
-					</div>
-					</dt>
-
-					<dd class="topics">
-						<div class="minivoteup"><span>{latest_ideas.VOTES_UP}</span></div>
-						<div class="minivotedown"><span>{latest_ideas.VOTES_DOWN}</span></div>
-					</dd>
-				</dl>
-			</li>
-			<!-- BEGINELSE -->
-			<li>
-				<div class="panel">
-					<div class="inner">
-						<strong>{L_NO_IDEAS_DISPLAY}</strong>
-					</div>
-				</div>
-			</li>
-			<!-- END latest_ideas -->
-		</ul>
+		{% set ideas = latest_ideas %}
+		{% include 'index_list.html' %}
 	</div>
 </div>
-<!-- IF .latest_ideas -->
-	<a class="button view-all" href="{U_VIEW_LATEST}" title="{L_VIEW_LATEST}">{L_VIEW_ALL}&hellip;</a>
-<!-- ENDIF -->
+{% if latest_ideas %}
+	<a class="button view-all" href="{{ U_VIEW_LATEST }}" title="{{ lang('VIEW_LATEST') }}">{{ lang('VIEW_ALL') }}&hellip;</a>
+{% endif %}
 
 <div class="forumbg" style="margin-top: 10px">
 	<div class="inner">
 		<ul class="topiclist">
 			<li class="header">
 				<dl class="row-item">
-					<dt><div class="list-inner">{L_IMPLEMENTED_IDEAS}</div></dt>
-					<dd class="posts">{L_RATING}</dd>
+					<dt><div class="list-inner">{{ lang('IMPLEMENTED_IDEAS') }}</div></dt>
+					<dd class="posts">{{ lang('RATING') }}</dd>
 				</dl>
 			</li>
 		</ul>
-		<ul class="topiclist forums">
-			<!-- BEGIN implemented_ideas -->
-			<li class="row">
-				<dl class="row-item topic_<!-- IF not implemented_ideas.READ -->un<!-- ENDIF -->read">
-					<dt title="<!-- IF implemented_ideas.READ -->{L_NO_UNREAD_POSTS}<!-- ELSE -->{L_UNREAD_POSTS}<!-- ENDIF -->">
-					<div class="list-inner">
-						<a href="{implemented_ideas.LINK}" class="forumtitle">{implemented_ideas.TITLE}</a><br />
-						{L_POST_BY_AUTHOR} <strong>{implemented_ideas.AUTHOR}</strong> &raquo; {implemented_ideas.DATE}
-					</div>
-					</dt>
-
-					<dd class="topics">
-						<div class="minivoteup"><span>{implemented_ideas.VOTES_UP}</span></div>
-						<div class="minivotedown"><span>{implemented_ideas.VOTES_DOWN}</span></div>
-					</dd>
-				</dl>
-			</li>
-			<!-- BEGINELSE -->
-			<li>
-				<div class="panel">
-					<div class="inner">
-						<strong>{L_NO_IDEAS_DISPLAY}</strong>
-					</div>
-				</div>
-			</li>
-			<!-- END implemented_ideas -->
-		</ul>
+		{% set ideas = implemented_ideas %}
+		{% include 'index_list.html' %}
 	</div>
 </div>
-<!-- IF .implemented_ideas -->
-	<a class="button view-all" href="{U_VIEW_IMPLEMENTED}" title="{L_VIEW_IMPLEMENTED}">{L_VIEW_ALL}&hellip;</a>
-<!-- ENDIF -->
+{% if implemented_ideas %}
+	<a class="button view-all" href="{{ U_VIEW_IMPLEMENTED }}" title="{{ lang('VIEW_IMPLEMENTED') }}">{{ lang('VIEW_ALL') }}&hellip;</a>
+{% endif %}
 
 <br />
 
-<!-- INCLUDE overall_footer.html -->
+{% include 'overall_footer.html' %}

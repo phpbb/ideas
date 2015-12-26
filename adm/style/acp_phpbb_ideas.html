@@ -1,53 +1,53 @@
-<!-- INCLUDE overall_header.html -->
+{% include 'overall_header.html' %}
 
 <a id="maincontent"></a>
 
-<h1>{L_ACP_PHPBB_IDEAS}</h1>
+<h1>{{ lang('ACP_PHPBB_IDEAS') }}</h1>
 
-<p>{L_ACP_PHPBB_IDEAS_EXPLAIN}</p>
+<p>{{ lang('ACP_PHPBB_IDEAS_EXPLAIN') }}</p>
 
-<!-- IF S_ERROR -->
+{% if S_ERROR %}
 	<div class="errorbox">
-		<h3>{L_WARNING}</h3>
-		<p>{ERROR_MSG}</p>
+		<h3>{{ lang('WARNING') }}</h3>
+		<p>{{ ERROR_MSG }}</p>
 	</div>
-<!-- ENDIF -->
+{% endif %}
 
-<form id="acp_phpbb_ideas_settings" method="post" action="{U_ACTION}">
+<form id="acp_phpbb_ideas_settings" method="post" action="{{ U_ACTION }}">
 	<fieldset>
-		<legend>{L_ACP_PHPBB_IDEAS_SETTINGS}</legend>
+		<legend>{{ lang('ACP_PHPBB_IDEAS_SETTINGS') }}</legend>
 		<dl>
-			<dt><label for="ideas_forum_id">{L_ACP_IDEAS_FORUM_ID}{L_COLON}</label><br /><span>{L_ACP_IDEAS_FORUM_ID_EXPLAIN}</span></dt>
-			<dd>{S_FORUM_SELECT_BOX}</dd>
+			<dt><label for="ideas_forum_id">{{ lang('ACP_IDEAS_FORUM_ID') ~ lang('COLON') }}</label><br /><span>{{ lang('ACP_IDEAS_FORUM_ID_EXPLAIN') }}</span></dt>
+			<dd>{{ S_FORUM_SELECT_BOX }}</dd>
 		</dl>
 		<dl>
-			<dt><label for="ideas_poster_id">{L_ACP_IDEAS_POSTER_ID}{L_COLON}</label><br /><span>{L_ACP_IDEAS_POSTER_ID_EXPLAIN}</span></dt>
-			<dd><input id="ideas_poster_id" type="text" size="45" maxlength="255" name="config[ideas_poster_id]" value="{IDEAS_POSTER}" /></dd>
-			<dd>[ <a href="{U_FIND_USERNAME}" onclick="find_username(this.href); return false;">{L_FIND_USERNAME}</a> ]</dd>
+			<dt><label for="ideas_poster_id">{{ lang('ACP_IDEAS_POSTER_ID') ~ lang('COLON') }}</label><br /><span>{{ lang('ACP_IDEAS_POSTER_ID_EXPLAIN') }}</span></dt>
+			<dd><input id="ideas_poster_id" type="text" size="45" maxlength="255" name="config[ideas_poster_id]" value="{{ IDEAS_POSTER }}" /></dd>
+			<dd>[ <a href="{{ U_FIND_USERNAME }}" onclick="find_username(this.href); return false;">{{ lang('FIND_USERNAME') }}</a> ]</dd>
 		</dl>
 		<dl>
-			<dt><label for="ideas_base_url">{L_ACP_IDEAS_BASE_URL}{L_COLON}</label><br /><span>{L_ACP_IDEAS_BASE_URL_EXPLAIN}</span></dt>
-			<dd><input id="ideas_base_url" type="text" size="45" maxlength="255" name="config[ideas_base_url]" value="{IDEAS_BASE_URL}" /></dd>
+			<dt><label for="ideas_base_url">{{ lang('ACP_IDEAS_BASE_URL') ~ lang('COLON') }}</label><br /><span>{{ lang('ACP_IDEAS_BASE_URL_EXPLAIN') }}</span></dt>
+			<dd><input id="ideas_base_url" type="text" size="45" maxlength="255" name="config[ideas_base_url]" value="{{ IDEAS_BASE_URL }}" /></dd>
 		</dl>
 
 		<fieldset class="submit-buttons">
-			<input class="button1" type="submit" id="submit" name="submit" value="{L_SUBMIT}" />&nbsp;
-			<input class="button2" type="reset" id="reset" name="reset" value="{L_RESET}" />
-			{S_FORM_TOKEN}
+			<input class="button1" type="submit" id="submit" name="submit" value="{{ lang('SUBMIT') }}" />&nbsp;
+			<input class="button2" type="reset" id="reset" name="reset" value="{{ lang('RESET') }}" />
+			{{ S_FORM_TOKEN }}
 		</fieldset>
 	</fieldset>
 </form>
 
-<form id="acp_phpbb_ideas_forum_setup" method="post" action="{U_ACTION}" data-ajax="true">
+<form id="acp_phpbb_ideas_forum_setup" method="post" action="{{ U_ACTION }}" data-ajax="true">
 	<fieldset>
-		<legend>{L_ACP_IDEAS_UTILITIES}</legend>
+		<legend>{{ lang('ACP_IDEAS_UTILITIES') }}</legend>
 		<dl>
-			<dt><label for="ideas_forum_setup">{L_ACP_IDEAS_FORUM_SETUP}{L_COLON}</label><br /><span>{L_ACP_IDEAS_FORUM_SETUP_EXPLAIN}</span></dt>
+			<dt><label for="ideas_forum_setup">{{ lang('ACP_IDEAS_FORUM_SETUP') ~ lang('COLON') }}</label><br /><span>{{ lang('ACP_IDEAS_FORUM_SETUP_EXPLAIN') }}</span></dt>
 			<dd>
-				<input class="button2" type="submit" id="ideas_forum_setup" name="ideas_forum_setup" value="{L_RUN}" <!-- IF not S_IDEAS_FORUM_ID -->disabled<!-- ENDIF --> />
+				<input class="button2" type="submit" id="ideas_forum_setup" name="ideas_forum_setup" value="{{ lang('RUN') }}" {{ not S_IDEAS_FORUM_ID ? 'disabled' }} />
 			</dd>
 		</dl>
 	</fieldset>
 </form>
 
-<!-- INCLUDE overall_footer.html -->
+{% include 'overall_footer.html' %}

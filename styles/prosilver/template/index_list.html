@@ -1,0 +1,27 @@
+<ul class="topiclist forums">
+	{% for idea in ideas %}
+		<li class="row">
+			<dl class="row-item topic_{{ not idea.READ ? 'un' }}read">
+				<dt title="{{ lang(idea.READ ? 'NO_UNREAD_POSTS' : 'UNREAD_POSTS') }}">
+				<div class="list-inner">
+					<a href="{{ idea.LINK }}" class="forumtitle">{{ idea.TITLE }}</a><br />
+					{{ lang('POST_BY_AUTHOR') }} <strong>{{ idea.AUTHOR }}</strong> &raquo; {{ idea.DATE }}
+				</div>
+				</dt>
+
+				<dd class="topics">
+					<div class="minivoteup"><span>{{ idea.VOTES_UP }}</span></div>
+					<div class="minivotedown"><span>{{ idea.VOTES_DOWN }}</span></div>
+				</dd>
+			</dl>
+		</li>
+	{% else %}
+		<li>
+			<div class="panel">
+				<div class="inner">
+					<strong>{{ lang('NO_IDEAS_DISPLAY') }}</strong>
+				</div>
+			</div>
+		</li>
+	{% endfor %}
+</ul>

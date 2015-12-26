@@ -1,92 +1,100 @@
-<!-- INCLUDECSS @phpbb_ideas/ideas.css -->
+{% INCLUDECSS '@phpbb_ideas/ideas.css' %}
 
-<!-- INCLUDE overall_header.html -->
+{% include 'overall_header.html' %}
 
-<h2>{STATUS_NAME}</h2>
+<h2>{{ STATUS_NAME }}</h2>
 
-<!-- IF S_USER_LOGGED_IN -->
+{% if S_USER_LOGGED_IN %}
 	<div class="action-bar bar-top">
-		<a href="{U_NEW_IDEA_ACTION}" class="button" title="{L_NEW_IDEA}">
-			<span>{L_NEW_IDEA}</span><i class="icon fa-lightbulb-o fa-fw" aria-hidden="true"></i>
+		<a href="{{ U_NEW_IDEA_ACTION }}" class="button" title="{{ lang('NEW_IDEA') }}">
+			<span>{{ lang('NEW_IDEA') }}</span><i class="icon fa-lightbulb-o fa-fw" aria-hidden="true"></i>
 		</a>
 	</div>
-<!-- ENDIF -->
+{% endif %}
 
-<!-- BEGIN ideas -->
-	<!-- IF ideas.S_FIRST_ROW  -->
+{% for idea in ideas %}
+	{% if idea.S_FIRST_ROW %}
 		<div class="forumbg">
 			<div class="inner">
 				<ul class="topiclist">
 					<li class="header">
 						<dl class="row-item">
-							<dt><div class="list-inner">{L_IDEAS}</div></dt>
-							<dd class="posts">{L_RATING}</dd>
+							<dt><div class="list-inner">{{ lang('IDEAS') }}</div></dt>
+							<dd class="posts">{{ lang('RATING') }}</dd>
 						</dl>
 					</li>
 				</ul>
 				<ul class="topiclist forums">
-	<!-- ENDIF -->
+	{% endif %}
 					<li class="row">
-						<dl class="row-item forum_<!-- IF not ideas.READ -->un<!-- ENDIF -->read">
+						<dl class="row-item forum_{{ not idea.READ ? 'un' }}read">
 							<dt title="Read posts">
 							<div class="list-inner">
-								<a href="{ideas.LINK}" class="forumtitle">{ideas.TITLE}</a><br />
-								by <strong>{ideas.AUTHOR}</strong> &raquo; {ideas.DATE}
+								<a href="{{ idea.LINK }}" class="forumtitle">{{ idea.TITLE }}</a><br />
+								by <strong>{{ idea.AUTHOR }}</strong> &raquo; {{ idea.DATE }}
 							</div>
 							</dt>
 
 							<dd class="topics">
-								<div class="minivoteup"><span>{ideas.VOTES_UP}</span></div>
-								<div class="minivotedown"><span>{ideas.VOTES_DOWN}</span></div>
+								<div class="minivoteup"><span>{{ idea.VOTES_UP }}</span></div>
+								<div class="minivotedown"><span>{{ idea.VOTES_DOWN }}</span></div>
 							</dd>
 						</dl>
 					</li>
-	<!-- IF ideas.S_LAST_ROW -->
+	{% if idea.S_LAST_ROW %}
 				</ul>
 			</div>
 		</div>
-	<!-- ENDIF -->
-<!-- BEGINELSE -->
+	{% endif %}
+{% else %}
 	<div class="panel">
 		<div class="inner">
-			<strong>{L_NO_IDEAS_DISPLAY}</strong>
+			<strong>{{ lang('NO_IDEAS_DISPLAY') }}</strong>
 		</div>
 	</div>
-<!-- END ideas -->
+{% endfor %}
 
-<form method="post" action="{U_POST_ACTION}">
+<form method="post" action="{{ U_POST_ACTION }}">
 	<fieldset class="display-options">
-		<!-- IF not S_IS_BOT -->
-		<label>{L_SHOW_W_STATUS}{L_COLON} <select name="status" id="st">
-		<option value="-1">{L_ALL_IDEAS}</option>
-		<!-- BEGIN status --><option value="{status.VALUE}"<!-- IF status.SELECTED --> selected="selected"<!-- ENDIF -->>{status.TEXT}</option><!-- END status -->
-		</select></label>
-		<label>
-			{L_SORT_BY} <select name="sort" id="sk"><!-- BEGIN sortby --><option value="{sortby.VALUE}"<!-- IF sortby.SELECTED --> selected="selected"<!-- ENDIF -->>{sortby.TEXT}</option><!-- END sortby --></select>
-		</label>
-		<label>
-			<select name="sd" id="sd">
-				<option value="a"<!-- IF SORT_DIRECTION === 'ASC' --> selected="selected"<!-- ENDIF -->>{L_ASCENDING}</option>
-				<option value="d"<!-- IF SORT_DIRECTION === 'DESC' --> selected="selected"<!-- ENDIF -->>{L_DESCENDING}</option>
-			</select>
-		</label>
-		<input type="submit" value="{L_GO}" class="button2" />
-		<!-- ENDIF -->
+		{% if not S_IS_BOT %}
+			<label>
+				{{ lang('SHOW_W_STATUS') ~ lang('COLON') }} <select name="status" id="st">
+					<option value="-1">{{ lang('ALL_IDEAS') }}</option>
+					{% for status, id in STATUS_ARY %}
+						<option value="{{ id }}"{% if id == STATUS %} selected="selected"{% endif %}>{{ lang(status) }}</option>
+					{% endfor %}
+				</select>
+			</label>
+			<label>
+				{{ lang('SORT_BY') }} <select name="sort" id="sk">
+					{% for sortby in SORT_ARY %}
+						<option value="{{ sortby }}"{% if sortby == SORT %} selected="selected"{% endif %}>{{ lang(sortby|upper) }}</option>
+					{% endfor %}
+				</select>
+			</label>
+			<label>
+				<select name="sd" id="sd">
+					<option value="a"{% if SORT_DIRECTION == 'ASC' %} selected="selected"{% endif %}>{{ lang('ASCENDING') }}</option>
+					<option value="d"{% if SORT_DIRECTION == 'DESC' %} selected="selected"{% endif %}>{{ lang('DESCENDING') }}</option>
+				</select>
+			</label>
+			<input type="submit" value="{{ lang('GO') }}" class="button2" />
+		{% endif %}
 	</fieldset>
 </form>
 <hr />
 
 <div class="action-bar bar-bottom">
 	<div class="pagination">
-		{TOTAL_IDEAS}
-		<!-- IF .pagination -->
-			<!-- INCLUDE pagination.html -->
-		<!-- ELSE -->
-			&bull; {PAGE_NUMBER}
-		<!-- ENDIF -->
+		{{ TOTAL_IDEAS }}
+		{% if pagination %}
+			{% include 'pagination.html' %}
+		{% else %}
+			&bull; {{ PAGE_NUMBER }}
+		{% endif %}
 	</div>
 </div>
 
 <br />
 
-<!-- INCLUDE overall_footer.html -->
+{% include 'overall_footer.html' %}

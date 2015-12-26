@@ -1,97 +1,100 @@
-<!-- INCLUDEJS @phpbb_ideas/ideas.js -->
+{% INCLUDEJS '@phpbb_ideas/ideas.js' %}
 <noscript>
 	<div class="rules">
 		<div class="inner">
-			<strong>{L_JS_DISABLED}:</strong><br />{L_ENABLE_JS}
+			<strong>{{ lang('JS_DISABLED') }}:</strong><br />{{ lang('ENABLE_JS') }}
 		</div>
 	</div>
 </noscript>
 <div class="panel">
 	<div class="inner">
 		<dl class="left-box details" style="width: 95%">
-			<dt style="width: 15%">{L_AUTHOR}{L_COLON}</dt> <dd><strong>{IDEA_AUTHOR}</strong></dd>
-			<dt style="width: 15%">{L_POSTED}{L_COLON}</dt> <dd>{IDEA_DATE}</dd>
-			<dt style="width: 15%">{L_RATING}{L_COLON}</dt>
+			<dt style="width: 15%">{{ lang('AUTHOR') ~ lang('COLON') }}</dt> <dd><strong>{{ IDEA_AUTHOR }}</strong></dd>
+			<dt style="width: 15%">{{ lang('POSTED') ~ lang('COLON') }}</dt> <dd>{{ IDEA_DATE }}</dd>
+			<dt style="width: 15%">{{ lang('RATING') ~ lang('COLON') }}</dt>
 			<dd>
 				<div class="rating">
-					<a <!-- IF S_CAN_VOTE-->href="{U_IDEA_VOTE}"<!-- ENDIF --> class="minivoteup <!-- IF S_CAN_VOTE-->voteup<!-- ELSE -->dead<!-- ENDIF -->" title="{L_VOTE_UP}" data-l-err="{L_ERROR}" data-l-msg="{L_VOTE_ERROR}{L_COLON}"><span>{IDEA_VOTES_UP}</span></a> &nbsp;
-					<a <!-- IF S_CAN_VOTE-->href="{U_IDEA_VOTE}"<!-- ENDIF --> class="minivotedown <!-- IF S_CAN_VOTE-->votedown<!-- ELSE -->dead<!-- ENDIF -->" title="{L_VOTE_DOWN}" data-l-err="{L_ERROR}" data-l-msg="{L_VOTE_ERROR}{L_COLON}"><span>{IDEA_VOTES_DOWN}</span></a>
-					<a href="#" class="votes bg3" data-l-msg="{L_CLICK_TO_VIEW}">{IDEA_POINTS} {L_CLICK_TO_VIEW}</a> <span class="successvoted" data-l-err="{L_VOTE_FAIL}"></span>
+					<a {% if S_CAN_VOTE %}href="{{ U_IDEA_VOTE }}"{% endif %} class="minivoteup {{ S_CAN_VOTE ? 'voteup' : 'dead' }}" title="{{ lang('VOTE_UP') }}" data-l-err="{{ lang('ERROR') }}" data-l-msg="{{ lang('VOTE_ERROR') ~ lang('COLON') }}"><span>{{ IDEA_VOTES_UP }}</span></a> &nbsp;
+					<a {% if S_CAN_VOTE %}href="{{ U_IDEA_VOTE }}"{% endif %} class="minivotedown {{ S_CAN_VOTE ? 'votedown' : 'dead' }}" title="{{ lang('VOTE_DOWN') }}" data-l-err="{{ lang('ERROR') }}" data-l-msg="{{ lang('VOTE_ERROR') ~ lang('COLON') }}"><span>{{ IDEA_VOTES_DOWN }}</span></a>
+					<a href="#" class="votes bg3" data-l-msg="{{ lang('CLICK_TO_VIEW') }}">{{ lang('TOTAL_POINTS', IDEA_POINTS) }} {{ lang('CLICK_TO_VIEW') }}</a> <span class="successvoted" data-l-err="{{ lang('VOTE_FAIL') }}"></span>
 				</div>
 				<div class="clear"></div>
-				<div class="voteslist bg3">
-					<ul>
-						<!-- IF .votes_up -->
-							<li>
-								<i class="fa fa-fw fa-thumbs-up"></i>
-								<!-- BEGIN votes_up -->
-									{votes_up.USER}<!-- IF not votes_up.S_LAST_ROW -->, <!-- ENDIF -->
-									<!-- DEFINE $S_VOTED = votes_up.S_VOTED -->
-								<!-- END votes_up -->
-							</li>
-						<!-- ENDIF -->
-						<!-- IF .votes_down -->
-							<li>
-								<i class="fa fa-fw fa-thumbs-down"></i>
-								<!-- BEGIN votes_down -->
-									{votes_down.USER}<!-- IF not votes_down.S_LAST_ROW -->, <!-- ENDIF -->
-									<!-- DEFINE $S_VOTED = votes_down.S_VOTED -->
-								<!-- END votes_down -->
-							</li>
-						<!-- ENDIF -->
-						<!-- IF $S_VOTED and S_CAN_VOTE -->
-							<li>
-								<i class="fa fa-fw fa-times"></i> <a href="{U_REMOVE_VOTE}" class="removevote" data-l-err="{L_ERROR}" data-l-msg="{L_VOTE_ERROR}{L_COLON}">{L_REMOVE_VOTE}</a>
-							</li>
-						<!-- ENDIF -->
-					</ul>
-				</div>
+				{% if IDEA_VOTES %}
+					<div class="voteslist bg3">
+						<ul>
+							{% set S_VOTED = false %}
+							{% if votes_up %}
+								<li>
+									<i class="fa fa-fw fa-thumbs-up"></i>
+									{% for vote_up in votes_up %}
+										{{ vote_up.USER }}{% if not vote_up.S_LAST_ROW %}, {% endif %}
+										{% if vote_up.S_VOTED %}{% set S_VOTED = true %}{% endif %}
+									{% endfor %}
+								</li>
+							{% endif %}
+							{% if votes_down %}
+								<li>
+									<i class="fa fa-fw fa-thumbs-down"></i>
+									{% for vote_down in votes_down %}
+										{{ vote_down.USER }}{% if not vote_down.S_LAST_ROW %}, {% endif %}
+										{% if vote_down.S_VOTED %}{% set S_VOTED = true %}{% endif %}
+									{% endfor %}
+								</li>
+							{% endif %}
+							{% if S_VOTED and S_CAN_VOTE %}
+								<li>
+									<i class="fa fa-fw fa-times"></i> <a href="{{ U_REMOVE_VOTE }}" class="removevote" data-l-err="{{ lang('ERROR') }}" data-l-msg="{{ lang('VOTE_ERROR') ~ lang('COLON') }}">{{ lang('REMOVE_VOTE') }}</a>
+								</li>
+							{% endif %}
+						</ul>
+					</div>
+				{% endif %}
 			</dd>
-			<dt style="width: 15%">{L_STATUS}{L_COLON}</dt>
+			<dt style="width: 15%">{{ lang('STATUS') ~ lang('COLON') }}</dt>
 			<dd>
-				<a href="{IDEA_STATUS_LINK}">{IDEA_STATUS}</a>
-				<!-- IF .statuses -->&nbsp; <select id="status" data-url="{U_CHANGE_STATUS}">
-					<option value="0">{L_CHANGE_STATUS}</option>
-					<!-- BEGIN statuses --><option value="{statuses.ID}">{statuses.NAME}</option><!-- END statuses -->
-				</select><!-- ENDIF -->
+				<a href="{{ IDEA_STATUS_LINK }}">{{ IDEA_STATUS }}</a>
+				{% if STATUS_ARY %}&nbsp; <select id="status" data-url="{{ U_CHANGE_STATUS }}">
+					<option value="0">{{ lang('CHANGE_STATUS') }}</option>
+					{% for status, id in STATUS_ARY %}<option value="{{ id }}">{{ lang(status) }}</option>{% endfor %}
+				</select>{% endif %}
 			</dd>
-			<!-- IF IDEA_RFC or S_CAN_EDIT -->
-				<dt style="width: 15%">{L_RFC}{L_COLON}</dt>
+			{% if IDEA_RFC or S_CAN_EDIT %}
+				<dt style="width: 15%">{{ lang('RFC') ~ lang('COLON') }}</dt>
 				<dd>
-					<a id="rfclink" class="ideamodbtn" href="{IDEA_RFC}"<!-- IF not IDEA_RFC --> style="display:none"<!-- ENDIF -->>{IDEA_RFC}</a>
-					<!-- IF S_CAN_EDIT -->
-						<a href="{U_EDIT_RFC}" id="rfcedit" data-l-add="{L_ADD}" data-l-edit="{L_EDIT}"><!-- IF IDEA_RFC -->{L_EDIT}<!-- ELSE -->{L_ADD}<!-- ENDIF --></a>
-						<input type="text" id="rfceditinput" class="ideainput" value="{IDEA_RFC}" data-l-err="{L_ERROR}" data-l-msg="{L_RFC_ERROR}" />
-					<!-- ENDIF -->
+					<a id="rfclink" class="ideamodbtn" href="{{ IDEA_RFC }}"{% if not IDEA_RFC %} style="display:none"{% endif %}>{{ IDEA_RFC }}</a>
+					{% if S_CAN_EDIT %}
+						<a href="{{ U_EDIT_RFC }}" id="rfcedit" data-l-add="{{ lang('ADD') }}" data-l-edit="{{ lang('EDIT') }}">{% if IDEA_RFC %}{{ lang('EDIT') }}{% else %}{{ lang('ADD') }}{% endif %}</a>
+						<input type="text" id="rfceditinput" class="ideainput" value="{{ IDEA_RFC }}" data-l-err="{{ lang('ERROR') }}" data-l-msg="{{ lang('RFC_ERROR') }}" />
+					{% endif %}
 				</dd>
-			<!-- ENDIF -->
-			<!-- IF IDEA_TICKET or S_CAN_EDIT -->
-				<dt style="width: 15%">{L_TICKET}{L_COLON}</dt>
+			{% endif %}
+			{% if IDEA_TICKET or S_CAN_EDIT %}
+				<dt style="width: 15%">{{ lang('TICKET') ~ lang('COLON') }}</dt>
 				<dd>
-					<a id="ticketlink" class="ideamodbtn" <!-- IF IDEA_TICKET -->href="https://tracker.phpbb.com/browse/PHPBB3-{IDEA_TICKET}">PHPBB3-{IDEA_TICKET}<!-- ELSE -->style="display:none"><!-- ENDIF --></a>
-					<!-- IF S_CAN_EDIT -->
-						<a href="{U_EDIT_TICKET}" id="ticketedit" data-l-add="{L_ADD}" data-l-edit="{L_EDIT}"><!-- IF IDEA_TICKET -->{L_EDIT}<!-- ELSE -->{L_ADD}<!-- ENDIF --></a>
-						<input type="text" id="ticketeditinput" class="ideainput"<!-- IF IDEA_TICKET --> value="PHPBB3-{IDEA_TICKET}"<!-- ENDIF --> placeholder="PHPBB3-#####" data-l-err="{L_ERROR}" data-l-msg="{L_TICKET_ERROR}" />
-					<!-- ENDIF -->
+					<a id="ticketlink" class="ideamodbtn" {% if IDEA_TICKET %}href="https://tracker.phpbb.com/browse/PHPBB3-{{ IDEA_TICKET }}">PHPBB3-{{ IDEA_TICKET }}{% else %}style="display:none">{% endif %}</a>
+					{% if S_CAN_EDIT %}
+						<a href="{{ U_EDIT_TICKET }}" id="ticketedit" data-l-add="{{ lang('ADD') }}" data-l-edit="{{ lang('EDIT') }}">{% if IDEA_TICKET %}{{ lang('EDIT') }}{% else %}{{ lang('ADD') }}{% endif %}</a>
+						<input type="text" id="ticketeditinput" class="ideainput"{% if IDEA_TICKET %} value="PHPBB3-{{ IDEA_TICKET }}"{% endif %} placeholder="PHPBB3-#####" data-l-err="{{ lang('ERROR') }}" data-l-msg="{{ lang('TICKET_ERROR') }}" />
+					{% endif %}
 				</dd>
-			<!-- ENDIF -->
-			<!-- IF IDEA_DUPLICATE or S_IS_MOD -->
-				<dt class="duplicatetoggle" style="width: 15%; {% if IDEA_STATUS != lang('DUPLICATE') %}display:none{% endif %}">{L_DUPLICATE}{L_COLON}</dt>
+			{% endif %}
+			{% if IDEA_DUPLICATE or S_IS_MOD %}
+				<dt class="duplicatetoggle" style="width: 15%; {% if IDEA_STATUS != lang('DUPLICATE') %}display:none{% endif %}">{{ lang('DUPLICATE') ~ lang('COLON') }}</dt>
 				<dd class="duplicatetoggle" {% if IDEA_STATUS != lang('DUPLICATE') %}style="display:none"{% endif %}>
-					<a id="duplicatelink" class="ideamodbtn" data-link="{U_IDEA_DUPLICATE}" data-l-msg="{L_VIEW_DUPLICATE}" <!-- IF IDEA_DUPLICATE -->href="{U_IDEA_DUPLICATE}">{L_VIEW_DUPLICATE}<!-- ELSE -->style="display:none"><!-- ENDIF --></a>
-					<!-- IF S_IS_MOD -->
-						<a href="{U_EDIT_DUPLICATE}" id="duplicateedit">{L_SET}</a>
-						<input type="text" id="duplicateeditinput" class="ideainput"<!-- IF IDEA_DUPLICATE --> value="{IDEA_DUPLICATE}"<!-- ENDIF --> placeholder="###" data-l-err="{L_ERROR}" data-l-msg="{L_TICKET_ERROR_DUP}" />
-					<!-- ENDIF -->
+					<a id="duplicatelink" class="ideamodbtn" data-link="{{ U_IDEA_DUPLICATE }}" data-l-msg="{{ lang('VIEW_DUPLICATE') }}" {% if IDEA_DUPLICATE %}href="{{ U_IDEA_DUPLICATE }}">{{ lang('VIEW_DUPLICATE') }}{% else %}style="display:none">{% endif %}</a>
+					{% if S_IS_MOD %}
+						<a href="{{ U_EDIT_DUPLICATE }}" id="duplicateedit">{{ lang('SET') }}</a>
+						<input type="text" id="duplicateeditinput" class="ideainput"{% if IDEA_DUPLICATE %} value="{{ IDEA_DUPLICATE }}"{% endif %} placeholder="###" data-l-err="{{ lang('ERROR') }}" data-l-msg="{{ lang('TICKET_ERROR_DUP') }}" />
+					{% endif %}
 				</dd>
-			<!-- ENDIF -->
-			<!-- IF S_IS_MOD -->
-				<dt style="width: 15%">{L_MOD_IDEA}{L_COLON}</dt>
+			{% endif %}
+			{% if S_IS_MOD %}
+				<dt style="width: 15%">{{ lang('MOD_IDEA') ~ lang('COLON') }}</dt>
 				<dd>
-					<a href="{U_DELETE_IDEA}" data-ajax="true" data-refresh="true"><i class="fa fa-fw fa-trash-o"></i>{L_DELETE}</a>&nbsp;
-					<a href="{U_EDIT_TITLE}" id="titleedit"><i class="fa fa-fw fa-pencil"></i>{L_TITLE_EDIT}</a>
+					<a href="{{ U_DELETE_IDEA }}" data-ajax="true" data-refresh="true"><i class="fa fa-fw fa-trash-o"></i>{{ lang('DELETE') }}</a>&nbsp;
+					<a href="{{ U_EDIT_TITLE }}" id="titleedit"><i class="fa fa-fw fa-pencil"></i>{{ lang('TITLE_EDIT') }}</a>
 				</dd>
-			<!-- ENDIF -->
+			{% endif %}
 		</dl>
 	</div>
 </div>

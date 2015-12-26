@@ -159,13 +159,7 @@ class listener implements EventSubscriberInterface
 
 		if ($mod)
 		{
-			foreach (ideas::$statuses as $status_name => $status_id)
-			{
-				$this->template->assign_block_vars('statuses', array(
-					'ID'	=> $status_id,
-					'NAME'	=> $this->language->lang($status_name),
-				));
-			}
+			$this->template->assign_var('STATUS_ARY', ideas::$statuses);
 		}
 
 		$points = $idea['idea_votes_up'] - $idea['idea_votes_down'];
@@ -182,7 +176,7 @@ class listener implements EventSubscriberInterface
 			'IDEA_VOTES'		=> $idea['idea_votes_up'] + $idea['idea_votes_down'],
 			'IDEA_VOTES_UP'		=> $idea['idea_votes_up'],
 			'IDEA_VOTES_DOWN'	=> $idea['idea_votes_down'],
-			'IDEA_POINTS'		=> $this->language->lang('TOTAL_POINTS', $points),
+			'IDEA_POINTS'		=> $points,
 			'IDEA_STATUS'		=> $this->ideas->get_status_from_id($idea['idea_status']),
 			'IDEA_STATUS_LINK'	=> $this->helper->route('phpbb_ideas_list_controller', array('status' => $idea['idea_status'])),
 
@@ -214,7 +208,7 @@ class listener implements EventSubscriberInterface
 			{
 				$this->template->assign_block_vars('votes_' . ($vote['vote_value'] ? 'up' : 'down'), array(
 					'USER'	=> get_username_string('full', $vote['user_id'], $vote['username'], $vote['user_colour']),
-					'S_VOTED' => ($this->user->data['user_id'] == $vote['user_id']) ? true : false,
+					'S_VOTED' => $this->user->data['user_id'] == $vote['user_id'],
 				));
 			}
 		}
