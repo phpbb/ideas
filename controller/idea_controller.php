@@ -206,7 +206,7 @@ class idea_controller extends base
 	{
 		if (($this->is_own() || $this->is_mod()) && check_link_hash($this->get_hash(), "title_{$this->data['idea_id']}"))
 		{
-			$title = $this->request->variable('title', '');
+			$title = $this->request->variable('title', '', true);
 			return $this->ideas->set_title($this->data['idea_id'], $title);
 		}
 
