@@ -43,10 +43,10 @@ class index_controller extends base
 		$this->assign_template_block_vars('implemented_ideas', $ideas);
 
 		$this->template->assign_vars(array(
-			'U_VIEW_TOP'			=> $this->link_helper->get_list_link('top'),
-			'U_VIEW_LATEST'			=> $this->link_helper->get_list_link('new'),
-			'U_VIEW_IMPLEMENTED'	=> $this->link_helper->get_list_link('implemented'),
-			'U_POST_ACTION'			=> $this->helper->route('phpbb_ideas_post_controller'),
+			'U_VIEW_TOP'		=> $this->link_helper->get_list_link('top'),
+			'U_VIEW_LATEST'		=> $this->link_helper->get_list_link('new'),
+			'U_VIEW_IMPLEMENTED'=> $this->link_helper->get_list_link('implemented'),
+			'U_POST_ACTION'		=> $this->helper->route('phpbb_ideas_post_controller'),
 		));
 
 		// Assign breadcrumb template vars
