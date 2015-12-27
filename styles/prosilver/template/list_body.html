@@ -4,13 +4,7 @@
 
 <h2>{{ STATUS_NAME }}</h2>
 
-{% if S_USER_LOGGED_IN %}
-	<div class="action-bar bar-top">
-		<a href="{{ U_NEW_IDEA_ACTION }}" class="button" title="{{ lang('NEW_IDEA') }}">
-			<span>{{ lang('NEW_IDEA') }}</span><i class="icon fa-lightbulb-o fa-fw" aria-hidden="true"></i>
-		</a>
-	</div>
-{% endif %}
+{% include 'action_bar_top.html' %}
 
 {% for idea in ideas %}
 	{% if idea.S_FIRST_ROW %}
@@ -54,7 +48,7 @@
 	</div>
 {% endfor %}
 
-<form method="post" action="{{ U_POST_ACTION }}">
+<form method="post" action="{{ U_LIST_ACTION }}">
 	<fieldset class="display-options">
 		{% if not S_IS_BOT %}
 			<label>

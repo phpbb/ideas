@@ -126,4 +126,19 @@ abstract class base
 			));
 		}
 	}
+
+	/**
+	 * Assign template variables for a search ideas field
+	 *
+	 * @return null
+	 */
+	protected function display_search_ideas()
+	{
+		$this->template->assign_vars(array(
+			'S_DISPLAY_SEARCHBOX'	=> (bool) $this->auth->acl_get('u_search') && $this->auth->acl_get('f_search', $this->config['ideas_forum_id']) && $this->config['load_search'],
+			'S_SEARCHBOX_ACTION'	=> append_sid("{$this->root_path}search.{$this->php_ext}"),
+			'S_SEARCH_IDEAS_HIDDEN_FIELDS'	=> build_hidden_fields(array('fid' => array($this->config['ideas_forum_id']))),
+
+		));
+	}
 }

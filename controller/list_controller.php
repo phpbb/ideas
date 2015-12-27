@@ -76,8 +76,8 @@ class list_controller extends base
 
 		// Build list page template output
 		$this->template->assign_vars(array(
-			'U_POST_ACTION'		=> $this->helper->route('phpbb_ideas_list_controller'),
-			'U_NEW_IDEA_ACTION'	=> $this->helper->route('phpbb_ideas_post_controller'),
+			'U_LIST_ACTION'		=> $this->helper->route('phpbb_ideas_list_controller'),
+			'U_POST_ACTION'		=> $this->helper->route('phpbb_ideas_post_controller'),
 			'TOTAL_IDEAS'       => $this->language->lang('TOTAL_IDEAS', $this->ideas->get_idea_count()),
 			'STATUS_NAME'       => $status_name ?: $this->language->lang('OPEN_IDEAS'),
 			'STATUS_ARY'		=> ideas::$statuses,
@@ -115,6 +115,9 @@ class list_controller extends base
 			$this->config['posts_per_page'],
 			$start
 		);
+
+		// Display the search ideas field
+		$this->display_search_ideas();
 
 		return $this->helper->render('list_body.html', $this->language->lang('IDEA_LIST'));
 	}
