@@ -22,9 +22,9 @@
 		</div>
 	{% endif %}
 
-	{% if TOTAL_IDEAS %}
+	{% if IDEAS_COUNT %}
 		<div class="pagination">
-			{{ TOTAL_IDEAS }}
+			{{ lang('TOTAL_IDEAS', IDEAS_COUNT) }}
 			{% if pagination %}
 				{% include 'pagination.html' %}
 			{% else %}

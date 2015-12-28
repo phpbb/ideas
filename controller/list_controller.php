@@ -78,7 +78,7 @@ class list_controller extends base
 		$this->template->assign_vars(array(
 			'U_LIST_ACTION'		=> $this->helper->route('phpbb_ideas_list_controller'),
 			'U_POST_ACTION'		=> $this->helper->route('phpbb_ideas_post_controller'),
-			'TOTAL_IDEAS'       => $this->language->lang('TOTAL_IDEAS', $this->ideas->get_idea_count()),
+			'IDEAS_COUNT'       => $this->ideas->get_idea_count(),
 			'STATUS_NAME'       => $status_name ?: $this->language->lang('OPEN_IDEAS'),
 			'STATUS_ARY'		=> ideas::$statuses,
 			'STATUS'			=> $u_status,
