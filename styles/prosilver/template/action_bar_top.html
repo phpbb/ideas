@@ -21,4 +21,15 @@
 			</form>
 		</div>
 	{% endif %}
+
+	{% if TOTAL_IDEAS %}
+		<div class="pagination">
+			{{ TOTAL_IDEAS }}
+			{% if pagination %}
+				{% include 'pagination.html' %}
+			{% else %}
+				&bull; {{ PAGE_NUMBER }}
+			{% endif %}
+		</div>
+	{% endif %}
 </div>
