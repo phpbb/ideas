@@ -4,13 +4,7 @@
 
 <h2>{{ lang('IDEAS_TITLE') }}</h2>
 
-{% if S_USER_LOGGED_IN %}
-	<div class="action-bar bar-top">
-		<a href="{{ U_POST_ACTION }}" class="button" title="{{ lang('NEW_IDEA') }}">
-			<span>{{ lang('NEW_IDEA') }}</span><i class="icon fa-lightbulb-o fa-fw" aria-hidden="true"></i>
-		</a>
-	</div>
-{% endif %}
+{% include 'action_bar_top.html' %}
 
 <div class="forumbg">
 	<div class="inner">
@@ -66,6 +60,6 @@
 	<a class="button view-all" href="{{ U_VIEW_IMPLEMENTED }}" title="{{ lang('VIEW_IMPLEMENTED') }}">{{ lang('VIEW_ALL') }}&hellip;</a>
 {% endif %}
 
-<br />
+<br /><br />
 
 {% include 'overall_footer.html' %}

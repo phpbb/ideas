@@ -40,7 +40,7 @@ class post_controller extends base
 		}
 
 		$mode = $this->request->variable('mode', '');
-		$title = $this->request->variable('title', '');
+		$title = $this->request->variable('title', '', true);
 		$message = $this->request->variable('message', '', true);
 
 		if ($mode === 'submit')
