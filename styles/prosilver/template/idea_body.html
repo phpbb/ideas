@@ -21,13 +21,11 @@
 				<div class="clear"></div>
 				<div class="voteslist bg3" data-display="{{ IDEA_VOTES ? 'true' : 'false' }}">
 					<ul>
-						{% set S_VOTED = false %}
 						<li id="up-voters"{% if votes_up is empty %} style="display:none;"{% endif %}>
 							<i class="fa fa-fw fa-thumbs-up"></i>
 							<span>
 								{% for vote_up in votes_up %}
 									{{ vote_up.USER }}{% if not vote_up.S_LAST_ROW %}, {% endif %}
-									{% if vote_up.S_VOTED %}{% set S_VOTED = true %}{% endif %}
 								{% endfor %}
 							</span>
 						</li>
@@ -36,7 +34,6 @@
 							<span>
 								{% for vote_down in votes_down %}
 									{{ vote_down.USER }}{% if not vote_down.S_LAST_ROW %}, {% endif %}
-									{% if vote_down.S_VOTED %}{% set S_VOTED = true %}{% endif %}
 								{% endfor %}
 							</span>
 						</li>
