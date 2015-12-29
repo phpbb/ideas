@@ -440,6 +440,7 @@ class ideas
 				'votes_up'	    => $idea['idea_votes_up'],
 				'votes_down'	=> $idea['idea_votes_down'],
 				'points'        => $this->language->lang('TOTAL_POINTS', $idea['idea_votes_up'] - $idea['idea_votes_down']),
+				'voters'		=> $this->get_voters($idea['idea_id']),
 			);
 		}
 
@@ -467,6 +468,7 @@ class ideas
 			'votes_up'	    => $idea['idea_votes_up'],
 			'votes_down'	=> $idea['idea_votes_down'],
 			'points'        => $this->language->lang('TOTAL_POINTS', $idea['idea_votes_up'] - $idea['idea_votes_down']),
+			'voters'		=> $this->get_voters($idea['idea_id']),
 		);
 	}
 
@@ -508,6 +510,7 @@ class ideas
 			'votes_up'	    => $idea['idea_votes_up'],
 			'votes_down'	=> $idea['idea_votes_down'],
 			'points'        => $this->language->lang('TOTAL_POINTS', $idea['idea_votes_up'] - $idea['idea_votes_down']),
+			'voters'		=> $this->get_voters($idea['idea_id']),
 		);
 	}
 
