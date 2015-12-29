@@ -102,6 +102,7 @@
 
 		$.get(url, function(data) {
 			voteSuccess(data, $this);
+			resetVoteButtons();
 			$obj.voteRemove.hide();
 		}).fail(voteFailure);
 	});
@@ -373,7 +374,9 @@
 
 	function resetVoteButtons($this) {
 		$obj.voteUp.add($obj.voteDown).removeClass('dead');
-		$this.addClass('dead');
+		if ($this !== undefined) {
+			$this.addClass('dead');
+		}
 	}
 
 })(jQuery); // Avoid conflicts with other libraries
