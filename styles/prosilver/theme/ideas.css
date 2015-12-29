@@ -6,7 +6,7 @@ a.votes {
 }
 
 a.dead {
-	cursor: text;
+	cursor: default;
 }
 
 a.dead:hover {
@@ -63,9 +63,11 @@ dd.topics {
 .minivoteup { background-position: 0 0; }
 .minivoteup.voteup:hover { background-position: 0 -25px; }
 .minivoteup.voteup:active { background-position: 0 -50px; }
+.minivoteup.voteup.dead:hover { background-position: 0 0; }
 .minivotedown { background-position: -65px 0; }
 .minivotedown.votedown:hover { background-position: -65px -25px; }
 .minivotedown.votedown:active { background-position: -65px -50px; }
+.minivotedown.votedown.dead:hover { background-position: -65px 0; }
 
 .voteslist {
 	display: none;

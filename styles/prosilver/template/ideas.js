@@ -77,6 +77,7 @@
 
 		$.get(url, {v: vote}, function(data) {
 			voteSuccess(data, $this);
+			resetVoteButtons($this);
 			$obj.voteRemove.show();
 		}).fail(voteFailure);
 	});
@@ -368,6 +369,11 @@
 			.attr('data-display', (hasUpVotes || hasDownVotes))
 			.toggle(($obj.votesList.is(':visible') && (hasUpVotes || hasDownVotes)))
 		;
+	}
+
+	function resetVoteButtons($this) {
+		$obj.voteUp.add($obj.voteDown).removeClass('dead');
+		$this.addClass('dead');
 	}
 
 })(jQuery); // Avoid conflicts with other libraries
