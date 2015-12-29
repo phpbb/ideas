@@ -530,6 +530,13 @@ class ideas
 		$rows = $this->db->sql_fetchrowset($result);
 		$this->db->sql_freeresult($result);
 
+		// Process the username for the template now, so it is
+		// ready to use in AJAX responses and DOM injections.
+		foreach ($rows as &$row)
+		{
+			$row['user'] = get_username_string('full', $row['user_id'], $row['username'], $row['user_colour']);
+		}
+
 		return $rows;
 	}
 
