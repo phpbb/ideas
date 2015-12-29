@@ -60,6 +60,9 @@ class ideas
 	/** @var int */
 	protected $idea_count;
 
+	/** @var string */
+	protected $php_ext;
+
 	/**
 	 * @param config           $config
 	 * @param driver_interface $db
@@ -68,14 +71,17 @@ class ideas
 	 * @param user             $user
 	 * @param string           $table_ideas
 	 * @param string           $table_votes
+	 * @param string           $phpEx
 	 */
-	public function __construct(config $config, driver_interface $db, language $language, log $log, user $user, $table_ideas, $table_votes)
+	public function __construct(config $config, driver_interface $db, language $language, log $log, user $user, $table_ideas, $table_votes, $phpEx)
 	{
 		$this->config = $config;
 		$this->db = $db;
 		$this->language = $language;
 		$this->log = $log;
 		$this->user = $user;
+
+		$this->php_ext = $phpEx;
 
 		$this->table_ideas = $table_ideas;
 		$this->table_votes = $table_votes;
@@ -537,7 +543,7 @@ class ideas
 		// ready to use in AJAX responses and DOM injections.
 		foreach ($rows as &$row)
 		{
-			$row['user'] = get_username_string('full', $row['user_id'], $row['username'], $row['user_colour']);
+			$row['user'] = get_username_string('full', $row['user_id'], $row['username'], $row['user_colour'], false, $this->profile_url_helper());
 		}
 
 		return $rows;
@@ -739,5 +745,24 @@ class ideas
 	public function get_idea_count()
 	{
 		return $this->idea_count;
+	}
+
+	/**
+	 * Helper to generate the user profile URL with an
+	 * absolute URL, which helps avoid problems when
+	 * used in AJAX requests.
+	 *
+	 * @return string User profile URL
+	 */
+	protected function profile_url_helper()
+	{
+		static $url;
+
+		if (empty($url))
+		{
+			$url = append_sid(generate_board_url() . "/memberlist.{$this->php_ext}", array('mode' => 'viewprofile'));
+		}
+
+		return $url;
 	}
 }
