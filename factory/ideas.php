@@ -528,7 +528,7 @@ class ideas
 				' . USERS_TABLE . ' as u
 			WHERE iv.idea_id = ' . (int) $id . '
 				AND iv.user_id = u.user_id
-			ORDER BY u.username DESC';
+			ORDER BY u.username ASC';
 		$result = $this->db->sql_query($sql);
 		$rows = $this->db->sql_fetchrowset($result);
 		$this->db->sql_freeresult($result);
