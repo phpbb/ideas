@@ -28,11 +28,6 @@ dd.topics {
 	padding-left: 10px !important;
 }
 
-.voteslist {
-	display: none;
-	list-style-type: none;
-}
-
 .ideainput {
 	display: none;
 	width: 300px;
@@ -79,6 +74,7 @@ dd.topics {
 	-webkit-border-radius: 3px;
 	-moz-border-radius: 3px;
 	border-radius: 3px;
+	list-style-type: none;
 }
 
 .voteslist ul, .voteslist ul li { list-style: none; }

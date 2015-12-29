@@ -31,23 +31,23 @@
 			voteRemove: $('#vote-remove')
 		};
 
-	function voteSuccess(message, $this) {
-		if (typeof message === 'string') {
-			phpbb.alert($this.attr('data-l-err'), $this.attr('data-l-msg') + ' ' + message);
+	function voteSuccess(result, $this) {
+		if (typeof result === 'string') {
+			phpbb.alert($this.attr('data-l-err'), $this.attr('data-l-msg') + ' ' + result);
 		} else {
-			$obj.voteUp.first().html('<span>' + message.votes_up + '</span>');
-			$obj.voteDown.first().html('<span>' + message.votes_down + '</span>');
+			$obj.voteUp.first().html('<span>' + result.votes_up + '</span>');
+			$obj.voteDown.first().html('<span>' + result.votes_down + '</span>');
 			$obj.votes.hide().text(function() {
-				return message.points + ' ' + $(this).attr('data-l-msg');
+				return result.points + ' ' + $(this).attr('data-l-msg');
 			});
-			$obj.successVoted.text(message.message)
+			$obj.successVoted.text(result.message)
 				.show()
 				.delay(2000)
 				.fadeOut(300, function() {
 					$obj.votes.fadeIn(300);
 				})
 			;
-			displayVoters(message.voters);
+			displayVoters(result.voters);
 		}
 	}
 
