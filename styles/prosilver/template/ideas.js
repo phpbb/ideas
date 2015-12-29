@@ -60,7 +60,8 @@
 			.delay(2000)
 			.fadeOut(300, function() {
 				$obj.votes.fadeIn(300);
-			});
+			})
+		;
 	}
 
 	$obj.voteUp.add($obj.voteDown).on('click', function(e) {
@@ -100,7 +101,6 @@
 			voteSuccess(data, $this);
 			$obj.voteRemove.hide();
 		}).fail(voteFailure);
-
 	});
 
 	$obj.status.change(function() {
@@ -331,7 +331,6 @@
 	 * Returns true if idea is a duplicate. Bit hacky.
 	 */
 	function idea_is_duplicate() {
-
 		var href = $obj.status.prev('a').attr('href');
 		return href && href.indexOf('status=4') !== -1;
 	}
