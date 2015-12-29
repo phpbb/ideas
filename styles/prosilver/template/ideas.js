@@ -84,7 +84,9 @@
 	$obj.votes.on('click', function(e) {
 		e.preventDefault();
 
-		$obj.votesList.slideToggle();
+		if ($obj.votesList.attr('data-display') === 'true') {
+			$obj.votesList.slideToggle();
+		}
 	});
 
 	$obj.removeVote.on('click', function(e) {
@@ -348,15 +350,23 @@
 			}
 		}
 
+		var hasUpVotes = upVoters.length > 0,
+			hasDownVotes = downVoters.length > 0;
+
 		$('#up-voters')
-			.toggle(upVoters.length > 0)
+			.toggle(hasUpVotes)
 			.find('span')
 			.html(upVoters.join(', '))
 		;
 		$('#down-voters')
-			.toggle(downVoters.length > 0)
+			.toggle(hasDownVotes)
 			.find('span')
 			.html(downVoters.join(', '))
+		;
+
+		$obj.votesList
+			.attr('data-display', (hasUpVotes || hasDownVotes))
+			.toggle(($obj.votesList.is(':visible') && (hasUpVotes || hasDownVotes)))
 		;
 	}
 

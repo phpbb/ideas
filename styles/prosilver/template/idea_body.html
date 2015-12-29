@@ -19,7 +19,7 @@
 					<a href="#" class="votes bg3" data-l-msg="{{ lang('CLICK_TO_VIEW') }}">{{ lang('TOTAL_POINTS', IDEA_POINTS) }} {{ IDEA_VOTES ? lang('CLICK_TO_VIEW') }}</a> <span class="successvoted" data-l-err="{{ lang('VOTE_FAIL') }}"></span>
 				</div>
 				<div class="clear"></div>
-				<div class="voteslist bg3">
+				<div class="voteslist bg3" data-display="{{ IDEA_VOTES ? 'true' : 'false' }}">
 					<ul>
 						{% set S_VOTED = false %}
 						<li id="up-voters"{% if votes_up is empty %} style="display:none;"{% endif %}>
