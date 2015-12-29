@@ -27,7 +27,8 @@
 			votes: $('.votes'),
 			votesList: $('.voteslist'),
 			voteDown: $('.votedown'),
-			voteUp: $('.voteup')
+			voteUp: $('.voteup'),
+			voteRemove: $('#vote-remove')
 		};
 
 	function voteSuccess(message, $this) {
@@ -44,7 +45,9 @@
 				.delay(2000)
 				.fadeOut(300, function() {
 					$obj.votes.fadeIn(300);
-				});
+				})
+			;
+			displayVoters(message.voters);
 		}
 	}
 
@@ -73,6 +76,7 @@
 
 		$.get(url, {v: vote}, function(data) {
 			voteSuccess(data, $this);
+			$obj.voteRemove.show();
 		}).fail(voteFailure);
 	});
 
@@ -94,6 +98,7 @@
 
 		$.get(url, function(data) {
 			voteSuccess(data, $this);
+			$obj.voteRemove.hide();
 		}).fail(voteFailure);
 
 	});
@@ -329,6 +334,31 @@
 
 		var href = $obj.status.prev('a').attr('href');
 		return href && href.indexOf('status=4') !== -1;
+	}
+
+	function displayVoters(data) {
+
+		var upVoters = [],
+			downVoters = [];
+
+		for (var i = 0; i < data.length; i++) {
+			if (data[i].vote_value === '1') {
+				upVoters.push(data[i].user);
+			} else if (data[i].vote_value === '0') {
+				downVoters.push(data[i].user);
+			}
+		}
+
+		$('#up-voters')
+			.toggle(upVoters.length > 0)
+			.find('span')
+			.html(upVoters.join(', '))
+		;
+		$('#down-voters')
+			.toggle(downVoters.length > 0)
+			.find('span')
+			.html(downVoters.join(', '))
+		;
 	}
 
 })(jQuery); // Avoid conflicts with other libraries

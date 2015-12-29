@@ -23,26 +23,26 @@
 					<div class="voteslist bg3">
 						<ul>
 							{% set S_VOTED = false %}
-							{% if votes_up %}
-								<li>
-									<i class="fa fa-fw fa-thumbs-up"></i>
+							<li id="up-voters"{% if votes_up is empty %} style="display:none;"{% endif %}>
+								<i class="fa fa-fw fa-thumbs-up"></i>
+								<span>
 									{% for vote_up in votes_up %}
 										{{ vote_up.USER }}{% if not vote_up.S_LAST_ROW %}, {% endif %}
 										{% if vote_up.S_VOTED %}{% set S_VOTED = true %}{% endif %}
 									{% endfor %}
-								</li>
-							{% endif %}
-							{% if votes_down %}
-								<li>
-									<i class="fa fa-fw fa-thumbs-down"></i>
+								</span>
+							</li>
+							<li id="down-voters"{% if votes_down is empty %} style="display:none;"{% endif %}>
+								<i class="fa fa-fw fa-thumbs-down"></i>
+								<span>
 									{% for vote_down in votes_down %}
 										{{ vote_down.USER }}{% if not vote_down.S_LAST_ROW %}, {% endif %}
 										{% if vote_down.S_VOTED %}{% set S_VOTED = true %}{% endif %}
 									{% endfor %}
-								</li>
-							{% endif %}
-							{% if S_VOTED and S_CAN_VOTE %}
-								<li>
+								</span>
+							</li>
+							{% if S_CAN_VOTE %}
+								<li id="vote-remove"{% if S_VOTED == false %} style="display:none;"{% endif %}>
 									<i class="fa fa-fw fa-times"></i> <a href="{{ U_REMOVE_VOTE }}" class="removevote" data-l-err="{{ lang('ERROR') }}" data-l-msg="{{ lang('VOTE_ERROR') ~ lang('COLON') }}">{{ lang('REMOVE_VOTE') }}</a>
 								</li>
 							{% endif %}
