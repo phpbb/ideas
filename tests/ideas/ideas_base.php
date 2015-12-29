@@ -34,6 +34,9 @@ class ideas_base extends \phpbb_database_test_case
 	/** @var \phpbb\user */
 	protected $user;
 
+	/** @var string */
+	protected $php_ext;
+
 	public function getDataSet()
 	{
 		return $this->createXMLDataSet(dirname(__FILE__) . '/../fixtures/ideas.xml');
@@ -59,6 +62,7 @@ class ideas_base extends \phpbb_database_test_case
 		$this->log = $this->getMockBuilder('\phpbb\log\log')
 			->disableOriginalConstructor()
 			->getMock();
+		$this->php_ext = $phpEx;
 	}
 
 	protected function get_ideas_object()
@@ -70,7 +74,8 @@ class ideas_base extends \phpbb_database_test_case
 			$this->log,
 			$this->user,
 			'phpbb_ideas_ideas',
-			'phpbb_ideas_votes'
+			'phpbb_ideas_votes',
+			$this->php_ext
 		);
 	}
 }
