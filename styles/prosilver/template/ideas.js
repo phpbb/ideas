@@ -45,8 +45,7 @@
 				.delay(2000)
 				.fadeOut(300, function() {
 					$obj.votes.fadeIn(300);
-				})
-			;
+				});
 			displayVoters(result.voters);
 		}
 	}
@@ -60,8 +59,7 @@
 			.delay(2000)
 			.fadeOut(300, function() {
 				$obj.votes.fadeIn(300);
-			})
-		;
+			});
 	}
 
 	$obj.voteUp.add($obj.voteDown).on('click', function(e) {
@@ -85,7 +83,7 @@
 	$obj.votes.on('click', function(e) {
 		e.preventDefault();
 
-		if ($obj.votesList.attr('data-display') === 'true') {
+		if ($obj.votesList.data('display')) {
 			$obj.votesList.slideToggle();
 		}
 	});
@@ -358,23 +356,20 @@
 		$('#up-voters')
 			.toggle(hasUpVotes)
 			.find('span')
-			.html(upVoters.join(', '))
-		;
+			.html(upVoters.join(', '));
 		$('#down-voters')
 			.toggle(hasDownVotes)
 			.find('span')
-			.html(downVoters.join(', '))
-		;
+			.html(downVoters.join(', '));
 
 		$obj.votesList
 			.attr('data-display', (hasUpVotes || hasDownVotes))
-			.toggle(($obj.votesList.is(':visible') && (hasUpVotes || hasDownVotes)))
-		;
+			.toggle(($obj.votesList.is(':visible') && (hasUpVotes || hasDownVotes)));
 	}
 
 	function resetVoteButtons($this) {
 		$obj.voteUp.add($obj.voteDown).removeClass('dead');
-		if ($this !== undefined) {
+		if ($this) {
 			$this.addClass('dead');
 		}
 	}
