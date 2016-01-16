@@ -63,6 +63,9 @@ class ideas
 	/** @var string */
 	protected $php_ext;
 
+	/** @var string */
+	protected $profile_url;
+
 	/**
 	 * @param config           $config
 	 * @param driver_interface $db
@@ -543,7 +546,7 @@ class ideas
 		// ready to use in AJAX responses and DOM injections.
 		foreach ($rows as &$row)
 		{
-			$row['user'] = get_username_string('full', $row['user_id'], $row['username'], $row['user_colour'], false, $this->profile_url_helper());
+			$row['user'] = get_username_string('full', $row['user_id'], $row['username'], $row['user_colour'], false, $this->profile_url());
 		}
 
 		return $rows;
@@ -754,15 +757,13 @@ class ideas
 	 *
 	 * @return string User profile URL
 	 */
-	protected function profile_url_helper()
+	protected function profile_url()
 	{
-		static $url;
-
-		if (empty($url))
+		if (!isset($this->profile_url))
 		{
-			$url = append_sid(generate_board_url() . "/memberlist.{$this->php_ext}", array('mode' => 'viewprofile'));
+			$this->profile_url = append_sid(generate_board_url() . "/memberlist.{$this->php_ext}", array('mode' => 'viewprofile'));
 		}
 
-		return $url;
+		return $this->profile_url;
 	}
 }

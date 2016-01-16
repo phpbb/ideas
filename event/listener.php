@@ -209,7 +209,7 @@ class listener implements EventSubscriberInterface
 			foreach ($votes as $vote)
 			{
 				$this->template->assign_block_vars('votes_' . ($vote['vote_value'] ? 'up' : 'down'), array(
-					'USER' => $vote['user']
+					'USER' => $vote['user'],
 				));
 
 				if ($this->user->data['user_id'] == $vote['user_id'])
