@@ -5,46 +5,46 @@ services:
     phpbb.ideas.listener:
         class: phpbb\ideas\event\listener
         arguments:
-            - @auth
-            - @config
-            - @controller.helper
-            - @phpbb.ideas.ideas
-            - @language
-            - @phpbb.ideas.linkhelper
-            - @template
-            - @user
-            - %core.php_ext%
+            - '@auth'
+            - '@config'
+            - '@controller.helper'
+            - '@phpbb.ideas.ideas'
+            - '@language'
+            - '@phpbb.ideas.linkhelper'
+            - '@template'
+            - '@user'
+            - '%core.php_ext%'
         tags:
             - { name: event.listener }
 
     phpbb.ideas.admin.controller:
         class: phpbb\ideas\controller\admin_controller
         arguments:
-            - @config
-            - @dbal.conn
-            - @language
-            - @log
-            - @request
-            - @template
-            - @user
-            - %core.root_path%
-            - %core.php_ext%
+            - '@config'
+            - '@dbal.conn'
+            - '@language'
+            - '@log'
+            - '@request'
+            - '@template'
+            - '@user'
+            - '%core.root_path%'
+            - '%core.php_ext%'
 
     phpbb.ideas.controller.base:
         abstract: true
         arguments:
-            - @auth
-            - @config
-            - @controller.helper
-            - @phpbb.ideas.ideas
-            - @language
-            - @phpbb.ideas.linkhelper
-            - @pagination
-            - @request
-            - @template
-            - @user
-            - %core.root_path%
-            - %core.php_ext%
+            - '@auth'
+            - '@config'
+            - '@controller.helper'
+            - '@phpbb.ideas.ideas'
+            - '@language'
+            - '@phpbb.ideas.linkhelper'
+            - '@pagination'
+            - '@request'
+            - '@template'
+            - '@user'
+            - '%core.root_path%'
+            - '%core.php_ext%'
 
     phpbb.ideas.index_controller:
         class: phpbb\ideas\controller\index_controller
@@ -65,17 +65,17 @@ services:
     phpbb.ideas.ideas:
         class: phpbb\ideas\factory\ideas
         arguments:
-            - @config
-            - @dbal.conn
-            - @language
-            - @log
-            - @user
-            - %tables.ideas_ideas%
-            - %tables.ideas_votes%
+            - '@config'
+            - '@dbal.conn'
+            - '@language'
+            - '@log'
+            - '@user'
+            - '%tables.ideas_ideas%'
+            - '%tables.ideas_votes%'
             - '%core.php_ext%'
 
     phpbb.ideas.linkhelper:
         class: phpbb\ideas\factory\linkhelper
         arguments:
-            - @controller.helper
-            - @user_loader
+            - '@controller.helper'
+            - '@user_loader'
