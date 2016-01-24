@@ -6,7 +6,7 @@ a.votes {
 }
 
 a.dead {
-	cursor: text;
+	cursor: default;
 }
 
 a.dead:hover {
@@ -26,11 +26,6 @@ dd.topics {
 	text-align: left;
 	width: auto;
 	padding-left: 10px !important;
-}
-
-.voteslist {
-	display: none;
-	list-style-type: none;
 }
 
 .ideainput {
@@ -68,9 +63,11 @@ dd.topics {
 .minivoteup { background-position: 0 0; }
 .minivoteup.voteup:hover { background-position: 0 -25px; }
 .minivoteup.voteup:active { background-position: 0 -50px; }
+.minivoteup.voteup.dead:hover { background-position: 0 0; }
 .minivotedown { background-position: -65px 0; }
 .minivotedown.votedown:hover { background-position: -65px -25px; }
 .minivotedown.votedown:active { background-position: -65px -50px; }
+.minivotedown.votedown.dead:hover { background-position: -65px 0; }
 
 .voteslist {
 	display: none;
@@ -79,6 +76,7 @@ dd.topics {
 	-webkit-border-radius: 3px;
 	-moz-border-radius: 3px;
 	border-radius: 3px;
+	list-style-type: none;
 }
 
 .voteslist ul, .voteslist ul li { list-style: none; }

@@ -202,15 +202,23 @@ class listener implements EventSubscriberInterface
 
 		if ($idea['idea_votes_up'] || $idea['idea_votes_down'])
 		{
+			$s_voted = false;
+
 			$votes = $this->ideas->get_voters($idea['idea_id']);
 
 			foreach ($votes as $vote)
 			{
 				$this->template->assign_block_vars('votes_' . ($vote['vote_value'] ? 'up' : 'down'), array(
-					'USER'	=> get_username_string('full', $vote['user_id'], $vote['username'], $vote['user_colour']),
-					'S_VOTED' => $this->user->data['user_id'] == $vote['user_id'],
+					'USER' => $vote['user'],
 				));
+
+				if ($this->user->data['user_id'] == $vote['user_id'])
+				{
+					$s_voted = true;
+				}
 			}
+
+			$this->template->assign_var('S_VOTED', $s_voted);
 		}
 
 		// Use Ideas breadcrumbs

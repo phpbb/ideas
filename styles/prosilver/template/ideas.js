@@ -27,24 +27,26 @@
 			votes: $('.votes'),
 			votesList: $('.voteslist'),
 			voteDown: $('.votedown'),
-			voteUp: $('.voteup')
+			voteUp: $('.voteup'),
+			voteRemove: $('#vote-remove')
 		};
 
-	function voteSuccess(message, $this) {
-		if (typeof message === 'string') {
-			phpbb.alert($this.attr('data-l-err'), $this.attr('data-l-msg') + ' ' + message);
+	function voteSuccess(result, $this) {
+		if (typeof result === 'string') {
+			phpbb.alert($this.attr('data-l-err'), $this.attr('data-l-msg') + ' ' + result);
 		} else {
-			$obj.voteUp.first().html('<span>' + message.votes_up + '</span>');
-			$obj.voteDown.first().html('<span>' + message.votes_down + '</span>');
+			$obj.voteUp.first().html('<span>' + result.votes_up + '</span>');
+			$obj.voteDown.first().html('<span>' + result.votes_down + '</span>');
 			$obj.votes.hide().text(function() {
-				return message.points + ' ' + $(this).attr('data-l-msg');
+				return result.points + ' ' + $(this).attr('data-l-msg');
 			});
-			$obj.successVoted.text(message.message)
+			$obj.successVoted.text(result.message)
 				.show()
 				.delay(2000)
 				.fadeOut(300, function() {
 					$obj.votes.fadeIn(300);
 				});
+			displayVoters(result.voters);
 		}
 	}
 
@@ -73,13 +75,17 @@
 
 		$.get(url, {v: vote}, function(data) {
 			voteSuccess(data, $this);
+			resetVoteButtons($this);
+			$obj.voteRemove.show();
 		}).fail(voteFailure);
 	});
 
 	$obj.votes.on('click', function(e) {
 		e.preventDefault();
 
-		$obj.votesList.slideToggle();
+		if ($obj.votesList.data('display')) {
+			$obj.votesList.slideToggle();
+		}
 	});
 
 	$obj.removeVote.on('click', function(e) {
@@ -94,8 +100,9 @@
 
 		$.get(url, function(data) {
 			voteSuccess(data, $this);
+			resetVoteButtons();
+			$obj.voteRemove.hide();
 		}).fail(voteFailure);
-
 	});
 
 	$obj.status.change(function() {
@@ -326,9 +333,45 @@
 	 * Returns true if idea is a duplicate. Bit hacky.
 	 */
 	function idea_is_duplicate() {
-
 		var href = $obj.status.prev('a').attr('href');
 		return href && href.indexOf('status=4') !== -1;
+	}
+
+	function displayVoters(data) {
+
+		var upVoters = [],
+			downVoters = [];
+
+		for (var i = 0; i < data.length; i++) {
+			if (data[i].vote_value === '1') {
+				upVoters.push(data[i].user);
+			} else if (data[i].vote_value === '0') {
+				downVoters.push(data[i].user);
+			}
+		}
+
+		var hasUpVotes = upVoters.length > 0,
+			hasDownVotes = downVoters.length > 0;
+
+		$('#up-voters')
+			.toggle(hasUpVotes)
+			.find('span')
+			.html(upVoters.join(', '));
+		$('#down-voters')
+			.toggle(hasDownVotes)
+			.find('span')
+			.html(downVoters.join(', '));
+
+		$obj.votesList
+			.attr('data-display', (hasUpVotes || hasDownVotes))
+			.toggle(($obj.votesList.is(':visible') && (hasUpVotes || hasDownVotes)));
+	}
+
+	function resetVoteButtons($this) {
+		$obj.voteUp.add($obj.voteDown).removeClass('dead');
+		if ($this) {
+			$this.addClass('dead');
+		}
 	}
 
 })(jQuery); // Avoid conflicts with other libraries

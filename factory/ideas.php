@@ -60,6 +60,12 @@ class ideas
 	/** @var int */
 	protected $idea_count;
 
+	/** @var string */
+	protected $php_ext;
+
+	/** @var string */
+	protected $profile_url;
+
 	/**
 	 * @param config           $config
 	 * @param driver_interface $db
@@ -68,14 +74,17 @@ class ideas
 	 * @param user             $user
 	 * @param string           $table_ideas
 	 * @param string           $table_votes
+	 * @param string           $phpEx
 	 */
-	public function __construct(config $config, driver_interface $db, language $language, log $log, user $user, $table_ideas, $table_votes)
+	public function __construct(config $config, driver_interface $db, language $language, log $log, user $user, $table_ideas, $table_votes, $phpEx)
 	{
 		$this->config = $config;
 		$this->db = $db;
 		$this->language = $language;
 		$this->log = $log;
 		$this->user = $user;
+
+		$this->php_ext = $phpEx;
 
 		$this->table_ideas = $table_ideas;
 		$this->table_votes = $table_votes;
@@ -440,6 +449,7 @@ class ideas
 				'votes_up'	    => $idea['idea_votes_up'],
 				'votes_down'	=> $idea['idea_votes_down'],
 				'points'        => $this->language->lang('TOTAL_POINTS', $idea['idea_votes_up'] - $idea['idea_votes_down']),
+				'voters'		=> $this->get_voters($idea['idea_id']),
 			);
 		}
 
@@ -467,6 +477,7 @@ class ideas
 			'votes_up'	    => $idea['idea_votes_up'],
 			'votes_down'	=> $idea['idea_votes_down'],
 			'points'        => $this->language->lang('TOTAL_POINTS', $idea['idea_votes_up'] - $idea['idea_votes_down']),
+			'voters'		=> $this->get_voters($idea['idea_id']),
 		);
 	}
 
@@ -508,6 +519,7 @@ class ideas
 			'votes_up'	    => $idea['idea_votes_up'],
 			'votes_down'	=> $idea['idea_votes_down'],
 			'points'        => $this->language->lang('TOTAL_POINTS', $idea['idea_votes_up'] - $idea['idea_votes_down']),
+			'voters'		=> $this->get_voters($idea['idea_id']),
 		);
 	}
 
@@ -525,10 +537,17 @@ class ideas
 				' . USERS_TABLE . ' as u
 			WHERE iv.idea_id = ' . (int) $id . '
 				AND iv.user_id = u.user_id
-			ORDER BY u.username DESC';
+			ORDER BY u.username ASC';
 		$result = $this->db->sql_query($sql);
 		$rows = $this->db->sql_fetchrowset($result);
 		$this->db->sql_freeresult($result);
+
+		// Process the username for the template now, so it is
+		// ready to use in AJAX responses and DOM injections.
+		foreach ($rows as &$row)
+		{
+			$row['user'] = get_username_string('full', $row['user_id'], $row['username'], $row['user_colour'], false, $this->profile_url());
+		}
 
 		return $rows;
 	}
@@ -729,5 +748,22 @@ class ideas
 	public function get_idea_count()
 	{
 		return $this->idea_count;
+	}
+
+	/**
+	 * Helper to generate the user profile URL with an
+	 * absolute URL, which helps avoid problems when
+	 * used in AJAX requests.
+	 *
+	 * @return string User profile URL
+	 */
+	protected function profile_url()
+	{
+		if (!isset($this->profile_url))
+		{
+			$this->profile_url = append_sid(generate_board_url() . "/memberlist.{$this->php_ext}", array('mode' => 'viewprofile'));
+		}
+
+		return $this->profile_url;
 	}
 }

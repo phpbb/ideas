@@ -19,36 +19,31 @@
 					<a href="#" class="votes bg3" data-l-msg="{{ lang('CLICK_TO_VIEW') }}">{{ lang('TOTAL_POINTS', IDEA_POINTS) }} {{ IDEA_VOTES ? lang('CLICK_TO_VIEW') }}</a> <span class="successvoted" data-l-err="{{ lang('VOTE_FAIL') }}"></span>
 				</div>
 				<div class="clear"></div>
-				{% if IDEA_VOTES %}
-					<div class="voteslist bg3">
-						<ul>
-							{% set S_VOTED = false %}
-							{% if votes_up %}
-								<li>
-									<i class="fa fa-fw fa-thumbs-up"></i>
-									{% for vote_up in votes_up %}
-										{{ vote_up.USER }}{% if not vote_up.S_LAST_ROW %}, {% endif %}
-										{% if vote_up.S_VOTED %}{% set S_VOTED = true %}{% endif %}
-									{% endfor %}
-								</li>
-							{% endif %}
-							{% if votes_down %}
-								<li>
-									<i class="fa fa-fw fa-thumbs-down"></i>
-									{% for vote_down in votes_down %}
-										{{ vote_down.USER }}{% if not vote_down.S_LAST_ROW %}, {% endif %}
-										{% if vote_down.S_VOTED %}{% set S_VOTED = true %}{% endif %}
-									{% endfor %}
-								</li>
-							{% endif %}
-							{% if S_VOTED and S_CAN_VOTE %}
-								<li>
-									<i class="fa fa-fw fa-times"></i> <a href="{{ U_REMOVE_VOTE }}" class="removevote" data-l-err="{{ lang('ERROR') }}" data-l-msg="{{ lang('VOTE_ERROR') ~ lang('COLON') }}">{{ lang('REMOVE_VOTE') }}</a>
-								</li>
-							{% endif %}
-						</ul>
-					</div>
-				{% endif %}
+				<div class="voteslist bg3" data-display="{{ IDEA_VOTES ? 'true' : 'false' }}">
+					<ul>
+						<li id="up-voters"{% if votes_up is empty %} style="display:none;"{% endif %}>
+							<i class="fa fa-fw fa-thumbs-up"></i>
+							<span>
+								{% for vote_up in votes_up %}
+									{{ vote_up.USER }}{% if not vote_up.S_LAST_ROW %}, {% endif %}
+								{% endfor %}
+							</span>
+						</li>
+						<li id="down-voters"{% if votes_down is empty %} style="display:none;"{% endif %}>
+							<i class="fa fa-fw fa-thumbs-down"></i>
+							<span>
+								{% for vote_down in votes_down %}
+									{{ vote_down.USER }}{% if not vote_down.S_LAST_ROW %}, {% endif %}
+								{% endfor %}
+							</span>
+						</li>
+						{% if S_CAN_VOTE %}
+							<li id="vote-remove"{% if S_VOTED == false %} style="display:none;"{% endif %}>
+								<i class="fa fa-fw fa-times"></i> <a href="{{ U_REMOVE_VOTE }}" class="removevote" data-l-err="{{ lang('ERROR') }}" data-l-msg="{{ lang('VOTE_ERROR') ~ lang('COLON') }}">{{ lang('REMOVE_VOTE') }}</a>
+							</li>
+						{% endif %}
+					</ul>
+				</div>
 			</dd>
 			<dt style="width: 15%">{{ lang('STATUS') ~ lang('COLON') }}</dt>
 			<dd>
