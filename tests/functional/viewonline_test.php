@@ -18,7 +18,7 @@ class viewonline_test extends ideas_functional_base
 	/**
 	* Visit Ideas as user "admin"
 	*/
-	public function test_viewonline_visit_rules()
+	public function test_viewonline_visit_ideas()
 	{
 		$this->login();
 		$crawler = self::request('GET', "app.php/ideas?sid={$this->sid}");
@@ -31,7 +31,7 @@ class viewonline_test extends ideas_functional_base
 	* We use a second function here, so we get a new session and can login
 	* without having to log out "admin" first.
 	*
-	* @depends test_viewonline_visit_rules
+	* @depends test_viewonline_visit_ideas
 	*/
 	public function test_viewonline_check_viewonline()
 	{

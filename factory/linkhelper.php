@@ -35,7 +35,7 @@ class linkhelper
 	 * Shortcut method to get the link to a specified idea.
 	 * Optionally add mode and hash URL arguments.
 	 *
-	 * @param int    $idea_id int The ID of the idea.
+	 * @param int    $idea_id The ID of the idea
 	 * @param string $mode    The mode argument (vote, delete, etc.)
 	 * @param bool   $hash    Add a link hash
 	 * @return string The route
@@ -49,6 +49,12 @@ class linkhelper
 		return $this->helper->route('phpbb_ideas_idea_controller', $params);
 	}
 
+	/**
+	 * Get the ideas list controller URL
+	 *
+	 * @param string $sort Optional value to sort the list by (top, new, date, etc.)
+	 * @return string The route
+	 */
 	public function get_list_link($sort = 'date')
 	{
 		return $this->helper->route('phpbb_ideas_list_controller', array(
@@ -61,8 +67,8 @@ class linkhelper
 	 *
 	 * Is there a function that already does this? This seems fairly database heavy.
 	 *
-	 * @param int $id The ID of the user.
-	 * @return string An HTML link to the users profile.
+	 * @param int $id The ID of the user
+	 * @return string An HTML link to the users profile
 	 */
 	public function get_user_link($id)
 	{
