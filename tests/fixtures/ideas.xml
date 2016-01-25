@@ -100,4 +100,39 @@
 			<value>0</value>
 		</row>
 	</table>
+	<table name="phpbb_users">
+		<column>user_id</column>
+		<column>username</column>
+		<column>username_clean</column>
+		<column>user_permissions</column>
+		<column>user_sig</column>
+		<row>
+			<value>1</value>
+			<value>ANONYMOUS</value>
+			<value>ANONYMOUS</value>
+			<value></value>
+			<value></value>
+		</row>
+		<row>
+			<value>2</value>
+			<value>ideabot</value>
+			<value>ideabot</value>
+			<value></value>
+			<value></value>
+		</row>
+		<row>
+			<value>3</value>
+			<value>admin</value>
+			<value>admin</value>
+			<value></value>
+			<value></value>
+		</row>
+		<row>
+			<value>4</value>
+			<value>poster</value>
+			<value>poster</value>
+			<value></value>
+			<value></value>
+		</row>
+	</table>
 </dataset>
