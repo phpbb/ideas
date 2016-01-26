@@ -46,13 +46,16 @@ class ideas_base extends \phpbb_database_test_case
 	{
 		parent::setUp();
 
-		global $phpbb_root_path, $phpEx;
+		global $auth, $config, $db, $phpbb_dispatcher, $phpbb_root_path, $phpEx, $request;
 
-		$this->db = $this->new_dbal();
-		$this->config = new \phpbb\config\config(array(
+		$auth = $this->getMock('\phpbb\auth\auth');
+		$this->config = $config = new \phpbb\config\config(array(
 			'posts_per_page' => 10,
 			'ideas_forum_id' => 2,
+			'ideas_poster_id' => 2,
 		));
+		$this->db = $db = $this->new_dbal();
+		$phpbb_dispatcher = new \phpbb_mock_event_dispatcher();
 		$lang_loader = new \phpbb\language\language_file_loader($phpbb_root_path, $phpEx);
 		$this->lang = new \phpbb\language\language($lang_loader);
 		$this->user = $this->getMock('\phpbb\user', array(), array(
@@ -63,6 +66,7 @@ class ideas_base extends \phpbb_database_test_case
 			->disableOriginalConstructor()
 			->getMock();
 		$this->php_ext = $phpEx;
+		$request = $this->getMock('\phpbb\request\request');
 	}
 
 	/**
