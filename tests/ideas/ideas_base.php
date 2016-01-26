@@ -56,7 +56,7 @@ class ideas_base extends \phpbb_database_test_case
 		$lang_loader = new \phpbb\language\language_file_loader($phpbb_root_path, $phpEx);
 		$this->lang = new \phpbb\language\language($lang_loader);
 		$this->user = $this->getMock('\phpbb\user', array(), array(
-			new \phpbb\language\language(new \phpbb\language\language_file_loader($phpbb_root_path, $phpEx)),
+			$this->lang,
 			'\phpbb\datetime'
 		));
 		$this->log = $this->getMockBuilder('\phpbb\log\log')
@@ -65,6 +65,11 @@ class ideas_base extends \phpbb_database_test_case
 		$this->php_ext = $phpEx;
 	}
 
+	/**
+	 * Get an instance of the ideas object
+	 *
+	 * @return \phpbb\ideas\factory\ideas
+	 */
 	protected function get_ideas_object()
 	{
 		return new \phpbb\ideas\factory\ideas(

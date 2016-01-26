@@ -25,6 +25,8 @@ class get_ideas_test extends ideas_base
 	);
 
 	/**
+	 * Test get_ideas()
+	 *
 	 * @dataProvider get_ideas_data
 	 */
 	public function test_get_ideas($test_data, $expected)
@@ -58,6 +60,11 @@ class get_ideas_test extends ideas_base
 		$this->assertEquals($expected, $ideas_ids);
 	}
 
+	/**
+	 * Test get_ideas() data
+	 *
+	 * @return array
+	 */
 	public function get_ideas_data()
 	{
 		return array(

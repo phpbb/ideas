@@ -92,7 +92,7 @@ class ideas
 
 	/**
 	 * Returns an array of ideas. Defaults to ten ideas ordered by date
-	 * excluding duplicate or rejected ideas.
+	 * excluding implemented, duplicate or invalid ideas.
 	 *
 	 * @param int       $number         The number of ideas to return.
 	 * @param string    $sort           Thing to sort by.
@@ -222,7 +222,7 @@ class ideas
 	 *
 	 * @param int $id The ID of the idea to return.
 	 *
-	 * @return array The idea.
+	 * @return array|false The idea row set, or false if not found.
 	 */
 	public function get_idea($id)
 	{
@@ -241,7 +241,7 @@ class ideas
 	 *
 	 * @param int $id The ID of the idea to return.
 	 *
-	 * @return array The idea
+	 * @return array|false The idea row set, or false if not found.
 	 */
 	public function get_idea_by_topic_id($id)
 	{
@@ -393,9 +393,9 @@ class ideas
 	/**
 	 * Submits a vote on an idea.
 	 *
-	 * @param array   $idea    The idea returned by get_idea().
-	 * @param int     $user_id The ID of the user voting.
-	 * @param boolean $value   Up or down?
+	 * @param array $idea    The idea returned by get_idea().
+	 * @param int   $user_id The ID of the user voting.
+	 * @param int   $value   Up (1) or down (0)?
 	 *
 	 * @return array Array of information.
 	 */
@@ -455,9 +455,9 @@ class ideas
 
 		// Insert vote into votes table.
 		$sql_ary = array(
-			'idea_id'		=> $idea['idea_id'],
-			'user_id'		=> $user_id,
-			'vote_value'	=> $value,
+			'idea_id'		=> (int) $idea['idea_id'],
+			'user_id'		=> (int) $user_id,
+			'vote_value'	=> (int) $value,
 		);
 
 		$this->insert_idea_data($sql_ary, 'table_votes');
@@ -493,9 +493,9 @@ class ideas
 	{
 		// Only change something if user has already voted
 		$sql = 'SELECT idea_id, vote_value
-			FROM ' . $this->table_votes . "
-			WHERE idea_id = {$idea['idea_id']}
-				AND user_id = $user_id";
+			FROM ' . $this->table_votes . '
+			WHERE idea_id = ' . (int) $idea['idea_id'] . '
+				AND user_id = ' . (int) $user_id;
 		$this->db->sql_query_limit($sql, 1);
 		if ($row = $this->db->sql_fetchrow())
 		{
@@ -556,7 +556,7 @@ class ideas
 	 * Submits a new idea.
 	 *
 	 * @param string $title   The title of the idea.
-	 * @param string $message    The description of the idea.
+	 * @param string $message The description of the idea.
 	 * @param int    $user_id The ID of the author.
 	 *
 	 * @return array|int Either an array of errors, or the ID of the new idea.
@@ -742,12 +742,13 @@ class ideas
 
 	/**
 	 * Get the stored idea count
+	 * Note: this should only be called after get_ideas()
 	 *
 	 * @return int Count of ideas
 	 */
 	public function get_idea_count()
 	{
-		return $this->idea_count;
+		return isset($this->idea_count) ? $this->idea_count : 0;
 	}
 
 	/**
