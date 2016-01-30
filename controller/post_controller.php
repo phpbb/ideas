@@ -28,11 +28,21 @@ class post_controller extends base
 			throw new http_exception(404, 'IDEAS_NOT_AVAILABLE');
 		}
 
-		$this->language->add_lang('posting');
-
 		if ($this->user->data['user_id'] == ANONYMOUS)
 		{
 			throw new http_exception(404, 'LOGGED_OUT');
+		}
+
+		$this->language->add_lang('posting');
+
+		if (!function_exists('submit_post'))
+		{
+			include($this->root_path . 'includes/functions_posting.' . $this->php_ext);
+		}
+
+		if (!function_exists('display_custom_bbcodes'))
+		{
+			include($this->root_path . 'includes/functions_display.' . $this->php_ext);
 		}
 
 		$mode = $this->request->variable('mode', '');
@@ -56,16 +66,7 @@ class post_controller extends base
 			}
 		}
 
-		if (!function_exists('display_custom_bbcodes'))
-		{
-			include($this->root_path . 'includes/functions_display.' . $this->php_ext);
-		}
 		display_custom_bbcodes();
-
-		if (!function_exists('generate_smilies'))
-		{
-			include($this->root_path . 'includes/functions_posting.' . $this->php_ext);
-		}
 		generate_smilies('inline', 0);
 
 		// BBCode, Smilies, Images URL, and Flash statuses
