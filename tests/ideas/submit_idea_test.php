@@ -8,6 +8,8 @@
  *
  */
 
+namespace phpbb\ideas\factory;
+
 require_once dirname(__FILE__) . '/../../../../../includes/functions_content.php';
 
 class submit_idea_test extends \phpbb\ideas\tests\ideas\ideas_base
@@ -94,7 +96,8 @@ class submit_idea_test extends \phpbb\ideas\tests\ideas\ideas_base
  * This function has too much overhead to deal with in this test.
  * We will trust submit_post() is working as expected.
  *
- * Note: for this to work this file should not be namespaced
+ * Note: for this to work this file should use the same
+ * namespace as the class being tested where this is used.
  */
 function submit_post()
 {

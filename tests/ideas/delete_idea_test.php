@@ -8,6 +8,8 @@
  *
  */
 
+namespace phpbb\ideas\factory;
+
 class delete_idea_test extends \phpbb\ideas\tests\ideas\ideas_base
 {
 	/**
@@ -79,7 +81,8 @@ class delete_idea_test extends \phpbb\ideas\tests\ideas\ideas_base
  * This function has too much overhead to deal with in this test.
  * We will trust delete_posts() is working as expected.
  *
- * Note: for this to work this file should not be namespaced
+ * Note: for this to work this file should use the same
+ * namespace as the class being tested where this is used.
  */
 function delete_posts()
 {

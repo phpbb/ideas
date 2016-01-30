@@ -172,8 +172,8 @@ class idea_attributes_test extends ideas_base
 		if ($idea)
 		{
 			$sql = "SELECT topic_title
-			FROM phpbb_topics
-			WHERE topic_id = {$idea['topic_id']}";
+				FROM phpbb_topics
+				WHERE topic_id = {$idea['topic_id']}";
 			$result = $this->db->sql_query($sql);
 			$topic_title = $this->db->sql_fetchfield('topic_title');
 			$this->db->sql_freeresult($result);
