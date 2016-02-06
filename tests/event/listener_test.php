@@ -201,6 +201,45 @@ class listener_test extends \phpbb_test_case
 				'phpbb_ideas_index_controller#a:0:{}',
 				'VIEWING_IDEAS',
 			),
+			// test when on_page is app and session_page is for ideas/post
+			array(
+				array(
+					1 => 'app',
+				),
+				array(
+					'session_page' => 'app.' . $phpEx . '/ideas/post'
+				),
+				'$location_url',
+				'$location',
+				'phpbb_ideas_index_controller#a:0:{}',
+				'POSTING_NEW_IDEA',
+			),
+			// test when viewing an idea topic (any topic in forum id 2)
+			array(
+				array(
+					1 => 'viewtopic',
+				),
+				array(
+					'session_forum_id' => 2,
+				),
+				'$location_url',
+				'$location',
+				'phpbb_ideas_index_controller#a:0:{}',
+				'VIEWING_IDEAS',
+			),
+			// test when viewing a normal topic (not an idea, so not in forum id 2)
+			array(
+				array(
+					1 => 'viewtopic',
+				),
+				array(
+					'session_forum_id' => 3,
+				),
+				'$location_url',
+				'$location',
+				'$location_url',
+				'$location',
+			),
 		);
 	}
 
