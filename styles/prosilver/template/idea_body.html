@@ -21,18 +21,18 @@
 				<div class="clear"></div>
 				<div class="voteslist bg3" data-display="{{ IDEA_VOTES ? 'true' : 'false' }}">
 					<ul>
-						<li id="up-voters"{% if votes_up is empty %} style="display:none;"{% endif %}>
+						<li id="up-voters"{% if loops.votes_up is empty %} style="display:none;"{% endif %}>
 							<strong>&#x25B2;{{ lang('COLON') }}</strong>
 							<span>
-								{% for vote_up in votes_up %}
+								{% for vote_up in loops.votes_up %}
 									{{ vote_up.USER }}{% if not vote_up.S_LAST_ROW %}, {% endif %}
 								{% endfor %}
 							</span>
 						</li>
-						<li id="down-voters"{% if votes_down is empty %} style="display:none;"{% endif %}>
+						<li id="down-voters"{% if loops.votes_down is empty %} style="display:none;"{% endif %}>
 							<strong>&#x25BC;{{ lang('COLON') }}</strong>
 							<span>
-								{% for vote_down in votes_down %}
+								{% for vote_down in loops.votes_down %}
 									{{ vote_down.USER }}{% if not vote_down.S_LAST_ROW %}, {% endif %}
 								{% endfor %}
 							</span>

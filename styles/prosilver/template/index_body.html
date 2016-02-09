@@ -16,11 +16,11 @@
 				</dl>
 			</li>
 		</ul>
-		{% set ideas = top_ideas %}
+		{% set ideas = loops.top_ideas %}
 		{% include 'index_list.html' %}
 	</div>
 </div>
-{% if top_ideas %}
+{% if loops.top_ideas %}
 	<a class="button view-all" href="{{ U_VIEW_TOP }}" title="{{ lang('VIEW_TOP') }}">{{ lang('VIEW_ALL') }}&hellip;</a>
 {% endif %}
 
@@ -34,11 +34,11 @@
 				</dl>
 			</li>
 		</ul>
-		{% set ideas = latest_ideas %}
+		{% set ideas = loops.latest_ideas %}
 		{% include 'index_list.html' %}
 	</div>
 </div>
-{% if latest_ideas %}
+{% if loops.latest_ideas %}
 	<a class="button view-all" href="{{ U_VIEW_LATEST }}" title="{{ lang('VIEW_LATEST') }}">{{ lang('VIEW_ALL') }}&hellip;</a>
 {% endif %}
 
@@ -52,11 +52,11 @@
 				</dl>
 			</li>
 		</ul>
-		{% set ideas = implemented_ideas %}
+		{% set ideas = loops.implemented_ideas %}
 		{% include 'index_list.html' %}
 	</div>
 </div>
-{% if implemented_ideas %}
+{% if loops.implemented_ideas %}
 	<a class="button view-all" href="{{ U_VIEW_IMPLEMENTED }}" title="{{ lang('VIEW_IMPLEMENTED') }}">{{ lang('VIEW_ALL') }}&hellip;</a>
 {% endif %}
 

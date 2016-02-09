@@ -23,7 +23,7 @@
 	{% if IDEAS_COUNT %}
 		<div class="pagination">
 			{{ lang('TOTAL_IDEAS', IDEAS_COUNT) }}
-			{% if pagination %}
+			{% if loops.pagination %}
 				{% include 'pagination.html' %}
 			{% else %}
 				&bull; {{ PAGE_NUMBER }}
