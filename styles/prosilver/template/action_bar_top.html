@@ -1,25 +1,23 @@
-<div class="action-bar bar-top">
+<div class="action-bar top">
 	{% if not S_IS_BOT %}
-		<a href="{{ U_POST_ACTION }}" class="button" title="{{ lang('NEW_IDEA') }}">
-			<span>{{ lang('NEW_IDEA') }}</span><i class="icon fa-lightbulb-o fa-fw" aria-hidden="true"></i>
-		</a>
+		<div class="buttons">
+			<a href="{{ U_POST_ACTION }}" class="button icon-button" title="{{ lang('NEW_IDEA') }}">
+				{{ lang('NEW_IDEA') }}
+			</a>
+		</div>
 	{% endif %}
 
 	{% if S_DISPLAY_SEARCHBOX %}
-		<div class="search-box" role="search">
-			<form method="get" id="forum-search" action="{{ S_SEARCHBOX_ACTION }}">
-				<fieldset>
-					<input class="inputbox search tiny" type="search" name="keywords" id="search_keywords" size="20" placeholder="{{ lang('SEARCH_IDEAS') }}" />
-					<button class="button button-search" type="submit" title="{{ lang('SEARCH') }}">
-						<i class="icon fa-search fa-fw" aria-hidden="true"></i><span class="sr-only">{{ lang('SEARCH') }}</span>
-					</button>
-					<a href="{{ U_SEARCH }}" class="button button-search-end" title="{{ lang('SEARCH_ADV') }}">
-						<i class="icon fa-cog fa-fw" aria-hidden="true"></i><span class="sr-only">{{ lang('SEARCH_ADV') }}</span>
-					</a>
-					{{ S_SEARCH_IDEAS_HIDDEN_FIELDS }}
-				</fieldset>
-			</form>
-		</div>
+	<div class="search-box" role="search">
+		<form method="get" id="forum-search" action="{{ S_SEARCHBOX_ACTION }}">
+			<fieldset>
+				<input class="inputbox search tiny" type="search" name="keywords" id="search_keywords" size="20" placeholder="{{ lang('SEARCH_IDEAS') }}" />
+				<button class="button icon-button search-icon" type="submit" title="{{ lang('SEARCH') }}">{{ lang('SEARCH') }}</button>
+				<a href="{{ U_SEARCH }}" class="button icon-button search-adv-icon" title="{{ lang('SEARCH_ADV') }}">{{ lang('SEARCH_ADV') }}</a>
+				{{ S_SEARCH_IDEAS_HIDDEN_FIELDS }}
+			</fieldset>
+		</form>
+	</div>
 	{% endif %}
 
 	{% if IDEAS_COUNT %}

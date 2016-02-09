@@ -22,7 +22,7 @@
 				<div class="voteslist bg3" data-display="{{ IDEA_VOTES ? 'true' : 'false' }}">
 					<ul>
 						<li id="up-voters"{% if votes_up is empty %} style="display:none;"{% endif %}>
-							<i class="fa fa-fw fa-thumbs-up"></i>
+							<strong>&#x25B2;{{ lang('COLON') }}</strong>
 							<span>
 								{% for vote_up in votes_up %}
 									{{ vote_up.USER }}{% if not vote_up.S_LAST_ROW %}, {% endif %}
@@ -30,7 +30,7 @@
 							</span>
 						</li>
 						<li id="down-voters"{% if votes_down is empty %} style="display:none;"{% endif %}>
-							<i class="fa fa-fw fa-thumbs-down"></i>
+							<strong>&#x25BC;{{ lang('COLON') }}</strong>
 							<span>
 								{% for vote_down in votes_down %}
 									{{ vote_down.USER }}{% if not vote_down.S_LAST_ROW %}, {% endif %}
@@ -39,7 +39,7 @@
 						</li>
 						{% if S_CAN_VOTE %}
 							<li id="vote-remove"{% if S_VOTED == false %} style="display:none;"{% endif %}>
-								<i class="fa fa-fw fa-times"></i> <a href="{{ U_REMOVE_VOTE }}" class="removevote" data-l-err="{{ lang('ERROR') }}" data-l-msg="{{ lang('VOTE_ERROR') ~ lang('COLON') }}">{{ lang('REMOVE_VOTE') }}</a>
+								<strong>&times;{{ lang('COLON') }}</strong> <a href="{{ U_REMOVE_VOTE }}" class="removevote" data-l-err="{{ lang('ERROR') }}" data-l-msg="{{ lang('VOTE_ERROR') ~ lang('COLON') }}">{{ lang('REMOVE_VOTE') }}</a>
 							</li>
 						{% endif %}
 					</ul>

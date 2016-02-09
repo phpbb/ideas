@@ -18,14 +18,12 @@ class submit_idea_test extends \phpbb\ideas\tests\ideas\ideas_base
 	{
 		parent::setUp();
 
-		global $phpbb_container;
-
-		// This is needed to set up the s9e text formatter services
-		// This can lead to a test failure if PCRE is old.
-		$this->get_test_case_helpers()->set_s9e_services($phpbb_container);
+		global $config;
 
 		$this->config['max_post_chars'] = 100;
 		$this->config['min_post_chars'] = 3;
+		$config = $this->config;
+		set_config(null, null, null, $config);  // remove in 3.2
 	}
 
 	/**
