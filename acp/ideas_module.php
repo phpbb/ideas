@@ -32,14 +32,14 @@ class ideas_module
 		// Set the page title for our ACP page
 		$this->page_title = 'ACP_PHPBB_IDEAS_SETTINGS';
 
-		$language = $phpbb_container->get('language');
 		$request = $phpbb_container->get('request');
+		$user = $phpbb_container->get('user');
 
 		// Get an instance of the admin controller
 		$admin_controller = $phpbb_container->get('phpbb.ideas.admin.controller');
 
 		// Add the phpBB Ideas ACP lang file
-		$language->add_lang('phpbb_ideas_acp', 'phpbb/ideas');
+		$user->add_lang_ext('phpbb/ideas', 'phpbb_ideas_acp');
 
 		// Make the $u_action url available in the admin controller
 		$admin_controller->set_page_url($this->u_action);

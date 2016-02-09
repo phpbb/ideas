@@ -72,7 +72,7 @@ class idea_controller extends base
 				$this->ideas->delete($this->data['idea_id'], $this->data['topic_id']);
 
 				$redirect = $this->helper->route('phpbb_ideas_index_controller');
-				$message = $this->language->lang('IDEA_DELETED') . '<br /><br />' . $this->language->lang('RETURN_IDEAS', '<a href="' . $redirect . '">', '</a>');
+				$message = $this->user->lang('IDEA_DELETED') . '<br /><br />' . $this->user->lang('RETURN_IDEAS', '<a href="' . $redirect . '">', '</a>');
 				meta_refresh(3, $redirect);
 				trigger_error($message); // trigger error needed for data-ajax
 			}
@@ -80,7 +80,7 @@ class idea_controller extends base
 			{
 				confirm_box(
 					false,
-					$this->language->lang('CONFIRM_OPERATION'),
+					$this->user->lang('CONFIRM_OPERATION'),
 					build_hidden_fields(array(
 						'idea_id' => $this->data['idea_id'],
 						'mode' => 'delete',
@@ -137,7 +137,7 @@ class idea_controller extends base
 		}
 		else
 		{
-			$result = $this->language->lang('NO_AUTH_OPERATION');
+			$result = $this->user->lang('NO_AUTH_OPERATION');
 		}
 
 		return $result;
@@ -234,7 +234,7 @@ class idea_controller extends base
 		}
 		else
 		{
-			$result = $this->language->lang('NO_AUTH_OPERATION');
+			$result = $this->user->lang('NO_AUTH_OPERATION');
 		}
 
 		return $result;

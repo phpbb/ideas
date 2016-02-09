@@ -60,14 +60,14 @@ class list_controller extends base
 		}
 
 		// Set the status name for displaying in the template
-		$status_name = (!$status && $sort == ideas::SORT_TOP) ? $this->language->lang('TOP_IDEAS') : $this->ideas->get_status_from_id($status);
+		$status_name = (!$status && $sort == ideas::SORT_TOP) ? $this->user->lang('TOP_IDEAS') : $this->ideas->get_status_from_id($status);
 
 		// For special case where we want to request ALL ideas,
 		// including the statuses normally hidden from lists.
 		if ($status === -1)
 		{
 			$status = ideas::$statuses;
-			$status_name = $this->language->lang('ALL_IDEAS');
+			$status_name = $this->user->lang('ALL_IDEAS');
 		}
 
 		// Generate ideas
@@ -79,7 +79,7 @@ class list_controller extends base
 			'U_LIST_ACTION'		=> $this->helper->route('phpbb_ideas_list_controller'),
 			'U_POST_ACTION'		=> $this->helper->route('phpbb_ideas_post_controller'),
 			'IDEAS_COUNT'       => $this->ideas->get_idea_count(),
-			'STATUS_NAME'       => $status_name ?: $this->language->lang('OPEN_IDEAS'),
+			'STATUS_NAME'       => $status_name ?: $this->user->lang('OPEN_IDEAS'),
 			'STATUS_ARY'		=> ideas::$statuses,
 			'STATUS'			=> $u_status,
 			'SORT_ARY'			=> array(ideas::SORT_AUTHOR, ideas::SORT_DATE, ideas::SORT_SCORE, ideas::SORT_TITLE, ideas::SORT_TOP, ideas::SORT_VOTES),
@@ -98,11 +98,11 @@ class list_controller extends base
 		$this->template->assign_block_vars_array('navlinks', array(
 			array(
 				'U_VIEW_FORUM'	=> $this->helper->route('phpbb_ideas_index_controller'),
-				'FORUM_NAME'	=> $this->language->lang('IDEAS'),
+				'FORUM_NAME'	=> $this->user->lang('IDEAS'),
 			),
 			array(
 				'U_VIEW_FORUM'	=> $this->helper->route('phpbb_ideas_list_controller', $params),
-				'FORUM_NAME'	=> $status_name ?: $this->language->lang('OPEN_IDEAS'),
+				'FORUM_NAME'	=> $status_name ?: $this->user->lang('OPEN_IDEAS'),
 			),
 		));
 
@@ -119,6 +119,6 @@ class list_controller extends base
 		// Display the search ideas field
 		$this->display_search_ideas();
 
-		return $this->helper->render('list_body.html', $this->language->lang('IDEA_LIST'));
+		return $this->helper->render('list_body.html', $this->user->lang('IDEA_LIST'));
 	}
 }

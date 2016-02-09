@@ -12,7 +12,6 @@ namespace phpbb\ideas\factory;
 
 use phpbb\config\config;
 use phpbb\db\driver\driver_interface;
-use phpbb\language\language;
 use phpbb\log\log;
 use phpbb\user;
 
@@ -42,9 +41,6 @@ class ideas
 	/* @var driver_interface */
 	protected $db;
 
-	/** @var language */
-	protected $language;
-
 	/** @var log */
 	protected $log;
 
@@ -69,18 +65,16 @@ class ideas
 	/**
 	 * @param config           $config
 	 * @param driver_interface $db
-	 * @param language         $language
 	 * @param log              $log
 	 * @param user             $user
 	 * @param string           $table_ideas
 	 * @param string           $table_votes
 	 * @param string           $phpEx
 	 */
-	public function __construct(config $config, driver_interface $db, language $language, log $log, user $user, $table_ideas, $table_votes, $phpEx)
+	public function __construct(config $config, driver_interface $db, log $log, user $user, $table_ideas, $table_votes, $phpEx)
 	{
 		$this->config = $config;
 		$this->db = $db;
-		$this->language = $language;
 		$this->log = $log;
 		$this->user = $user;
 
@@ -264,7 +258,7 @@ class ideas
 	 */
 	public function get_status_from_id($id)
 	{
-		return $this->language->lang(array_search($id, self::$statuses));
+		return $this->user->lang(array_search($id, self::$statuses));
 	}
 
 	/**
@@ -445,10 +439,10 @@ class ideas
 			}
 
 			return array(
-				'message'	    => $this->language->lang('UPDATED_VOTE'),
+				'message'	    => $this->user->lang('UPDATED_VOTE'),
 				'votes_up'	    => $idea['idea_votes_up'],
 				'votes_down'	=> $idea['idea_votes_down'],
-				'points'        => $this->language->lang('TOTAL_POINTS', $idea['idea_votes_up'] - $idea['idea_votes_down']),
+				'points'        => $this->user->lang('TOTAL_POINTS', $idea['idea_votes_up'] - $idea['idea_votes_down']),
 				'voters'		=> $this->get_voters($idea['idea_id']),
 			);
 		}
@@ -473,10 +467,10 @@ class ideas
 		$this->update_idea_data($sql_ary, $idea['idea_id'], 'table_ideas');
 
 		return array(
-			'message'	    => $this->language->lang('VOTE_SUCCESS'),
+			'message'	    => $this->user->lang('VOTE_SUCCESS'),
 			'votes_up'	    => $idea['idea_votes_up'],
 			'votes_down'	=> $idea['idea_votes_down'],
-			'points'        => $this->language->lang('TOTAL_POINTS', $idea['idea_votes_up'] - $idea['idea_votes_down']),
+			'points'        => $this->user->lang('TOTAL_POINTS', $idea['idea_votes_up'] - $idea['idea_votes_down']),
 			'voters'		=> $this->get_voters($idea['idea_id']),
 		);
 	}
@@ -515,10 +509,10 @@ class ideas
 		}
 
 		return array(
-			'message'	    => $this->language->lang('UPDATED_VOTE'),
+			'message'	    => $this->user->lang('UPDATED_VOTE'),
 			'votes_up'	    => $idea['idea_votes_up'],
 			'votes_down'	=> $idea['idea_votes_down'],
-			'points'        => $this->language->lang('TOTAL_POINTS', $idea['idea_votes_up'] - $idea['idea_votes_down']),
+			'points'        => $this->user->lang('TOTAL_POINTS', $idea['idea_votes_up'] - $idea['idea_votes_down']),
 			'voters'		=> $this->get_voters($idea['idea_id']),
 		);
 	}
@@ -566,19 +560,19 @@ class ideas
 		$error = array();
 		if (utf8_clean_string($title) === '')
 		{
-			$error[] = $this->language->lang('TITLE_TOO_SHORT');
+			$error[] = $this->user->lang('TITLE_TOO_SHORT');
 		}
 		if (utf8_strlen($title) > 64)
 		{
-			$error[] = $this->language->lang('TITLE_TOO_LONG');
+			$error[] = $this->user->lang('TITLE_TOO_LONG');
 		}
 		if (utf8_strlen($message) < $this->config['min_post_chars'])
 		{
-			$error[] = $this->language->lang('TOO_FEW_CHARS');
+			$error[] = $this->user->lang('TOO_FEW_CHARS');
 		}
 		if (utf8_strlen($message) > $this->config['max_post_chars'])
 		{
-			$error[] = $this->language->lang('TOO_MANY_CHARS');
+			$error[] = $this->user->lang('TOO_MANY_CHARS');
 		}
 
 		if (count($error))

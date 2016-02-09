@@ -33,7 +33,7 @@ class post_controller extends base
 			throw new http_exception(404, 'LOGGED_OUT');
 		}
 
-		$this->language->add_lang('posting');
+		$this->user->add_lang('posting');
 
 		if (!function_exists('submit_post'))
 		{
@@ -87,25 +87,25 @@ class post_controller extends base
 			'S_BBCODE_FLASH'	=> $flash_status,
 			'S_BBCODE_QUOTE'	=> true,
 
-			'BBCODE_STATUS'		=> $this->language->lang(($bbcode_status ? 'BBCODE_IS_ON' : 'BBCODE_IS_OFF'), '<a href="' . $this->helper->route('phpbb_help_bbcode_controller') . '">', '</a>'),
-			'IMG_STATUS'		=> ($img_status) ? $this->language->lang('IMAGES_ARE_ON') : $this->language->lang('IMAGES_ARE_OFF'),
-			'FLASH_STATUS'		=> ($flash_status) ? $this->language->lang('FLASH_IS_ON') : $this->language->lang('FLASH_IS_OFF'),
-			'URL_STATUS'		=> ($bbcode_status && $url_status) ? $this->language->lang('URL_IS_ON') : $this->language->lang('URL_IS_OFF'),
-			'SMILIES_STATUS'	=> ($smilies_status) ? $this->language->lang('SMILIES_ARE_ON') : $this->language->lang('SMILIES_ARE_OFF'),
+			'BBCODE_STATUS'		=> $this->user->lang(($bbcode_status ? 'BBCODE_IS_ON' : 'BBCODE_IS_OFF'), '<a href="' . append_sid("{$this->root_path}faq.{$this->php_ext}", 'mode=bbcode') . '">', '</a>'),
+			'IMG_STATUS'		=> ($img_status) ? $this->user->lang('IMAGES_ARE_ON') : $this->user->lang('IMAGES_ARE_OFF'),
+			'FLASH_STATUS'		=> ($flash_status) ? $this->user->lang('FLASH_IS_ON') : $this->user->lang('FLASH_IS_OFF'),
+			'URL_STATUS'		=> ($bbcode_status && $url_status) ? $this->user->lang('URL_IS_ON') : $this->user->lang('URL_IS_OFF'),
+			'SMILIES_STATUS'	=> ($smilies_status) ? $this->user->lang('SMILIES_ARE_ON') : $this->user->lang('SMILIES_ARE_OFF'),
 		));
 
 		// Assign breadcrumb template vars
 		$this->template->assign_block_vars_array('navlinks', array(
 			array(
 				'U_VIEW_FORUM'	=> $this->helper->route('phpbb_ideas_index_controller'),
-				'FORUM_NAME'	=> $this->language->lang('IDEAS'),
+				'FORUM_NAME'	=> $this->user->lang('IDEAS'),
 			),
 			array(
 				'U_VIEW_FORUM'	=> $this->helper->route('phpbb_ideas_post_controller'),
-				'FORUM_NAME'	=> $this->language->lang('NEW_IDEA'),
+				'FORUM_NAME'	=> $this->user->lang('NEW_IDEA'),
 			),
 		));
 
-		return $this->helper->render('idea_new.html', $this->language->lang('NEW_IDEA'));
+		return $this->helper->render('idea_new.html', $this->user->lang('NEW_IDEA'));
 	}
 }

@@ -29,7 +29,7 @@ class idea_controller_test extends \phpbb\ideas\tests\controller\controller_base
 			array(3, 'duplicate', 'set_duplicate', true, true, 'true', 200), // ajax set duplicate success
 			array(3, 'duplicate', 'set_duplicate', true, false, 'false', 200), // ajax set duplicate fail
 			array(4, 'removevote', 'remove_vote', true, true, 'true', 200), // ajax set title success
-			array(4, 'removevote', 'remove_vote', true, false, '"You do not have the necessary permissions to complete this operation."', 200), // ajax set title fail
+			array(4, 'removevote', 'remove_vote', true, false, '"NO_AUTH_OPERATION"', 200), // ajax set title fail
 			array(5, 'rfc', 'set_rfc', true, true, 'true', 200), // ajax set rfc success
 			array(5, 'rfc', 'set_rfc', true, false, 'false', 200), // ajax set rfc fail
 			array(6, 'status', 'set_status', true, true, 'true', 200), // ajax set status success
@@ -39,7 +39,7 @@ class idea_controller_test extends \phpbb\ideas\tests\controller\controller_base
 			array(8, 'title', 'set_title', true, true, 'true', 200), // ajax set title success
 			array(8, 'title', 'set_title', true, false, 'false', 200), // ajax set title fail
 			array(9, 'vote', 'vote', true, true, 'true', 200), // ajax set title success
-			array(9, 'vote', 'vote', true, false, '"You do not have the necessary permissions to complete this operation."', 200), // ajax set title fail
+			array(9, 'vote', 'vote', true, false, '"NO_AUTH_OPERATION"', 200), // ajax set title fail
 		);
 	}
 

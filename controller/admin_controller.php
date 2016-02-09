@@ -21,9 +21,6 @@ class admin_controller
 	/** @var \phpbb\db\driver\driver_interface */
 	protected $db;
 
-	/** @var \phpbb\language\language */
-	protected $language;
-
 	/** @var \phpbb\log\log */
 	protected $log;
 
@@ -53,7 +50,6 @@ class admin_controller
 	 *
 	 * @param \phpbb\config\config              $config               Config object
 	 * @param \phpbb\db\driver\driver_interface $db                   Database object
-	 * @param \phpbb\language\language          $language             Language object
 	 * @param \phpbb\log\log                    $log                  Log object
 	 * @param \phpbb\request\request            $request              Request object
 	 * @param \phpbb\template\template          $template             Template object
@@ -62,11 +58,10 @@ class admin_controller
 	 * @param string                            $php_ext              php_ext
 	 * @access public
 	 */
-	public function __construct(\phpbb\config\config $config, \phpbb\db\driver\driver_interface $db, \phpbb\language\language $language, \phpbb\log\log $log, \phpbb\request\request $request, \phpbb\template\template $template, \phpbb\user $user, $root_path, $php_ext)
+	public function __construct(\phpbb\config\config $config, \phpbb\db\driver\driver_interface $db, \phpbb\log\log $log, \phpbb\request\request $request, \phpbb\template\template $template, \phpbb\user $user, $root_path, $php_ext)
 	{
 		$this->config = $config;
 		$this->db = $db;
-		$this->language = $language;
 		$this->log = $log;
 		$this->request = $request;
 		$this->template = $template;
@@ -113,14 +108,14 @@ class admin_controller
 		// Check the form for validity
 		if (!check_form_key('acp_phpbb_ideas_settings'))
 		{
-			$errors[] = $this->language->lang('FORM_INVALID');
+			$errors[] = $this->user->lang('FORM_INVALID');
 		}
 
 		// Check if selected user exists
 		$user_id = $this->get_ideas_topics_poster_id();
 		if (!$user_id)
 		{
-			$errors[] = $this->language->lang('NO_USER');
+			$errors[] = $this->user->lang('NO_USER');
 		}
 
 		// Don't save settings if errors have occurred
@@ -161,7 +156,7 @@ class admin_controller
 				}
 			}
 			$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'ACP_PHPBB_IDEAS_SETTINGS_LOG');
-			trigger_error($this->language->lang('ACP_IDEAS_SETTINGS_UPDATED') . adm_back_link($this->u_action));
+			trigger_error($this->user->lang('ACP_IDEAS_SETTINGS_UPDATED') . adm_back_link($this->u_action));
 		}
 	}
 
@@ -179,7 +174,7 @@ class admin_controller
 		{
 			if (empty($this->config['ideas_forum_id']))
 			{
-				trigger_error($this->language->lang('ACP_IDEAS_NO_FORUM') . adm_back_link($this->u_action), E_USER_WARNING);
+				trigger_error($this->user->lang('ACP_IDEAS_NO_FORUM') . adm_back_link($this->u_action), E_USER_WARNING);
 			}
 
 			if (!class_exists('auth_admin'))
@@ -215,11 +210,11 @@ class admin_controller
 			$this->db->sql_query($sql);
 
 			$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'ACP_PHPBB_IDEAS_FORUM_SETUP_LOG');
-			trigger_error($this->language->lang('ACP_IDEAS_FORUM_SETUP_UPDATED') . adm_back_link($this->u_action));
+			trigger_error($this->user->lang('ACP_IDEAS_FORUM_SETUP_UPDATED') . adm_back_link($this->u_action));
 		}
 		else
 		{
-			confirm_box(false, $this->language->lang('ACP_IDEAS_FORUM_SETUP_CONFIRM'), build_hidden_fields(array(
+			confirm_box(false, $this->user->lang('ACP_IDEAS_FORUM_SETUP_CONFIRM'), build_hidden_fields(array(
 				'ideas_forum_setup'	=> $this->request->is_set_post('ideas_forum_setup'),
 			)));
 		}
@@ -269,7 +264,7 @@ class admin_controller
 	{
 		$ideas_forum_id = (int) $this->config['ideas_forum_id'];
 		$s_forums_list = '<select id="ideas_forum_id" name="config[ideas_forum_id]">';
-		$s_forums_list .= '<option value="0"' . ((!$ideas_forum_id) ? ' selected="selected"' : '') . '>' . $this->language->lang('ACP_IDEAS_NO_FORUM') . '</option>';
+		$s_forums_list .= '<option value="0"' . ((!$ideas_forum_id) ? ' selected="selected"' : '') . '>' . $this->user->lang('ACP_IDEAS_NO_FORUM') . '</option>';
 		$forum_list = make_forum_select($ideas_forum_id, false, true, true);
 		$s_forums_list .= $forum_list . '</select>';
 

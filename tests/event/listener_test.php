@@ -24,16 +24,13 @@ class listener_test extends \phpbb_test_case
 	/** @var \PHPUnit_Framework_MockObject_MockObject|\phpbb\ideas\factory\ideas */
 	protected $ideas;
 
-	/** @var \phpbb\language\language */
-	protected $lang;
-
 	/** @var \PHPUnit_Framework_MockObject_MockObject|\phpbb\ideas\factory\linkhelper */
 	protected $link_helper;
 
 	/** @var \PHPUnit_Framework_MockObject_MockObject|\phpbb\template\template */
 	protected $template;
 
-	/** @var \phpbb\user */
+	/** @var \PHPUnit_Framework_MockObject_MockObject|\phpbb\user */
 	protected $user;
 
 	/** @var string */
@@ -62,14 +59,15 @@ class listener_test extends \phpbb_test_case
 		$this->ideas = $this->getMockBuilder('\phpbb\ideas\factory\ideas')
 			->disableOriginalConstructor()
 			->getMock();
-		$lang_loader = new \phpbb\language\language_file_loader($phpbb_root_path, $phpEx);
-		$this->lang = new \phpbb\language\language($lang_loader);
 		$this->link_helper = $this->getMockBuilder('\phpbb\ideas\factory\linkhelper')
 			->disableOriginalConstructor()
 			->getMock();
 		$this->template = $this->getMockBuilder('\phpbb\template\template')
 			->getMock();
-		$this->user = new \phpbb\user($this->lang, '\phpbb\datetime');
+		$this->user = $this->getMock('\phpbb\user', array(), array('\phpbb\datetime'));
+		$this->user->expects($this->any())
+			->method('lang')
+			->will($this->returnArgument(0));
 		$this->php_ext = $phpEx;
 	}
 
@@ -85,7 +83,6 @@ class listener_test extends \phpbb_test_case
 			$this->config,
 			$this->helper,
 			$this->ideas,
-			$this->lang,
 			$this->link_helper,
 			$this->template,
 			$this->user,

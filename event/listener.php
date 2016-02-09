@@ -15,7 +15,6 @@ use phpbb\config\config;
 use phpbb\controller\helper;
 use phpbb\ideas\factory\ideas;
 use phpbb\ideas\factory\linkhelper;
-use phpbb\language\language;
 use phpbb\template\template;
 use phpbb\user;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -34,9 +33,6 @@ class listener implements EventSubscriberInterface
 	/* @var ideas */
 	protected $ideas;
 
-	/** @var language */
-	protected $language;
-
 	/* @var linkhelper */
 	protected $link_helper;
 
@@ -54,25 +50,23 @@ class listener implements EventSubscriberInterface
 	 * @param \phpbb\config\config            $config
 	 * @param \phpbb\controller\helper        $helper
 	 * @param \phpbb\ideas\factory\ideas      $ideas
-	 * @param \phpbb\language\language        $language
 	 * @param \phpbb\ideas\factory\linkhelper $link_helper
 	 * @param \phpbb\template\template        $template
 	 * @param \phpbb\user                     $user
 	 * @param string                          $php_ext
 	 */
-	public function __construct(auth $auth, config $config, helper $helper, ideas $ideas, language $language, linkhelper $link_helper, template $template, user $user, $php_ext)
+	public function __construct(auth $auth, config $config, helper $helper, ideas $ideas, linkhelper $link_helper, template $template, user $user, $php_ext)
 	{
 		$this->auth = $auth;
 		$this->config = $config;
 		$this->helper = $helper;
 		$this->ideas = $ideas;
-		$this->language = $language;
 		$this->link_helper = $link_helper;
 		$this->template = $template;
 		$this->user = $user;
 		$this->php_ext = $php_ext;
 
-		$this->language->add_lang('common', 'phpbb/ideas');
+		$this->user->add_lang_ext('phpbb/ideas', 'common');
 	}
 
 	/**
@@ -225,7 +219,7 @@ class listener implements EventSubscriberInterface
 		$this->template->destroy_block_vars('navlinks');
 		$this->template->assign_block_vars('navlinks', array(
 			'U_VIEW_FORUM'		=> $this->helper->route('phpbb_ideas_index_controller'),
-			'FORUM_NAME'		=> $this->language->lang('IDEAS'),
+			'FORUM_NAME'		=> $this->user->lang('IDEAS'),
 		));
 	}
 
@@ -242,12 +236,12 @@ class listener implements EventSubscriberInterface
 		{
 			if (strrpos($event['row']['session_page'], 'app.' . $this->php_ext . '/ideas/post') === 0)
 			{
-				$event['location'] = $this->language->lang('POSTING_NEW_IDEA');
+				$event['location'] = $this->user->lang('POSTING_NEW_IDEA');
 				$event['location_url'] = $this->helper->route('phpbb_ideas_index_controller');
 			}
 			else if (strrpos($event['row']['session_page'], 'app.' . $this->php_ext . '/ideas') === 0)
 			{
-				$event['location'] = $this->language->lang('VIEWING_IDEAS');
+				$event['location'] = $this->user->lang('VIEWING_IDEAS');
 				$event['location_url'] = $this->helper->route('phpbb_ideas_index_controller');
 			}
 		}
@@ -255,7 +249,7 @@ class listener implements EventSubscriberInterface
 		{
 			if ($event['row']['session_forum_id'] == $this->config['ideas_forum_id'])
 			{
-				$event['location'] = $this->language->lang('VIEWING_IDEAS');
+				$event['location'] = $this->user->lang('VIEWING_IDEAS');
 				$event['location_url'] = $this->helper->route('phpbb_ideas_index_controller');
 			}
 		}

@@ -52,12 +52,12 @@ class index_controller extends base
 		// Assign breadcrumb template vars
 		$this->template->assign_block_vars('navlinks', array(
 			'U_VIEW_FORUM'		=> $this->helper->route('phpbb_ideas_index_controller'),
-			'FORUM_NAME'		=> $this->language->lang('IDEAS'),
+			'FORUM_NAME'		=> $this->user->lang('IDEAS'),
 		));
 
 		// Display the search ideas field
 		$this->display_search_ideas();
 
-		return $this->helper->render('index_body.html', $this->language->lang('IDEAS_TITLE'));
+		return $this->helper->render('index_body.html', $this->user->lang('IDEAS_TITLE'));
 	}
 }

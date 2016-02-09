@@ -25,9 +25,6 @@ class ideas_base extends \phpbb_database_test_case
 	/** @var \phpbb\db\driver\driver_interface */
 	protected $db;
 
-	/** @var \phpbb\language\language */
-	protected $lang;
-
 	/** @var \phpbb\log\log */
 	protected $log;
 
@@ -46,7 +43,7 @@ class ideas_base extends \phpbb_database_test_case
 	{
 		parent::setUp();
 
-		global $auth, $config, $db, $phpbb_dispatcher, $phpbb_root_path, $phpEx, $request;
+		global $auth, $config, $db, $phpbb_dispatcher, $phpEx, $request;
 
 		$auth = $this->getMock('\phpbb\auth\auth');
 		$this->config = $config = new \phpbb\config\config(array(
@@ -56,12 +53,10 @@ class ideas_base extends \phpbb_database_test_case
 		));
 		$this->db = $db = $this->new_dbal();
 		$phpbb_dispatcher = new \phpbb_mock_event_dispatcher();
-		$lang_loader = new \phpbb\language\language_file_loader($phpbb_root_path, $phpEx);
-		$this->lang = new \phpbb\language\language($lang_loader);
-		$this->user = $this->getMock('\phpbb\user', array(), array(
-			$this->lang,
-			'\phpbb\datetime'
-		));
+		$this->user = $this->getMock('\phpbb\user', array(), array('\phpbb\datetime'));
+		$this->user->expects($this->any())
+			->method('lang')
+			->will($this->returnArgument(0));
 		$this->log = $this->getMockBuilder('\phpbb\log\log')
 			->disableOriginalConstructor()
 			->getMock();
@@ -79,7 +74,6 @@ class ideas_base extends \phpbb_database_test_case
 		return new \phpbb\ideas\factory\ideas(
 			$this->config,
 			$this->db,
-			$this->lang,
 			$this->log,
 			$this->user,
 			'phpbb_ideas_ideas',

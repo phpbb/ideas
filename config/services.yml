@@ -9,7 +9,6 @@ services:
             - '@config'
             - '@controller.helper'
             - '@phpbb.ideas.ideas'
-            - '@language'
             - '@phpbb.ideas.linkhelper'
             - '@template'
             - '@user'
@@ -22,7 +21,6 @@ services:
         arguments:
             - '@config'
             - '@dbal.conn'
-            - '@language'
             - '@log'
             - '@request'
             - '@template'
@@ -37,7 +35,6 @@ services:
             - '@config'
             - '@controller.helper'
             - '@phpbb.ideas.ideas'
-            - '@language'
             - '@phpbb.ideas.linkhelper'
             - '@pagination'
             - '@request'
@@ -67,7 +64,6 @@ services:
         arguments:
             - '@config'
             - '@dbal.conn'
-            - '@language'
             - '@log'
             - '@user'
             - '%tables.ideas_ideas%'
