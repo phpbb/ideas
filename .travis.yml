@@ -41,10 +41,12 @@ branches:
     - /^release-.*$/
 
 install:
-  - travis_retry composer install --dev --no-interaction --prefer-source
   - travis/prepare-phpbb.sh $EXTNAME $PHPBB_BRANCH
-  - cd ../../phpBB3
-  - travis/prepare-extension.sh $EXTNAME $PHPBB_BRANCH
+  - cd ../../phpBB3/phpBB
+  - sed -i -e "s#\"require\"\:\ {#\"require\"\:\ {\"$EXTNAME\"\:\ \"$TRAVIS_BRANCH\",#" composer.json
+  - sed -i -e "s@\"extra\"@\"repositories\"\:\[{\"type\"\:\"path\",\"url\"\:\"$TRAVIS_BUILD_DIR/phpBB3/phpBB/ext\/$EXTNAME\"}\],\"extra\"@" composer.json
+  - composer update $EXTNAME --no-interaction --prefer-source
+  - cd ../
   - travis/setup-phpbb.sh $DB $TRAVIS_PHP_VERSION $NOTESTS
 
 before_script:
