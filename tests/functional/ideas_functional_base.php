@@ -57,4 +57,26 @@ class ideas_functional_base extends \phpbb_functional_test_case
 
 		$this->purge_cache();
 	}
+
+	/**
+	 * Disable Ideas settings.
+	 */
+	public function disable_ideas()
+	{
+		$this->get_db();
+
+		$sql = "UPDATE phpbb_config
+			SET config_value = ''
+			WHERE config_name = 'ideas_forum_id'";
+
+		$this->db->sql_query($sql);
+
+		$sql = "UPDATE phpbb_config
+			SET config_value = ''
+			WHERE config_name = 'ideas_poster_id'";
+
+		$this->db->sql_query($sql);
+
+		$this->purge_cache();
+	}
 }
