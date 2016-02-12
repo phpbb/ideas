@@ -11,14 +11,15 @@
 namespace phpbb\ideas\controller;
 
 use \phpbb\exception\http_exception;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class post_controller extends base
 {
 	/**
 	 * Controller for /post
 	 *
-	 * @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
 	 * @throws http_exception
+	 * @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
 	 */
 	public function post()
 	{
@@ -27,44 +28,70 @@ class post_controller extends base
 			throw new http_exception(404, 'IDEAS_NOT_AVAILABLE');
 		}
 
-		include($this->root_path . 'includes/functions_posting.' . $this->php_ext);
-		include($this->root_path . 'includes/functions_display.' . $this->php_ext);
-		include($this->root_path . 'includes/message_parser.' . $this->php_ext);
-
-		$this->user->add_lang('posting');
-
 		if ($this->user->data['user_id'] == ANONYMOUS)
 		{
 			throw new http_exception(404, 'LOGGED_OUT');
 		}
 
+		$this->user->add_lang('posting');
+
+		if (!function_exists('submit_post'))
+		{
+			include($this->root_path . 'includes/functions_posting.' . $this->php_ext);
+		}
+
+		if (!function_exists('display_custom_bbcodes'))
+		{
+			include($this->root_path . 'includes/functions_display.' . $this->php_ext);
+		}
+
 		$mode = $this->request->variable('mode', '');
-		$title = $this->request->variable('title', '');
-		$desc = $this->request->variable('desc', '', true);
+		$title = $this->request->variable('title', '', true);
+		$message = $this->request->variable('message', '', true);
 
 		if ($mode === 'submit')
 		{
-			$submit = $this->ideas->submit($title, $desc, $this->user->data['user_id']);
+			$submit = $this->ideas->submit($title, $message, $this->user->data['user_id']);
 
 			if (is_array($submit))
 			{
 				$this->template->assign_vars(array(
 					'ERROR'		=> implode('<br />', $submit),
-					'DESC'		=> $desc,
+					'MESSAGE'	=> $message,
 				));
 			}
 			else
 			{
-				redirect($this->helper->route('phpbb_ideas_idea_controller', array('idea_id' => $submit)));
+				return new RedirectResponse($this->helper->route('phpbb_ideas_idea_controller', array('idea_id' => $submit)));
 			}
 		}
 
 		display_custom_bbcodes();
 		generate_smilies('inline', 0);
 
+		// BBCode, Smilies, Images URL, and Flash statuses
+		$bbcode_status	= (bool) $this->config['allow_bbcode'] && $this->auth->acl_get('f_bbcode', $this->config['ideas_forum_id']);
+		$smilies_status	= (bool) $this->config['allow_smilies'] && $this->auth->acl_get('f_smilies', $this->config['ideas_forum_id']);
+		$img_status		= (bool) $bbcode_status && $this->auth->acl_get('f_img', $this->config['ideas_forum_id']);
+		$url_status		= (bool) $this->config['allow_post_links'];
+		$flash_status	= (bool) $bbcode_status && $this->auth->acl_get('f_flash', $this->config['ideas_forum_id']) && $this->config['allow_post_flash'];
+
 		$this->template->assign_vars(array(
-			'S_POST_ACTION'		=> $this->helper->route('phpbb_ideas_post_controller', array('mode' => 'submit')),
 			'TITLE'				=> $title,
+
+			'S_POST_ACTION'		=> $this->helper->route('phpbb_ideas_post_controller', array('mode' => 'submit')),
+			'S_BBCODE_ALLOWED'	=> $bbcode_status,
+			'S_SMILIES_ALLOWED'	=> $smilies_status,
+			'S_LINKS_ALLOWED'	=> $url_status,
+			'S_BBCODE_IMG'		=> $img_status,
+			'S_BBCODE_FLASH'	=> $flash_status,
+			'S_BBCODE_QUOTE'	=> true,
+
+			'BBCODE_STATUS'		=> $this->user->lang(($bbcode_status ? 'BBCODE_IS_ON' : 'BBCODE_IS_OFF'), '<a href="' . append_sid("{$this->root_path}faq.{$this->php_ext}", 'mode=bbcode') . '">', '</a>'),
+			'IMG_STATUS'		=> ($img_status) ? $this->user->lang('IMAGES_ARE_ON') : $this->user->lang('IMAGES_ARE_OFF'),
+			'FLASH_STATUS'		=> ($flash_status) ? $this->user->lang('FLASH_IS_ON') : $this->user->lang('FLASH_IS_OFF'),
+			'URL_STATUS'		=> ($bbcode_status && $url_status) ? $this->user->lang('URL_IS_ON') : $this->user->lang('URL_IS_OFF'),
+			'SMILIES_STATUS'	=> ($smilies_status) ? $this->user->lang('SMILIES_ARE_ON') : $this->user->lang('SMILIES_ARE_OFF'),
 		));
 
 		// Assign breadcrumb template vars
@@ -75,7 +102,7 @@ class post_controller extends base
 			),
 			array(
 				'U_VIEW_FORUM'	=> $this->helper->route('phpbb_ideas_post_controller'),
-				  'FORUM_NAME'	=> $this->user->lang('POST_IDEA'),
+				'FORUM_NAME'	=> $this->user->lang('NEW_IDEA'),
 			),
 		));
 

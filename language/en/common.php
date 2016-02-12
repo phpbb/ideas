@@ -19,29 +19,24 @@ if (empty($lang) || !is_array($lang))
 }
 
 $lang = array_merge($lang, array(
-	'ACCEPTED'				=> 'Accepted',
 	'ADD'					=> 'Add',
 	'ALL_IDEAS'				=> 'All ideas',
 	'ALREADY_VOTED'			=> 'You have already voted on this idea.',
 
 	'CHANGE_STATUS'			=> 'Change status',
-	'CREATE_IDEA'			=> 'Create new idea',
+	'CLICK_TO_VIEW'			=> 'Click to view votes.',
 
 	'DATE'					=> 'Date',
-	'DESC'					=> 'Description',
 	'DUPLICATE'				=> 'Duplicate',
 
 	'EDIT'					=> 'Edit',
-	'ENABLE_JS'             => 'Please enable JavaScript to use phpBB Ideas correctly',
+	'ENABLE_JS'             => 'Please enable JavaScript in your browser to use phpBB Ideas effectively.',
 
 	'ID'					=> 'ID',
 	'IDEAS'					=> 'Ideas',
 	'IDEA_DELETED'			=> 'Idea successfully deleted.',
 	'IDEA_LIST'				=> 'Idea List',
 	'IDEA_NOT_FOUND'		=> 'Idea not found',
-	'IDEA_TOPIC'            => 'Idea topic',
-	'IDEA_POSTER'           => 'Posted by %s', // Warning: submitted to db
-	'IDEAS_HOME'			=> 'Ideas Home',
 	'IDEAS_TITLE'			=> 'phpBB Ideas',
 	'IDEAS_NOT_AVAILABLE'	=> 'Ideas is not available at this time.',
 	'IMPLEMENTED'           => 'Implemented',
@@ -55,26 +50,27 @@ $lang = array_merge($lang, array(
 	'LATEST_IDEAS'			=> 'Latest Ideas',
 	'LOGGED_OUT'			=> 'You must be logged in to do this.',
 
-	'MERGED'				=> 'Merged',
 	'MOD_IDEA'				=> 'Moderate idea',
 
 	'NEW'					=> 'New',
 	'NEW_IDEA'				=> 'New Idea',
-	'NO_IDEAS'				=> 'No ideas',
 	'NO_IDEAS_DISPLAY'		=> 'There are no ideas to display.',
 
-	'POST_IDEA'				=> 'Post idea',
+	'OPEN_IDEAS'			=> 'Open ideas',
+
+	'POST_IDEA'				=> 'Post a new idea',
+	'POSTING_NEW_IDEA'		=> 'Posting a new idea',
 
 	'RATING'                => 'Rating',
-	'REJECTED'				=> 'Rejected',
-	'REMOVE_VOTE'			=> 'Remove vote',
+	'REMOVE_VOTE'			=> 'Remove my vote',
 	'RETURN_IDEAS'			=> '%sReturn to Ideas%s',
 	'RFC'					=> 'RFC',
 	'RFC_ERROR'				=> 'RFC must be a topic on Area51.',
 
+	'SEARCH_IDEAS'			=> 'Search ideas...',
 	'SET'                   => 'Set',
 	'SCORE'                 => 'Score',
-	'SHOW_W_STATUS'			=> 'Display ideas with status:',
+	'SHOW_W_STATUS'			=> 'Display ideas with status',
 	'STATUS'				=> 'Status',
 
 	'TICKET'				=> 'Ticket',
@@ -87,15 +83,24 @@ $lang = array_merge($lang, array(
 	'TITLE_TOO_SHORT'		=> 'You must specify a subject when posting a new idea.',
 	'TOP'                   => 'Top',
 	'TOP_IDEAS'				=> 'Top Ideas',
+	'TOTAL_IDEAS'			=> array(
+		1	=> '%d idea',
+		2	=> '%d ideas',
+	),
+	'TOTAL_POINTS'			=> array(
+		1	=> '%s point.',
+		2	=> '%s points.',
+	),
 
 	'UPDATED_VOTE'			=> 'Successfully updated vote',
 
 	'VIEW_ALL'				=> 'View All',
 	'VIEW_DUPLICATE'		=> 'View duplicate',
 	'VIEW_IDEA'				=> 'View Idea',
-	'VIEW_IDEA_AT'          => 'View idea at: %s', // Warning: submitted to db
-	'VIEW_VOTES'            => '%s points. Click to view votes',
-	'VIEWING_IDEA'			=> 'Viewing Idea',
+	'VIEW_IMPLEMENTED'		=> 'View all implemented ideas',
+	'VIEW_LATEST'			=> 'View all open ideas',
+	'VIEW_TOP'				=> 'View all top rated ideas',
+	'VIEWING_IDEAS'			=> 'Viewing Ideas',
 	'VOTE'					=> 'Vote',
 	'VOTE_DOWN'				=> 'Vote Down',
 	'VOTE_ERROR'			=> 'An error occurred',

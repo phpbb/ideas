@@ -1,23 +1,70 @@
-<!-- INCLUDE overall_header.html -->
+{% include 'overall_header.html' %}
 
-<h2>{L_NEW_IDEA}</h2>
+<h2 class="posting-title">{{ lang('NEW_IDEA') }}</h2>
 
-<form id="postform" method="post" action="{S_POST_ACTION}"{S_FORM_ENCTYPE}>
+<form id="postform" method="post" action="{{ S_POST_ACTION }}"{{ S_FORM_ENCTYPE }}>
 
-<!-- IF S_POST_REVIEW --><!-- INCLUDE posting_review.html --><!-- ENDIF -->
-
-<!-- IF S_DISPLAY_PREVIEW --><!-- INCLUDE posting_preview.html --><!-- ENDIF -->
+{% if S_DISPLAY_PREVIEW %}{% include 'posting_preview.html' %}{% endif %}
 
 <div class="panel" id="postingbox">
 	<div class="inner">
 
-	<h3>{L_POST_IDEA}</h3>
+	<h3>{{ lang('POST_IDEA') }}</h3>
 
-	<!-- INCLUDE posting_editor.html -->
-	{S_FORM_TOKEN}
+		<fieldset class="fields1">
+			{% if ERROR %}<p class="error">{{ ERROR }}</p>{% endif %}
+
+			<dl style="clear: left;">
+				<dt><label for="title">{{ lang('SUBJECT') ~ lang('COLON') }}</label></dt>
+				<dd><input type="text" name="title" id="title" size="45" tabindex="2" value="{{ TITLE }}" class="inputbox autowidth" /></dd>
+			</dl>
+
+			{% include 'posting_buttons.html' %}
+
+			<div id="smiley-box" class="smiley-box">
+				{% EVENT posting_editor_smilies_before %}
+				{% if S_SMILIES_ALLOWED and loops.smiley %}
+					<strong>{{ lang('SMILIES') }}</strong><br />
+					{% for smiley in loops.smiley %}
+						<a href="#" onclick="insert_text('{{ smiley.A_SMILEY_CODE }}', true); return false;"><img src="{{ smiley.SMILEY_IMG }}" width="{{ smiley.SMILEY_WIDTH }}" height="{{ smiley.SMILEY_HEIGHT }}" alt="{{ smiley.SMILEY_CODE }}" title="{{ smiley.SMILEY_DESC }}" /></a>
+					{% endfor %}
+				{% endif %}
+				{% if S_SHOW_SMILEY_LINK and S_SMILIES_ALLOWED %}
+					<br /><a href="{{ U_MORE_SMILIES }}" onclick="popup(this.href, 750, 350, '_phpbbsmilies'); return false;">{{ lang('MORE_SMILIES') }}</a>
+				{% endif %}
+				{% EVENT posting_editor_smilies_after %}
+				{% if BBCODE_STATUS %}
+					<div class="bbcode-status">
+						{% if loops.smiley %}<hr />{% endif %}
+							{{ BBCODE_STATUS }}<br />
+						{% if S_BBCODE_ALLOWED %}
+							{{ IMG_STATUS }}<br />
+							{{ FLASH_STATUS }}<br />
+							{{ URL_STATUS }}<br />
+						{% endif %}
+						{{ SMILIES_STATUS }}
+					</div>
+				{% endif %}
+				{% EVENT posting_editor_bbcode_status_after %}
+			</div>
+
+			<div id="message-box" class="message-box">
+				<textarea name="message" id="message" rows="15" cols="76" tabindex="4" onselect="storeCaret(this);" onclick="storeCaret(this);" onkeyup="storeCaret(this);" onfocus="initInsertions();" class="inputbox">{{ MESSAGE }}</textarea>
+			</div>
+		</fieldset>
+		{{ S_FORM_TOKEN }}
+	</div>
+</div>
+
+<div class="panel bg2">
+	<div class="inner">
+		<fieldset class="submit-buttons">
+			{{ S_HIDDEN_FIELDS }}
+			<input type="submit" accesskey="s" tabindex="6" name="post" value="{{ lang('SUBMIT') }}" class="button1 default-submit-action" />
+		</fieldset>
 	</div>
 </div>
 
 </form>
 
-<!-- INCLUDE overall_footer.html -->
+{% include 'overall_footer.html' %}

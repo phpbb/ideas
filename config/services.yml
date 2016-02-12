@@ -2,18 +2,46 @@ imports:
     - { resource: tables.yml }
 
 services:
+    phpbb.ideas.listener:
+        class: phpbb\ideas\event\listener
+        arguments:
+            - '@auth'
+            - '@config'
+            - '@controller.helper'
+            - '@phpbb.ideas.ideas'
+            - '@phpbb.ideas.linkhelper'
+            - '@template'
+            - '@user'
+            - '%core.php_ext%'
+        tags:
+            - { name: event.listener }
+
+    phpbb.ideas.admin.controller:
+        class: phpbb\ideas\controller\admin_controller
+        arguments:
+            - '@config'
+            - '@dbal.conn'
+            - '@log'
+            - '@request'
+            - '@template'
+            - '@user'
+            - '%core.root_path%'
+            - '%core.php_ext%'
+
     phpbb.ideas.controller.base:
         abstract: true
         arguments:
-            - @config
-            - @controller.helper
-            - @phpbb.ideas.ideas
-            - @phpbb.ideas.linkhelper
-            - @request
-            - @template
-            - @user
-            - %core.root_path%
-            - %core.php_ext%
+            - '@auth'
+            - '@config'
+            - '@controller.helper'
+            - '@phpbb.ideas.ideas'
+            - '@phpbb.ideas.linkhelper'
+            - '@pagination'
+            - '@request'
+            - '@template'
+            - '@user'
+            - '%core.root_path%'
+            - '%core.php_ext%'
 
     phpbb.ideas.index_controller:
         class: phpbb\ideas\controller\index_controller
@@ -29,41 +57,21 @@ services:
 
     phpbb.ideas.idea_controller:
         class: phpbb\ideas\controller\idea_controller
-        arguments:
-            - @auth
-            - @cache
-            - @config
-            - @content.visibility
-            - @profilefields.manager
-            - @dbal.conn
-            - @controller.helper
-            - @phpbb.ideas.ideas
-            - @phpbb.ideas.linkhelper
-            - @pagination
-            - @request
-            - @template
-            - @user
-            - %core.root_path%
-            - %core.php_ext%
+        parent: phpbb.ideas.controller.base
 
     phpbb.ideas.ideas:
         class: phpbb\ideas\factory\ideas
         arguments:
-            - @config
-            - @dbal.conn
-            - @controller.helper
-            - @log
-            - @user
-            - %tables.ideas_ideas%
-            - %tables.ideas_duplicates%
-            - %tables.ideas_rfcs%
-            - %tables.ideas_statuses%
-            - %tables.ideas_tickets%
-            - %tables.ideas_votes%
-            - %core.php_ext%
+            - '@config'
+            - '@dbal.conn'
+            - '@log'
+            - '@user'
+            - '%tables.ideas_ideas%'
+            - '%tables.ideas_votes%'
+            - '%core.php_ext%'
 
     phpbb.ideas.linkhelper:
         class: phpbb\ideas\factory\linkhelper
         arguments:
-            - @controller.helper
-            - @user_loader
+            - '@controller.helper'
+            - '@user_loader'

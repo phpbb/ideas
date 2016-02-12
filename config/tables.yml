@@ -1,7 +1,3 @@
 parameters:
-    tables.ideas_ideas: %core.table_prefix%ideas_ideas
-    tables.ideas_duplicates: %core.table_prefix%ideas_duplicates
-    tables.ideas_rfcs: %core.table_prefix%ideas_rfcs
-    tables.ideas_statuses: %core.table_prefix%ideas_statuses
-    tables.ideas_tickets: %core.table_prefix%ideas_tickets
-    tables.ideas_votes: %core.table_prefix%ideas_votes
+    tables.ideas_ideas: '%core.table_prefix%ideas_ideas'
+    tables.ideas_votes: '%core.table_prefix%ideas_votes'

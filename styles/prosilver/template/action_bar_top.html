@@ -1,0 +1,33 @@
+<div class="action-bar top">
+	{% if not S_IS_BOT %}
+		<div class="buttons">
+			<a href="{{ U_POST_ACTION }}" class="button icon-button" title="{{ lang('NEW_IDEA') }}">
+				{{ lang('NEW_IDEA') }}
+			</a>
+		</div>
+	{% endif %}
+
+	{% if S_DISPLAY_SEARCHBOX %}
+	<div class="search-box" role="search">
+		<form method="get" id="forum-search" action="{{ S_SEARCHBOX_ACTION }}">
+			<fieldset>
+				<input class="inputbox search tiny" type="search" name="keywords" id="search_keywords" size="20" placeholder="{{ lang('SEARCH_IDEAS') }}" />
+				<button class="button icon-button search-icon" type="submit" title="{{ lang('SEARCH') }}">{{ lang('SEARCH') }}</button>
+				<a href="{{ U_SEARCH }}" class="button icon-button search-adv-icon" title="{{ lang('SEARCH_ADV') }}">{{ lang('SEARCH_ADV') }}</a>
+				{{ S_SEARCH_IDEAS_HIDDEN_FIELDS }}
+			</fieldset>
+		</form>
+	</div>
+	{% endif %}
+
+	{% if IDEAS_COUNT %}
+		<div class="pagination">
+			{{ lang('TOTAL_IDEAS', IDEAS_COUNT) }}
+			{% if loops.pagination %}
+				{% include 'pagination.html' %}
+			{% else %}
+				&bull; {{ PAGE_NUMBER }}
+			{% endif %}
+		</div>
+	{% endif %}
+</div>

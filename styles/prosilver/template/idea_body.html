@@ -1,423 +1,95 @@
-<!-- INCLUDEJS @phpbb_ideas/ideas.js -->
-<!-- INCLUDECSS @phpbb_ideas/ideas.css -->
-
-<!-- INCLUDE overall_header.html -->
-
-<h2>{L_VIEWING_IDEA} - <span id="ideatitle">{IDEA_TITLE}</span><input type="text" id="titleeditinput" value="{IDEA_TITLE}" data-l-err="{L_ERROR}" data-l-msg="{L_TITLE_EDIT_ERROR}" /></h2>
-
-<div class="action-bar top">
-
-	<div class="buttons">
-		<!-- EVENT viewtopic_buttons_top_before -->
-
-		<!-- IF not S_IS_BOT and S_DISPLAY_REPLY_INFO -->
-		<a href="{U_POST_REPLY_TOPIC}" class="button icon-button <!-- IF S_IS_LOCKED -->locked-icon<!-- ELSE -->reply-icon<!-- ENDIF -->" title="<!-- IF S_IS_LOCKED -->{L_TOPIC_LOCKED}<!-- ELSE -->{L_POST_REPLY}<!-- ENDIF -->">
-			<!-- IF S_IS_LOCKED -->{L_BUTTON_TOPIC_LOCKED}<!-- ELSE -->{L_BUTTON_POST_REPLY}<!-- ENDIF -->
-		</a>
-		<!-- ENDIF -->
-
-		<!-- EVENT viewtopic_buttons_top_after -->
+{% INCLUDEJS '@phpbb_ideas/ideas.js' %}
+<noscript>
+	<div class="rules">
+		<div class="inner">
+			<strong>{{ lang('JS_DISABLED') }}:</strong><br />{{ lang('ENABLE_JS') }}
+		</div>
 	</div>
-
-	<!-- INCLUDE viewtopic_topic_tools.html -->
-	<!-- EVENT viewtopic_dropdown_top_custom -->
-
-	<!-- IF S_DISPLAY_SEARCHBOX -->
-	<div class="search-box" role="search">
-		<form method="get" id="topic-search" action="{S_SEARCHBOX_ACTION}">
-			<fieldset>
-				<input class="inputbox search tiny"  type="search" name="keywords" id="search_keywords" size="20" placeholder="{L_SEARCH_TOPIC}" />
-				<button class="button icon-button search-icon" type="submit" title="{L_SEARCH}">{L_SEARCH}</button>
-				<a href="{U_SEARCH}" class="button icon-button search-adv-icon" title="{L_SEARCH_ADV}">{L_SEARCH_ADV}</a>
-				{S_SEARCH_LOCAL_HIDDEN_FIELDS}
-			</fieldset>
-		</form>
-	</div>
-	<!-- ENDIF -->
-
-	<!-- IF .pagination or TOTAL_POSTS -->
-	<div class="pagination">
-		<!-- IF U_VIEW_UNREAD_POST and not S_IS_BOT --><a href="{U_VIEW_UNREAD_POST}" class="mark">{L_VIEW_UNREAD_POST}</a> &bull; <!-- ENDIF -->{TOTAL_POSTS}
-		<!-- IF .pagination -->
-		<!-- INCLUDE pagination.html -->
-		<!-- ELSE -->
-		&bull; {PAGE_NUMBER}
-		<!-- ENDIF -->
-	</div>
-	<!-- ENDIF -->
-	<!-- EVENT viewtopic_body_pagination_top_after -->
-</div>
-
+</noscript>
 <div class="panel">
 	<div class="inner">
-	<dl class="left-box details" style="width: 95%">
-		<dt style="width: 15%">{L_AUTHOR}{L_COLON}</dt> <dd><strong>{IDEA_AUTHOR}</strong></dd>
-		<dt style="width: 15%">{L_POSTED}{L_COLON}</dt> <dd>{IDEA_DATE}</dd>
-		<dt style="width: 15%">{L_RATING}{L_COLON}</dt>
-		<dd>
-			<div class="rating">
-				<a <!-- IF S_CAN_VOTE-->href="{U_IDEA_VOTE}"<!-- ENDIF --> class="minivoteup <!-- IF S_CAN_VOTE-->voteup<!-- ELSE -->dead<!-- ENDIF -->" title="{L_VOTE_UP}" data-l-err="{L_ERROR}" data-l-msg="{L_VOTE_ERROR}{L_COLON}"><span>{IDEA_VOTES_UP}</span></a> &nbsp;
-				<a <!-- IF S_CAN_VOTE-->href="{U_IDEA_VOTE}"<!-- ENDIF --> class="minivotedown <!-- IF S_CAN_VOTE-->votedown<!-- ELSE -->dead<!-- ENDIF -->" title="{L_VOTE_DOWN}" data-l-err="{L_ERROR}" data-l-msg="{L_VOTE_ERROR}{L_COLON}"><span>{IDEA_VOTES_DOWN}</span></a>
-				<a href="#" class="votes" data-l-msg="({L_VIEW_VOTES})">({IDEA_POINTS})</a> <span class="successvoted" data-l-err="{L_VOTE_FAIL}"></span>
-			</div>
-			<div class="clear"></div>
-			<div class="voteslist bg3">
-				<ul>
-					<!-- IF .votes_up -->
-						<li>
-							<strong>&#x25B2;{L_COLON}</strong> <!-- BEGIN votes_up -->{votes_up.USER}<!-- IF not votes_up.S_LAST_ROW -->, <!-- ENDIF --><!-- END votes_up -->
-						</li>
-						<!-- BEGIN votes_up --><!-- IF votes_up.S_VOTED and S_CAN_VOTE --><li><a href="{U_REMOVE_VOTE}" class="removevote" data-l-err="{L_ERROR}" data-l-msg="{L_VOTE_ERROR}{L_COLON}">{L_REMOVE_VOTE}</a></li><!-- ENDIF --><!-- END votes_up -->
-					<!-- ENDIF -->
-					<!-- IF .votes_down -->
-						<li>
-							<strong>&#x25BC;{L_COLON}</strong> <!-- BEGIN votes_down -->{votes_down.USER}<!-- IF not votes_down.S_LAST_ROW -->, <!-- ENDIF --><!-- END votes_down -->
-						</li>
-					<!-- BEGIN votes_down --><!-- IF votes_down.S_VOTED and S_CAN_VOTE --><li><a href="{U_REMOVE_VOTE}" class="removevote" data-l-err="{L_ERROR}" data-l-msg="{L_VOTE_ERROR}{L_COLON}">{L_REMOVE_VOTE}</a></li><!-- ENDIF --><!-- END votes_down -->
-					<!-- ENDIF -->
-				</ul>
-			</div>
-		</dd>
-		<dt style="width: 15%">{L_STATUS}{L_COLON}</dt>
-		<dd>
-			<a href="{IDEA_STATUS_LINK}">{IDEA_STATUS}</a>
-			<!-- IF .statuses -->&nbsp; <select id="status" data-url="{U_CHANGE_STATUS}">
-				<option value="0">{L_CHANGE_STATUS}</option>
-				<!-- BEGIN statuses --><option value="{statuses.ID}">{statuses.NAME}</option><!-- END statuses -->
-			</select><!-- ENDIF -->
-		</dd>
-		<!-- IF IDEA_RFC or S_CAN_EDIT -->
-		<dt style="width: 15%">{L_RFC}{L_COLON}</dt>
-		<dd>
-			<a id="rfclink" href="{IDEA_RFC}"<!-- IF not IDEA_RFC --> style="display:none"<!-- ENDIF -->>{IDEA_RFC}</a>
-
-			<!-- IF S_CAN_EDIT -->
-			<a href="{U_EDIT_RFC}" id="rfcedit" data-l-add="{L_ADD}" data-l-edit="{L_EDIT}"><!-- IF IDEA_RFC -->{L_EDIT}<!-- ELSE -->{L_ADD}<!-- ENDIF --></a>
-			<input type="text" id="rfceditinput" value="{IDEA_RFC}" data-l-err="{L_ERROR}" data-l-msg="{L_RFC_ERROR}" />
-			<!-- ENDIF -->
-		</dd>
-		<!-- ENDIF -->
-        <!-- IF IDEA_TICKET or S_CAN_EDIT -->
-        <dt style="width: 15%">{L_TICKET}{L_COLON}</dt>
-        <dd>
-
-            <a id="ticketlink" <!-- IF IDEA_TICKET -->href="https://tracker.phpbb.com/browse/PHPBB3-{IDEA_TICKET}">PHPBB3-{IDEA_TICKET}<!-- ELSE -->style="display:none"><!-- ENDIF --></a>
-
-            <!-- IF S_CAN_EDIT -->
-            <a href="{U_EDIT_TICKET}" id="ticketedit" data-l-add="{L_ADD}" data-l-edit="{L_EDIT}"><!-- IF IDEA_TICKET -->{L_EDIT}<!-- ELSE -->{L_ADD}<!-- ENDIF --></a>
-            <input type="text" id="ticketeditinput"<!-- IF IDEA_TICKET --> value="PHPBB3-{IDEA_TICKET}"<!-- ENDIF --> placeholder="PHPBB3-#####" data-l-err="{L_ERROR}" data-l-msg="{L_TICKET_ERROR}" />
-            <!-- ENDIF -->
-        </dd>
-        <!-- ENDIF -->
-        <!-- IF IDEA_DUPLICATE or S_IS_MOD -->
-        <dt style="width: 15%" class="duplicatetoggle">{L_DUPLICATE}{L_COLON}</dt>
-        <dd class="duplicatetoggle">
-
-            <a id="duplicatelink" data-link="{U_IDEA_DUPLICATE}" <!-- IF IDEA_DUPLICATE -->href="{U_IDEA_DUPLICATE}">{L_VIEW_DUPLICATE}<!-- ELSE -->style="display:none" data-l-msg="{L_VIEW_DUPLICATE}"><!-- ENDIF --></a>
-
-            <!-- IF S_IS_MOD -->
-            <a href="{U_EDIT_DUPLICATE}" id="duplicateedit">{L_SET}</a>
-            <input type="text" id="duplicateeditinput"<!-- IF IDEA_DUPLICATE --> value="{IDEA_DUPLICATE}"<!-- ENDIF --> placeholder="###" data-l-err="{L_ERROR}" data-l-msg="{L_TICKET_ERROR_DUP}" />
-            <!-- ENDIF -->
-        </dd>
-        <!-- ENDIF -->
-		<!-- IF U_DELETE_IDEA or S_CAN_EDIT -->
-		<dt style="width: 15%">{L_MOD_IDEA}{L_COLON}</dt>
-		<dd>
-			<!-- IF U_DELETE_IDEA --><a href="{U_DELETE_IDEA}" data-ajax="true" data-refresh="true">{L_DELETE}</a> &bull; <!-- ENDIF -->
-            <!-- IF S_CAN_EDIT --><a href="{U_EDIT_TITLE}" id="titleedit">{L_TITLE_EDIT}</a> &bull; <!-- ENDIF -->
-            <a href="{U_IDEA_TOPIC}">{L_IDEA_TOPIC}</a>
-		</dd>
-		<!-- ENDIF -->
-	</dl>
-
-	</div>
-</div>
-
-<!-- BEGIN postrow -->
-<!-- EVENT viewtopic_body_postrow_post_before -->
-<!-- IF postrow.S_FIRST_UNREAD -->
-<a id="unread" class="anchor"<!-- IF S_UNREAD_VIEW --> data-url="{postrow.U_MINI_POST}"<!-- ENDIF -->></a>
-<!-- ENDIF -->
-<div id="p{postrow.POST_ID}" class="post has-profile <!-- IF postrow.S_ROW_COUNT is odd -->bg1<!-- ELSE -->bg2<!-- ENDIF --><!-- IF postrow.S_UNREAD_POST --> unreadpost<!-- ENDIF --><!-- IF postrow.S_POST_REPORTED --> reported<!-- ENDIF --><!-- IF postrow.S_POST_DELETED --> deleted<!-- ENDIF --><!-- IF postrow.S_ONLINE and not postrow.S_POST_HIDDEN --> online<!-- ENDIF --><!-- IF postrow.POSTER_WARNINGS --> warned<!-- ENDIF -->">
-	<div class="inner">
-
-		<dl class="postprofile" id="profile{postrow.POST_ID}"<!-- IF postrow.S_POST_HIDDEN --> style="display: none;"<!-- ENDIF -->>
-		<dt class="<!-- IF postrow.RANK_TITLE or postrow.RANK_IMG -->has-profile-rank<!-- ELSE -->no-profile-rank<!-- ENDIF --> <!-- IF postrow.POSTER_AVATAR -->has-avatar<!-- ELSE -->no-avatar<!-- ENDIF -->">
-		<div class="avatar-container">
-			<!-- EVENT viewtopic_body_avatar_before -->
-			<!-- IF postrow.POSTER_AVATAR -->
-			<!-- IF postrow.U_POST_AUTHOR --><a href="{postrow.U_POST_AUTHOR}" class="avatar">{postrow.POSTER_AVATAR}</a><!-- ELSE --><span class="avatar">{postrow.POSTER_AVATAR}</span><!-- ENDIF -->
-			<!-- ENDIF -->
-			<!-- EVENT viewtopic_body_avatar_after -->
-		</div>
-		<!-- EVENT viewtopic_body_post_author_before -->
-		<!-- IF not postrow.U_POST_AUTHOR --><strong>{postrow.POST_AUTHOR_FULL}</strong><!-- ELSE -->{postrow.POST_AUTHOR_FULL}<!-- ENDIF -->
-		<!-- EVENT viewtopic_body_post_author_after -->
-		</dt>
-
-		<!-- EVENT viewtopic_body_postrow_rank_before -->
-		<!-- IF postrow.RANK_TITLE or postrow.RANK_IMG --><dd class="profile-rank">{postrow.RANK_TITLE}<!-- IF postrow.RANK_TITLE and postrow.RANK_IMG --><br /><!-- ENDIF -->{postrow.RANK_IMG}</dd><!-- ENDIF -->
-		<!-- EVENT viewtopic_body_postrow_rank_after -->
-
-		<!-- IF postrow.POSTER_POSTS != '' --><dd class="profile-posts"><strong>{L_POSTS}{L_COLON}</strong> <!-- IF postrow.U_SEARCH !== '' --><a href="{postrow.U_SEARCH}"><!-- ENDIF -->{postrow.POSTER_POSTS}<!-- IF postrow.U_SEARCH !== '' --></a><!-- ENDIF --></dd><!-- ENDIF -->
-		<!-- IF postrow.POSTER_JOINED --><dd class="profile-joined"><strong>{L_JOINED}{L_COLON}</strong> {postrow.POSTER_JOINED}</dd><!-- ENDIF -->
-		<!-- IF postrow.POSTER_WARNINGS --><dd class="profile-warnings"><strong>{L_WARNINGS}{L_COLON}</strong> {postrow.POSTER_WARNINGS}</dd><!-- ENDIF -->
-
-		<!-- IF postrow.S_PROFILE_FIELD1 -->
-		<!-- Use a construct like this to include admin defined profile fields. Replace FIELD1 with the name of your field. -->
-		<dd><strong>{postrow.PROFILE_FIELD1_NAME}{L_COLON}</strong> {postrow.PROFILE_FIELD1_VALUE}</dd>
-		<!-- ENDIF -->
-
-		<!-- EVENT viewtopic_body_postrow_custom_fields_before -->
-		<!-- BEGIN custom_fields -->
-		<!-- IF not postrow.custom_fields.S_PROFILE_CONTACT -->
-		<dd class="profile-custom-field profile-{postrow.custom_fields.PROFILE_FIELD_IDENT}"><strong>{postrow.custom_fields.PROFILE_FIELD_NAME}{L_COLON}</strong> {postrow.custom_fields.PROFILE_FIELD_VALUE}</dd>
-		<!-- ENDIF -->
-		<!-- END custom_fields -->
-		<!-- EVENT viewtopic_body_postrow_custom_fields_after -->
-
-		<!-- EVENT viewtopic_body_contact_fields_before -->
-		<!-- IF not S_IS_BOT and .postrow.contact -->
-		<dd class="profile-contact">
-			<strong>{L_CONTACT}{L_COLON}</strong>
-			<div class="dropdown-container dropdown-left">
-				<a href="#" class="dropdown-trigger"><span class="imageset icon_contact" title="{postrow.CONTACT_USER}">{postrow.CONTACT_USER}</span></a>
-				<div class="dropdown hidden">
-					<div class="pointer"><div class="pointer-inner"></div></div>
-					<div class="dropdown-contents contact-icons">
-						<!-- BEGIN contact -->
-						{% set REMAINDER = postrow.contact.S_ROW_COUNT % 4 %}
-						<!-- DEFINE $S_LAST_CELL = ((REMAINDER eq 3) or (postrow.contact.S_LAST_ROW and postrow.contact.S_NUM_ROWS < 4)) -->
-						<!-- IF REMAINDER eq 0 -->
-						<div>
-							<!-- ENDIF -->
-							<a href="<!-- IF postrow.contact.U_CONTACT -->{postrow.contact.U_CONTACT}<!-- ELSE -->{postrow.U_POST_AUTHOR}<!-- ENDIF -->" title="{postrow.contact.NAME}"<!-- IF $S_LAST_CELL --> class="last-cell"<!-- ENDIF --><!-- IF postrow.contact.ID eq 'jabber' --> onclick="popup(this.href, 750, 320); return false;"<!-- ENDIF -->>
-							<span class="contact-icon {postrow.contact.ID}-icon">{postrow.contact.NAME}</span>
-							</a>
-							<!-- IF REMAINDER eq 3 or postrow.contact.S_LAST_ROW -->
-						</div>
-						<!-- ENDIF -->
-						<!-- END contact -->
-					</div>
+		<dl class="left-box details" style="width: 95%">
+			<dt style="width: 15%">{{ lang('AUTHOR') ~ lang('COLON') }}</dt> <dd><strong>{{ IDEA_AUTHOR }}</strong></dd>
+			<dt style="width: 15%">{{ lang('POSTED') ~ lang('COLON') }}</dt> <dd>{{ IDEA_DATE }}</dd>
+			<dt style="width: 15%">{{ lang('RATING') ~ lang('COLON') }}</dt>
+			<dd>
+				<div class="rating">
+					<a {% if S_CAN_VOTE %}href="{{ U_IDEA_VOTE }}"{% endif %} class="minivoteup {{ S_CAN_VOTE ? 'voteup' : 'dead' }}" title="{{ lang('VOTE_UP') }}" data-l-err="{{ lang('ERROR') }}" data-l-msg="{{ lang('VOTE_ERROR') ~ lang('COLON') }}"><span>{{ IDEA_VOTES_UP }}</span></a> &nbsp;
+					<a {% if S_CAN_VOTE %}href="{{ U_IDEA_VOTE }}"{% endif %} class="minivotedown {{ S_CAN_VOTE ? 'votedown' : 'dead' }}" title="{{ lang('VOTE_DOWN') }}" data-l-err="{{ lang('ERROR') }}" data-l-msg="{{ lang('VOTE_ERROR') ~ lang('COLON') }}"><span>{{ IDEA_VOTES_DOWN }}</span></a>
+					<a href="#" class="votes bg3" data-l-msg="{{ lang('CLICK_TO_VIEW') }}">{{ lang('TOTAL_POINTS', IDEA_POINTS) }} {{ IDEA_VOTES ? lang('CLICK_TO_VIEW') }}</a> <span class="successvoted" data-l-err="{{ lang('VOTE_FAIL') }}"></span>
 				</div>
-			</div>
-		</dd>
-		<!-- ENDIF -->
-		<!-- EVENT viewtopic_body_contact_fields_after -->
-
+				<div class="clear"></div>
+				<div class="voteslist bg3" data-display="{{ IDEA_VOTES ? 'true' : 'false' }}">
+					<ul>
+						<li id="up-voters"{% if loops.votes_up is empty %} style="display:none;"{% endif %}>
+							<strong>&#x25B2;{{ lang('COLON') }}</strong>
+							<span>
+								{% for vote_up in loops.votes_up %}
+									{{ vote_up.USER }}{% if not vote_up.S_LAST_ROW %}, {% endif %}
+								{% endfor %}
+							</span>
+						</li>
+						<li id="down-voters"{% if loops.votes_down is empty %} style="display:none;"{% endif %}>
+							<strong>&#x25BC;{{ lang('COLON') }}</strong>
+							<span>
+								{% for vote_down in loops.votes_down %}
+									{{ vote_down.USER }}{% if not vote_down.S_LAST_ROW %}, {% endif %}
+								{% endfor %}
+							</span>
+						</li>
+						{% if S_CAN_VOTE %}
+							<li id="vote-remove"{% if S_VOTED == false %} style="display:none;"{% endif %}>
+								<strong>&times;{{ lang('COLON') }}</strong> <a href="{{ U_REMOVE_VOTE }}" class="removevote" data-l-err="{{ lang('ERROR') }}" data-l-msg="{{ lang('VOTE_ERROR') ~ lang('COLON') }}">{{ lang('REMOVE_VOTE') }}</a>
+							</li>
+						{% endif %}
+					</ul>
+				</div>
+			</dd>
+			<dt style="width: 15%">{{ lang('STATUS') ~ lang('COLON') }}</dt>
+			<dd>
+				<a href="{{ IDEA_STATUS_LINK }}">{{ IDEA_STATUS }}</a>
+				{% if STATUS_ARY %}&nbsp; <select id="status" data-url="{{ U_CHANGE_STATUS }}">
+					<option value="0">{{ lang('CHANGE_STATUS') }}</option>
+					{% for status, id in STATUS_ARY %}<option value="{{ id }}">{{ lang(status) }}</option>{% endfor %}
+				</select>{% endif %}
+			</dd>
+			{% if IDEA_RFC or S_CAN_EDIT %}
+				<dt style="width: 15%">{{ lang('RFC') ~ lang('COLON') }}</dt>
+				<dd>
+					<a id="rfclink" class="ideamodbtn" href="{{ IDEA_RFC }}"{% if not IDEA_RFC %} style="display:none"{% endif %}>{{ IDEA_RFC }}</a>
+					{% if S_CAN_EDIT %}
+						<a href="{{ U_EDIT_RFC }}" id="rfcedit" data-l-add="{{ lang('ADD') }}" data-l-edit="{{ lang('EDIT') }}">{% if IDEA_RFC %}{{ lang('EDIT') }}{% else %}{{ lang('ADD') }}{% endif %}</a>
+						<input type="text" id="rfceditinput" class="ideainput" value="{{ IDEA_RFC }}" data-l-err="{{ lang('ERROR') }}" data-l-msg="{{ lang('RFC_ERROR') }}" />
+					{% endif %}
+				</dd>
+			{% endif %}
+			{% if IDEA_TICKET or S_CAN_EDIT %}
+				<dt style="width: 15%">{{ lang('TICKET') ~ lang('COLON') }}</dt>
+				<dd>
+					<a id="ticketlink" class="ideamodbtn" {% if IDEA_TICKET %}href="https://tracker.phpbb.com/browse/PHPBB3-{{ IDEA_TICKET }}">PHPBB3-{{ IDEA_TICKET }}{% else %}style="display:none">{% endif %}</a>
+					{% if S_CAN_EDIT %}
+						<a href="{{ U_EDIT_TICKET }}" id="ticketedit" data-l-add="{{ lang('ADD') }}" data-l-edit="{{ lang('EDIT') }}">{% if IDEA_TICKET %}{{ lang('EDIT') }}{% else %}{{ lang('ADD') }}{% endif %}</a>
+						<input type="text" id="ticketeditinput" class="ideainput"{% if IDEA_TICKET %} value="PHPBB3-{{ IDEA_TICKET }}"{% endif %} placeholder="PHPBB3-#####" data-l-err="{{ lang('ERROR') }}" data-l-msg="{{ lang('TICKET_ERROR') }}" />
+					{% endif %}
+				</dd>
+			{% endif %}
+			{% if IDEA_DUPLICATE or S_IS_MOD %}
+				<dt class="duplicatetoggle" style="width: 15%; {% if IDEA_STATUS != lang('DUPLICATE') %}display:none{% endif %}">{{ lang('DUPLICATE') ~ lang('COLON') }}</dt>
+				<dd class="duplicatetoggle" {% if IDEA_STATUS != lang('DUPLICATE') %}style="display:none"{% endif %}>
+					<a id="duplicatelink" class="ideamodbtn" data-link="{{ U_IDEA_DUPLICATE }}" data-l-msg="{{ lang('VIEW_DUPLICATE') }}" {% if IDEA_DUPLICATE %}href="{{ U_IDEA_DUPLICATE }}">{{ lang('VIEW_DUPLICATE') }}{% else %}style="display:none">{% endif %}</a>
+					{% if S_IS_MOD %}
+						<a href="{{ U_EDIT_DUPLICATE }}" id="duplicateedit">{{ lang('SET') }}</a>
+						<input type="text" id="duplicateeditinput" class="ideainput"{% if IDEA_DUPLICATE %} value="{{ IDEA_DUPLICATE }}"{% endif %} placeholder="###" data-l-err="{{ lang('ERROR') }}" data-l-msg="{{ lang('TICKET_ERROR_DUP') }}" />
+					{% endif %}
+				</dd>
+			{% endif %}
+			{% if S_IS_MOD %}
+				<dt style="width: 15%">{{ lang('MOD_IDEA') ~ lang('COLON') }}</dt>
+				<dd>
+					<a href="{{ U_DELETE_IDEA }}" data-ajax="true" data-refresh="true"><i class="fa fa-fw fa-trash-o"></i>{{ lang('DELETE') }}</a>&nbsp;
+					<a href="{{ U_EDIT_TITLE }}" id="titleedit"><i class="fa fa-fw fa-pencil"></i>{{ lang('TITLE_EDIT') }}</a>
+				</dd>
+			{% endif %}
 		</dl>
-
-		<div class="postbody">
-			<!-- IF postrow.S_POST_HIDDEN -->
-			<!-- IF postrow.S_POST_DELETED -->
-			<div class="ignore" id="post_hidden{postrow.POST_ID}">
-				{postrow.L_POST_DELETED_MESSAGE}<br />
-				{postrow.L_POST_DISPLAY}
-			</div>
-			<!-- ELSEIF postrow.S_IGNORE_POST -->
-			<div class="ignore" id="post_hidden{postrow.POST_ID}">
-				{postrow.L_IGNORE_POST}<br />
-				{postrow.L_POST_DISPLAY}
-			</div>
-			<!-- ENDIF -->
-			<!-- ENDIF -->
-			<div id="post_content{postrow.POST_ID}"<!-- IF postrow.S_POST_HIDDEN --> style="display: none;"<!-- ENDIF -->>
-
-			<h3 <!-- IF postrow.S_FIRST_ROW -->class="first"<!-- ENDIF -->><!-- IF postrow.POST_ICON_IMG --><img src="{T_ICONS_PATH}{postrow.POST_ICON_IMG}" width="{postrow.POST_ICON_IMG_WIDTH}" height="{postrow.POST_ICON_IMG_HEIGHT}" alt="" /> <!-- ENDIF --><a href="#p{postrow.POST_ID}">{postrow.POST_SUBJECT}</a></h3>
-
-			<!-- DEFINE $SHOW_POST_BUTTONS = (postrow.U_EDIT or postrow.U_DELETE or postrow.U_REPORT or postrow.U_WARN or postrow.U_INFO or postrow.U_QUOTE) -->
-			<!-- EVENT viewtopic_body_post_buttons_list_before -->
-			<!-- IF not S_IS_BOT and postrow.POST_NUMBER != 1 -->
-			<!-- IF $SHOW_POST_BUTTONS -->
-			<ul class="post-buttons">
-				<!-- EVENT viewtopic_body_post_buttons_before -->
-				<!-- IF postrow.U_EDIT -->
-				<li>
-					<a href="{postrow.U_EDIT}" title="{L_EDIT_POST}" class="button icon-button edit-icon"><span>{L_BUTTON_EDIT}</span></a>
-				</li>
-				<!-- ENDIF -->
-				<!-- IF postrow.U_DELETE -->
-				<li>
-					<a href="{postrow.U_DELETE}" title="{L_DELETE_POST}" class="button icon-button delete-icon"><span>{L_DELETE_POST}</span></a>
-				</li>
-				<!-- ENDIF -->
-				<!-- IF postrow.U_REPORT -->
-				<li>
-					<a href="{postrow.U_REPORT}" title="{L_REPORT_POST}" class="button icon-button report-icon"><span>{L_REPORT_POST}</span></a>
-				</li>
-				<!-- ENDIF -->
-				<!-- IF postrow.U_WARN -->
-				<li>
-					<a href="{postrow.U_WARN}" title="{L_WARN_USER}" class="button icon-button warn-icon"><span>{L_WARN_USER}</span></a>
-				</li>
-				<!-- ENDIF -->
-				<!-- IF postrow.U_INFO -->
-				<li>
-					<a href="{postrow.U_INFO}" title="{L_INFORMATION}" class="button icon-button info-icon"><span>{L_INFORMATION}</span></a>
-				</li>
-				<!-- ENDIF -->
-				<!-- IF postrow.U_QUOTE -->
-				<li>
-					<a href="{postrow.U_QUOTE}" title="{L_REPLY_WITH_QUOTE}" class="button icon-button quote-icon"><span>{L_QUOTE}</span></a>
-				</li>
-				<!-- ENDIF -->
-				<!-- EVENT viewtopic_body_post_buttons_after -->
-			</ul>
-			<!-- ENDIF -->
-			<!-- ENDIF -->
-			<!-- EVENT viewtopic_body_post_buttons_list_after -->
-
-			<!-- EVENT viewtopic_body_postrow_post_details_before -->
-			<p class="author"><!-- IF S_IS_BOT -->{postrow.MINI_POST_IMG}<!-- ELSE --><a href="{postrow.U_MINI_POST}">{postrow.MINI_POST_IMG}</a><!-- ENDIF --><span class="responsive-hide">{L_POST_BY_AUTHOR} <strong>{postrow.POST_AUTHOR_FULL}</strong> &raquo; </span>{postrow.POST_DATE} </p>
-			<!-- EVENT viewtopic_body_postrow_post_details_after -->
-
-			<!-- IF postrow.S_POST_UNAPPROVED -->
-			<form method="post" class="mcp_approve" action="{postrow.U_APPROVE_ACTION}">
-				<p class="post-notice unapproved">
-					<strong>{L_POST_UNAPPROVED_ACTION}</strong>
-					<input class="button2" type="submit" value="{L_DISAPPROVE}" name="action[disapprove]" />
-					<input class="button1" type="submit" value="{L_APPROVE}" name="action[approve]" />
-					<input type="hidden" name="post_id_list[]" value="{postrow.POST_ID}" />
-					{S_FORM_TOKEN}
-				</p>
-			</form>
-			<!-- ELSEIF postrow.S_POST_DELETED -->
-			<form method="post" class="mcp_approve" action="{postrow.U_APPROVE_ACTION}">
-				<p class="post-notice deleted">
-					<strong>{L_POST_DELETED_ACTION}</strong>
-					<!-- IF postrow.S_DELETE_PERMANENT -->
-					<input class="button2" type="submit" value="{L_DELETE}" name="action[delete]" />
-					<!-- ENDIF -->
-					<input class="button1" type="submit" value="{L_RESTORE}" name="action[restore]" />
-					<input type="hidden" name="post_id_list[]" value="{postrow.POST_ID}" />
-					{S_FORM_TOKEN}
-				</p>
-			</form>
-			<!-- ENDIF -->
-
-			<!-- IF postrow.S_POST_REPORTED -->
-			<p class="post-notice reported">
-				<a href="{postrow.U_MCP_REPORT}"><strong>{L_POST_REPORTED}</strong></a>
-			</p>
-			<!-- ENDIF -->
-
-			<div class="content">{postrow.MESSAGE}</div>
-
-			<!-- IF postrow.S_HAS_ATTACHMENTS -->
-			<dl class="attachbox">
-				<dt>
-					{L_ATTACHMENTS}
-				</dt>
-				<!-- BEGIN attachment -->
-				<dd>{postrow.attachment.DISPLAY_ATTACHMENT}</dd>
-				<!-- END attachment -->
-			</dl>
-			<!-- ENDIF -->
-
-			<!-- EVENT viewtopic_body_postrow_post_notices_before -->
-			<!-- IF postrow.S_DISPLAY_NOTICE --><div class="rules">{L_DOWNLOAD_NOTICE}</div><!-- ENDIF -->
-			<!-- IF postrow.DELETED_MESSAGE or postrow.DELETE_REASON -->
-			<div class="notice post_deleted_msg">
-				{postrow.DELETED_MESSAGE}
-				<!-- IF postrow.DELETE_REASON --><br /><strong>{L_REASON}{L_COLON}</strong> <em>{postrow.DELETE_REASON}</em><!-- ENDIF -->
-			</div>
-			<!-- ELSEIF postrow.EDITED_MESSAGE or postrow.EDIT_REASON -->
-			<div class="notice">
-				{postrow.EDITED_MESSAGE}
-				<!-- IF postrow.EDIT_REASON --><br /><strong>{L_REASON}{L_COLON}</strong> <em>{postrow.EDIT_REASON}</em><!-- ENDIF -->
-			</div>
-			<!-- ENDIF -->
-
-			<!-- IF postrow.BUMPED_MESSAGE --><div class="notice"><br /><br />{postrow.BUMPED_MESSAGE}</div><!-- ENDIF -->
-			<!-- EVENT viewtopic_body_postrow_post_notices_after -->
-			<!-- IF postrow.SIGNATURE --><div id="sig{postrow.POST_ID}" class="signature">{postrow.SIGNATURE}</div><!-- ENDIF -->
-
-			<!-- EVENT viewtopic_body_postrow_post_content_footer -->
-		</div>
-
 	</div>
-
-	<div class="back2top"><a href="#top" class="top" title="{L_BACK_TO_TOP}">{L_BACK_TO_TOP}</a></div>
-
 </div>
-</div>
-
-<hr class="divider" />
-<!-- EVENT viewtopic_body_postrow_post_after -->
-<!-- END postrow -->
-
-<!-- IF S_QUICK_REPLY -->
-<!-- INCLUDE quickreply_editor.html -->
-<!-- ENDIF -->
-
-<!-- IF S_NUM_POSTS > 1 or .pagination -->
-<form id="viewtopic" method="post" action="{S_TOPIC_ACTION}">
-	<fieldset class="display-options" style="margin-top: 0; ">
-		<!-- IF not S_IS_BOT -->
-		<label>{L_DISPLAY_POSTS}{L_COLON} {S_SELECT_SORT_DAYS}</label>
-		<label>{L_SORT_BY} {S_SELECT_SORT_KEY}</label> <label>{S_SELECT_SORT_DIR}</label>
-		<input type="submit" name="sort" value="{L_GO}" class="button2" />
-		<!-- ENDIF -->
-	</fieldset>
-</form>
-<hr />
-<!-- ENDIF -->
-
-<!-- EVENT viewtopic_body_topic_actions_before -->
-<div class="action-bar bottom">
-	<div class="buttons">
-		<!-- EVENT viewtopic_buttons_bottom_before -->
-
-		<!-- IF not S_IS_BOT and S_DISPLAY_REPLY_INFO -->
-		<a href="{U_POST_REPLY_TOPIC}" class="button icon-button <!-- IF S_IS_LOCKED -->locked-icon<!-- ELSE -->reply-icon<!-- ENDIF -->" title="<!-- IF S_IS_LOCKED -->{L_TOPIC_LOCKED}<!-- ELSE -->{L_POST_REPLY}<!-- ENDIF -->">
-			<!-- IF S_IS_LOCKED -->{L_BUTTON_TOPIC_LOCKED}<!-- ELSE -->{L_BUTTON_POST_REPLY}<!-- ENDIF -->
-		</a>
-		<!-- ENDIF -->
-
-		<!-- EVENT viewtopic_buttons_bottom_after -->
-	</div>
-
-	<!-- INCLUDE viewtopic_topic_tools.html -->
-
-	<!-- IF .quickmod -->
-	<div class="dropdown-container dropdown-container-{S_CONTENT_FLOW_BEGIN} dropdown-up dropdown-{S_CONTENT_FLOW_END} dropdown-button-control" id="quickmod">
-		<span title="{L_QUICK_MOD}" class="dropdown-trigger button icon-button modtools-icon dropdown-select">{L_QUICK_MOD}</span>
-		<div class="dropdown hidden">
-			<div class="pointer"><div class="pointer-inner"></div></div>
-			<ul class="dropdown-contents">
-				<!-- BEGIN quickmod -->
-				<!-- DEFINE $QUICKMOD_AJAX = (quickmod.VALUE in ['lock', 'unlock', 'delete_topic', 'restore_topic', 'make_normal', 'make_sticky', 'make_announce', 'make_global']) -->
-				<li><a href="{quickmod.LINK}"<!-- IF $QUICKMOD_AJAX --> data-ajax="true" data-refresh="true"<!-- ENDIF -->>{quickmod.TITLE}</a></li>
-				<!-- END quickmod -->
-			</ul>
-		</div>
-	</div>
-	<!-- ENDIF -->
-
-	<!-- EVENT viewtopic_dropdown_bottom_custom -->
-
-	<!-- IF .pagination or TOTAL_POSTS -->
-	<div class="pagination">
-		{TOTAL_POSTS}
-		<!-- IF .pagination -->
-		<!-- INCLUDE pagination.html -->
-		<!-- ELSE -->
-		&bull; {PAGE_NUMBER}
-		<!-- ENDIF -->
-	</div>
-	<!-- ENDIF -->
-	<div class="clear"></div>
-</div>
-
-<!-- EVENT viewtopic_body_footer_before -->
-<!-- INCLUDE jumpbox.html -->
-
-<!-- IF S_DISPLAY_ONLINE_LIST -->
-<div class="stat-block online-list">
-	<h3><!-- IF U_VIEWONLINE --><a href="{U_VIEWONLINE}">{L_WHO_IS_ONLINE}</a><!-- ELSE -->{L_WHO_IS_ONLINE}<!-- ENDIF --></h3>
-	<p>{LOGGED_IN_USER_LIST}</p>
-</div>
-<!-- ENDIF -->
-
-<!-- INCLUDE overall_footer.html -->

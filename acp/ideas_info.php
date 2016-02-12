@@ -15,13 +15,13 @@ class ideas_info
 	public function module()
 	{
 		return array(
-			'filename'	=> '\phpbb\ideas\acp\ideas_module',
-			'title'		=> 'ACP_PHPBB_IDEAS',
-			'modes'		=> array(
-				'settings'	=> array(
+			'filename' => '\phpbb\ideas\acp\ideas_module',
+			'title'    => 'ACP_PHPBB_IDEAS',
+			'modes'    => array(
+				'settings' => array(
 					'title' => 'ACP_PHPBB_IDEAS_SETTINGS',
-					'auth' => 'ext_phpbb/ideas && acl_a_board',
-					'cat' => array('ACP_PHPBB_IDEAS')
+					'auth'  => 'ext_phpbb/ideas && acl_a_board',
+					'cat'   => array('ACP_PHPBB_IDEAS'),
 				),
 			),
 		);
