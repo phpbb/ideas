@@ -576,7 +576,7 @@ class ideas
 		{
 			$error[] = $this->language->lang('TOO_FEW_CHARS');
 		}
-		if (utf8_strlen($message) > $this->config['max_post_chars'])
+		if (utf8_strlen($message) > $this->config['max_post_chars'] && $this->config['max_post_chars'] != 0)
 		{
 			$error[] = $this->language->lang('TOO_MANY_CHARS');
 		}

@@ -34,11 +34,11 @@ class idea_attributes_test extends ideas_base
 	 *
 	 * @dataProvider get_status_from_id_test_data
 	 */
-	public function test_get_status_from_id($idea_id, $expected)
+	public function test_get_status_from_id($id, $expected)
 	{
 		$ideas = $this->get_ideas_object();
 
-		$this->assertEquals($expected, $ideas->get_status_from_id($idea_id));
+		$this->assertEquals($expected, $ideas->get_status_from_id($id));
 	}
 
 	/**
