@@ -10,8 +10,6 @@
 
 namespace phpbb\ideas\factory;
 
-require_once dirname(__FILE__) . '/../../../../../includes/functions_content.php';
-
 class submit_idea_test extends \phpbb\ideas\tests\ideas\ideas_base
 {
 	public function setUp()
