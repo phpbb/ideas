@@ -10,8 +10,6 @@
 
 namespace phpbb\ideas\tests\ideas;
 
-require_once dirname(__FILE__) . '/../../../../../includes/functions.php';
-
 class ideas_base extends \phpbb_database_test_case
 {
 	static protected function setup_extensions()

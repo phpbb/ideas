@@ -10,8 +10,6 @@
 
 namespace phpbb\ideas\tests\controller;
 
-require_once dirname(__FILE__) . '/../../../../../includes/functions.php';
-
 class controller_base extends \phpbb_test_case
 {
 	/** @var \PHPUnit_Framework_MockObject_MockObject|\phpbb\auth\auth */

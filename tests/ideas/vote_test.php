@@ -10,8 +10,6 @@
 
 namespace phpbb\ideas\tests\ideas;
 
-require_once dirname(__FILE__) . '/../../../../../includes/functions_content.php';
-
 class vote_test extends ideas_base
 {
 	/**
