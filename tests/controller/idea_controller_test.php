@@ -12,7 +12,7 @@ namespace phpbb\ideas\controller;
 
 class idea_controller_test extends \phpbb\ideas\tests\controller\controller_base
 {
-	static $confirm = false;
+	public static $confirm = false;
 
 	/**
 	 * Test data for the test_controller test
