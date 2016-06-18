@@ -69,7 +69,7 @@ class linkhelper_test extends \phpbb_database_test_case
 		return array(
 			array(1, '', false, 'phpbb_ideas_idea_controller#{"idea_id":1}'),
 			array(2, 'vote', false, 'phpbb_ideas_idea_controller#{"idea_id":2,"mode":"vote"}'),
-			array(3, 'delete', true, 'phpbb_ideas_idea_controller#{"idea_id":3,"mode":"delete","hash":"' . generate_link_hash("delete_3") . '"}'),
+			array(3, 'delete', true, 'phpbb_ideas_idea_controller#{"idea_id":3,"mode":"delete","hash":"' . generate_link_hash('delete_3') . '"}'),
 		);
 	}
 

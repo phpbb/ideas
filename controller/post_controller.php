@@ -88,10 +88,10 @@ class post_controller extends base
 			'S_BBCODE_QUOTE'	=> true,
 
 			'BBCODE_STATUS'		=> $this->language->lang(($bbcode_status ? 'BBCODE_IS_ON' : 'BBCODE_IS_OFF'), '<a href="' . $this->helper->route('phpbb_help_bbcode_controller') . '">', '</a>'),
-			'IMG_STATUS'		=> ($img_status) ? $this->language->lang('IMAGES_ARE_ON') : $this->language->lang('IMAGES_ARE_OFF'),
-			'FLASH_STATUS'		=> ($flash_status) ? $this->language->lang('FLASH_IS_ON') : $this->language->lang('FLASH_IS_OFF'),
+			'IMG_STATUS'		=> $img_status ? $this->language->lang('IMAGES_ARE_ON') : $this->language->lang('IMAGES_ARE_OFF'),
+			'FLASH_STATUS'		=> $flash_status ? $this->language->lang('FLASH_IS_ON') : $this->language->lang('FLASH_IS_OFF'),
 			'URL_STATUS'		=> ($bbcode_status && $url_status) ? $this->language->lang('URL_IS_ON') : $this->language->lang('URL_IS_OFF'),
-			'SMILIES_STATUS'	=> ($smilies_status) ? $this->language->lang('SMILIES_ARE_ON') : $this->language->lang('SMILIES_ARE_OFF'),
+			'SMILIES_STATUS'	=> $smilies_status ? $this->language->lang('SMILIES_ARE_ON') : $this->language->lang('SMILIES_ARE_OFF'),
 		));
 
 		// Assign breadcrumb template vars
