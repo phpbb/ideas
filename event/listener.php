@@ -232,7 +232,7 @@ class listener implements EventSubscriberInterface
 	/**
 	 * Show users as viewing Ideas on Who Is Online page
 	 *
-	 * @param object $event The event object
+	 * @param \phpbb\event\data $event The event object
 	 * @return null
 	 * @access public
 	 */
