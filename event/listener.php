@@ -238,7 +238,7 @@ class listener implements EventSubscriberInterface
 	 */
 	public function viewonline_ideas($event)
 	{
-		if ($event['on_page'][1] == 'app')
+		if ($event['on_page'][1] === 'app')
 		{
 			if (strrpos($event['row']['session_page'], 'app.' . $this->php_ext . '/ideas/post') === 0)
 			{
@@ -251,7 +251,7 @@ class listener implements EventSubscriberInterface
 				$event['location_url'] = $this->helper->route('phpbb_ideas_index_controller');
 			}
 		}
-		else if ($event['on_page'][1] == 'viewtopic')
+		else if ($event['on_page'][1] === 'viewtopic')
 		{
 			if ($event['row']['session_forum_id'] == $this->config['ideas_forum_id'])
 			{

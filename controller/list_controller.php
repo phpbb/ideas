@@ -60,7 +60,7 @@ class list_controller extends base
 		}
 
 		// Set the status name for displaying in the template
-		$status_name = (!$status && $sort == ideas::SORT_TOP) ? $this->language->lang('TOP_IDEAS') : $this->ideas->get_status_from_id($status);
+		$status_name = (!$status && $sort === ideas::SORT_TOP) ? $this->language->lang('TOP_IDEAS') : $this->ideas->get_status_from_id($status);
 
 		// For special case where we want to request ALL ideas,
 		// including the statuses normally hidden from lists.
