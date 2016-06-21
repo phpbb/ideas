@@ -190,7 +190,7 @@ class idea_attributes_test extends ideas_base
 	 * @param string $attribute The name of the attribute
 	 * @param array  $data      The test data array
 	 * @param bool   $expected  The expected result returned by method
-	 * @return array The idea data array
+	 * @return array|bool The idea data array, or false if error
 	 */
 	public function set_attribute_test($call, $attribute, $data, $expected)
 	{
@@ -208,5 +208,7 @@ class idea_attributes_test extends ideas_base
 
 			return $idea;
 		}
+
+		return false;
 	}
 }

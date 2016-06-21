@@ -12,7 +12,7 @@ namespace phpbb\ideas\controller;
 
 class idea_controller_test extends \phpbb\ideas\tests\controller\controller_base
 {
-	static $confirm = false;
+	public static $confirm = false;
 
 	/**
 	 * Test data for the test_controller test
@@ -86,7 +86,7 @@ class idea_controller_test extends \phpbb\ideas\tests\controller\controller_base
 			)));
 
 		// special case, expect trigger_error when a confirm_box return true
-		if ($expected == 'trigger_error')
+		if ($expected === 'trigger_error')
 		{
 			self::$confirm = true;
 			$this->setExpectedTriggerError(E_USER_NOTICE);

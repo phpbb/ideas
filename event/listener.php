@@ -100,7 +100,7 @@ class listener implements EventSubscriberInterface
 		if ($event['forum_id'] == $this->config['ideas_forum_id'])
 		{
 			// Use the custom base url if set, otherwise default to normal routing
-			$url = ($this->config['ideas_base_url']) ? $this->config['ideas_base_url'] : $this->helper->route('phpbb_ideas_index_controller');
+			$url = $this->config['ideas_base_url'] ?: $this->helper->route('phpbb_ideas_index_controller');
 			redirect($url);
 		}
 	}
@@ -232,13 +232,13 @@ class listener implements EventSubscriberInterface
 	/**
 	 * Show users as viewing Ideas on Who Is Online page
 	 *
-	 * @param object $event The event object
+	 * @param \phpbb\event\data $event The event object
 	 * @return null
 	 * @access public
 	 */
 	public function viewonline_ideas($event)
 	{
-		if ($event['on_page'][1] == 'app')
+		if ($event['on_page'][1] === 'app')
 		{
 			if (strrpos($event['row']['session_page'], 'app.' . $this->php_ext . '/ideas/post') === 0)
 			{
@@ -251,7 +251,7 @@ class listener implements EventSubscriberInterface
 				$event['location_url'] = $this->helper->route('phpbb_ideas_index_controller');
 			}
 		}
-		else if ($event['on_page'][1] == 'viewtopic')
+		else if ($event['on_page'][1] === 'viewtopic')
 		{
 			if ($event['row']['session_forum_id'] == $this->config['ideas_forum_id'])
 			{

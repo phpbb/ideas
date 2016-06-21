@@ -31,7 +31,7 @@ class list_controller extends base
 
 		// Overwrite the $sort parameter if the url contains a sort query.
 		// This is needed with the sort by options form at the footer of the list.
-		$sort = ($this->request->is_set('sort')) ? $this->request->variable('sort', ideas::SORT_NEW) : $sort;
+		$sort = $this->request->is_set('sort') ? $this->request->variable('sort', ideas::SORT_NEW) : $sort;
 
 		// Get additional query values the url may contain
 		$sort_direction = $this->request->variable('sd', 'd');
@@ -60,7 +60,7 @@ class list_controller extends base
 		}
 
 		// Set the status name for displaying in the template
-		$status_name = (!$status && $sort == ideas::SORT_TOP) ? $this->language->lang('TOP_IDEAS') : $this->ideas->get_status_from_id($status);
+		$status_name = (!$status && $sort === ideas::SORT_TOP) ? $this->language->lang('TOP_IDEAS') : $this->ideas->get_status_from_id($status);
 
 		// For special case where we want to request ALL ideas,
 		// including the statuses normally hidden from lists.

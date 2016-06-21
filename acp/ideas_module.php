@@ -18,11 +18,9 @@ class ideas_module
 	/**
 	* Main ACP module
 	*
-	* @param int $id
-	* @param string $mode
 	* @access public
 	*/
-	public function main($id, $mode)
+	public function main()
 	{
 		global $phpbb_container;
 
@@ -61,6 +59,5 @@ class ideas_module
 
 		// Display/set ACP configuration settings
 		$admin_controller->display_options();
-
 	}
 }

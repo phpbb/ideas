@@ -85,7 +85,7 @@ class admin_controller
 	{
 		$this->template->assign_vars(array(
 			'IDEAS_POSTER'		=> $this->get_ideas_topics_poster_username(),
-			'IDEAS_BASE_URL'	=> ($this->config['ideas_base_url']) ?: '',
+			'IDEAS_BASE_URL'	=> $this->config['ideas_base_url'] ?: '',
 
 			'S_FORUM_SELECT_BOX'	=> $this->select_ideas_forum(),
 			'S_IDEAS_FORUM_ID'		=> !empty($this->config['ideas_forum_id']),

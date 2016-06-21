@@ -28,7 +28,7 @@ class ideas
 	const SORT_VOTES = 'votes';
 
 	/** @var array Idea status names and IDs */
-	static $statuses = array(
+	public static $statuses = array(
 		'NEW'			=> 1,
 		'IN_PROGRESS'	=> 2,
 		'IMPLEMENTED'	=> 3,
