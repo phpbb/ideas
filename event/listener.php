@@ -251,13 +251,10 @@ class listener implements EventSubscriberInterface
 				$event['location_url'] = $this->helper->route('phpbb_ideas_index_controller');
 			}
 		}
-		else if ($event['on_page'][1] === 'viewtopic')
+		else if ($event['on_page'][1] === 'viewtopic' && $event['row']['session_forum_id'] == $this->config['ideas_forum_id'])
 		{
-			if ($event['row']['session_forum_id'] == $this->config['ideas_forum_id'])
-			{
-				$event['location'] = $this->language->lang('VIEWING_IDEAS');
-				$event['location_url'] = $this->helper->route('phpbb_ideas_index_controller');
-			}
+			$event['location'] = $this->language->lang('VIEWING_IDEAS');
+			$event['location_url'] = $this->helper->route('phpbb_ideas_index_controller');
 		}
 	}
 }
