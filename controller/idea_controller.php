@@ -59,7 +59,7 @@ class idea_controller extends base
 	/**
 	 * Delete action (deletes an idea via confirm dialog)
 	 *
-	 * @return null
+	 * @return void
 	 * @access public
 	 */
 	public function delete()

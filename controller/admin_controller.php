@@ -78,7 +78,7 @@ class admin_controller
 	/**
 	 * Display the options a user can configure for this extension
 	 *
-	 * @return null
+	 * @return void
 	 * @access public
 	 */
 	public function display_options()
@@ -98,7 +98,7 @@ class admin_controller
 	/**
 	 * Set configuration options
 	 *
-	 * @return null
+	 * @return void
 	 * @access public
 	 */
 	public function set_config_options()
@@ -168,7 +168,7 @@ class admin_controller
 	/**
 	 * Set ideas forum options
 	 *
-	 * @return  null
+	 * @return void
 	 * @access public
 	 */
 	public function set_ideas_forum_options()
@@ -280,7 +280,7 @@ class admin_controller
 	 * Set page url
 	 *
 	 * @param string $u_action Custom form action
-	 * @return null
+	 * @return void
 	 * @access public
 	 */
 	public function set_page_url($u_action)

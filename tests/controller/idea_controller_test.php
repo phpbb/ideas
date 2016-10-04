@@ -168,7 +168,7 @@ function confirm_box()
  * Mock meta_refresh()
  * Note: use the same namespace as the idea_controller
  *
- * @return null
+ * @return void
  */
 function meta_refresh()
 {

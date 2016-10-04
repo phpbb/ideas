@@ -92,7 +92,7 @@ class listener implements EventSubscriberInterface
 	 * Redirect users from the forum to the Ideas centre
 	 *
 	 * @param $event
-	 * @return null
+	 * @return void
 	 * @access public
 	 */
 	public function ideas_forum_redirect($event)
@@ -109,7 +109,7 @@ class listener implements EventSubscriberInterface
 	 * Clean obsolete link-backs from idea topics
 	 *
 	 * @param $event
-	 * @return null
+	 * @return void
 	 * @access public
 	 */
 	public function clean_message($event)
@@ -137,7 +137,7 @@ class listener implements EventSubscriberInterface
 	 * Show the idea related to the current topic
 	 *
 	 * @param $event
-	 * @return null
+	 * @return void
 	 * @access public
 	 */
 	public function show_idea($event)
@@ -233,7 +233,7 @@ class listener implements EventSubscriberInterface
 	 * Show users as viewing Ideas on Who Is Online page
 	 *
 	 * @param \phpbb\event\data $event The event object
-	 * @return null
+	 * @return void
 	 * @access public
 	 */
 	public function viewonline_ideas($event)

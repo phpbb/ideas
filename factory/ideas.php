@@ -273,7 +273,7 @@ class ideas
 	 * @param int $idea_id The ID of the idea.
 	 * @param int $status  The ID of the status.
 	 *
-	 * @return null
+	 * @return void
 	 */
 	public function change_status($idea_id, $status)
 	{
@@ -713,7 +713,7 @@ class ideas
 	 * @param int    $id    The ID of the idea
 	 * @param string $table The name of the table
 	 *
-	 * @return null
+	 * @return void
 	 */
 	protected function update_idea_data(array $data, $id, $table)
 	{

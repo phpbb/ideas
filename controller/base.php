@@ -108,7 +108,7 @@ abstract class base
 	 * @param string $block The template block var name
 	 * @param array  $rows  The Idea row data
 	 *
-	 * @return null
+	 * @return void
 	 */
 	protected function assign_template_block_vars($block, $rows)
 	{
@@ -132,7 +132,7 @@ abstract class base
 	/**
 	 * Assign template variables for a search ideas field
 	 *
-	 * @return null
+	 * @return void
 	 */
 	protected function display_search_ideas()
 	{
