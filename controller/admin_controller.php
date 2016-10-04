@@ -184,7 +184,7 @@ class admin_controller
 
 			if (!class_exists('auth_admin'))
 			{
-				include($this->phpbb_root_path . 'includes/acp/auth.' . $this->php_ext);
+				include $this->phpbb_root_path . 'includes/acp/auth.' . $this->php_ext;
 			}
 			$auth_admin = new \auth_admin();
 

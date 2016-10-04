@@ -68,7 +68,7 @@ class idea_controller extends base
 		{
 			if (confirm_box(true))
 			{
-				include($this->root_path . 'includes/functions_admin.' . $this->php_ext);
+				include $this->root_path . 'includes/functions_admin.' . $this->php_ext;
 				$this->ideas->delete($this->data['idea_id'], $this->data['topic_id']);
 
 				$redirect = $this->helper->route('phpbb_ideas_index_controller');
