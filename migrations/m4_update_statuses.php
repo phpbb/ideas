@@ -26,7 +26,10 @@ class m4_update_statuses extends \phpbb\db\migration\migration
 
 	static public function depends_on()
 	{
-		return array('\phpbb\ideas\migrations\m2_initial_data');
+		return array(
+			'\phpbb\ideas\migrations\m1_initial_schema',
+			'\phpbb\ideas\migrations\m2_initial_data',
+		);
 	}
 
 	public function update_data()

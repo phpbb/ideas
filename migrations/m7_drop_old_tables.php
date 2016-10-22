@@ -19,7 +19,10 @@ class m7_drop_old_tables extends \phpbb\db\migration\migration
 
 	static public function depends_on()
 	{
-		return array('\phpbb\ideas\migrations\m6_migrate_old_tables');
+		return array(
+			'\phpbb\ideas\migrations\m1_initial_schema',
+			'\phpbb\ideas\migrations\m6_migrate_old_tables',
+		);
 	}
 
 	public function update_schema()

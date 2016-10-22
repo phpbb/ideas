@@ -19,7 +19,10 @@ class m6_migrate_old_tables extends \phpbb\db\migration\migration
 
 	static public function depends_on()
 	{
-		return array('\phpbb\ideas\migrations\m4_update_statuses');
+		return array(
+			'\phpbb\ideas\migrations\m1_initial_schema',
+			'\phpbb\ideas\migrations\m4_update_statuses',
+		);
 	}
 
 	public function update_schema()
