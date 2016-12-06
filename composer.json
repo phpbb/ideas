@@ -3,7 +3,7 @@
     "type": "phpbb-extension",
     "description": "phpBB Ideas extension",
     "homepage": "https://www.phpbb.com",
-    "version": "2.1.0-dev",
+    "version": "2.1.0",
     "license": "GPL-2.0",
     "authors": [
         {
@@ -35,7 +35,7 @@
     ],
     "require": {
         "php": ">=5.4",
-        "phpbb/phpbb": ">=3.2.0@dev,<3.3.0@dev"
+        "phpbb/phpbb": "^3.2"
     },
     "extra": {
         "display-name": "phpBB Ideas",
