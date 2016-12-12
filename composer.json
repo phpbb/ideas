@@ -35,12 +35,13 @@
     ],
     "require": {
         "php": ">=5.4",
-        "phpbb/phpbb": ">=3.2.0@dev,<3.3.0@dev"
+        "phpbb/phpbb": ">=3.2.0@dev",
+		"composer/installers": "~1.0"
     },
     "extra": {
         "display-name": "phpBB Ideas",
         "soft-require": {
-            "phpbb/phpbb": ">=3.2.0@dev,<3.3.0@dev"
+            "phpbb/phpbb": ">=3.2.0@dev,<3.3"
         }
     }
 }
