@@ -24,7 +24,7 @@ class idea_controller_test extends \phpbb\ideas\tests\controller\controller_base
 		return array(
 			array(1, '', '', false, null, null, 302), // non-ajax
 			array(2, 'delete', 'delete', true, true, '{}', 200), // ajax delete success (confirm fail)
-			array(2, 'delete', 'delete', true, false, '{}', 200), // ajax delete fail
+			array(2, 'delete', 'delete', true, false, 'NO_AUTH_OPERATION', 403), // ajax delete fail
 			array(2, 'delete', 'delete', true, true, 'trigger_error', 200), // ajax delete success (confirm true)
 			array(3, 'duplicate', 'set_duplicate', true, true, 'true', 200), // ajax set duplicate success
 			array(3, 'duplicate', 'set_duplicate', true, false, 'false', 200), // ajax set duplicate fail
@@ -90,6 +90,11 @@ class idea_controller_test extends \phpbb\ideas\tests\controller\controller_base
 		{
 			self::$confirm = true;
 			$this->setExpectedTriggerError(E_USER_NOTICE);
+		}
+
+		if ($status_code === 403)
+		{
+			$this->setExpectedException('\phpbb\exception\http_exception', 'NO_AUTH_OPERATION');
 		}
 
 		/** @var \phpbb\ideas\controller\idea_controller $controller */
