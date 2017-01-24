@@ -13,7 +13,6 @@ namespace phpbb\ideas\controller;
 use phpbb\exception\http_exception;
 use phpbb\ideas\factory\ideas;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class idea_controller extends base
 {
@@ -64,40 +63,39 @@ class idea_controller extends base
 	 */
 	public function delete()
 	{
-		if ($this->is_mod())
+		if (!$this->is_mod())
 		{
-			if (confirm_box(true))
-			{
-				include $this->root_path . 'includes/functions_admin.' . $this->php_ext;
-				$this->ideas->delete($this->data['idea_id'], $this->data['topic_id']);
+			throw new http_exception(403, 'NO_AUTH_OPERATION');
+		}
 
-				$redirect = $this->helper->route('phpbb_ideas_index_controller');
-				$message = $this->language->lang('IDEA_DELETED') . '<br /><br />' . $this->language->lang('RETURN_IDEAS', '<a href="' . $redirect . '">', '</a>');
-				meta_refresh(3, $redirect);
-				trigger_error($message); // trigger error needed for data-ajax
-			}
-			else
-			{
-				confirm_box(
-					false,
-					$this->language->lang('CONFIRM_OPERATION'),
-					build_hidden_fields(array(
+		if (confirm_box(true))
+		{
+			include $this->root_path . 'includes/functions_admin.' . $this->php_ext;
+			$this->ideas->delete($this->data['idea_id'], $this->data['topic_id']);
+
+			$redirect = $this->helper->route('phpbb_ideas_index_controller');
+			$message = $this->language->lang('IDEA_DELETED') . '<br /><br />' . $this->language->lang('RETURN_IDEAS', '<a href="' . $redirect . '">', '</a>');
+			meta_refresh(3, $redirect);
+			trigger_error($message); // trigger error needed for data-ajax
+		}
+		else
+		{
+			confirm_box(
+				false,
+				$this->language->lang('CONFIRM_OPERATION'),
+				build_hidden_fields(array(
+					'idea_id' => $this->data['idea_id'],
+					'mode' => 'delete',
+				)),
+				'confirm_body.html',
+				$this->helper->route(
+					'phpbb_ideas_idea_controller',
+					array(
 						'idea_id' => $this->data['idea_id'],
-						'mode' => 'delete',
-					)),
-					'confirm_body.html',
-					$this->helper->route(
-						'phpbb_ideas_idea_controller',
-						array(
-							'idea_id' => $this->data['idea_id'],
-							'mode'    => 'delete',
-						),
-						true,
-						false,
-						UrlGeneratorInterface::ABSOLUTE_URL
+						'mode'    => 'delete',
 					)
-				);
-			}
+				)
+			);
 		}
 	}
 
