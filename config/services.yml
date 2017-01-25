@@ -72,6 +72,7 @@ services:
             - '@user'
             - '%tables.ideas_ideas%'
             - '%tables.ideas_votes%'
+            - '%tables.topics%'
             - '%core.php_ext%'
 
     phpbb.ideas.linkhelper:
