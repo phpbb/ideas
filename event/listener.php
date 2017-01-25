@@ -239,8 +239,8 @@ class listener implements EventSubscriberInterface
 
 		$quickmod_array = $event['quickmod_array'];
 
-		$quickmod_array['lock'][1] = false;
-		$quickmod_array['unlock'][1] = false;
+		//$quickmod_array['lock'][1] = false;
+		//$quickmod_array['unlock'][1] = false;
 		$quickmod_array['delete_topic'][1] = false;
 		$quickmod_array['restore_topic'][1] = false;
 		//$quickmod_array['move'][1] = false;
