@@ -77,6 +77,19 @@
 			<value>0</value>
 			<value></value>
 		</row>
+		<row>
+			<value>6</value>
+			<value>2</value>
+			<value>Orphaned Idea #6 New with 2 votes</value>
+			<value>1439999994</value>
+			<value>1</value>
+			<value>1</value>
+			<value>1</value>
+			<value>6</value>
+			<value>0</value>
+			<value>0</value>
+			<value></value>
+		</row>
 	</table>
 	<table name="phpbb_ideas_votes">
 		<column>idea_id</column>
