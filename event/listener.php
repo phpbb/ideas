@@ -81,10 +81,11 @@ class listener implements EventSubscriberInterface
 	static public function getSubscribedEvents()
 	{
 		return array(
-			'core.viewforum_get_topic_data'			=> 'ideas_forum_redirect',
-			'core.viewtopic_modify_post_row'		=> 'clean_message',
-			'core.viewtopic_modify_page_title'		=> 'show_idea',
-			'core.viewonline_overwrite_location'	=> 'viewonline_ideas',
+			'core.viewforum_get_topic_data'				=> 'ideas_forum_redirect',
+			'core.viewtopic_modify_post_row'			=> 'clean_message',
+			'core.viewtopic_modify_page_title'			=> 'show_idea',
+			'core.viewtopic_add_quickmod_option_before'	=> 'adjust_quickmod_tools',
+			'core.viewonline_overwrite_location'		=> 'viewonline_ideas',
 		);
 	}
 
@@ -227,6 +228,32 @@ class listener implements EventSubscriberInterface
 			'U_VIEW_FORUM'		=> $this->helper->route('phpbb_ideas_index_controller'),
 			'FORUM_NAME'		=> $this->language->lang('IDEAS'),
 		));
+	}
+
+	public function adjust_quickmod_tools($event)
+	{
+		if ($event['forum_id'] != $this->config['ideas_forum_id'])
+		{
+			return;
+		}
+
+		$quickmod_array = $event['quickmod_array'];
+
+		$quickmod_array['lock'][1] = false;
+		$quickmod_array['unlock'][1] = false;
+		$quickmod_array['delete_topic'][1] = false;
+		$quickmod_array['restore_topic'][1] = false;
+		//$quickmod_array['move'][1] = false;
+		//$quickmod_array['split'][1] = false;
+		//$quickmod_array['merge'][1] = false;
+		//$quickmod_array['merge_topic'][1] = false;
+		//$quickmod_array['fork'][1] = false;
+		$quickmod_array['make_normal'][1] = false;
+		$quickmod_array['make_sticky'][1] = false;
+		$quickmod_array['make_announce'][1] = false;
+		$quickmod_array['make_global'][1] = false;
+
+		$event['quickmod_array'] = $quickmod_array;
 	}
 
 	/**

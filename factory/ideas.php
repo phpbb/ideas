@@ -57,6 +57,9 @@ class ideas
 	/** @var string */
 	protected $table_votes;
 
+	/** @var string */
+	protected $table_topics;
+
 	/** @var int */
 	protected $idea_count;
 
@@ -74,9 +77,10 @@ class ideas
 	 * @param user             $user
 	 * @param string           $table_ideas
 	 * @param string           $table_votes
+	 * @param string           $table_topics
 	 * @param string           $phpEx
 	 */
-	public function __construct(config $config, driver_interface $db, language $language, log $log, user $user, $table_ideas, $table_votes, $phpEx)
+	public function __construct(config $config, driver_interface $db, language $language, log $log, user $user, $table_ideas, $table_votes, $table_topics, $phpEx)
 	{
 		$this->config = $config;
 		$this->db = $db;
@@ -88,6 +92,7 @@ class ideas
 
 		$this->table_ideas = $table_ideas;
 		$this->table_votes = $table_votes;
+		$this->table_topics = $table_topics;
 	}
 
 	/**
@@ -107,23 +112,23 @@ class ideas
 		switch (strtolower($sort))
 		{
 			case self::SORT_AUTHOR:
-				$sortby = 'idea_author ' . $sort_direction;
+				$sortby = 'i.idea_author ' . $sort_direction;
 			break;
 
 			case self::SORT_DATE:
-				$sortby = 'idea_date ' . $sort_direction;
+				$sortby = 'i.idea_date ' . $sort_direction;
 			break;
 
 			case self::SORT_SCORE:
-				$sortby = 'CAST(idea_votes_up AS decimal) - CAST(idea_votes_down AS decimal) ' . $sort_direction;
+				$sortby = 'CAST(i.idea_votes_up AS decimal) - CAST(i.idea_votes_down AS decimal) ' . $sort_direction;
 			break;
 
 			case self::SORT_TITLE:
-				$sortby = 'idea_title ' . $sort_direction;
+				$sortby = 'i.idea_title ' . $sort_direction;
 			break;
 
 			case self::SORT_VOTES:
-				$sortby = 'idea_votes_up + idea_votes_down ' . $sort_direction;
+				$sortby = 'i.idea_votes_up + i.idea_votes_down ' . $sort_direction;
 			break;
 
 			case self::SORT_TOP:
@@ -139,20 +144,20 @@ class ideas
 
 		// If we have a $status value or array lets use it,
 		// otherwise lets exclude implemented, invalid and duplicate by default
-		$where = (!empty($status)) ? $this->db->sql_in_set('idea_status', $status) : $this->db->sql_in_set(
-			'idea_status', array(self::$statuses['IMPLEMENTED'], self::$statuses['DUPLICATE'], self::$statuses['INVALID'],
+		$where = (!empty($status)) ? $this->db->sql_in_set('i.idea_status', $status) : $this->db->sql_in_set(
+			'i.idea_status', array(self::$statuses['IMPLEMENTED'], self::$statuses['DUPLICATE'], self::$statuses['INVALID'],
 		), true);
 
 		if ($sortby === 'TOP')
 		{
-			$where .= ' AND idea_votes_up > idea_votes_down';
+			$where .= ' AND i.idea_votes_up > i.idea_votes_down';
 		}
 
 		// Count the total number of ideas for pagination
 		if ($number >= $this->config['posts_per_page'])
 		{
-			$sql = 'SELECT COUNT(idea_id) as num_ideas
-				FROM ' . $this->table_ideas . "
+			$sql = 'SELECT COUNT(i.idea_id) as num_ideas
+				FROM ' . $this->table_ideas . " i
 				WHERE $where";
 			$result = $this->db->sql_query($sql);
 			$num_ideas = (int) $this->db->sql_fetchfield('num_ideas');
@@ -162,10 +167,15 @@ class ideas
 			$this->idea_count = $num_ideas;
 		}
 
+		// Only get approved topics
+		$where .= ' AND t.topic_visibility = ' . ITEM_APPROVED;
+
 		if ($sortby !== 'TOP' && $sortby !== 'ALL')
 		{
-			$sql = 'SELECT *
-				FROM ' . $this->table_ideas . "
+			$sql = 'SELECT i.*
+				FROM ' . $this->table_ideas . " i
+				INNER JOIN " . $this->table_topics . " t 
+					ON i.topic_id = t.topic_id
 				WHERE $where
 				ORDER BY " . $this->db->sql_escape($sortby);
 		}
@@ -173,12 +183,14 @@ class ideas
 		{
 			// YEEEEEEEEAAAAAAAAAAAAAHHHHHHH
 			// From http://evanmiller.org/how-not-to-sort-by-average-rating.html
-			$sql = 'SELECT *,
-				((idea_votes_up + 1.9208) / (idea_votes_up + idea_votes_down) -
-	            1.96 * SQRT((idea_votes_up * idea_votes_down) / (idea_votes_up + idea_votes_down) + 0.9604) /
-	            (idea_votes_up + idea_votes_down)) / (1 + 3.8416 / (idea_votes_up + idea_votes_down))
+			$sql = 'SELECT i.*,
+				((i.idea_votes_up + 1.9208) / (i.idea_votes_up + i.idea_votes_down) -
+	            1.96 * SQRT((i.idea_votes_up * i.idea_votes_down) / (i.idea_votes_up + i.idea_votes_down) + 0.9604) /
+	            (i.idea_votes_up + i.idea_votes_down)) / (1 + 3.8416 / (i.idea_votes_up + i.idea_votes_down))
 	            AS ci_lower_bound
-       				FROM ' . $this->table_ideas . "
+       				FROM ' . $this->table_ideas . " i
+       				INNER JOIN " . $this->table_topics . " t 
+       					ON i.topic_id = t.topic_id
        				WHERE $where
        			ORDER BY ci_lower_bound " . $this->db->sql_escape($sort_direction);
 		}
@@ -198,7 +210,7 @@ class ideas
 
 			$last_times = array();
 			$sql = 'SELECT topic_id, topic_last_post_time
-				FROM ' . TOPICS_TABLE . '
+				FROM ' . $this->table_topics . '
 				WHERE ' . $this->db->sql_in_set('topic_id', $topic_ids);
 			$result = $this->db->sql_query($sql);
 			while ($last_time = $this->db->sql_fetchrow($result))
@@ -380,7 +392,7 @@ class ideas
 
 		// We also need to update the topic's title
 		$idea = $this->get_idea($idea_id);
-		$sql = 'UPDATE ' . TOPICS_TABLE . "
+		$sql = 'UPDATE ' . $this->table_topics . "
 			SET topic_title='" . $this->db->sql_escape($title) . "'
 			WHERE topic_id=" . (int) $idea['topic_id'];
 		$this->db->sql_query($sql);
