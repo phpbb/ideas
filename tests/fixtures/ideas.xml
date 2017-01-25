@@ -64,6 +64,19 @@
 			<value>0</value>
 			<value></value>
 		</row>
+		<row>
+			<value>5</value>
+			<value>2</value>
+			<value>Unapproved Idea #5 New with 0 votes</value>
+			<value>1439999995</value>
+			<value>0</value>
+			<value>0</value>
+			<value>1</value>
+			<value>5</value>
+			<value>0</value>
+			<value>0</value>
+			<value></value>
+		</row>
 	</table>
 	<table name="phpbb_ideas_votes">
 		<column>idea_id</column>
@@ -151,21 +164,31 @@
 	<table name="phpbb_topics">
 		<column>topic_id</column>
 		<column>topic_title</column>
+		<column>topic_visibility</column>
 		<row>
 			<value>1</value>
 			<value>Foo Idea #1 New with 3 up votes</value>
+			<value>1</value>
 		</row>
 		<row>
 			<value>2</value>
 			<value>Bar Idea #2 New with 1 down vote</value>
+			<value>1</value>
 		</row>
 		<row>
 			<value>3</value>
 			<value>Foo Idea #3 In Progress with 1 up and 1 down vote</value>
+			<value>1</value>
 		</row>
 		<row>
 			<value>4</value>
 			<value>Bar Idea #4 Implemented with 0 votes</value>
+			<value>1</value>
+		</row>
+		<row>
+			<value>5</value>
+			<value>Unapproved Idea #5 New with 0 votes</value>
+			<value>0</value>
 		</row>
 	</table>
 </dataset>

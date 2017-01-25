@@ -162,6 +162,9 @@ class ideas
 			$this->idea_count = $num_ideas;
 		}
 
+		// Only get approved topics
+		$where .= ' AND t.topic_visibility = ' . ITEM_APPROVED;
+
 		if ($sortby !== 'TOP' && $sortby !== 'ALL')
 		{
 			$sql = 'SELECT i.*, t.topic_visibility
