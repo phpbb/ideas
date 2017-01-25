@@ -57,6 +57,9 @@ class ideas
 	/** @var string */
 	protected $table_votes;
 
+	/** @var string */
+	protected $table_topics;
+
 	/** @var int */
 	protected $idea_count;
 
@@ -74,9 +77,10 @@ class ideas
 	 * @param user             $user
 	 * @param string           $table_ideas
 	 * @param string           $table_votes
+	 * @param string           $table_topics
 	 * @param string           $phpEx
 	 */
-	public function __construct(config $config, driver_interface $db, language $language, log $log, user $user, $table_ideas, $table_votes, $phpEx)
+	public function __construct(config $config, driver_interface $db, language $language, log $log, user $user, $table_ideas, $table_votes, $table_topics, $phpEx)
 	{
 		$this->config = $config;
 		$this->db = $db;
@@ -88,6 +92,7 @@ class ideas
 
 		$this->table_ideas = $table_ideas;
 		$this->table_votes = $table_votes;
+		$this->table_topics = $table_topics;
 	}
 
 	/**
@@ -167,9 +172,9 @@ class ideas
 
 		if ($sortby !== 'TOP' && $sortby !== 'ALL')
 		{
-			$sql = 'SELECT i.*, t.topic_visibility
+			$sql = 'SELECT i.*
 				FROM ' . $this->table_ideas . " i
-				INNER JOIN " . TOPICS_TABLE . " t 
+				INNER JOIN " . $this->table_topics . " t 
 					ON i.topic_id = t.topic_id
 				WHERE $where
 				ORDER BY " . $this->db->sql_escape($sortby);
@@ -178,13 +183,13 @@ class ideas
 		{
 			// YEEEEEEEEAAAAAAAAAAAAAHHHHHHH
 			// From http://evanmiller.org/how-not-to-sort-by-average-rating.html
-			$sql = 'SELECT t.topic_visibility, i.*,
+			$sql = 'SELECT i.*,
 				((i.idea_votes_up + 1.9208) / (i.idea_votes_up + i.idea_votes_down) -
 	            1.96 * SQRT((i.idea_votes_up * i.idea_votes_down) / (i.idea_votes_up + i.idea_votes_down) + 0.9604) /
 	            (i.idea_votes_up + i.idea_votes_down)) / (1 + 3.8416 / (i.idea_votes_up + i.idea_votes_down))
 	            AS ci_lower_bound
        				FROM ' . $this->table_ideas . " i
-       				INNER JOIN " . TOPICS_TABLE . " t 
+       				INNER JOIN " . $this->table_topics . " t 
        					ON i.topic_id = t.topic_id
        				WHERE $where
        			ORDER BY ci_lower_bound " . $this->db->sql_escape($sort_direction);
@@ -205,7 +210,7 @@ class ideas
 
 			$last_times = array();
 			$sql = 'SELECT topic_id, topic_last_post_time
-				FROM ' . TOPICS_TABLE . '
+				FROM ' . $this->table_topics . '
 				WHERE ' . $this->db->sql_in_set('topic_id', $topic_ids);
 			$result = $this->db->sql_query($sql);
 			while ($last_time = $this->db->sql_fetchrow($result))
@@ -387,7 +392,7 @@ class ideas
 
 		// We also need to update the topic's title
 		$idea = $this->get_idea($idea_id);
-		$sql = 'UPDATE ' . TOPICS_TABLE . "
+		$sql = 'UPDATE ' . $this->table_topics . "
 			SET topic_title='" . $this->db->sql_escape($title) . "'
 			WHERE topic_id=" . (int) $idea['topic_id'];
 		$this->db->sql_query($sql);

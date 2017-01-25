@@ -82,6 +82,7 @@ class ideas_base extends \phpbb_database_test_case
 			$this->user,
 			'phpbb_ideas_ideas',
 			'phpbb_ideas_votes',
+			'phpbb_topics',
 			$this->php_ext
 		);
 	}
