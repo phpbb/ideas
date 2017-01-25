@@ -107,23 +107,23 @@ class ideas
 		switch (strtolower($sort))
 		{
 			case self::SORT_AUTHOR:
-				$sortby = 'idea_author ' . $sort_direction;
+				$sortby = 'i.idea_author ' . $sort_direction;
 			break;
 
 			case self::SORT_DATE:
-				$sortby = 'idea_date ' . $sort_direction;
+				$sortby = 'i.idea_date ' . $sort_direction;
 			break;
 
 			case self::SORT_SCORE:
-				$sortby = 'CAST(idea_votes_up AS decimal) - CAST(idea_votes_down AS decimal) ' . $sort_direction;
+				$sortby = 'CAST(i.idea_votes_up AS decimal) - CAST(i.idea_votes_down AS decimal) ' . $sort_direction;
 			break;
 
 			case self::SORT_TITLE:
-				$sortby = 'idea_title ' . $sort_direction;
+				$sortby = 'i.idea_title ' . $sort_direction;
 			break;
 
 			case self::SORT_VOTES:
-				$sortby = 'idea_votes_up + idea_votes_down ' . $sort_direction;
+				$sortby = 'i.idea_votes_up + i.idea_votes_down ' . $sort_direction;
 			break;
 
 			case self::SORT_TOP:
@@ -139,20 +139,20 @@ class ideas
 
 		// If we have a $status value or array lets use it,
 		// otherwise lets exclude implemented, invalid and duplicate by default
-		$where = (!empty($status)) ? $this->db->sql_in_set('idea_status', $status) : $this->db->sql_in_set(
-			'idea_status', array(self::$statuses['IMPLEMENTED'], self::$statuses['DUPLICATE'], self::$statuses['INVALID'],
+		$where = (!empty($status)) ? $this->db->sql_in_set('i.idea_status', $status) : $this->db->sql_in_set(
+			'i.idea_status', array(self::$statuses['IMPLEMENTED'], self::$statuses['DUPLICATE'], self::$statuses['INVALID'],
 		), true);
 
 		if ($sortby === 'TOP')
 		{
-			$where .= ' AND idea_votes_up > idea_votes_down';
+			$where .= ' AND i.idea_votes_up > i.idea_votes_down';
 		}
 
 		// Count the total number of ideas for pagination
 		if ($number >= $this->config['posts_per_page'])
 		{
-			$sql = 'SELECT COUNT(idea_id) as num_ideas
-				FROM ' . $this->table_ideas . "
+			$sql = 'SELECT COUNT(i.idea_id) as num_ideas
+				FROM ' . $this->table_ideas . " i
 				WHERE $where";
 			$result = $this->db->sql_query($sql);
 			$num_ideas = (int) $this->db->sql_fetchfield('num_ideas');
@@ -164,8 +164,10 @@ class ideas
 
 		if ($sortby !== 'TOP' && $sortby !== 'ALL')
 		{
-			$sql = 'SELECT *
-				FROM ' . $this->table_ideas . "
+			$sql = 'SELECT i.*, t.topic_visibility
+				FROM ' . $this->table_ideas . " i
+				INNER JOIN " . TOPICS_TABLE . " t 
+					ON i.topic_id = t.topic_id
 				WHERE $where
 				ORDER BY " . $this->db->sql_escape($sortby);
 		}
@@ -173,12 +175,14 @@ class ideas
 		{
 			// YEEEEEEEEAAAAAAAAAAAAAHHHHHHH
 			// From http://evanmiller.org/how-not-to-sort-by-average-rating.html
-			$sql = 'SELECT *,
-				((idea_votes_up + 1.9208) / (idea_votes_up + idea_votes_down) -
-	            1.96 * SQRT((idea_votes_up * idea_votes_down) / (idea_votes_up + idea_votes_down) + 0.9604) /
-	            (idea_votes_up + idea_votes_down)) / (1 + 3.8416 / (idea_votes_up + idea_votes_down))
+			$sql = 'SELECT t.topic_visibility, i.*,
+				((i.idea_votes_up + 1.9208) / (i.idea_votes_up + i.idea_votes_down) -
+	            1.96 * SQRT((i.idea_votes_up * i.idea_votes_down) / (i.idea_votes_up + i.idea_votes_down) + 0.9604) /
+	            (i.idea_votes_up + i.idea_votes_down)) / (1 + 3.8416 / (i.idea_votes_up + i.idea_votes_down))
 	            AS ci_lower_bound
-       				FROM ' . $this->table_ideas . "
+       				FROM ' . $this->table_ideas . " i
+       				INNER JOIN " . TOPICS_TABLE . " t 
+       					ON i.topic_id = t.topic_id
        				WHERE $where
        			ORDER BY ci_lower_bound " . $this->db->sql_escape($sort_direction);
 		}
