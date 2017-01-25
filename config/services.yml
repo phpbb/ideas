@@ -80,3 +80,14 @@ services:
         arguments:
             - '@controller.helper'
             - '@user_loader'
+
+# ----- Cron tasks -----
+    phpbb.ideas.cron.task.prune_orphaned_ideas:
+        class: phpbb\ideas\cron\prune_orphaned_ideas
+        arguments:
+            - '@config'
+            - '@phpbb.ideas.ideas'
+        calls:
+            - [set_name, [cron.task.prune_orphaned_ideas]]
+        tags:
+            - { name: cron.task }

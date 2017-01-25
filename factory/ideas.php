@@ -280,7 +280,7 @@ class ideas
 			'idea_status' => (int) $status,
 		);
 
-		$this->update_idea_data($sql_ary, $idea_id, 'table_ideas');
+		$this->update_idea_data($sql_ary, $idea_id, $this->table_ideas);
 	}
 
 	/**
@@ -302,7 +302,7 @@ class ideas
 			'duplicate_id'	=> (int) $duplicate,
 		);
 
-		$this->update_idea_data($sql_ary, $idea_id, 'table_ideas');
+		$this->update_idea_data($sql_ary, $idea_id, $this->table_ideas);
 
 		return true;
 	}
@@ -327,7 +327,7 @@ class ideas
 			'rfc_link'	=> $rfc, // string is escaped by build_array()
 		);
 
-		$this->update_idea_data($sql_ary, $idea_id, 'table_ideas');
+		$this->update_idea_data($sql_ary, $idea_id, $this->table_ideas);
 
 		return true;
 	}
@@ -351,7 +351,7 @@ class ideas
 			'ticket_id'	=> (int) $ticket,
 		);
 
-		$this->update_idea_data($sql_ary, $idea_id, 'table_ideas');
+		$this->update_idea_data($sql_ary, $idea_id, $this->table_ideas);
 
 		return true;
 	}
@@ -375,7 +375,7 @@ class ideas
 			'idea_title' => $title,
 		);
 
-		$this->update_idea_data($sql_ary, $idea_id, 'table_ideas');
+		$this->update_idea_data($sql_ary, $idea_id, $this->table_ideas);
 
 		// We also need to update the topic's title
 		$idea = $this->get_idea($idea_id);
@@ -440,7 +440,7 @@ class ideas
 					'idea_votes_down'	=> $idea['idea_votes_down'],
 				);
 
-				$this->update_idea_data($sql_ary, $idea['idea_id'], 'table_ideas');
+				$this->update_idea_data($sql_ary, $idea['idea_id'], $this->table_ideas);
 			}
 
 			return array(
@@ -459,7 +459,7 @@ class ideas
 			'vote_value'	=> (int) $value,
 		);
 
-		$this->insert_idea_data($sql_ary, 'table_votes');
+		$this->insert_idea_data($sql_ary, $this->table_votes);
 
 		// Update number of votes in ideas table
 		$idea['idea_votes_' . ($value ? 'up' : 'down')]++;
@@ -469,7 +469,7 @@ class ideas
 			'idea_votes_down'	=> $idea['idea_votes_down'],
 		);
 
-		$this->update_idea_data($sql_ary, $idea['idea_id'], 'table_ideas');
+		$this->update_idea_data($sql_ary, $idea['idea_id'], $this->table_ideas);
 
 		return array(
 			'message'	    => $this->language->lang('VOTE_SUCCESS'),
@@ -510,7 +510,7 @@ class ideas
 				'idea_votes_down'	=> $idea['idea_votes_down'],
 			);
 
-			$this->update_idea_data($sql_ary, $idea['idea_id'], 'table_ideas');
+			$this->update_idea_data($sql_ary, $idea['idea_id'], $this->table_ideas);
 		}
 
 		return array(
@@ -593,7 +593,7 @@ class ideas
 			'topic_id'			=> 0,
 		);
 
-		$idea_id = $this->insert_idea_data($sql_ary, 'table_ideas');
+		$idea_id = $this->insert_idea_data($sql_ary, $this->table_ideas);
 
 		// Initial vote
 		$idea = $this->get_idea($idea_id);
@@ -655,7 +655,7 @@ class ideas
 			'topic_id' => $data['topic_id'],
 		);
 
-		$this->update_idea_data($sql_ary, $idea_id, 'table_ideas');
+		$this->update_idea_data($sql_ary, $idea_id, $this->table_ideas);
 
 		return $idea_id;
 	}
@@ -680,12 +680,49 @@ class ideas
 		delete_posts('topic_id', $topic_id);
 
 		// Delete idea
-		$deleted = $this->delete_idea_data($id, 'table_ideas');
+		$deleted = $this->delete_idea_data($id, $this->table_ideas);
 
 		// Delete votes
-		$this->delete_idea_data($id, 'table_votes');
+		$this->delete_idea_data($id, $this->table_votes);
 
 		return $deleted;
+	}
+
+	/**
+	 * Delete orphaned ideas. Orphaned ideas may exist after a
+	 * topic has been deleted or moved to another forum.
+	 *
+	 * @return int Number of rows affected
+	 */
+	public function delete_orphans()
+	{
+		// Find any orphans
+		$sql = 'SELECT idea_id FROM ' . $this->table_ideas . '
+ 			WHERE topic_id NOT IN (SELECT t.topic_id 
+ 			FROM ' . $this->table_topics . ' t)';
+		$result = $this->db->sql_query($sql);
+		$rows = $this->db->sql_fetchrowset($result);
+		$this->db->sql_freeresult($result);
+
+		if (empty($rows))
+		{
+			return 0;
+		}
+
+		$this->db->sql_transaction('begin');
+
+		foreach ($rows as $row)
+		{
+			// Delete idea
+			$this->delete_idea_data($row['idea_id'], $this->table_ideas);
+
+			// Delete votes
+			$this->delete_idea_data($row['idea_id'], $this->table_votes);
+		}
+
+		$this->db->sql_transaction('commit');
+
+		return count($rows);
 	}
 
 	/**
@@ -698,7 +735,7 @@ class ideas
 	 */
 	protected function insert_idea_data(array $data, $table)
 	{
-		$sql = 'INSERT INTO ' . $this->{$table} . '
+		$sql = 'INSERT INTO ' . $table . '
 		' . $this->db->sql_build_array('INSERT', $data);
 		$this->db->sql_query($sql);
 
@@ -716,7 +753,7 @@ class ideas
 	 */
 	protected function update_idea_data(array $data, $id, $table)
 	{
-		$sql = 'UPDATE ' . $this->{$table} . '
+		$sql = 'UPDATE ' . $table . '
 			SET ' . $this->db->sql_build_array('UPDATE', $data) . '
 			WHERE idea_id = ' . (int) $id;
 		$this->db->sql_query($sql);
@@ -732,7 +769,7 @@ class ideas
 	 */
 	protected function delete_idea_data($id, $table)
 	{
-		$sql = 'DELETE FROM ' . $this->{$table} . '
+		$sql = 'DELETE FROM ' . $table . '
 			WHERE idea_id = ' . (int) $id;
 		$this->db->sql_query($sql);
 
