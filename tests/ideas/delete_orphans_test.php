@@ -8,12 +8,13 @@
  *
  */
 
-namespace phpbb\ideas\factory;
+namespace phpbb\ideas\tests\ideas;
 
 class delete_orphans_test extends \phpbb\ideas\tests\ideas\ideas_base
 {
 	public function test_delete_orphans()
 	{
+		// The id of an orphaned idea in our test fixture
 		$idea_id = 6;
 
 		$ideas = $this->get_ideas_object();
