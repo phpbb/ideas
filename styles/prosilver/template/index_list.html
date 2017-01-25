@@ -1,7 +1,7 @@
 <ul class="topiclist forums">
 	{% for idea in ideas %}
 		<li class="row">
-			<dl class="row-item topic_{{ not idea.READ ? 'un' }}read">
+			<dl class="row-item topic_{{ not idea.READ ? 'un' }}read{{ idea.LOCKED ? '_locked' }}">
 				<dt title="{{ lang(idea.READ ? 'NO_UNREAD_POSTS' : 'UNREAD_POSTS') }}">
 				<div class="list-inner">
 					<a href="{{ idea.LINK }}" class="forumtitle">{{ idea.TITLE }}</a><br />

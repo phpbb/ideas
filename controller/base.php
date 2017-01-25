@@ -125,6 +125,7 @@ abstract class base
 				'VOTES_DOWN' => $row['idea_votes_down'],
 				'POINTS'     => $row['idea_votes_up'] - $row['idea_votes_down'],
 				'STATUS'     => $row['idea_status'], // for status icons (not currently implemented)
+				'LOCKED'     => $row['topic_status'] == ITEM_LOCKED,
 			));
 		}
 	}

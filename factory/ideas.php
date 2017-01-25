@@ -172,9 +172,9 @@ class ideas
 
 		if ($sortby !== 'TOP' && $sortby !== 'ALL')
 		{
-			$sql = 'SELECT i.*
-				FROM ' . $this->table_ideas . " i
-				INNER JOIN " . $this->table_topics . " t 
+			$sql = 'SELECT t.topic_last_post_time, t.topic_status, i.*
+				FROM ' . $this->table_ideas . ' i
+				INNER JOIN ' . $this->table_topics . " t 
 					ON i.topic_id = t.topic_id
 				WHERE $where
 				ORDER BY " . $this->db->sql_escape($sortby);
@@ -183,13 +183,13 @@ class ideas
 		{
 			// YEEEEEEEEAAAAAAAAAAAAAHHHHHHH
 			// From http://evanmiller.org/how-not-to-sort-by-average-rating.html
-			$sql = 'SELECT i.*,
+			$sql = 'SELECT t.topic_last_post_time, t.topic_status, i.*,
 				((i.idea_votes_up + 1.9208) / (i.idea_votes_up + i.idea_votes_down) -
 	            1.96 * SQRT((i.idea_votes_up * i.idea_votes_down) / (i.idea_votes_up + i.idea_votes_down) + 0.9604) /
 	            (i.idea_votes_up + i.idea_votes_down)) / (1 + 3.8416 / (i.idea_votes_up + i.idea_votes_down))
 	            AS ci_lower_bound
-       				FROM ' . $this->table_ideas . " i
-       				INNER JOIN " . $this->table_topics . " t 
+       				FROM ' . $this->table_ideas . ' i
+       				INNER JOIN ' . $this->table_topics . " t 
        					ON i.topic_id = t.topic_id
        				WHERE $where
        			ORDER BY ci_lower_bound " . $this->db->sql_escape($sort_direction);
@@ -201,28 +201,15 @@ class ideas
 
 		if (count($rows))
 		{
-			$topic_ids = array();
-			foreach ($rows as $row)
-			{
-				$topic_ids[] = $row['topic_id'];
-			}
-			$topic_tracking_info = get_complete_topic_tracking((int) $this->config['ideas_forum_id'], $topic_ids);
+			$topic_ids = array_map(function($row) {
+				return $row['topic_id'];
+			}, $rows);
 
-			$last_times = array();
-			$sql = 'SELECT topic_id, topic_last_post_time
-				FROM ' . $this->table_topics . '
-				WHERE ' . $this->db->sql_in_set('topic_id', $topic_ids);
-			$result = $this->db->sql_query($sql);
-			while ($last_time = $this->db->sql_fetchrow($result))
-			{
-				$last_times[$last_time['topic_id']] = $last_time['topic_last_post_time'];
-			}
-			$this->db->sql_freeresult($result);
+			$topic_tracking_info = get_complete_topic_tracking((int) $this->config['ideas_forum_id'], $topic_ids);
 
 			foreach ($rows as &$row)
 			{
-				$topic_id = $row['topic_id'];
-				$row['read'] = !(isset($topic_tracking_info[$topic_id]) && $last_times[$topic_id] > $topic_tracking_info[$topic_id]);
+				$row['read'] = !(isset($topic_tracking_info[$row['topic_id']]) && $row['topic_last_post_time'] > $topic_tracking_info[$row['topic_id']]);
 			}
 		}
 
