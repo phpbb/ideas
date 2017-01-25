@@ -110,6 +110,7 @@ class listener_test extends \phpbb_test_case
 			'core.viewforum_get_topic_data',
 			'core.viewtopic_modify_post_row',
 			'core.viewtopic_modify_page_title',
+			'core.viewtopic_add_quickmod_option_before',
 			'core.viewonline_overwrite_location',
 		), array_keys(\phpbb\ideas\event\listener::getSubscribedEvents()));
 	}
