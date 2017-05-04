@@ -1,7 +1,7 @@
 a.votes {
 	font-weight: bold;
-	display: inline-block;
 	border-radius: 4px;
+	display: inline-block;
 	padding: 6px;
 }
 
@@ -37,48 +37,79 @@ dd.topics {
 	margin: 0 5px 0 0;
 }
 
-.minivoteup, .minivotedown {
-	width: 65px;
-	height: 25px;
-	display: inline-block;
-	float: left;
+.minivoteup,
+.minivotedown {
 	font-family: Arial, Helvetica, sans-serif;
 	font-size: 14px;
 	font-weight: bold;
-	color: #FFFFFF !important;
+	background: url('images/button-sprite.png') no-repeat;
+	color: #ffffff !important;
 	text-shadow: 0 -1px 0 rgba(0, 0, 0, 1);
+	display: inline-block;
+	float: left;
+	width: 65px;
+	height: 25px;
 	margin-right: 10px;
-	background: url(images/button-sprite.png) no-repeat;
 }
 
-.minivoteup span, .minivotedown span {
+.minivoteup span,
+.minivotedown span {
+	line-height: normal;
+	text-align: center;
 	display: inline-block;
 	width: 40px;
-	margin-left: 25px;
 	margin-top: 5px;
-	text-align: center;
-	line-height: normal;
+	margin-left: 25px;
 }
 
-.minivoteup { background-position: 0 0; }
-.minivoteup.voteup:hover { background-position: 0 -25px; }
-.minivoteup.voteup:active { background-position: 0 -50px; }
-.minivoteup.voteup.dead:hover { background-position: 0 0; }
-.minivotedown { background-position: -65px 0; }
-.minivotedown.votedown:hover { background-position: -65px -25px; }
-.minivotedown.votedown:active { background-position: -65px -50px; }
-.minivotedown.votedown.dead:hover { background-position: -65px 0; }
+.minivoteup {
+	background-position: 0 0;
+}
+
+.minivoteup.voteup:hover {
+	background-position: 0 -25px;
+}
+
+.minivoteup.voteup:active {
+	background-position: 0 -50px;
+}
+
+.minivoteup.voteup.dead:hover {
+	background-position: 0 0;
+}
+
+.minivotedown {
+	background-position: -65px 0;
+}
+
+.minivotedown.votedown:hover {
+	background-position: -65px -25px;
+}
+
+.minivotedown.votedown:active {
+	background-position: -65px -50px;
+}
+
+.minivotedown.votedown.dead:hover {
+	background-position: -65px 0;
+}
 
 .voteslist {
-	display: none;
-	padding: 6px;
-	margin-top: 6px;
-	-webkit-border-radius: 3px;
 	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
 	border-radius: 3px;
+	display: none;
+	margin-top: 6px;
+	padding: 6px;
 	list-style-type: none;
 }
 
-.voteslist ul, .voteslist ul li { list-style: none; }
+.voteslist ul,
+.voteslist ul li {
+	list-style: none;
+}
 
-.view-all, .view-all:hover { color: #536482; }
+.view-all,
+.view-all:hover {
+	color: #536482;
+}
