@@ -92,7 +92,7 @@ class listener implements EventSubscriberInterface
 	/**
 	 * Redirect users from the forum to the Ideas centre
 	 *
-	 * @param $event
+	 * @param \phpbb\event\data $event The event object
 	 * @return void
 	 * @access public
 	 */
@@ -109,7 +109,7 @@ class listener implements EventSubscriberInterface
 	/**
 	 * Clean obsolete link-backs from idea topics
 	 *
-	 * @param $event
+	 * @param \phpbb\event\data $event The event object
 	 * @return void
 	 * @access public
 	 */
@@ -137,7 +137,7 @@ class listener implements EventSubscriberInterface
 	/**
 	 * Show post buttons (hide edit, delete, warn, quote; show others)
 	 *
-	 * @param $event
+	 * @param \phpbb\event\data $event The event object
 	 * @return void
 	 * @access public
 	 */
@@ -165,7 +165,7 @@ class listener implements EventSubscriberInterface
 	/**
 	 * Show the idea related to the current topic
 	 *
-	 * @param $event
+	 * @param \phpbb\event\data $event The event object
 	 * @return void
 	 * @access public
 	 */
@@ -259,6 +259,14 @@ class listener implements EventSubscriberInterface
 		));
 	}
 
+	/**
+	 * Adjust the QuickMod tools displayed
+	 * (hide options to delete, restore, make global, sticky or announcement)
+	 *
+	 * @param \phpbb\event\data $event The event object
+	 * @return void
+	 * @access public
+	 */
 	public function adjust_quickmod_tools($event)
 	{
 		if ($event['forum_id'] != $this->config['ideas_forum_id'])
