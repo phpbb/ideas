@@ -169,7 +169,9 @@
 
 					$obj.rfcEdit.text(function() {
 						return value ? $(this).attr('data-l-edit') : $(this).attr('data-l-add');
-					}).show();
+					}).prepend($('<i class="fa fa-fw"></i>').addClass(function() {
+						return value ? 'fa-pencil' : 'fa-plus-circle';
+					})).show();
 				}
 			});
 		} else if (e.keyCode === keymap.ESC) {
@@ -224,7 +226,9 @@
 
 					$obj.ticketEdit.text(function() {
 						return value ? $(this).attr('data-l-edit') : $(this).attr('data-l-add');
-					}).show();
+					}).prepend($('<i class="fa fa-fw"></i>').addClass(function() {
+						return value ? 'fa-pencil' : 'fa-plus-circle';
+					})).show();
 				}
 
 			});
@@ -272,6 +276,7 @@
 						$obj.duplicateLink
 							.text(msg)
 							.attr('href', link + value)
+							.prepend($('<i class="fa fa-fw fa-link"></i>'))
 							.show();
 					}
 

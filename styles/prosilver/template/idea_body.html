@@ -58,7 +58,7 @@
 				<dd>
 					<a id="rfclink" class="ideamodbtn" href="{{ IDEA_RFC }}"{% if not IDEA_RFC %} style="display:none"{% endif %}>{{ IDEA_RFC }}</a>
 					{% if S_CAN_EDIT %}
-						<a href="{{ U_EDIT_RFC }}" id="rfcedit" data-l-add="{{ lang('ADD') }}" data-l-edit="{{ lang('EDIT') }}">{% if IDEA_RFC %}{{ lang('EDIT') }}{% else %}{{ lang('ADD') }}{% endif %}</a>
+						<a href="{{ U_EDIT_RFC }}" id="rfcedit" data-l-add="{{ lang('ADD') }}" data-l-edit="{{ lang('EDIT') }}">{% if IDEA_RFC %}<i class="fa fa-fw fa-pencil"></i>{{ lang('EDIT') }}{% else %}<i class="fa fa-fw fa-plus-circle"></i>{{ lang('ADD') }}{% endif %}</a>
 						<input type="text" id="rfceditinput" class="ideainput" value="{{ IDEA_RFC }}" data-l-err="{{ lang('ERROR') }}" data-l-msg="{{ lang('RFC_ERROR') }}" />
 					{% endif %}
 				</dd>
@@ -68,7 +68,7 @@
 				<dd>
 					<a id="ticketlink" class="ideamodbtn" {% if IDEA_TICKET %}href="https://tracker.phpbb.com/browse/PHPBB3-{{ IDEA_TICKET }}">PHPBB3-{{ IDEA_TICKET }}{% else %}style="display:none">{% endif %}</a>
 					{% if S_CAN_EDIT %}
-						<a href="{{ U_EDIT_TICKET }}" id="ticketedit" data-l-add="{{ lang('ADD') }}" data-l-edit="{{ lang('EDIT') }}">{% if IDEA_TICKET %}{{ lang('EDIT') }}{% else %}{{ lang('ADD') }}{% endif %}</a>
+						<a href="{{ U_EDIT_TICKET }}" id="ticketedit" data-l-add="{{ lang('ADD') }}" data-l-edit="{{ lang('EDIT') }}">{% if IDEA_TICKET %}<i class="fa fa-fw fa-pencil"></i>{{ lang('EDIT') }}{% else %}<i class="fa fa-fw fa-plus-circle"></i>{{ lang('ADD') }}{% endif %}</a>
 						<input type="text" id="ticketeditinput" class="ideainput"{% if IDEA_TICKET %} value="PHPBB3-{{ IDEA_TICKET }}"{% endif %} placeholder="PHPBB3-#####" data-l-err="{{ lang('ERROR') }}" data-l-msg="{{ lang('TICKET_ERROR') }}" />
 					{% endif %}
 				</dd>
@@ -76,9 +76,9 @@
 			{% if IDEA_DUPLICATE or S_IS_MOD %}
 				<dt class="duplicatetoggle" style="width: 15%; {% if IDEA_STATUS != lang('DUPLICATE') %}display:none{% endif %}">{{ lang('DUPLICATE') ~ lang('COLON') }}</dt>
 				<dd class="duplicatetoggle" {% if IDEA_STATUS != lang('DUPLICATE') %}style="display:none"{% endif %}>
-					<a id="duplicatelink" class="ideamodbtn" data-link="{{ U_IDEA_DUPLICATE }}" data-l-msg="{{ lang('VIEW_DUPLICATE') }}" {% if IDEA_DUPLICATE %}href="{{ U_IDEA_DUPLICATE }}">{{ lang('VIEW_DUPLICATE') }}{% else %}style="display:none">{% endif %}</a>
+					<a id="duplicatelink" class="ideamodbtn" data-link="{{ U_IDEA_DUPLICATE }}" data-l-msg="{{ lang('VIEW_DUPLICATE') }}" {% if IDEA_DUPLICATE %}href="{{ U_IDEA_DUPLICATE }}"><i class="fa fa-fw fa-link"></i>{{ lang('VIEW_DUPLICATE') }}{% else %}style="display:none">{% endif %}</a>
 					{% if S_IS_MOD %}
-						<a href="{{ U_EDIT_DUPLICATE }}" id="duplicateedit">{{ lang('SET') }}</a>
+						<a href="{{ U_EDIT_DUPLICATE }}" id="duplicateedit"><i class="fa fa-fw fa-pencil"></i>{{ lang('SET') }}</a>
 						<input type="text" id="duplicateeditinput" class="ideainput"{% if IDEA_DUPLICATE %} value="{{ IDEA_DUPLICATE }}"{% endif %} placeholder="###" data-l-err="{{ lang('ERROR') }}" data-l-msg="{{ lang('TICKET_ERROR_DUP') }}" />
 					{% endif %}
 				</dd>
