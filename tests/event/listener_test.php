@@ -156,6 +156,55 @@ class listener_test extends \phpbb_test_case
 	}
 
 	/**
+	 * Data set for show_post_buttons
+	 *
+	 * @return array Array of test data
+	 */
+	public function show_post_buttons_data()
+	{
+		$post_row = array(
+			'U_EDIT'   => true,
+			'U_DELETE' => true,
+			'U_REPORT' => true,
+			'U_WARN'   => true,
+			'U_INFO'   => true,
+			'U_QUOTE'  => true,
+		);
+
+		return array(
+			array(2, 1, 1, $post_row, false), // Valid
+			array(1, 1, 1, $post_row, true), // Invalid forum
+			array(2, 1, 2, $post_row, true), // Invalid post
+		);
+	}
+
+	/**
+	 * Test the show_post_buttons event
+	 *
+	 * @dataProvider show_post_buttons_data
+	 */
+	public function test_show_post_buttons($forum_id, $post_id, $first_post_id, $post_row, $expected)
+	{
+		$listener = $this->get_listener();
+
+		$event = new \phpbb\event\data(array(
+			'row' 			=> array(
+				'forum_id'	=> $forum_id,
+				'post_id'	=> $post_id,
+			),
+			'post_row'		=> $post_row,
+			'topic_data'	=> array('topic_first_post_id' => $first_post_id),
+		));
+
+		$listener->show_post_buttons($event);
+
+		$this->assertEquals($expected, $event['post_row']['U_EDIT']);
+		$this->assertEquals($expected, $event['post_row']['U_DELETE']);
+		$this->assertEquals($expected, $event['post_row']['U_WARN']);
+		$this->assertEquals($expected, $event['post_row']['U_QUOTE']);
+	}
+
+	/**
 	 * Data set for test_viewonline
 	 *
 	 * @return array Array of test data

@@ -82,7 +82,7 @@ class listener implements EventSubscriberInterface
 	{
 		return array(
 			'core.viewforum_get_topic_data'				=> 'ideas_forum_redirect',
-			'core.viewtopic_modify_post_row'			=> 'clean_message',
+			'core.viewtopic_modify_post_row'			=> array(array('clean_message'), array('show_post_buttons')),
 			'core.viewtopic_modify_page_title'			=> 'show_idea',
 			'core.viewtopic_add_quickmod_option_before'	=> 'adjust_quickmod_tools',
 			'core.viewonline_overwrite_location'		=> 'viewonline_ideas',
@@ -130,6 +130,34 @@ class listener implements EventSubscriberInterface
 			$message = preg_replace('/(<br[^>]*>\\n?)\\1-{10}\\1\\1.*/s', '', $message);
 
 			$post_row['MESSAGE'] = $message;
+			$event['post_row'] = $post_row;
+		}
+	}
+
+	/**
+	 * Show post buttons (hide edit, delete, warn, quote; show others)
+	 *
+	 * @param $event
+	 * @return void
+	 * @access public
+	 */
+	public function show_post_buttons($event)
+	{
+		if ($event['row']['forum_id'] != $this->config['ideas_forum_id'])
+		{
+			return;
+		}
+
+		if ($event['topic_data']['topic_first_post_id'] == $event['row']['post_id'])
+		{
+			$post_row = $event['post_row'];
+
+			// Do not display edit, delete, quote or warn user buttons
+			$post_row['U_EDIT']   = false;
+			$post_row['U_DELETE'] = false;
+			$post_row['U_QUOTE']  = false;
+			$post_row['U_WARN']   = false;
+
 			$event['post_row'] = $post_row;
 		}
 	}
