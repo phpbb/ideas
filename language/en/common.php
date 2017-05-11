@@ -37,6 +37,7 @@ $lang = array_merge($lang, array(
 	'IDEAS'					=> 'Ideas',
 	'IDEA_DELETED'			=> 'Idea successfully deleted.',
 	'IDEA_LIST'				=> 'Idea List',
+	'IDEA_NO'				=> 'Idea #',
 	'IDEA_NOT_FOUND'		=> 'Idea not found',
 	'IDEAS_TITLE'			=> 'phpBB Ideas',
 	'IDEAS_NOT_AVAILABLE'	=> 'Ideas is not available at this time.',
@@ -67,14 +68,13 @@ $lang = array_merge($lang, array(
 	'RFC_ERROR'				=> 'RFC must be a topic on Area51.',
 
 	'SEARCH_IDEAS'			=> 'Search ideas...',
-	'SET'                   => 'Set',
 	'SCORE'                 => 'Score',
 	'SHOW_W_STATUS'			=> 'Display ideas with status',
 	'STATUS'				=> 'Status',
 
 	'TICKET'				=> 'Ticket',
 	'TICKET_ERROR'			=> 'Ticket ID must be of the format “PHPBB3-#####”.',
-	'TICKET_ERROR_DUP'		=> 'Please post the ID of the ticket.',
+	'TICKET_ERROR_DUP'		=> 'Please use the post ID of the idea.',
 	'TITLE'					=> 'Title',
 	'TITLE_EDIT'            => 'Edit title',
 	'TITLE_EDIT_ERROR'		=> 'Subject must be between 1 and 64 characters.',
@@ -94,7 +94,6 @@ $lang = array_merge($lang, array(
 	'UPDATED_VOTE'			=> 'Successfully updated vote!',
 
 	'VIEW_ALL'				=> 'View All',
-	'VIEW_DUPLICATE'		=> 'View duplicate',
 	'VIEW_IDEA'				=> 'View Idea',
 	'VIEW_IMPLEMENTED'		=> 'View all implemented ideas',
 	'VIEW_LATEST'			=> 'View all open ideas',

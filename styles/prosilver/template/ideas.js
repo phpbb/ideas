@@ -276,15 +276,18 @@
 						var link = $obj.duplicateLink.attr('data-link').replace(/^(.*\/)(\d+)$/, '$1');
 
 						$obj.duplicateLink
-							.text(msg)
+							.text(msg + value)
 							.attr('href', link + value)
-							.prepend($('<i class="fa fa-fw fa-link"></i>'))
 							.show();
 					}
 
 					$this.hide();
 
-					$obj.duplicateEdit.show();
+					$obj.duplicateEdit.text(function() {
+						return value ? $(this).attr('data-l-edit') : $(this).attr('data-l-add');
+					}).prepend($('<i class="fa fa-fw"></i>').addClass(function() {
+						return value ? 'fa-pencil' : 'fa-plus-circle';
+					})).show();
 				}
 			});
 		} else if (e.keyCode === keymap.ESC) {
