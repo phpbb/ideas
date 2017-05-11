@@ -47,7 +47,7 @@
 			</dd>
 			<dt style="width: 15%">{{ lang('STATUS') ~ lang('COLON') }}</dt>
 			<dd>
-				<a href="{{ IDEA_STATUS_LINK }}">{{ IDEA_STATUS }}</a>
+				<a href="{{ IDEA_STATUS_LINK }}" class="status-badge status-{{ IDEA_STATUS_ID }}">{{ IDEA_STATUS_NAME }}</a>
 				{% if STATUS_ARY %}&nbsp; <select id="status" data-url="{{ U_CHANGE_STATUS }}">
 					<option value="0">{{ lang('CHANGE_STATUS') }}</option>
 					{% for status, id in STATUS_ARY %}<option value="{{ id }}">{{ lang(status) }}</option>{% endfor %}
@@ -74,8 +74,8 @@
 				</dd>
 			{% endif %}
 			{% if IDEA_DUPLICATE or S_IS_MOD %}
-				<dt class="duplicatetoggle" style="width: 15%; {% if IDEA_STATUS != lang('DUPLICATE') %}display:none{% endif %}">{{ lang('DUPLICATE') ~ lang('COLON') }}</dt>
-				<dd class="duplicatetoggle" {% if IDEA_STATUS != lang('DUPLICATE') %}style="display:none"{% endif %}>
+				<dt class="duplicatetoggle" style="width: 15%; {% if IDEA_STATUS_ID != 4 %}display:none{% endif %}">{{ lang('DUPLICATE') ~ lang('COLON') }}</dt>
+				<dd class="duplicatetoggle" {% if IDEA_STATUS_ID != 4 %}style="display:none"{% endif %}>
 					<a id="duplicatelink" class="ideamodbtn" data-link="{{ U_IDEA_DUPLICATE }}" data-l-msg="{{ lang('VIEW_DUPLICATE') }}" {% if IDEA_DUPLICATE %}href="{{ U_IDEA_DUPLICATE }}"><i class="fa fa-fw fa-link"></i>{{ lang('VIEW_DUPLICATE') }}{% else %}style="display:none">{% endif %}</a>
 					{% if S_IS_MOD %}
 						<a href="{{ U_EDIT_DUPLICATE }}" id="duplicateedit"><i class="fa fa-fw fa-pencil"></i>{{ lang('SET') }}</a>

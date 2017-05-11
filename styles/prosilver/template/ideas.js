@@ -124,7 +124,9 @@
 				href = href.replace(/status=\d/, 'status=' + data.status);
 
 				anchor.attr('href', href)
-					.text($this.find(':selected').text());
+					.text($this.find(':selected').text())
+					.removeClass()
+					.addClass('status-badge status-' + $this.find(':selected').val());
 
 				if (idea_is_duplicate()) {
 					$obj.duplicateToggle.show();

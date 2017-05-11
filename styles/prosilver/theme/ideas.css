@@ -115,3 +115,33 @@ dd.topics {
 .view-all:hover {
 	color: #536482;
 }
+
+.status-badge {
+	border-radius: 3px;
+	color: #ffffff;
+	padding: 3px 6px;
+}
+
+.status-badge:hover {
+	color: #ffffff;
+}
+
+.status-1 {
+	background-color: #6495ed;
+}
+
+.status-2 {
+	background-color: #f08080;
+}
+
+.status-3 {
+	background-color: #006400;
+}
+
+.status-4 {
+	background-color: #daa520;
+}
+
+.status-5 {
+	background-color: #b22222;
+}
