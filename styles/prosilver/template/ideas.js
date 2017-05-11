@@ -41,7 +41,7 @@
 				return result.points + ' ' + $(this).attr('data-l-msg');
 			});
 			$obj.successVoted.text(result.message)
-				.show()
+				.css('display', 'inline-block')
 				.delay(2000)
 				.fadeOut(300, function() {
 					$obj.votes.fadeIn(300);

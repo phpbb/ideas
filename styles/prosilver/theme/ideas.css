@@ -19,7 +19,9 @@ a.dead.removevote {
 
 .successvoted {
 	font-weight: bold;
+	border-radius: 4px;
 	display: none;
+	padding: 6px;
 }
 
 dd.topics {

@@ -92,7 +92,7 @@ $lang = array_merge($lang, array(
 		2	=> '%s points.',
 	),
 
-	'UPDATED_VOTE'			=> 'Successfully updated vote',
+	'UPDATED_VOTE'			=> 'Successfully updated vote!',
 
 	'VIEW_ALL'				=> 'View All',
 	'VIEW_DUPLICATE'		=> 'View duplicate',
