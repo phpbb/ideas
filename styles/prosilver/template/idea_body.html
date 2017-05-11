@@ -8,7 +8,21 @@
 </noscript>
 <div class="panel">
 	<div class="inner">
-		<dl class="left-box details" style="width: 95%">
+		<dl class="left-box details" style="width: 76%">
+			{% if S_IS_MOD %}
+				<ul class="post-buttons">
+					<li>
+						<a href="{{ U_EDIT_TITLE }}" id="titleedit" title="{{ lang('TITLE_EDIT') }}" class="button button-icon-only">
+							<i class="icon fa-pencil fa-fw" aria-hidden="true"></i><span class="sr-only">{{ lang('TITLE_EDIT') }}</span>
+						</a>
+					</li>
+					<li>
+						<a href="{{ U_DELETE_IDEA }}" title="{{ lang('DELETE_IDEA') }}" data-ajax="true" data-refresh="true" class="button button-icon-only">
+							<i class="icon fa-times fa-fw" aria-hidden="true"></i><span class="sr-only">{{ lang('DELETE_IDEA') }}</span>
+						</a>
+					</li>
+				</ul>
+			{% endif %}
 			<dt style="width: 15%">{{ lang('AUTHOR') ~ lang('COLON') }}</dt> <dd><strong>{{ IDEA_AUTHOR }}</strong></dd>
 			<dt style="width: 15%">{{ lang('POSTED') ~ lang('COLON') }}</dt> <dd>{{ IDEA_DATE }}</dd>
 			<dt style="width: 15%">{{ lang('RATING') ~ lang('COLON') }}</dt>
@@ -81,13 +95,6 @@
 						<a href="{{ U_EDIT_DUPLICATE }}" id="duplicateedit"><i class="fa fa-fw fa-pencil"></i>{{ lang('SET') }}</a>
 						<input type="text" id="duplicateeditinput" class="ideainput"{% if IDEA_DUPLICATE %} value="{{ IDEA_DUPLICATE }}"{% endif %} placeholder="###" data-l-err="{{ lang('ERROR') }}" data-l-msg="{{ lang('TICKET_ERROR_DUP') }}" />
 					{% endif %}
-				</dd>
-			{% endif %}
-			{% if S_IS_MOD %}
-				<dt style="width: 15%">{{ lang('MOD_IDEA') ~ lang('COLON') }}</dt>
-				<dd>
-					<a href="{{ U_DELETE_IDEA }}" data-ajax="true" data-refresh="true"><i class="fa fa-fw fa-trash-o"></i>{{ lang('DELETE') }}</a>&nbsp;
-					<a href="{{ U_EDIT_TITLE }}" id="titleedit"><i class="fa fa-fw fa-pencil"></i>{{ lang('TITLE_EDIT') }}</a>
 				</dd>
 			{% endif %}
 		</dl>

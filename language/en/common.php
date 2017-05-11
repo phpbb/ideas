@@ -27,6 +27,7 @@ $lang = array_merge($lang, array(
 	'CLICK_TO_VIEW'			=> 'Click to view votes.',
 
 	'DATE'					=> 'Date',
+	'DELETE_IDEA'			=> 'Delete idea',
 	'DUPLICATE'				=> 'Duplicate',
 
 	'EDIT'					=> 'Edit',
@@ -49,8 +50,6 @@ $lang = array_merge($lang, array(
 
 	'LATEST_IDEAS'			=> 'Latest Ideas',
 	'LOGGED_OUT'			=> 'You must be logged in to do this.',
-
-	'MOD_IDEA'				=> 'Moderate idea',
 
 	'NEW'					=> 'New',
 	'NEW_IDEA'				=> 'New Idea',
