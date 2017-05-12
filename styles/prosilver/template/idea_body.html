@@ -6,9 +6,9 @@
 		</div>
 	</div>
 </noscript>
-<div class="panel">
+<div class="panel idea-panel">
 	<div class="inner">
-		<dl class="left-box details" style="width: 76%">
+		<dl class="left-box details postbody">
 			{% if S_IS_MOD %}
 				<ul class="post-buttons">
 					<li>
@@ -23,9 +23,9 @@
 					</li>
 				</ul>
 			{% endif %}
-			<dt style="width: 15%">{{ lang('AUTHOR') ~ lang('COLON') }}</dt> <dd><strong>{{ IDEA_AUTHOR }}</strong></dd>
-			<dt style="width: 15%">{{ lang('POSTED') ~ lang('COLON') }}</dt> <dd>{{ IDEA_DATE }}</dd>
-			<dt style="width: 15%">{{ lang('RATING') ~ lang('COLON') }}</dt>
+			<dt class="idealabel">{{ lang('AUTHOR') ~ lang('COLON') }}</dt> <dd><strong>{{ IDEA_AUTHOR }}</strong></dd>
+			<dt class="idealabel">{{ lang('POSTED') ~ lang('COLON') }}</dt> <dd>{{ IDEA_DATE }}</dd>
+			<dt class="idealabel">{{ lang('RATING') ~ lang('COLON') }}</dt>
 			<dd>
 				<div class="rating">
 					<a {% if S_CAN_VOTE %}href="{{ U_IDEA_VOTE }}"{% endif %} class="minivoteup {{ S_CAN_VOTE ? 'voteup' : 'dead' }}" title="{{ lang('VOTE_UP') }}" data-l-err="{{ lang('ERROR') }}" data-l-msg="{{ lang('VOTE_ERROR') ~ lang('COLON') }}"><span>{{ IDEA_VOTES_UP }}</span></a> &nbsp;
@@ -59,7 +59,7 @@
 					</ul>
 				</div>
 			</dd>
-			<dt style="width: 15%">{{ lang('STATUS') ~ lang('COLON') }}</dt>
+			<dt class="idealabel">{{ lang('STATUS') ~ lang('COLON') }}</dt>
 			<dd>
 				<a href="{{ IDEA_STATUS_LINK }}" class="status-badge status-{{ IDEA_STATUS_ID }}">{{ IDEA_STATUS_NAME }}</a>
 				{% if STATUS_ARY %}&nbsp; <select id="status" data-url="{{ U_CHANGE_STATUS }}">
@@ -68,7 +68,7 @@
 				</select>{% endif %}
 			</dd>
 			{% if IDEA_RFC or S_CAN_EDIT %}
-				<dt style="width: 15%">{{ lang('RFC') ~ lang('COLON') }}</dt>
+				<dt class="idealabel">{{ lang('RFC') ~ lang('COLON') }}</dt>
 				<dd>
 					<a id="rfclink" class="ideamodbtn" href="{{ IDEA_RFC }}"{% if not IDEA_RFC %} style="display:none"{% endif %}>{{ IDEA_RFC }}</a>
 					{% if S_CAN_EDIT %}
@@ -78,7 +78,7 @@
 				</dd>
 			{% endif %}
 			{% if IDEA_TICKET or S_CAN_EDIT %}
-				<dt style="width: 15%">{{ lang('TICKET') ~ lang('COLON') }}</dt>
+				<dt class="idealabel">{{ lang('TICKET') ~ lang('COLON') }}</dt>
 				<dd>
 					<a id="ticketlink" class="ideamodbtn" {% if IDEA_TICKET %}href="https://tracker.phpbb.com/browse/PHPBB3-{{ IDEA_TICKET }}">PHPBB3-{{ IDEA_TICKET }}{% else %}style="display:none">{% endif %}</a>
 					{% if S_CAN_EDIT %}
@@ -88,7 +88,7 @@
 				</dd>
 			{% endif %}
 			{% if IDEA_DUPLICATE or S_IS_MOD %}
-				<dt class="duplicatetoggle" style="width: 15%; {% if IDEA_STATUS_ID != 4 %}display:none{% endif %}">{{ lang('DUPLICATE') ~ lang('COLON') }}</dt>
+				<dt class="duplicatetoggle idealabel"{% if IDEA_STATUS_ID != 4 %} style="display:none"{% endif %}>{{ lang('DUPLICATE') ~ lang('COLON') }}</dt>
 				<dd class="duplicatetoggle" {% if IDEA_STATUS_ID != 4 %}style="display:none"{% endif %}>
 					<a id="duplicatelink" class="ideamodbtn" data-link="{{ U_IDEA_DUPLICATE }}" data-l-msg="{{ lang('IDEA_NO') }}" {% if IDEA_DUPLICATE %}href="{{ U_IDEA_DUPLICATE }}">{{ lang('IDEA_NO') }}{{ IDEA_DUPLICATE }}{% else %}style="display:none">{% endif %}</a>
 					{% if S_IS_MOD %}
