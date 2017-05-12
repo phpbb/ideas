@@ -1,42 +1,8 @@
-a.votes {
-	font-weight: bold;
-	border-radius: 4px;
-	display: inline-block;
-	padding: 6px;
-}
-
-a.dead {
-	cursor: default;
-}
-
-a.dead:hover {
-	text-decoration: none;
-}
-
-a.dead.removevote {
-	display: none;
-}
-
-.successvoted {
-	font-weight: bold;
-	border-radius: 4px;
-	display: none;
-	padding: 6px;
-}
-
+/* Common Styles */
 dd.topics {
 	text-align: left;
 	width: auto;
 	padding-left: 10px !important;
-}
-
-dt.idealabel {
-	width: 15% !important;
-}
-
-.ideainput {
-	display: none;
-	width: 300px;
 }
 
 .ideamodbtn {
@@ -100,6 +66,28 @@ dt.idealabel {
 	background-position: -65px 0;
 }
 
+/* Ideas Lists Styles */
+.view-all,
+.view-all:hover {
+	color: #536482;
+}
+
+/* Idea Body Styles */
+.votes,
+.successvoted {
+	font-weight: bold;
+	border-radius: 4px;
+	padding: 6px;
+}
+
+.votes {
+	display: inline-block;
+}
+
+.successvoted {
+	display: none;
+}
+
 .voteslist {
 	-moz-border-radius: 3px;
 	-webkit-border-radius: 3px;
@@ -115,9 +103,25 @@ dt.idealabel {
 	list-style: none;
 }
 
-.view-all,
-.view-all:hover {
-	color: #536482;
+.dead {
+	cursor: default;
+}
+
+.dead:hover {
+	text-decoration: none;
+}
+
+.dead.removevote {
+	display: none;
+}
+
+.idealabel {
+	width: 15% !important;
+}
+
+.ideainput {
+	display: none;
+	width: 300px;
 }
 
 .status-badge {
