@@ -161,10 +161,11 @@
 
 			$.get(url, {rfc: value}, function(res) {
 				if (res) {
+					$obj.rfcLink.text(value)
+						.attr('href', value);
+
 					if (value) {
-						$obj.rfcLink.text(value)
-							.attr('href', value)
-							.show();
+						$obj.rfcLink.show();
 					}
 
 					$this.hide();
@@ -218,10 +219,11 @@
 
 			$.get(url, {ticket: value && info[1]}, function(res) {
 				if (res) {
+					$obj.ticketLink.text(value)
+						.attr('href', 'https://tracker.phpbb.com/browse/' + value);
+
 					if (value) {
-						$obj.ticketLink.text(value)
-							.attr('href', 'https://tracker.phpbb.com/browse/' + value)
-							.show();
+						$obj.ticketLink.show();
 					}
 
 					$this.hide();
@@ -279,6 +281,10 @@
 							.text(msg + value)
 							.attr('href', link + value)
 							.show();
+					} else {
+						$obj.duplicateLink
+							.text(value)
+							.attr('href', value);
 					}
 
 					$this.hide();
