@@ -103,6 +103,10 @@ dd.topics {
 	list-style: none;
 }
 
+.voteslist ul li:not(:first-child) {
+	border-top: dashed 1px #b9b9b9;
+}
+
 .dead {
 	cursor: default;
 }
