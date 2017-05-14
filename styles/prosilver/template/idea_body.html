@@ -9,6 +9,7 @@
 <div class="panel">
 	<div class="inner">
 		<dl class="left-box details idea-panel">
+			{% if S_IS_MOD %}<dt class="idealabel">{{ lang('IDEA_ID') ~ lang('COLON') }}</dt> <dd>{{ IDEA_ID }}</dd>{% endif %}
 			<dt class="idealabel">{{ lang('AUTHOR') ~ lang('COLON') }}</dt> <dd><strong>{{ IDEA_AUTHOR }}</strong></dd>
 			<dt class="idealabel">{{ lang('POSTED') ~ lang('COLON') }}</dt> <dd>{{ IDEA_DATE }}</dd>
 			<dt class="idealabel">{{ lang('RATING') ~ lang('COLON') }}</dt>

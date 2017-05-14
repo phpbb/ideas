@@ -34,9 +34,9 @@ $lang = array_merge($lang, array(
 	'EDIT'					=> 'Edit',
 	'ENABLE_JS'             => 'Please enable JavaScript in your browser to use phpBB Ideas effectively.',
 
-	'ID'					=> 'ID',
 	'IDEAS'					=> 'Ideas',
 	'IDEA_DELETED'			=> 'Idea successfully deleted.',
+	'IDEA_ID'				=> 'Idea ID',
 	'IDEA_LIST'				=> 'Idea List',
 	'IDEA_NUM'				=> 'Idea #',
 	'IDEA_NOT_FOUND'		=> 'Idea not found',
@@ -75,7 +75,7 @@ $lang = array_merge($lang, array(
 
 	'TICKET'				=> 'Ticket',
 	'TICKET_ERROR'			=> 'Ticket ID must be of the format “PHPBB3-#####”.',
-	'TICKET_ERROR_DUP'		=> 'Please use the post ID of the idea.',
+	'TICKET_ERROR_DUP'		=> 'Please use the Idea ID number.',
 	'TITLE'					=> 'Title',
 	'TITLE_TOO_LONG'		=> 'Subject must be under 120 characters long.',
 	'TITLE_TOO_SHORT'		=> 'You must specify a subject when posting a new idea.',
