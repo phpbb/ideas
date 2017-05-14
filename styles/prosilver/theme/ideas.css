@@ -120,7 +120,7 @@ dd.topics {
 }
 
 .idealabel {
-	width: 15% !important;
+	width: 10% !important;
 }
 
 .ideainput {
@@ -158,29 +158,7 @@ dd.topics {
 	background-color: #b22222;
 }
 
-.idea-panel .post-buttons {
-	position: absolute;
-	top: 5px;
-	right: 0;
-	margin: 0;
-}
-
-.rtl .idea-panel .post-buttons {
-	right: auto;
-	left: 0;
-}
-
-@media (max-width: 700px) {
-	.idea-panel {
-		position: relative;
-	}
-
-	.idea-panel .post-buttons {
-		top: 15px;
-		right: 30px;
-	}
-
-	.rtl .idea-panel .post-buttons {
-		left: 20px;
-	}
+.idea-panel {
+	line-height: 1.48em;
+	width: 100%;
 }
