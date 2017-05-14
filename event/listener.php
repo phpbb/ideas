@@ -98,7 +98,7 @@ class listener implements EventSubscriberInterface
 	 */
 	public function ideas_forum_redirect($event)
 	{
-		if ($event['forum_id'] == $this->config['ideas_forum_id'])
+		if ($this->is_ideas_forum($event['forum_id']))
 		{
 			// Use the custom base url if set, otherwise default to normal routing
 			$url = $this->config['ideas_base_url'] ?: $this->helper->route('phpbb_ideas_index_controller');
@@ -115,7 +115,7 @@ class listener implements EventSubscriberInterface
 	 */
 	public function clean_message($event)
 	{
-		if ($event['row']['forum_id'] != $this->config['ideas_forum_id'])
+		if (!$this->is_ideas_forum($event['row']['forum_id']))
 		{
 			return;
 		}
@@ -126,7 +126,7 @@ class listener implements EventSubscriberInterface
 			$message = $post_row['MESSAGE'];
 
 			// This freakish looking regex pattern should
-			// remove the ideas link-backs from the message.
+			// remove the old ideas link-backs from the message.
 			$message = preg_replace('/(<br[^>]*>\\n?)\\1-{10}\\1\\1.*/s', '', $message);
 
 			$post_row['MESSAGE'] = $message;
@@ -143,7 +143,7 @@ class listener implements EventSubscriberInterface
 	 */
 	public function show_post_buttons($event)
 	{
-		if ($event['row']['forum_id'] != $this->config['ideas_forum_id'])
+		if (!$this->is_ideas_forum($event['row']['forum_id']))
 		{
 			return;
 		}
@@ -171,7 +171,7 @@ class listener implements EventSubscriberInterface
 	 */
 	public function show_idea($event)
 	{
-		if ($event['forum_id'] != $this->config['ideas_forum_id'])
+		if (!$this->is_ideas_forum($event['forum_id']))
 		{
 			return;
 		}
@@ -278,7 +278,7 @@ class listener implements EventSubscriberInterface
 	 */
 	public function adjust_quickmod_tools($event)
 	{
-		if ($event['forum_id'] != $this->config['ideas_forum_id'])
+		if (!$this->is_ideas_forum($event['forum_id']))
 		{
 			return;
 		}
@@ -329,5 +329,17 @@ class listener implements EventSubscriberInterface
 			$event['location'] = $this->language->lang('VIEWING_IDEAS');
 			$event['location_url'] = $this->helper->route('phpbb_ideas_index_controller');
 		}
+	}
+
+	/**
+	 * Check if forum id is for the ideas the forum
+	 *
+	 * @param int $forum_id
+	 * @return bool
+	 * @access public
+	 */
+	protected function is_ideas_forum($forum_id)
+	{
+		return (int) $forum_id === (int) $this->config['ideas_forum_id'];
 	}
 }

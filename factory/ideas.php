@@ -248,7 +248,7 @@ class ideas
 			FROM ' . $this->table_ideas . '
 			WHERE topic_id = ' . (int) $id;
 		$result = $this->db->sql_query_limit($sql, 1);
-		$idea_id = $this->db->sql_fetchfield('idea_id');
+		$idea_id = (int) $this->db->sql_fetchfield('idea_id');
 		$this->db->sql_freeresult($result);
 
 		return $this->get_idea($idea_id);
