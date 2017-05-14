@@ -82,7 +82,7 @@ class idea_controller extends base
 		{
 			confirm_box(
 				false,
-				$this->language->lang('CONFIRM_OPERATION'),
+				$this->language->lang('CONFIRM_DELETE'),
 				build_hidden_fields(array(
 					'idea_id' => $this->data['idea_id'],
 					'mode' => 'delete',

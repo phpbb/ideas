@@ -220,7 +220,6 @@ class listener implements EventSubscriberInterface
 			'S_CAN_EDIT'		=> $mod || $own,
 			'S_CAN_VOTE'		=> $can_vote,
 
-			'U_DELETE_IDEA'		=> $this->link_helper->get_idea_link($idea['idea_id'], 'delete'),
 			'U_CHANGE_STATUS'	=> $this->link_helper->get_idea_link($idea['idea_id'], 'status', true),
 			'U_EDIT_DUPLICATE'	=> $this->link_helper->get_idea_link($idea['idea_id'], 'duplicate', true),
 			'U_EDIT_RFC'		=> $this->link_helper->get_idea_link($idea['idea_id'], 'rfc', true),
@@ -257,6 +256,16 @@ class listener implements EventSubscriberInterface
 			'U_VIEW_FORUM'		=> $this->helper->route('phpbb_ideas_index_controller'),
 			'FORUM_NAME'		=> $this->language->lang('IDEAS'),
 		));
+
+		// Add quick mod option for deleting an idea
+		if ($mod)
+		{
+			$this->template->alter_block_array('quickmod', array(
+				'VALUE'		=> 'delete_topic', // delete topic is used here simply to enable ajax
+				'TITLE'		=> $this->language->lang('DELETE_IDEA'),
+				'LINK'		=> $this->link_helper->get_idea_link($idea['idea_id'], 'delete'),
+			));
+		}
 	}
 
 	/**

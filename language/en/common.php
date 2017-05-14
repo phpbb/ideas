@@ -25,6 +25,7 @@ $lang = array_merge($lang, array(
 
 	'CHANGE_STATUS'			=> 'Change status',
 	'CLICK_TO_VIEW'			=> 'Click to view votes.',
+	'CONFIRM_DELETE'		=> 'Are you sure you want to delete this idea?',
 
 	'DATE'					=> 'Date',
 	'DELETE_IDEA'			=> 'Delete idea',
