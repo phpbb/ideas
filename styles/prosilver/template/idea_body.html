@@ -9,15 +9,6 @@
 <div class="panel idea-panel">
 	<div class="inner">
 		<dl class="left-box details postbody">
-			{% if S_IS_MOD %}
-				<ul class="post-buttons">
-					<li>
-						<a href="{{ U_EDIT_TITLE }}" id="titleedit" title="{{ lang('TITLE_EDIT') }}" class="button button-icon-only">
-							<i class="icon fa-pencil fa-fw" aria-hidden="true"></i><span class="sr-only">{{ lang('TITLE_EDIT') }}</span>
-						</a>
-					</li>
-				</ul>
-			{% endif %}
 			<dt class="idealabel">{{ lang('AUTHOR') ~ lang('COLON') }}</dt> <dd><strong>{{ IDEA_AUTHOR }}</strong></dd>
 			<dt class="idealabel">{{ lang('POSTED') ~ lang('COLON') }}</dt> <dd>{{ IDEA_DATE }}</dd>
 			<dt class="idealabel">{{ lang('RATING') ~ lang('COLON') }}</dt>

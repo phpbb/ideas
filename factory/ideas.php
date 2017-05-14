@@ -366,25 +366,16 @@ class ideas
 	 */
 	public function set_title($idea_id, $title)
 	{
-		if (utf8_clean_string($title) === '' || utf8_strlen($title) > 64)
+		if (utf8_clean_string($title) === '')
 		{
 			return false;
 		}
 
 		$sql_ary = array(
-			'idea_title' => $title,
+			'idea_title' => truncate_string($title, 120),
 		);
 
 		$this->update_idea_data($sql_ary, $idea_id, $this->table_ideas);
-
-		// We also need to update the topic's title
-		$idea = $this->get_idea($idea_id);
-		$sql = 'UPDATE ' . $this->table_topics . "
-			SET topic_title='" . $this->db->sql_escape($title) . "'
-			WHERE topic_id=" . (int) $idea['topic_id'];
-		$this->db->sql_query($sql);
-
-		$this->log->add('mod', $this->user->data['user_id'], $this->user->ip, 'ACP_PHPBB_IDEAS_TITLE_EDITED_LOG', time(), array($idea_id));
 
 		return true;
 	}
@@ -567,7 +558,7 @@ class ideas
 		{
 			$error[] = $this->language->lang('TITLE_TOO_SHORT');
 		}
-		if (utf8_strlen($title) > 64)
+		if (utf8_strlen($title) > 120)
 		{
 			$error[] = $this->language->lang('TITLE_TOO_LONG');
 		}

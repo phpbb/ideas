@@ -112,6 +112,7 @@ class listener_test extends \phpbb_test_case
 			'core.viewtopic_modify_page_title',
 			'core.viewtopic_add_quickmod_option_before',
 			'core.viewonline_overwrite_location',
+			'core.posting_modify_submit_post_after',
 		), array_keys(\phpbb\ideas\event\listener::getSubscribedEvents()));
 	}
 
@@ -198,7 +199,6 @@ class listener_test extends \phpbb_test_case
 
 		$listener->show_post_buttons($event);
 
-		$this->assertEquals($expected, $event['post_row']['U_EDIT']);
 		$this->assertEquals($expected, $event['post_row']['U_DELETE']);
 		$this->assertEquals($expected, $event['post_row']['U_WARN']);
 		$this->assertEquals($expected, $event['post_row']['U_QUOTE']);
@@ -318,5 +318,109 @@ class listener_test extends \phpbb_test_case
 
 		$this->assertEquals($expected_location_url, $location_url);
 		$this->assertEquals($expected_location, $location);
+	}
+
+	/**
+	 * Data set for edit_idea_title
+	 *
+	 * @return array Array of test data
+	 */
+	public function edit_idea_title_data()
+	{
+		return array(
+			array(
+				array(
+					'topic_id'       => 1,
+					'post_id'        => 1,
+					'forum_id'       => 2,
+					'mode'           => 'edit',
+					'update_subject' => true,
+					'post_data'      => array(
+						'topic_first_post_id' => 1,
+						'post_subject'        => 'Foo Bar 1',
+					),
+				),
+				'once',
+			),
+			array( // invalid posting mode
+				array(
+					'topic_id'       => 1,
+					'post_id'        => 1,
+					'forum_id'       => 2,
+					'mode'           => 'post',
+					'update_subject' => true,
+					'post_data'      => array(
+						'topic_first_post_id' => 1,
+						'post_subject'        => 'Foo Bar 1',
+					),
+				),
+				'never',
+			),
+			array( // subject not updated
+				   array(
+					   'topic_id'       => 1,
+					   'post_id'        => 1,
+					   'forum_id'       => 2,
+					   'mode'           => 'edit',
+					   'update_subject' => false,
+					   'post_data'      => array(
+						   'topic_first_post_id' => 1,
+						   'post_subject'        => 'Foo Bar 1',
+					   ),
+				   ),
+				   'never',
+			),
+			array( // wrong forum
+				   array(
+					   'topic_id'       => 1,
+					   'post_id'        => 1,
+					   'forum_id'       => 1,
+					   'mode'           => 'edit',
+					   'update_subject' => true,
+					   'post_data'      => array(
+						   'topic_first_post_id' => 1,
+						   'post_subject'        => 'Foo Bar 1',
+					   ),
+				   ),
+				   'never',
+			),
+			array( // not first post
+				   array(
+					   'topic_id'       => 1,
+					   'post_id'        => 2,
+					   'forum_id'       => 2,
+					   'mode'           => 'edit',
+					   'update_subject' => true,
+					   'post_data'      => array(
+						   'topic_first_post_id' => 1,
+						   'post_subject'        => 'Foo Bar 1',
+					   ),
+				   ),
+				   'never',
+			),
+		);
+	}
+
+	/**
+	 * Test the edit_idea_title event
+	 *
+	 * @dataProvider edit_idea_title_data
+	 */
+	public function test_edit_idea_title($data, $expected)
+	{
+		$listener = $this->get_listener();
+
+		$event = new \phpbb\event\data($data);
+
+		$this->ideas->expects($this->$expected())
+			->method('get_idea_by_topic_id')
+			->with($event['topic_id'])
+			->willReturn(array('idea_id' => $event['topic_id']));
+
+		$this->ideas->expects($this->$expected())
+			->method('set_title')
+			->with($event['topic_id'], $event['post_data']['post_subject']);
+
+		$listener->edit_idea_title($event);
 	}
 }

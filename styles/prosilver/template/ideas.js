@@ -16,8 +16,6 @@
 			ticketEdit: $('#ticketedit'),
 			ticketEditInput: $('#ticketeditinput'),
 			ticketLink: $('#ticketlink'),
-			titleEdit: $('#titleedit'),
-			titleEditInput: $('#titleeditinput'),
 			rfcEdit: $('#rfcedit'),
 			rfcEditInput: $('#rfceditinput'),
 			rfcLink: $('#rfclink'),
@@ -307,41 +305,6 @@
 			if ($link.html()) {
 				$link.show();
 			}
-		}
-	});
-
-	$obj.titleEdit.on('click', function(e) {
-		e.preventDefault();
-
-		$obj.ideaTitle.hide();
-		$obj.titleEditInput.show().focus();
-	});
-
-	$obj.titleEditInput.on('keydown', function(e) {
-		if (e.keyCode === keymap.ENTER) {
-			e.preventDefault();
-			e.stopPropagation();
-
-			var $this = $(this),
-				url = $obj.titleEdit.attr('href'),
-				value = $this.val();
-
-			if (value.length < 1 || value.length > 64) {
-				phpbb.alert($this.attr('data-l-err'), $this.attr('data-l-msg'));
-				return;
-			}
-
-			$.get(url, {title: value}, function(res) {
-				if (res) {
-					$obj.ideaTitle.text(value).show();
-					$this.hide();
-				}
-			});
-		} else if (e.keyCode === keymap.ESC) {
-			e.preventDefault();
-
-			$obj.ideaTitle.show();
-			$(this).hide();
 		}
 	});
 

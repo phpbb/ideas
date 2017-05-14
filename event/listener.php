@@ -86,6 +86,7 @@ class listener implements EventSubscriberInterface
 			'core.viewtopic_modify_page_title'			=> 'show_idea',
 			'core.viewtopic_add_quickmod_option_before'	=> 'adjust_quickmod_tools',
 			'core.viewonline_overwrite_location'		=> 'viewonline_ideas',
+			'core.posting_modify_submit_post_after'		=> 'edit_idea_title',
 		);
 	}
 
@@ -152,8 +153,7 @@ class listener implements EventSubscriberInterface
 		{
 			$post_row = $event['post_row'];
 
-			// Do not display edit, delete, quote or warn user buttons
-			$post_row['U_EDIT']   = false;
+			// Do not display delete, quote or warn user buttons
 			$post_row['U_DELETE'] = false;
 			$post_row['U_QUOTE']  = false;
 			$post_row['U_WARN']   = false;
@@ -224,7 +224,6 @@ class listener implements EventSubscriberInterface
 			'U_EDIT_DUPLICATE'	=> $this->link_helper->get_idea_link($idea['idea_id'], 'duplicate', true),
 			'U_EDIT_RFC'		=> $this->link_helper->get_idea_link($idea['idea_id'], 'rfc', true),
 			'U_EDIT_TICKET'		=> $this->link_helper->get_idea_link($idea['idea_id'], 'ticket', true),
-			'U_EDIT_TITLE'		=> $this->link_helper->get_idea_link($idea['idea_id'], 'title', true),
 			'U_REMOVE_VOTE'		=> $this->link_helper->get_idea_link($idea['idea_id'], 'removevote', true),
 			'U_IDEA_VOTE'		=> $this->link_helper->get_idea_link($idea['idea_id'], 'vote', true),
 		));
@@ -329,6 +328,27 @@ class listener implements EventSubscriberInterface
 			$event['location'] = $this->language->lang('VIEWING_IDEAS');
 			$event['location_url'] = $this->helper->route('phpbb_ideas_index_controller');
 		}
+	}
+
+	/**
+	 * Update the idea's title when post title is edited.
+	 *
+	 * @param \phpbb\event\data $event The event object
+	 * @return void
+	 * @access public
+	 */
+	public function edit_idea_title($event)
+	{
+		if ($event['mode'] !== 'edit' ||
+			!$event['update_subject'] ||
+			!$this->is_ideas_forum($event['forum_id']) ||
+			$event['post_data']['topic_first_post_id'] != $event['post_id'])
+		{
+			return;
+		}
+
+		$idea = $this->ideas->get_idea_by_topic_id($event['topic_id']);
+		$this->ideas->set_title($idea['idea_id'], $event['post_data']['post_subject']);
 	}
 
 	/**
