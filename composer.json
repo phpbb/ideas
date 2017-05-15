@@ -1,9 +1,9 @@
 {
 	"name": "phpbb/ideas",
 	"type": "phpbb-extension",
-	"description": "phpBB Ideas extension",
+	"description": "phpBB Ideas centre for phpBB 3.2.",
 	"homepage": "https://www.phpbb.com",
-	"version": "2.1.3",
+	"version": "2.1.4",
 	"license": "GPL-2.0",
 	"authors": [
 		{
