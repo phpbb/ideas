@@ -25,17 +25,20 @@ $lang = array_merge($lang, array(
 
 	'CHANGE_STATUS'			=> 'Change status',
 	'CLICK_TO_VIEW'			=> 'Click to view votes.',
+	'CONFIRM_DELETE'		=> 'Are you sure you want to delete this idea?',
 
 	'DATE'					=> 'Date',
+	'DELETE_IDEA'			=> 'Delete idea',
 	'DUPLICATE'				=> 'Duplicate',
 
 	'EDIT'					=> 'Edit',
 	'ENABLE_JS'             => 'Please enable JavaScript in your browser to use phpBB Ideas effectively.',
 
-	'ID'					=> 'ID',
 	'IDEAS'					=> 'Ideas',
 	'IDEA_DELETED'			=> 'Idea successfully deleted.',
+	'IDEA_ID'				=> 'Idea ID',
 	'IDEA_LIST'				=> 'Idea List',
+	'IDEA_NUM'				=> 'Idea #',
 	'IDEA_NOT_FOUND'		=> 'Idea not found',
 	'IDEAS_TITLE'			=> 'phpBB Ideas',
 	'IDEAS_NOT_AVAILABLE'	=> 'Ideas is not available at this time.',
@@ -49,8 +52,6 @@ $lang = array_merge($lang, array(
 
 	'LATEST_IDEAS'			=> 'Latest Ideas',
 	'LOGGED_OUT'			=> 'You must be logged in to do this.',
-
-	'MOD_IDEA'				=> 'Moderate idea',
 
 	'NEW'					=> 'New',
 	'NEW_IDEA'				=> 'New Idea',
@@ -68,18 +69,15 @@ $lang = array_merge($lang, array(
 	'RFC_ERROR'				=> 'RFC must be a topic on Area51.',
 
 	'SEARCH_IDEAS'			=> 'Search ideas...',
-	'SET'                   => 'Set',
 	'SCORE'                 => 'Score',
 	'SHOW_W_STATUS'			=> 'Display ideas with status',
 	'STATUS'				=> 'Status',
 
 	'TICKET'				=> 'Ticket',
 	'TICKET_ERROR'			=> 'Ticket ID must be of the format “PHPBB3-#####”.',
-	'TICKET_ERROR_DUP'		=> 'Please post the ID of the ticket.',
+	'TICKET_ERROR_DUP'		=> 'Please use the Idea ID number.',
 	'TITLE'					=> 'Title',
-	'TITLE_EDIT'            => 'Edit title',
-	'TITLE_EDIT_ERROR'		=> 'Subject must be between 1 and 64 characters.',
-	'TITLE_TOO_LONG'		=> 'Subject must be under 64 characters long.',
+	'TITLE_TOO_LONG'		=> 'Subject must be under %d characters long.',
 	'TITLE_TOO_SHORT'		=> 'You must specify a subject when posting a new idea.',
 	'TOP'                   => 'Top',
 	'TOP_IDEAS'				=> 'Top Ideas',
@@ -92,10 +90,9 @@ $lang = array_merge($lang, array(
 		2	=> '%s points.',
 	),
 
-	'UPDATED_VOTE'			=> 'Successfully updated vote',
+	'UPDATED_VOTE'			=> 'Successfully updated vote!',
 
 	'VIEW_ALL'				=> 'View All',
-	'VIEW_DUPLICATE'		=> 'View duplicate',
 	'VIEW_IDEA'				=> 'View Idea',
 	'VIEW_IMPLEMENTED'		=> 'View all implemented ideas',
 	'VIEW_LATEST'			=> 'View all open ideas',

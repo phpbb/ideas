@@ -26,6 +26,7 @@ class ideas
 	const SORT_TITLE = 'title';
 	const SORT_TOP = 'top';
 	const SORT_VOTES = 'votes';
+	const SUBJECT_LENGTH = 120;
 
 	/** @var array Idea status names and IDs */
 	public static $statuses = array(
@@ -248,7 +249,7 @@ class ideas
 			FROM ' . $this->table_ideas . '
 			WHERE topic_id = ' . (int) $id;
 		$result = $this->db->sql_query_limit($sql, 1);
-		$idea_id = $this->db->sql_fetchfield('idea_id');
+		$idea_id = (int) $this->db->sql_fetchfield('idea_id');
 		$this->db->sql_freeresult($result);
 
 		return $this->get_idea($idea_id);
@@ -366,25 +367,16 @@ class ideas
 	 */
 	public function set_title($idea_id, $title)
 	{
-		if (utf8_clean_string($title) === '' || utf8_strlen($title) > 64)
+		if (utf8_clean_string($title) === '')
 		{
 			return false;
 		}
 
 		$sql_ary = array(
-			'idea_title' => $title,
+			'idea_title' => truncate_string($title, self::SUBJECT_LENGTH),
 		);
 
 		$this->update_idea_data($sql_ary, $idea_id, $this->table_ideas);
-
-		// We also need to update the topic's title
-		$idea = $this->get_idea($idea_id);
-		$sql = 'UPDATE ' . $this->table_topics . "
-			SET topic_title='" . $this->db->sql_escape($title) . "'
-			WHERE topic_id=" . (int) $idea['topic_id'];
-		$this->db->sql_query($sql);
-
-		$this->log->add('mod', $this->user->data['user_id'], $this->user->ip, 'ACP_PHPBB_IDEAS_TITLE_EDITED_LOG', time(), array($idea_id));
 
 		return true;
 	}
@@ -567,9 +559,9 @@ class ideas
 		{
 			$error[] = $this->language->lang('TITLE_TOO_SHORT');
 		}
-		if (utf8_strlen($title) > 64)
+		if (utf8_strlen($title) > self::SUBJECT_LENGTH)
 		{
-			$error[] = $this->language->lang('TITLE_TOO_LONG');
+			$error[] = $this->language->lang('TITLE_TOO_LONG', self::SUBJECT_LENGTH);
 		}
 		if (utf8_strlen($message) < $this->config['min_post_chars'])
 		{

@@ -1,36 +1,8 @@
-a.votes {
-	font-weight: bold;
-	border-radius: 4px;
-	display: inline-block;
-	padding: 6px;
-}
-
-a.dead {
-	cursor: default;
-}
-
-a.dead:hover {
-	text-decoration: none;
-}
-
-a.dead.removevote {
-	display: none;
-}
-
-.successvoted {
-	font-weight: bold;
-	display: none;
-}
-
+/* Common Styles */
 dd.topics {
 	text-align: left;
 	width: auto;
 	padding-left: 10px !important;
-}
-
-.ideainput {
-	display: none;
-	width: 300px;
 }
 
 .ideamodbtn {
@@ -94,6 +66,28 @@ dd.topics {
 	background-position: -65px 0;
 }
 
+/* Ideas Lists Styles */
+.view-all,
+.view-all:hover {
+	color: #536482;
+}
+
+/* Idea Body Styles */
+.votes,
+.successvoted {
+	font-weight: bold;
+	border-radius: 4px;
+	padding: 6px;
+}
+
+.votes {
+	display: inline-block;
+}
+
+.successvoted {
+	display: none;
+}
+
 .voteslist {
 	-moz-border-radius: 3px;
 	-webkit-border-radius: 3px;
@@ -109,7 +103,62 @@ dd.topics {
 	list-style: none;
 }
 
-.view-all,
-.view-all:hover {
-	color: #536482;
+.voteslist ul li:not(:first-child) {
+	border-top: dashed 1px #b9b9b9;
+}
+
+.dead {
+	cursor: default;
+}
+
+.dead:hover {
+	text-decoration: none;
+}
+
+.dead.removevote {
+	display: none;
+}
+
+.idealabel {
+	width: 10% !important;
+}
+
+.ideainput {
+	display: none;
+	width: 300px;
+}
+
+.status-badge {
+	border-radius: 3px;
+	color: #ffffff;
+	padding: 3px 6px;
+}
+
+.status-badge:hover {
+	color: #ffffff;
+}
+
+.status-1 {
+	background-color: #6495ed;
+}
+
+.status-2 {
+	background-color: #f08080;
+}
+
+.status-3 {
+	background-color: #006400;
+}
+
+.status-4 {
+	background-color: #daa520;
+}
+
+.status-5 {
+	background-color: #b22222;
+}
+
+.idea-panel {
+	line-height: 1.48em;
+	width: 100%;
 }

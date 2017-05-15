@@ -82,23 +82,24 @@ class listener implements EventSubscriberInterface
 	{
 		return array(
 			'core.viewforum_get_topic_data'				=> 'ideas_forum_redirect',
-			'core.viewtopic_modify_post_row'			=> 'clean_message',
+			'core.viewtopic_modify_post_row'			=> array(array('clean_message'), array('show_post_buttons')),
 			'core.viewtopic_modify_page_title'			=> 'show_idea',
 			'core.viewtopic_add_quickmod_option_before'	=> 'adjust_quickmod_tools',
 			'core.viewonline_overwrite_location'		=> 'viewonline_ideas',
+			'core.posting_modify_submit_post_after'		=> 'edit_idea_title',
 		);
 	}
 
 	/**
 	 * Redirect users from the forum to the Ideas centre
 	 *
-	 * @param $event
+	 * @param \phpbb\event\data $event The event object
 	 * @return void
 	 * @access public
 	 */
 	public function ideas_forum_redirect($event)
 	{
-		if ($event['forum_id'] == $this->config['ideas_forum_id'])
+		if ($this->is_ideas_forum($event['forum_id']))
 		{
 			// Use the custom base url if set, otherwise default to normal routing
 			$url = $this->config['ideas_base_url'] ?: $this->helper->route('phpbb_ideas_index_controller');
@@ -109,13 +110,13 @@ class listener implements EventSubscriberInterface
 	/**
 	 * Clean obsolete link-backs from idea topics
 	 *
-	 * @param $event
+	 * @param \phpbb\event\data $event The event object
 	 * @return void
 	 * @access public
 	 */
 	public function clean_message($event)
 	{
-		if ($event['row']['forum_id'] != $this->config['ideas_forum_id'])
+		if (!$this->is_ideas_forum($event['row']['forum_id']))
 		{
 			return;
 		}
@@ -126,7 +127,7 @@ class listener implements EventSubscriberInterface
 			$message = $post_row['MESSAGE'];
 
 			// This freakish looking regex pattern should
-			// remove the ideas link-backs from the message.
+			// remove the old ideas link-backs from the message.
 			$message = preg_replace('/(<br[^>]*>\\n?)\\1-{10}\\1\\1.*/s', '', $message);
 
 			$post_row['MESSAGE'] = $message;
@@ -135,15 +136,41 @@ class listener implements EventSubscriberInterface
 	}
 
 	/**
+	 * Show post buttons (hide delete, quote or warn user buttons)
+	 *
+	 * @param \phpbb\event\data $event The event object
+	 * @return void
+	 * @access public
+	 */
+	public function show_post_buttons($event)
+	{
+		if (!$this->is_ideas_forum($event['row']['forum_id']))
+		{
+			return;
+		}
+
+		if ($event['topic_data']['topic_first_post_id'] == $event['row']['post_id'])
+		{
+			$post_row = $event['post_row'];
+
+			$post_row['U_DELETE'] = false;
+			$post_row['U_QUOTE']  = false;
+			$post_row['U_WARN']   = false;
+
+			$event['post_row'] = $post_row;
+		}
+	}
+
+	/**
 	 * Show the idea related to the current topic
 	 *
-	 * @param $event
+	 * @param \phpbb\event\data $event The event object
 	 * @return void
 	 * @access public
 	 */
 	public function show_idea($event)
 	{
-		if ($event['forum_id'] != $this->config['ideas_forum_id'])
+		if (!$this->is_ideas_forum($event['forum_id']))
 		{
 			return;
 		}
@@ -161,6 +188,13 @@ class listener implements EventSubscriberInterface
 		if ($mod)
 		{
 			$this->template->assign_var('STATUS_ARY', ideas::$statuses);
+
+			// Add quick mod option for deleting an idea
+			$this->template->alter_block_array('quickmod', array(
+				'VALUE'		=> 'delete_topic', // delete topic is used here simply to enable ajax
+				'TITLE'		=> $this->language->lang('DELETE_IDEA'),
+				'LINK'		=> $this->link_helper->get_idea_link($idea['idea_id'], 'delete'),
+			));
 		}
 
 		$points = $idea['idea_votes_up'] - $idea['idea_votes_down'];
@@ -178,7 +212,8 @@ class listener implements EventSubscriberInterface
 			'IDEA_VOTES_UP'		=> $idea['idea_votes_up'],
 			'IDEA_VOTES_DOWN'	=> $idea['idea_votes_down'],
 			'IDEA_POINTS'		=> $points,
-			'IDEA_STATUS'		=> $this->ideas->get_status_from_id($idea['idea_status']),
+			'IDEA_STATUS_ID'	=> $idea['idea_status'],
+			'IDEA_STATUS_NAME'	=> $this->ideas->get_status_from_id($idea['idea_status']),
 			'IDEA_STATUS_LINK'	=> $this->helper->route('phpbb_ideas_list_controller', array('status' => $idea['idea_status'])),
 
 			'IDEA_DUPLICATE'	=> $idea['duplicate_id'],
@@ -191,12 +226,10 @@ class listener implements EventSubscriberInterface
 			'S_CAN_EDIT'		=> $mod || $own,
 			'S_CAN_VOTE'		=> $can_vote,
 
-			'U_DELETE_IDEA'		=> $this->link_helper->get_idea_link($idea['idea_id'], 'delete'),
 			'U_CHANGE_STATUS'	=> $this->link_helper->get_idea_link($idea['idea_id'], 'status', true),
 			'U_EDIT_DUPLICATE'	=> $this->link_helper->get_idea_link($idea['idea_id'], 'duplicate', true),
 			'U_EDIT_RFC'		=> $this->link_helper->get_idea_link($idea['idea_id'], 'rfc', true),
 			'U_EDIT_TICKET'		=> $this->link_helper->get_idea_link($idea['idea_id'], 'ticket', true),
-			'U_EDIT_TITLE'		=> $this->link_helper->get_idea_link($idea['idea_id'], 'title', true),
 			'U_REMOVE_VOTE'		=> $this->link_helper->get_idea_link($idea['idea_id'], 'removevote', true),
 			'U_IDEA_VOTE'		=> $this->link_helper->get_idea_link($idea['idea_id'], 'vote', true),
 		));
@@ -230,9 +263,17 @@ class listener implements EventSubscriberInterface
 		));
 	}
 
+	/**
+	 * Adjust the QuickMod tools displayed
+	 * (hide options to delete, restore, make global, sticky or announcement)
+	 *
+	 * @param \phpbb\event\data $event The event object
+	 * @return void
+	 * @access public
+	 */
 	public function adjust_quickmod_tools($event)
 	{
-		if ($event['forum_id'] != $this->config['ideas_forum_id'])
+		if (!$this->is_ideas_forum($event['forum_id']))
 		{
 			return;
 		}
@@ -283,5 +324,38 @@ class listener implements EventSubscriberInterface
 			$event['location'] = $this->language->lang('VIEWING_IDEAS');
 			$event['location_url'] = $this->helper->route('phpbb_ideas_index_controller');
 		}
+	}
+
+	/**
+	 * Update the idea's title when post title is edited.
+	 *
+	 * @param \phpbb\event\data $event The event object
+	 * @return void
+	 * @access public
+	 */
+	public function edit_idea_title($event)
+	{
+		if ($event['mode'] !== 'edit' ||
+			!$event['update_subject'] ||
+			!$this->is_ideas_forum($event['forum_id']) ||
+			$event['post_data']['topic_first_post_id'] != $event['post_id'])
+		{
+			return;
+		}
+
+		$idea = $this->ideas->get_idea_by_topic_id($event['topic_id']);
+		$this->ideas->set_title($idea['idea_id'], $event['post_data']['post_subject']);
+	}
+
+	/**
+	 * Check if forum id is for the ideas the forum
+	 *
+	 * @param int $forum_id
+	 * @return bool
+	 * @access public
+	 */
+	protected function is_ideas_forum($forum_id)
+	{
+		return (int) $forum_id === (int) $this->config['ideas_forum_id'];
 	}
 }

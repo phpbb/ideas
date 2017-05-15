@@ -123,7 +123,7 @@ class idea_attributes_test extends ideas_base
 					'duplicate_id'	=> array(1),
 					'rfc_link'		=> 'foobar',
 					'ticket_id'		=> array(1),
-					'idea_title'	=> str_repeat('a', 65),
+					'idea_title'	=> '',
 				), false
 			),
 		);
@@ -166,20 +166,7 @@ class idea_attributes_test extends ideas_base
 	 */
 	public function test_set_title($data, $expected)
 	{
-		$idea = $this->set_attribute_test('set_title', 'idea_title', $data, $expected);
-
-		// Also check the topic title was updated
-		if ($idea)
-		{
-			$sql = "SELECT topic_title
-				FROM phpbb_topics
-				WHERE topic_id = {$idea['topic_id']}";
-			$result = $this->db->sql_query($sql);
-			$topic_title = $this->db->sql_fetchfield('topic_title');
-			$this->db->sql_freeresult($result);
-
-			$this->assertEquals($data['idea_title'], $topic_title);
-		}
+		$this->set_attribute_test('set_title', 'idea_title', $data, $expected);
 	}
 
 	/**

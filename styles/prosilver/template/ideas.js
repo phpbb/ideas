@@ -16,8 +16,6 @@
 			ticketEdit: $('#ticketedit'),
 			ticketEditInput: $('#ticketeditinput'),
 			ticketLink: $('#ticketlink'),
-			titleEdit: $('#titleedit'),
-			titleEditInput: $('#titleeditinput'),
 			rfcEdit: $('#rfcedit'),
 			rfcEditInput: $('#rfceditinput'),
 			rfcLink: $('#rfclink'),
@@ -41,7 +39,7 @@
 				return result.points + ' ' + $(this).attr('data-l-msg');
 			});
 			$obj.successVoted.text(result.message)
-				.show()
+				.css('display', 'inline-block')
 				.delay(2000)
 				.fadeOut(300, function() {
 					$obj.votes.fadeIn(300);
@@ -124,7 +122,9 @@
 				href = href.replace(/status=\d/, 'status=' + data.status);
 
 				anchor.attr('href', href)
-					.text($this.find(':selected').text());
+					.text($this.find(':selected').text())
+					.removeClass()
+					.addClass('status-badge status-' + $this.find(':selected').val());
 
 				if (idea_is_duplicate()) {
 					$obj.duplicateToggle.show();
@@ -159,17 +159,20 @@
 
 			$.get(url, {rfc: value}, function(res) {
 				if (res) {
+					$obj.rfcLink.text(value)
+						.attr('href', value);
+
 					if (value) {
-						$obj.rfcLink.text(value)
-							.attr('href', value)
-							.show();
+						$obj.rfcLink.show();
 					}
 
 					$this.hide();
 
 					$obj.rfcEdit.text(function() {
 						return value ? $(this).attr('data-l-edit') : $(this).attr('data-l-add');
-					}).show();
+					}).prepend($('<i class="fa fa-fw"></i>').addClass(function() {
+						return value ? 'fa-pencil' : 'fa-plus-circle';
+					})).show();
 				}
 			});
 		} else if (e.keyCode === keymap.ESC) {
@@ -214,17 +217,20 @@
 
 			$.get(url, {ticket: value && info[1]}, function(res) {
 				if (res) {
+					$obj.ticketLink.text(value)
+						.attr('href', 'https://tracker.phpbb.com/browse/' + value);
+
 					if (value) {
-						$obj.ticketLink.text(value)
-							.attr('href', 'https://tracker.phpbb.com/browse/' + value)
-							.show();
+						$obj.ticketLink.show();
 					}
 
 					$this.hide();
 
 					$obj.ticketEdit.text(function() {
 						return value ? $(this).attr('data-l-edit') : $(this).attr('data-l-add');
-					}).show();
+					}).prepend($('<i class="fa fa-fw"></i>').addClass(function() {
+						return value ? 'fa-pencil' : 'fa-plus-circle';
+					})).show();
 				}
 
 			});
@@ -270,14 +276,22 @@
 						var link = $obj.duplicateLink.attr('data-link').replace(/^(.*\/)(\d+)$/, '$1');
 
 						$obj.duplicateLink
-							.text(msg)
+							.text(msg + value)
 							.attr('href', link + value)
 							.show();
+					} else {
+						$obj.duplicateLink
+							.text(value)
+							.attr('href', value);
 					}
 
 					$this.hide();
 
-					$obj.duplicateEdit.show();
+					$obj.duplicateEdit.text(function() {
+						return value ? $(this).attr('data-l-edit') : $(this).attr('data-l-add');
+					}).prepend($('<i class="fa fa-fw"></i>').addClass(function() {
+						return value ? 'fa-pencil' : 'fa-plus-circle';
+					})).show();
 				}
 			});
 		} else if (e.keyCode === keymap.ESC) {
@@ -291,41 +305,6 @@
 			if ($link.html()) {
 				$link.show();
 			}
-		}
-	});
-
-	$obj.titleEdit.on('click', function(e) {
-		e.preventDefault();
-
-		$obj.ideaTitle.hide();
-		$obj.titleEditInput.show().focus();
-	});
-
-	$obj.titleEditInput.on('keydown', function(e) {
-		if (e.keyCode === keymap.ENTER) {
-			e.preventDefault();
-			e.stopPropagation();
-
-			var $this = $(this),
-				url = $obj.titleEdit.attr('href'),
-				value = $this.val();
-
-			if (value.length < 1 || value.length > 64) {
-				phpbb.alert($this.attr('data-l-err'), $this.attr('data-l-msg'));
-				return;
-			}
-
-			$.get(url, {title: value}, function(res) {
-				if (res) {
-					$obj.ideaTitle.text(value).show();
-					$this.hide();
-				}
-			});
-		} else if (e.keyCode === keymap.ESC) {
-			e.preventDefault();
-
-			$obj.ideaTitle.show();
-			$(this).hide();
 		}
 	});
 

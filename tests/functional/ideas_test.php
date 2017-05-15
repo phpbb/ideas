@@ -134,7 +134,7 @@ class ideas_test extends ideas_functional_base
 		$this->assertContains($data['title'], $crawler->filter('h2')->text());
 
 		// Get the new idea's ID and add it to the data array
-		$url = $crawler->selectLink('Edit title')->link()->getUri();
+		$url = $crawler->selectLink($this->lang('REMOVE_VOTE'))->link()->getUri();
 		preg_match('#\/idea\/(\d+)\?#', $url, $matches);
 		$data['idea_id'] = $matches ? $matches[1] : null;
 
