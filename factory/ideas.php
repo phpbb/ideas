@@ -26,6 +26,7 @@ class ideas
 	const SORT_TITLE = 'title';
 	const SORT_TOP = 'top';
 	const SORT_VOTES = 'votes';
+	const SUBJECT_LENGTH = 120;
 
 	/** @var array Idea status names and IDs */
 	public static $statuses = array(
@@ -372,7 +373,7 @@ class ideas
 		}
 
 		$sql_ary = array(
-			'idea_title' => truncate_string($title, 120),
+			'idea_title' => truncate_string($title, self::SUBJECT_LENGTH),
 		);
 
 		$this->update_idea_data($sql_ary, $idea_id, $this->table_ideas);
@@ -558,9 +559,9 @@ class ideas
 		{
 			$error[] = $this->language->lang('TITLE_TOO_SHORT');
 		}
-		if (utf8_strlen($title) > 120)
+		if (utf8_strlen($title) > self::SUBJECT_LENGTH)
 		{
-			$error[] = $this->language->lang('TITLE_TOO_LONG');
+			$error[] = $this->language->lang('TITLE_TOO_LONG', self::SUBJECT_LENGTH);
 		}
 		if (utf8_strlen($message) < $this->config['min_post_chars'])
 		{
