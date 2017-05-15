@@ -136,7 +136,7 @@ class listener implements EventSubscriberInterface
 	}
 
 	/**
-	 * Show post buttons (hide edit, delete, warn, quote; show others)
+	 * Show post buttons (hide delete, quote or warn user buttons)
 	 *
 	 * @param \phpbb\event\data $event The event object
 	 * @return void
@@ -153,7 +153,6 @@ class listener implements EventSubscriberInterface
 		{
 			$post_row = $event['post_row'];
 
-			// Do not display delete, quote or warn user buttons
 			$post_row['U_DELETE'] = false;
 			$post_row['U_QUOTE']  = false;
 			$post_row['U_WARN']   = false;
@@ -189,6 +188,13 @@ class listener implements EventSubscriberInterface
 		if ($mod)
 		{
 			$this->template->assign_var('STATUS_ARY', ideas::$statuses);
+
+			// Add quick mod option for deleting an idea
+			$this->template->alter_block_array('quickmod', array(
+				'VALUE'		=> 'delete_topic', // delete topic is used here simply to enable ajax
+				'TITLE'		=> $this->language->lang('DELETE_IDEA'),
+				'LINK'		=> $this->link_helper->get_idea_link($idea['idea_id'], 'delete'),
+			));
 		}
 
 		$points = $idea['idea_votes_up'] - $idea['idea_votes_down'];
@@ -255,16 +261,6 @@ class listener implements EventSubscriberInterface
 			'U_VIEW_FORUM'		=> $this->helper->route('phpbb_ideas_index_controller'),
 			'FORUM_NAME'		=> $this->language->lang('IDEAS'),
 		));
-
-		// Add quick mod option for deleting an idea
-		if ($mod)
-		{
-			$this->template->alter_block_array('quickmod', array(
-				'VALUE'		=> 'delete_topic', // delete topic is used here simply to enable ajax
-				'TITLE'		=> $this->language->lang('DELETE_IDEA'),
-				'LINK'		=> $this->link_helper->get_idea_link($idea['idea_id'], 'delete'),
-			));
-		}
 	}
 
 	/**
