@@ -89,8 +89,6 @@ dd.topics {
 }
 
 .voteslist {
-	-moz-border-radius: 3px;
-	-webkit-border-radius: 3px;
 	border-radius: 3px;
 	display: none;
 	margin-top: 6px;
