@@ -1,6 +1,8 @@
 phpbb_ideas_index_controller:
-    path: /ideas
-    defaults: { _controller: phpbb.ideas.index_controller:index }
+    path: /ideas{trailing}
+    defaults: { _controller: phpbb.ideas.index_controller:index, trailing: '' }
+    requirements:
+        trailing: '/?'
 
 phpbb_ideas_idea_controller:
     path: /idea/{idea_id}
