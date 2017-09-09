@@ -6,47 +6,19 @@
 
 {% include 'action_bar_top.html' %}
 
-{% for idea in ideas %}
-	{% if idea.S_FIRST_ROW %}
-		<div class="forumbg">
-			<div class="inner">
-				<ul class="topiclist">
-					<li class="header">
-						<dl class="row-item">
-							<dt><div class="list-inner">{{ lang('IDEAS') }}</div></dt>
-							<dd class="posts">{{ lang('RATING') }}</dd>
-						</dl>
-					</li>
-				</ul>
-				<ul class="topiclist forums">
-	{% endif %}
-					<li class="row">
-						<dl class="row-item forum_{{ not idea.READ ? 'un' }}read">
-							<dt title="Read posts">
-							<div class="list-inner">
-								<a href="{{ idea.LINK }}" class="forumtitle">{{ idea.TITLE }}</a><br />
-								by <strong>{{ idea.AUTHOR }}</strong> &raquo; {{ idea.DATE }}
-							</div>
-							</dt>
-
-							<dd class="topics">
-								<div class="minivoteup"><span>{{ idea.VOTES_UP }}</span></div>
-								<div class="minivotedown"><span>{{ idea.VOTES_DOWN }}</span></div>
-							</dd>
-						</dl>
-					</li>
-	{% if idea.S_LAST_ROW %}
-				</ul>
-			</div>
-		</div>
-	{% endif %}
-{% else %}
-	<div class="panel">
-		<div class="inner">
-			<strong>{{ lang('NO_IDEAS_DISPLAY') }}</strong>
-		</div>
+<div class="forumbg">
+	<div class="inner">
+		<ul class="topiclist">
+			<li class="header">
+				<dl class="row-item">
+					<dt><div class="list-inner">{{ lang('IDEAS') }}</div></dt>
+					<dd class="posts">{{ lang('RATING') }}</dd>
+				</dl>
+			</li>
+		</ul>
+		{% include 'index_list.html' %}
 	</div>
-{% endfor %}
+</div>
 
 <form method="post" action="{{ U_LIST_ACTION }}">
 	<fieldset class="display-options">
