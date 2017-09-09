@@ -56,22 +56,22 @@ class ideas_test extends ideas_functional_base
 		// Access new ideas list
 		$crawler = self::request('GET', "app.php/ideas/list?sid={$this->sid}");
 		$this->assertContainsLang('OPEN_IDEAS', $crawler->filter('h2')->text());
-		$this->assertCount(1, $crawler->filter('.topiclist.forums'));
+		$this->assertNotContainsLang('NO_IDEAS_DISPLAY', $crawler->filter('.topiclist.forums')->text());
 
 		// Access top ideas list
 		$crawler = self::request('GET', "app.php/ideas/list/top?sid={$this->sid}");
 		$this->assertContainsLang('TOP_IDEAS', $crawler->filter('h2')->text());
-		$this->assertCount(1, $crawler->filter('.topiclist.forums'));
+		$this->assertNotContainsLang('NO_IDEAS_DISPLAY', $crawler->filter('.topiclist.forums')->text());
 
 		// Access all ideas list
 		$crawler = self::request('GET', "app.php/ideas/list/date?status=-1&sid={$this->sid}");
 		$this->assertContainsLang('ALL_IDEAS', $crawler->filter('h2')->text());
-		$this->assertCount(1, $crawler->filter('.topiclist.forums'));
+		$this->assertNotContainsLang('NO_IDEAS_DISPLAY', $crawler->filter('.topiclist.forums')->text());
 
 		// Access implemented ideas list (should be empty list)
 		$crawler = self::request('GET', "app.php/ideas/list/date?status=3&sid={$this->sid}");
 		$this->assertContainsLang('IMPLEMENTED', $crawler->filter('h2')->text());
-		$this->assertCount(0, $crawler->filter('.topiclist.forums'));
+		$this->assertContainsLang('NO_IDEAS_DISPLAY', $crawler->filter('.topiclist.forums')->text());
 	}
 
 	/**

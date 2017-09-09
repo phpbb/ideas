@@ -3,10 +3,11 @@
 		<li class="row">
 			<dl class="row-item topic_{{ not idea.READ ? 'un' }}read{{ idea.LOCKED ? '_locked' }}">
 				<dt title="{{ lang(idea.READ ? 'NO_UNREAD_POSTS' : 'UNREAD_POSTS') }}">
-				<div class="list-inner">
-					<a href="{{ idea.LINK }}" class="forumtitle">{{ idea.TITLE }}</a><br />
-					{{ lang('POST_BY_AUTHOR') }} <strong>{{ idea.AUTHOR }}</strong> &raquo; {{ idea.DATE }}
-				</div>
+					{% if not idea.READ and not S_IS_BOT %}<a href="{{ idea.LINK }}?view=unread" class="row-item-link"></a>{% endif %}
+					<div class="list-inner">
+						<a href="{{ idea.LINK }}" class="forumtitle">{{ idea.TITLE }}</a><br />
+						{{ lang('POST_BY_AUTHOR') }} <strong>{{ idea.AUTHOR }}</strong> &raquo; {{ idea.DATE }}
+					</div>
 				</dt>
 
 				<dd class="topics">

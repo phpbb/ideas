@@ -47,10 +47,17 @@ class idea_controller extends base
 			return new \Symfony\Component\HttpFoundation\JsonResponse($result);
 		}
 
-		$url = append_sid(generate_board_url() . "/viewtopic.{$this->php_ext}",
-			array('f' => $this->config['ideas_forum_id'], 't' => $this->data['topic_id']),
-			false
+		$params = array(
+			'f' => $this->config['ideas_forum_id'],
+			't' => $this->data['topic_id']
 		);
+
+		if ($unread = ($this->request->variable('view', '') === 'unread'))
+		{
+			$params = array_merge($params, array('view' => 'unread'));
+		}
+
+		$url = append_sid(generate_board_url() . "/viewtopic.{$this->php_ext}", $params, false) . ($unread ? '#unread' : '');
 
 		return new RedirectResponse($url);
 	}
@@ -58,6 +65,7 @@ class idea_controller extends base
 	/**
 	 * Delete action (deletes an idea via confirm dialog)
 	 *
+	 * @throws http_exception
 	 * @return void
 	 * @access public
 	 */
