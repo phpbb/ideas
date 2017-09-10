@@ -92,7 +92,6 @@ $lang = array_merge($lang, array(
 
 	'UPDATED_VOTE'			=> 'Successfully updated vote!',
 
-	'VIEW_ALL'				=> 'View All',
 	'VIEW_IDEA'				=> 'View Idea',
 	'VIEW_IMPLEMENTED'		=> 'View all implemented ideas',
 	'VIEW_LATEST'			=> 'View all open ideas',
