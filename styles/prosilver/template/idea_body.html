@@ -54,7 +54,7 @@
 					{% for status, id in STATUS_ARY %}<option value="{{ id }}">{{ lang(status) }}</option>{% endfor %}
 				</select>{% endif %}
 			</dd>
-			{% if IDEA_RFC or S_CAN_EDIT %}
+			{% if IDEA_RFC %}
 				<dt class="idealabel">{{ lang('RFC') ~ lang('COLON') }}</dt>
 				<dd>
 					<a id="rfclink" class="ideamodbtn" href="{{ IDEA_RFC }}"{% if not IDEA_RFC %} style="display:none"{% endif %}>{{ IDEA_RFC }}</a>
