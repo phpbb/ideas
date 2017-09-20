@@ -67,9 +67,28 @@ dd.topics {
 }
 
 /* Ideas Lists Styles */
-.view-all,
+.view-all {
+	color: #536482;
+	float: right;
+	margin: 0.8em 0 0.2em;
+}
+
 .view-all:hover {
 	color: #536482;
+}
+
+.push-left {
+	float: left;
+}
+
+@media (min-width: 701px) and (max-width: 950px) {
+	ul.topiclist dt {
+		margin-right: -250px;
+	}
+
+	ul.topiclist dt .list-inner {
+		margin-right: 250px;
+	}
 }
 
 /* Idea Body Styles */
