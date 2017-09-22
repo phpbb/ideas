@@ -113,6 +113,7 @@ class listener_test extends \phpbb_test_case
 			'core.viewtopic_add_quickmod_option_before',
 			'core.viewonline_overwrite_location',
 			'core.posting_modify_submit_post_after',
+			'core.posting_modify_post_data',
 		), array_keys(\phpbb\ideas\event\listener::getSubscribedEvents()));
 	}
 
@@ -199,9 +200,14 @@ class listener_test extends \phpbb_test_case
 
 		$listener->show_post_buttons($event);
 
+		// These are toggled depending on forum and post id
 		$this->assertEquals($expected, $event['post_row']['U_DELETE']);
 		$this->assertEquals($expected, $event['post_row']['U_WARN']);
-		$this->assertEquals($expected, $event['post_row']['U_QUOTE']);
+		// Should always be true
+		$this->assertTrue($event['post_row']['U_QUOTE']);
+		$this->assertTrue($event['post_row']['U_EDIT']);
+		$this->assertTrue($event['post_row']['U_REPORT']);
+		$this->assertTrue($event['post_row']['U_INFO']);
 	}
 
 	/**
@@ -422,5 +428,88 @@ class listener_test extends \phpbb_test_case
 			->with($event['topic_id'], $event['post_data']['post_subject']);
 
 		$listener->edit_idea_title($event);
+	}
+
+	/**
+	 * Data set for test_update_quote_username
+	 *
+	 * @return array Array of test data
+	 */
+	public function update_quote_username_data()
+	{
+		return array(
+			array(
+				array(
+					'topic_id'       => 1,
+					'post_id'        => 1,
+					'forum_id'       => 2,
+					'mode'           => 'quote',
+					'post_data'      => array(
+						'topic_first_post_id' => 1,
+						'quote_username'      => 'Foo',
+					),
+				),
+				'Bar',
+			),
+			array( // not quoting
+				array(
+					'topic_id'       => 1,
+					'post_id'        => 1,
+					'forum_id'       => 2,
+					'mode'           => 'post',
+					'post_data'      => array(
+						'topic_first_post_id' => 1,
+						'quote_username'      => 'Foo',
+					),
+				),
+				'Foo',
+			),
+			array( // wrong forum
+				   array(
+					   'topic_id'       => 1,
+					   'post_id'        => 1,
+					   'forum_id'       => 1,
+					   'mode'           => 'quote',
+					   'post_data'      => array(
+						   'topic_first_post_id' => 1,
+						   'quote_username'      => 'Foo',
+					   ),
+				   ),
+				   'Foo',
+			),
+			array( // not first post
+				   array(
+					   'topic_id'       => 1,
+					   'post_id'        => 2,
+					   'forum_id'       => 2,
+					   'mode'           => 'quote',
+					   'post_data'      => array(
+						   'topic_first_post_id' => 1,
+						   'quote_username'      => 'Foo',
+					   ),
+				   ),
+				   'Foo',
+			),
+		);
+	}
+
+	/**
+	 * Test the update_quote_username event
+	 *
+	 * @dataProvider update_quote_username_data
+	 */
+	public function test_update_quote_username($data, $expected)
+	{
+		$listener = $this->get_listener();
+
+		$event = new \phpbb\event\data($data);
+
+		$this->link_helper->expects($this->any())
+			->method('get_user_link')
+			->willReturn($expected);
+
+		$listener->update_quote_username($event);
+
+		$this->assertEquals($expected, $event['post_data']['quote_username']);
 	}
 }
