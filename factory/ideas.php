@@ -13,7 +13,6 @@ namespace phpbb\ideas\factory;
 use phpbb\config\config;
 use phpbb\db\driver\driver_interface;
 use phpbb\language\language;
-use phpbb\log\log;
 use phpbb\user;
 
 class ideas
@@ -46,9 +45,6 @@ class ideas
 	/** @var language */
 	protected $language;
 
-	/** @var log */
-	protected $log;
-
 	/* @var user */
 	protected $user;
 
@@ -74,19 +70,17 @@ class ideas
 	 * @param config           $config
 	 * @param driver_interface $db
 	 * @param language         $language
-	 * @param log              $log
 	 * @param user             $user
 	 * @param string           $table_ideas
 	 * @param string           $table_votes
 	 * @param string           $table_topics
 	 * @param string           $phpEx
 	 */
-	public function __construct(config $config, driver_interface $db, language $language, log $log, user $user, $table_ideas, $table_votes, $table_topics, $phpEx)
+	public function __construct(config $config, driver_interface $db, language $language, user $user, $table_ideas, $table_votes, $table_topics, $phpEx)
 	{
 		$this->config = $config;
 		$this->db = $db;
 		$this->language = $language;
-		$this->log = $log;
 		$this->user = $user;
 
 		$this->php_ext = $phpEx;

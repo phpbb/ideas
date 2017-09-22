@@ -68,7 +68,6 @@ services:
             - '@config'
             - '@dbal.conn'
             - '@language'
-            - '@log'
             - '@user'
             - '%tables.ideas_ideas%'
             - '%tables.ideas_votes%'
