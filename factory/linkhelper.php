@@ -67,12 +67,13 @@ class linkhelper
 	 *
 	 * Is there a function that already does this? This seems fairly database heavy.
 	 *
-	 * @param int $id The ID of the user
+	 * @param int    $id   The ID of the user
+	 * @param string $mode The mode, profile|username|colour|full|no_profile
 	 * @return string An HTML link to the users profile
 	 */
-	public function get_user_link($id)
+	public function get_user_link($id, $mode = 'full')
 	{
 		$this->user_loader->load_users(array($id));
-		return $this->user_loader->get_username($id, 'full');
+		return $this->user_loader->get_username($id, $mode);
 	}
 }

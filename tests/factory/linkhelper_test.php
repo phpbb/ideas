@@ -104,19 +104,22 @@ class linkhelper_test extends \phpbb_database_test_case
 	public function get_user_link_test_data()
 	{
 		return array(
-			array(2, '<a href="phpBB/memberlist.php?mode=viewprofile&amp;u=2" class="username">ideabot</a>'),
-			array(3, '<a href="phpBB/memberlist.php?mode=viewprofile&amp;u=3" class="username">admin</a>'),
-			array(4, '<a href="phpBB/memberlist.php?mode=viewprofile&amp;u=4" class="username">poster</a>'),
+			array(2, 'full', '<a href="phpBB/memberlist.php?mode=viewprofile&amp;u=2" class="username">ideabot</a>'),
+			array(3, 'full', '<a href="phpBB/memberlist.php?mode=viewprofile&amp;u=3" class="username">admin</a>'),
+			array(4, 'full', '<a href="phpBB/memberlist.php?mode=viewprofile&amp;u=4" class="username">poster</a>'),
+			array(2, 'username', 'ideabot'),
+			array(3, 'username', 'admin'),
+			array(4, 'username', 'poster'),
 		);
 	}
 
 	/**
 	 * @dataProvider get_user_link_test_data
 	 */
-	public function test_get_user_link($user, $expected)
+	public function test_get_user_link($user, $mode, $expected)
 	{
 		$linkhelper = $this->get_linkhelper();
 
-		$this->assertEquals($expected, $linkhelper->get_user_link($user));
+		$this->assertEquals($expected, $linkhelper->get_user_link($user, $mode));
 	}
 }

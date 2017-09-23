@@ -87,6 +87,7 @@ class listener implements EventSubscriberInterface
 			'core.viewtopic_add_quickmod_option_before'	=> 'adjust_quickmod_tools',
 			'core.viewonline_overwrite_location'		=> 'viewonline_ideas',
 			'core.posting_modify_submit_post_after'		=> 'edit_idea_title',
+			'core.posting_modify_post_data'				=> 'update_quote_username',
 		);
 	}
 
@@ -154,7 +155,6 @@ class listener implements EventSubscriberInterface
 			$post_row = $event['post_row'];
 
 			$post_row['U_DELETE'] = false;
-			$post_row['U_QUOTE']  = false;
 			$post_row['U_WARN']   = false;
 
 			$event['post_row'] = $post_row;
@@ -345,6 +345,26 @@ class listener implements EventSubscriberInterface
 
 		$idea = $this->ideas->get_idea_by_topic_id($event['topic_id']);
 		$this->ideas->set_title($idea['idea_id'], $event['post_data']['post_subject']);
+	}
+
+	/**
+	 * When quoting the first idea post, replace the idea author username
+	 * which is normally the Ideas Bot, to the actual author's name
+	 *
+	 * @param \phpbb\event\data $event The event object
+	 * @return void
+	 * @access public
+	 */
+	public function update_quote_username($event)
+	{
+		if ($event['mode'] === 'quote' &&
+			$event['post_data']['topic_first_post_id'] == $event['post_id'] &&
+			$this->is_ideas_forum($event['forum_id']))
+		{
+			$idea = $this->ideas->get_idea_by_topic_id($event['topic_id']);
+			$username = $this->link_helper->get_user_link($idea['idea_author'], 'username');
+			$event->update_subarray('post_data', 'quote_username', $username);
+		}
 	}
 
 	/**
