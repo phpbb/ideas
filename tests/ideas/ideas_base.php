@@ -26,9 +26,6 @@ class ideas_base extends \phpbb_database_test_case
 	/** @var \phpbb\language\language */
 	protected $lang;
 
-	/** @var \phpbb\log\log */
-	protected $log;
-
 	/** @var \phpbb\user */
 	protected $user;
 
@@ -60,9 +57,6 @@ class ideas_base extends \phpbb_database_test_case
 			$this->lang,
 			'\phpbb\datetime'
 		));
-		$this->log = $this->getMockBuilder('\phpbb\log\log')
-			->disableOriginalConstructor()
-			->getMock();
 		$this->php_ext = $phpEx;
 		$request = $this->getMock('\phpbb\request\request');
 	}
@@ -78,7 +72,6 @@ class ideas_base extends \phpbb_database_test_case
 			$this->config,
 			$this->db,
 			$this->lang,
-			$this->log,
 			$this->user,
 			'phpbb_ideas_ideas',
 			'phpbb_ideas_votes',
