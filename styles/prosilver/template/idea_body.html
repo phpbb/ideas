@@ -84,6 +84,16 @@
 					{% endif %}
 				</dd>
 			{% endif %}
+			{% if IDEA_IMPLEMENTED or S_IS_MOD %}
+				<dt class="implementedtoggle idealabel"{% if IDEA_STATUS_ID != 3 %} style="display:none"{% endif %}>{{ lang('IMPLEMENTED_VERSION') ~ lang('COLON') }}</dt>
+				<dd class="implementedtoggle" {% if IDEA_STATUS_ID != 3 %}style="display:none"{% endif %}>
+					<span id="implementedversion"{% if not IDEA_IMPLEMENTED %} style="display:none;"{% endif %}>{{ IDEA_IMPLEMENTED }}</span>
+					{% if S_IS_MOD %}
+						<a href="{{ U_EDIT_IMPLEMENTED }}" id="implementededit" data-l-add="{{ lang('ADD') }}" data-l-edit="{{ lang('EDIT') }}">{% if IDEA_IMPLEMENTED %}<i class="fa fa-fw fa-pencil"></i>{{ lang('EDIT') }}{% else %}<i class="fa fa-fw fa-plus-circle"></i>{{ lang('ADD') }}{% endif %}</a>
+						<input type="text" id="implementededitinput" class="ideainput"{% if IDEA_IMPLEMENTED %} value="{{ IDEA_IMPLEMENTED }}"{% endif %} placeholder="3.x.x" data-l-err="{{ lang('ERROR') }}" data-l-msg="{{ lang('IMPLEMENTED_ERROR') }}" />
+					{% endif %}
+				</dd>
+			{% endif %}
 		</dl>
 	</div>
 </div>

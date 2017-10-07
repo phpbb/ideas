@@ -203,6 +203,23 @@ class idea_controller extends base
 	}
 
 	/**
+	 * Implemented action (sets an idea's implemented phpBB version)
+	 *
+	 * @return bool True if set, false if not
+	 * @access public
+	 */
+	public function implemented()
+	{
+		if ($this->is_mod() && check_link_hash($this->get_hash(), "implemented_{$this->data['idea_id']}"))
+		{
+			$version = $this->request->variable('implemented', '');
+			return $this->ideas->set_implemented($this->data['idea_id'], $version);
+		}
+
+		return false;
+	}
+
+	/**
 	 * Title action (sets an idea's title)
 	 *
 	 * @return bool True if set, false if not

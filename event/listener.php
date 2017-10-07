@@ -219,6 +219,7 @@ class listener implements EventSubscriberInterface
 			'IDEA_DUPLICATE'	=> $idea['duplicate_id'],
 			'IDEA_RFC'			=> $idea['rfc_link'],
 			'IDEA_TICKET'		=> $idea['ticket_id'],
+			'IDEA_IMPLEMENTED'	=> $idea['implemented_version'],
 
 			'U_IDEA_DUPLICATE'	=> $this->link_helper->get_idea_link((int) $idea['duplicate_id']),
 
@@ -229,6 +230,7 @@ class listener implements EventSubscriberInterface
 			'U_CHANGE_STATUS'	=> $this->link_helper->get_idea_link($idea['idea_id'], 'status', true),
 			'U_EDIT_DUPLICATE'	=> $this->link_helper->get_idea_link($idea['idea_id'], 'duplicate', true),
 			'U_EDIT_RFC'		=> $this->link_helper->get_idea_link($idea['idea_id'], 'rfc', true),
+			'U_EDIT_IMPLEMENTED'=> $this->link_helper->get_idea_link($idea['idea_id'], 'implemented', true),
 			'U_EDIT_TICKET'		=> $this->link_helper->get_idea_link($idea['idea_id'], 'ticket', true),
 			'U_REMOVE_VOTE'		=> $this->link_helper->get_idea_link($idea['idea_id'], 'removevote', true),
 			'U_IDEA_VOTE'		=> $this->link_helper->get_idea_link($idea['idea_id'], 'vote', true),
