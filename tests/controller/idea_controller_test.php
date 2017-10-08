@@ -40,6 +40,8 @@ class idea_controller_test extends \phpbb\ideas\tests\controller\controller_base
 			array(8, 'title', 'set_title', true, false, 'false', 200), // ajax set title fail
 			array(9, 'vote', 'vote', true, true, 'true', 200), // ajax set title success
 			array(9, 'vote', 'vote', true, false, '"You do not have the necessary permissions to complete this operation."', 200), // ajax set title fail
+			array(10, 'implemented', 'set_implemented', true, true, 'true', 200), // ajax set implemented success
+			array(10, 'implemented', 'set_implemented', true, false, 'false', 200), // ajax set implemented fail
 		);
 	}
 

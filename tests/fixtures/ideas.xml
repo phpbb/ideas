@@ -12,6 +12,7 @@
 		<column>ticket_id</column>
 		<column>duplicate_id</column>
 		<column>rfc_link</column>
+		<column>implemented_version</column>
 		<row>
 			<value>1</value>
 			<value>2</value>
@@ -23,6 +24,7 @@
 			<value>1</value>
 			<value>1234</value>
 			<value>0</value>
+			<value></value>
 			<value></value>
 		</row>
 		<row>
@@ -37,6 +39,7 @@
 			<value>0</value>
 			<value>0</value>
 			<value></value>
+			<value></value>
 		</row>
 		<row>
 			<value>3</value>
@@ -49,6 +52,7 @@
 			<value>3</value>
 			<value>0</value>
 			<value>0</value>
+			<value></value>
 			<value></value>
 		</row>
 		<row>
@@ -63,6 +67,7 @@
 			<value>0</value>
 			<value>0</value>
 			<value></value>
+			<value></value>
 		</row>
 		<row>
 			<value>5</value>
@@ -76,6 +81,7 @@
 			<value>0</value>
 			<value>0</value>
 			<value></value>
+			<value></value>
 		</row>
 		<row>
 			<value>6</value>
@@ -88,6 +94,7 @@
 			<value>6</value>
 			<value>0</value>
 			<value>0</value>
+			<value></value>
 			<value></value>
 		</row>
 	</table>
