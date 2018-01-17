@@ -352,6 +352,31 @@ class ideas
 	}
 
 	/**
+	 * Sets the implemented version of an idea.
+	 *
+	 * @param int    $idea_id ID of the idea to be updated.
+	 * @param string $version Version of phpBB the idea was implemented in.
+	 *
+	 * @return bool True if set, false if invalid.
+	 */
+	public function set_implemented($idea_id, $version)
+	{
+		$match = '/^\d\.\d\.\d+(\-\w+)?$/';
+		if ($version && !preg_match($match, $version))
+		{
+			return false;
+		}
+
+		$sql_ary = array(
+			'implemented_version'	=> $version, // string is escaped by build_array()
+		);
+
+		$this->update_idea_data($sql_ary, $idea_id, $this->table_ideas);
+
+		return true;
+	}
+
+	/**
 	 * Sets the title of an idea.
 	 *
 	 * @param int    $idea_id ID of the idea to be updated.

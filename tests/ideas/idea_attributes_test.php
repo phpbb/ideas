@@ -86,6 +86,7 @@ class idea_attributes_test extends ideas_base
 					'idea_id'		=> 1,
 					'duplicate_id'	=> 2,
 					'rfc_link'		=> 'http://area51.phpbb.com/phpBB/viewtopic.php?foo&bar',
+					'implemented_version' => '3.1.0',
 					'ticket_id'		=> 1111,
 					'idea_title'	=> 'Foo Idea 1',
 				), true
@@ -95,6 +96,7 @@ class idea_attributes_test extends ideas_base
 					'idea_id'		=> 2,
 					'duplicate_id'	=> 1,
 					'rfc_link'		=> 'https://area51.phpbb.com/phpBB/viewtopic.php?bar&foo',
+					'implemented_version' => '3.2.0',
 					'ticket_id'		=> 2222,
 					'idea_title'	=> 'Foo Idea 2',
 				), true
@@ -104,6 +106,7 @@ class idea_attributes_test extends ideas_base
 					'idea_id'		=> 3,
 					'duplicate_id'	=> '5',
 					'rfc_link'		=> '',
+					'implemented_version' => '',
 					'ticket_id'		=> '3333',
 					'idea_title'	=> 'Føó Îdéå',
 				), true
@@ -113,6 +116,7 @@ class idea_attributes_test extends ideas_base
 					'idea_id'		=> 4,
 					'duplicate_id'	=> 'foo',
 					'rfc_link'		=> 'https://www.phpbb.com/phpBB/viewtopic.php?foo',
+					'implemented_version' => 'foo',
 					'ticket_id'		=> 'foo',
 					'idea_title'	=> '',
 				), false
@@ -122,6 +126,7 @@ class idea_attributes_test extends ideas_base
 					'idea_id'		=> 5,
 					'duplicate_id'	=> array(1),
 					'rfc_link'		=> 'foobar',
+					'implemented_version' => '1',
 					'ticket_id'		=> array(1),
 					'idea_title'	=> '',
 				), false
@@ -147,6 +152,16 @@ class idea_attributes_test extends ideas_base
 	public function test_set_rfc($data, $expected)
 	{
 		$this->set_attribute_test('set_rfc', 'rfc_link', $data, $expected);
+	}
+
+	/**
+	 * Test set_implemented()
+	 *
+	 * @dataProvider idea_attribute_test_data
+	 */
+	public function test_set_implemented($data, $expected)
+	{
+		$this->set_attribute_test('set_implemented', 'implemented_version', $data, $expected);
 	}
 
 	/**

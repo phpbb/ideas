@@ -19,6 +19,10 @@
 			rfcEdit: $('#rfcedit'),
 			rfcEditInput: $('#rfceditinput'),
 			rfcLink: $('#rfclink'),
+			implementedEdit: $('#implementededit'),
+			implementedEditInput: $('#implementededitinput'),
+			implementedVersion: $('#implementedversion'),
+			implementedToggle: $('.implementedtoggle'),
 			removeVote: $('.removevote'),
 			status: $('#status'),
 			successVoted: $('.successvoted'),
@@ -126,11 +130,8 @@
 					.removeClass()
 					.addClass('status-badge status-' + $this.find(':selected').val());
 
-				if (idea_is_duplicate()) {
-					$obj.duplicateToggle.show();
-				} else {
-					$obj.duplicateToggle.hide();
-				}
+				$obj.duplicateToggle.toggle(idea_is_duplicate());
+				$obj.implementedToggle.toggle(idea_is_implemented());
 			}
 		});
 	});
@@ -168,11 +169,7 @@
 
 					$this.hide();
 
-					$obj.rfcEdit.text(function() {
-						return value ? $(this).attr('data-l-edit') : $(this).attr('data-l-add');
-					}).prepend($('<i class="fa fa-fw"></i>').addClass(function() {
-						return value ? 'fa-pencil' : 'fa-plus-circle';
-					})).show();
+					$obj.rfcEdit.toggleAddEdit(value);
 				}
 			});
 		} else if (e.keyCode === keymap.ESC) {
@@ -226,11 +223,7 @@
 
 					$this.hide();
 
-					$obj.ticketEdit.text(function() {
-						return value ? $(this).attr('data-l-edit') : $(this).attr('data-l-add');
-					}).prepend($('<i class="fa fa-fw"></i>').addClass(function() {
-						return value ? 'fa-pencil' : 'fa-plus-circle';
-					})).show();
+					$obj.ticketEdit.toggleAddEdit(value);
 				}
 
 			});
@@ -287,11 +280,7 @@
 
 					$this.hide();
 
-					$obj.duplicateEdit.text(function() {
-						return value ? $(this).attr('data-l-edit') : $(this).attr('data-l-add');
-					}).prepend($('<i class="fa fa-fw"></i>').addClass(function() {
-						return value ? 'fa-pencil' : 'fa-plus-circle';
-					})).show();
+					$obj.duplicateEdit.toggleAddEdit(value);
 				}
 			});
 		} else if (e.keyCode === keymap.ESC) {
@@ -308,12 +297,75 @@
 		}
 	});
 
+	$obj.implementedEdit.on('click', function(e) {
+		e.preventDefault();
+
+		$obj.implementedEdit.add($obj.implementedVersion).hide();
+		$obj.implementedEditInput.show().focus();
+	});
+
+	$obj.implementedEditInput.on('keydown', function(e) {
+		if (e.keyCode === keymap.ENTER) {
+			e.preventDefault();
+			e.stopPropagation();
+
+			var $this = $(this),
+				find = /^\d\.\d\.\d+(\-\w+)?$/,
+				url = $obj.implementedEdit.attr('href'),
+				value = $this.val();
+
+			if (value && !find.test(value)) {
+				phpbb.alert($this.attr('data-l-err'), $this.attr('data-l-msg'));
+				return;
+			}
+
+			$.get(url, {implemented: value}, function(res) {
+				if (res) {
+					$obj.implementedVersion.text(value);
+
+					if (value) {
+						$obj.implementedVersion.show();
+					}
+
+					$this.hide();
+
+					$obj.implementedEdit.toggleAddEdit(value);
+				}
+			});
+		} else if (e.keyCode === keymap.ESC) {
+			e.preventDefault();
+
+			$(this).hide();
+			$obj.implementedEdit.show();
+
+			if ($obj.implementedVersion.text()) {
+				$obj.implementedVersion.show();
+			}
+		}
+	});
+
+	$.fn.toggleAddEdit = function(value) {
+		$(this).text(function() {
+			return value ? $(this).attr('data-l-edit') : $(this).attr('data-l-add');
+		}).prepend($('<i class="fa fa-fw"></i>').addClass(function() {
+			return value ? 'fa-pencil' : 'fa-plus-circle';
+		})).show();
+	};
+
 	/**
 	 * Returns true if idea is a duplicate. Bit hacky.
 	 */
 	function idea_is_duplicate() {
 		var href = $obj.status.prev('a').attr('href');
 		return href && href.indexOf('status=4') !== -1;
+	}
+
+	/**
+	 * Returns true if idea is implemented. Bit hacky.
+	 */
+	function idea_is_implemented() {
+		var href = $obj.status.prev('a').attr('href');
+		return href && href.indexOf('status=3') !== -1;
 	}
 
 	function displayVoters(data) {
