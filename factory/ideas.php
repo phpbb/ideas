@@ -148,11 +148,19 @@ class ideas
 			$where .= ' AND i.idea_votes_up > i.idea_votes_down';
 		}
 
+		// Only get approved topics
+		$where .= ' AND t.topic_visibility = ' . ITEM_APPROVED;
+
+		// Only get ideas that are actually in the ideas forum (not ones that have been moved)
+		$where .= ' AND t.forum_id = ' . (int) $this->config['ideas_forum_id'];
+
 		// Count the total number of ideas for pagination
 		if ($number >= $this->config['posts_per_page'])
 		{
 			$sql = 'SELECT COUNT(i.idea_id) as num_ideas
-				FROM ' . $this->table_ideas . " i
+				FROM ' . $this->table_ideas . ' i
+       			INNER JOIN ' . $this->table_topics . " t 
+       				ON i.topic_id = t.topic_id
 				WHERE $where";
 			$result = $this->db->sql_query($sql);
 			$num_ideas = (int) $this->db->sql_fetchfield('num_ideas');
@@ -161,9 +169,6 @@ class ideas
 			// Set the total number of ideas for pagination
 			$this->idea_count = $num_ideas;
 		}
-
-		// Only get approved topics
-		$where .= ' AND t.topic_visibility = ' . ITEM_APPROVED;
 
 		if ($sortby !== 'TOP' && $sortby !== 'ALL')
 		{
@@ -710,7 +715,8 @@ class ideas
 		// Find any orphans
 		$sql = 'SELECT idea_id FROM ' . $this->table_ideas . '
  			WHERE topic_id NOT IN (SELECT t.topic_id 
- 			FROM ' . $this->table_topics . ' t)';
+ 			FROM ' . $this->table_topics . ' t
+ 				WHERE t.forum_id = ' . (int) $this->config['ideas_forum_id'] . ')';
 		$result = $this->db->sql_query($sql);
 		$rows = $this->db->sql_fetchrowset($result);
 		$this->db->sql_freeresult($result);
