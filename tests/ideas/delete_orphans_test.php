@@ -14,26 +14,32 @@ class delete_orphans_test extends \phpbb\ideas\tests\ideas\ideas_base
 {
 	public function test_delete_orphans()
 	{
-		// The id of an orphaned idea in our test fixture
-		$idea_id = 6;
-
 		$ideas = $this->get_ideas_object();
 
-		// First, check the idea exists
-		$this->assertNotEmpty($ideas->get_idea($idea_id));
+		// First lets get a count of the good ideas
+		$ideas->get_ideas();
+		$valid_ideas = $ideas->get_idea_count();
+
+		// Check the orphan ideas exists
+		$this->assertNotEmpty($ideas->get_idea(6));
+		$this->assertNotEmpty($ideas->get_idea(7));
 
 		// Delete orphans
-		$this->assertEquals(1, $ideas->delete_orphans());
+		$this->assertEquals(2, $ideas->delete_orphans());
 
-		// Confirm idea no longer exists
-		$this->assertFalse($ideas->get_idea($idea_id));
+		// Confirm orphan ideas no longer exists
+		$this->assertFalse($ideas->get_idea(6));
+		$this->assertFalse($ideas->get_idea(7));
 
-		// check that all votes are removed
-		$sql = 'SELECT * FROM phpbb_ideas_votes WHERE idea_id = ' . $idea_id;
+		// Check that all votes from orphan ideas are removed
+		$sql = 'SELECT COUNT(idea_id) as num_ideas FROM phpbb_ideas_votes WHERE idea_id IN(6, 7)';
 		$result = $this->db->sql_query($sql);
-		$rows = $this->db->sql_fetchrow($result);
+		$num_ideas = (int) $this->db->sql_fetchfield('num_ideas');
 		$this->db->sql_freeresult($result);
+		$this->assertEquals(0, $num_ideas);
 
-		$this->assertFalse($rows);
+		// Confirm that only the orphans were deleted
+		$ideas->get_ideas();
+		$this->assertEquals($valid_ideas, $ideas->get_idea_count());
 	}
 }
