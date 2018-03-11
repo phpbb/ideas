@@ -1,0 +1,66 @@
+{% INCLUDECSS '@phpbb_ideas/ideas.css' %}
+
+{% include 'overall_header.html' %}
+
+<h2>{{ lang('IDEAS_TITLE') }} :: {{ STATUS_NAME }}</h2>
+
+{% include 'action_bar_top.html' %}
+
+<div class="forumbg">
+	<div class="inner">
+		<ul class="topiclist">
+			<li class="header">
+				<dl class="row-item">
+					<dt><div class="list-inner">{{ lang('IDEAS') }}</div></dt>
+					<dd class="posts">{{ lang('RATING') }}</dd>
+				</dl>
+			</li>
+		</ul>
+		{% include 'index_list.html' %}
+	</div>
+</div>
+
+<form method="post" action="{{ U_LIST_ACTION }}">
+	<fieldset class="display-options">
+		{% if not S_IS_BOT %}
+			<label>
+				{{ lang('SHOW_W_STATUS') ~ lang('COLON') }} <select name="status" id="st">
+					<option value="-1">{{ lang('ALL_IDEAS') }}</option>
+					{% for status, id in STATUS_ARY %}
+						<option value="{{ id }}"{% if id == STATUS %} selected="selected"{% endif %}>{{ lang(status) }}</option>
+					{% endfor %}
+				</select>
+			</label>
+			<label>
+				{{ lang('SORT_BY') }} <select name="sort" id="sk">
+					{% for sortby in SORT_ARY %}
+						<option value="{{ sortby }}"{% if sortby == SORT %} selected="selected"{% endif %}>{{ lang(sortby|upper) }}</option>
+					{% endfor %}
+				</select>
+			</label>
+			<label>
+				<select name="sd" id="sd">
+					<option value="a"{% if SORT_DIRECTION == 'ASC' %} selected="selected"{% endif %}>{{ lang('ASCENDING') }}</option>
+					<option value="d"{% if SORT_DIRECTION == 'DESC' %} selected="selected"{% endif %}>{{ lang('DESCENDING') }}</option>
+				</select>
+			</label>
+			<input type="submit" value="{{ lang('GO') }}" class="button2" />
+		{% endif %}
+	</fieldset>
+</form>
+<hr />
+
+<div class="action-bar bar-bottom">
+	<div class="pagination">
+		{{ lang('TOTAL_IDEAS', IDEAS_COUNT) }}
+		{% if pagination %}
+			{% include 'pagination.html' %}
+		{% else %}
+			&bull; {{ PAGE_NUMBER }}
+		{% endif %}
+	</div>
+</div>
+
+<br />
+
+{% include 'overall_footer.html' %}

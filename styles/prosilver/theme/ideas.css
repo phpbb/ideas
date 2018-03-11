@@ -1,0 +1,181 @@
+/* Common Styles */
+dd.topics {
+	text-align: left;
+	width: auto;
+	padding-left: 10px !important;
+}
+
+.ideamodbtn {
+	margin: 0 5px 0 0;
+}
+
+.minivoteup,
+.minivotedown {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	font-weight: bold;
+	background: url('images/button-sprite.png') no-repeat;
+	color: #ffffff !important;
+	text-shadow: 0 -1px 0 rgba(0, 0, 0, 1);
+	display: inline-block;
+	float: left;
+	width: 65px;
+	height: 25px;
+	margin-right: 10px;
+}
+
+.minivoteup span,
+.minivotedown span {
+	line-height: normal;
+	text-align: center;
+	display: inline-block;
+	width: 40px;
+	margin-top: 5px;
+	margin-left: 25px;
+}
+
+.minivoteup {
+	background-position: 0 0;
+}
+
+.minivoteup.voteup:hover {
+	background-position: 0 -25px;
+}
+
+.minivoteup.voteup:active {
+	background-position: 0 -50px;
+}
+
+.minivoteup.voteup.dead:hover {
+	background-position: 0 0;
+}
+
+.minivotedown {
+	background-position: -65px 0;
+}
+
+.minivotedown.votedown:hover {
+	background-position: -65px -25px;
+}
+
+.minivotedown.votedown:active {
+	background-position: -65px -50px;
+}
+
+.minivotedown.votedown.dead:hover {
+	background-position: -65px 0;
+}
+
+/* Ideas Lists Styles */
+.view-all {
+	color: #536482;
+	float: right;
+	margin: 0.8em 0 0.2em;
+}
+
+.view-all:hover {
+	color: #536482;
+}
+
+.push-left {
+	float: left;
+}
+
+@media (min-width: 701px) and (max-width: 950px) {
+	ul.topiclist dt {
+		margin-right: -250px;
+	}
+
+	ul.topiclist dt .list-inner {
+		margin-right: 250px;
+	}
+}
+
+/* Idea Body Styles */
+.votes,
+.successvoted {
+	font-weight: bold;
+	border-radius: 4px;
+	padding: 6px;
+}
+
+.votes {
+	display: inline-block;
+}
+
+.successvoted {
+	display: none;
+}
+
+.voteslist {
+	border-radius: 3px;
+	display: none;
+	margin-top: 6px;
+	padding: 6px;
+	list-style-type: none;
+}
+
+.voteslist ul,
+.voteslist ul li {
+	list-style: none;
+}
+
+.voteslist ul li:not(:first-child) {
+	border-top: dashed 1px #b9b9b9;
+}
+
+.dead {
+	cursor: default;
+}
+
+.dead:hover {
+	text-decoration: none;
+}
+
+.dead.removevote {
+	display: none;
+}
+
+.idealabel {
+	width: 10% !important;
+}
+
+.ideainput {
+	display: none;
+	width: 300px;
+}
+
+.status-badge {
+	border-radius: 3px;
+	color: #ffffff;
+	padding: 3px 6px;
+}
+
+.status-badge:hover {
+	color: #ffffff;
+}
+
+.status-1 {
+	background-color: #6495ed;
+}
+
+.status-2 {
+	background-color: #f08080;
+}
+
+.status-3 {
+	background-color: #006400;
+}
+
+.status-4 {
+	background-color: #daa520;
+}
+
+.status-5 {
+	background-color: #b22222;
+}
+
+.idea-panel {
+	line-height: 1.48em;
+	width: 100%;
+}

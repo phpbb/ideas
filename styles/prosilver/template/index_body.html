@@ -1,0 +1,71 @@
+{% INCLUDECSS '@phpbb_ideas/ideas.css' %}
+
+{% include 'overall_header.html' %}
+
+<h2>{{ lang('IDEAS_TITLE') }}</h2>
+
+{% include 'action_bar_top.html' %}
+
+{# TOP IDEAS #}
+<h2 class="push-left">{{ lang('TOP_IDEAS') }}</h2>
+{% if top_ideas %}
+	<a class="button view-all" href="{{ U_VIEW_TOP }}"><i class="fa fa-fw fa-fire"></i> <span>{{ lang('VIEW_TOP') }}</span></a>
+{% endif %}
+<div class="forumbg">
+	<div class="inner">
+		<ul class="topiclist">
+			<li class="header">
+				<dl class="row-item">
+					<dt><div class="list-inner">{{ lang('IDEAS') }}</div></dt>
+					<dd class="posts">{{ lang('RATING') }}</dd>
+				</dl>
+			</li>
+		</ul>
+		{% set ideas = top_ideas %}
+		{% include 'index_list.html' %}
+	</div>
+</div>
+
+{# LATEST IDEAS #}
+<h2 class="push-left">{{ lang('LATEST_IDEAS') }}</h2>
+{% if latest_ideas %}
+	<a class="button view-all" href="{{ U_VIEW_LATEST }}"><i class="fa fa-fw fa-lightbulb-o"></i> <span>{{ lang('VIEW_LATEST') }}</span></a>
+{% endif %}
+<div class="forumbg" style="margin-top: 10px">
+	<div class="inner">
+		<ul class="topiclist">
+			<li class="header">
+				<dl class="row-item">
+					<dt><div class="list-inner">{{ lang('IDEAS') }}</div></dt>
+					<dd class="posts">{{ lang('RATING') }}</dd>
+				</dl>
+			</li>
+		</ul>
+		{% set ideas = latest_ideas %}
+		{% include 'index_list.html' %}
+	</div>
+</div>
+
+{# IMPLEMENTED IDEAS #}
+<h2 class="push-left">{{ lang('IMPLEMENTED_IDEAS') }}</h2>
+{% if implemented_ideas %}
+	<a class="button view-all" href="{{ U_VIEW_IMPLEMENTED }}"><i class="fa fa-fw fa-check-circle-o"></i> <span>{{ lang('VIEW_IMPLEMENTED') }}</span></a>
+{% endif %}
+<div class="forumbg" style="margin-top: 10px">
+	<div class="inner">
+		<ul class="topiclist">
+			<li class="header">
+				<dl class="row-item">
+					<dt><div class="list-inner">{{ lang('IDEAS') }}</div></dt>
+					<dd class="posts">{{ lang('RATING') }}</dd>
+				</dl>
+			</li>
+		</ul>
+		{% set ideas = implemented_ideas %}
+		{% include 'index_list.html' %}
+	</div>
+</div>
+
+<br /><br />
+
+{% include 'overall_footer.html' %}

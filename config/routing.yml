@@ -1,0 +1,19 @@
+phpbb_ideas_index_controller:
+    path: /ideas{trailing}
+    defaults: { _controller: phpbb.ideas.index_controller:index, trailing: '' }
+    requirements:
+        trailing: '/?'
+
+phpbb_ideas_idea_controller:
+    path: /idea/{idea_id}
+    defaults: { _controller: phpbb.ideas.idea_controller:idea }
+    requirements:
+        idea_id: \d+
+
+phpbb_ideas_list_controller:
+    path: /ideas/list/{sort}
+    defaults: { _controller: phpbb.ideas.list_controller:ideas_list, sort: new }
+
+phpbb_ideas_post_controller:
+    path: /ideas/post
+    defaults: { _controller: phpbb.ideas.post_controller:post }

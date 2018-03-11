@@ -1,0 +1,3 @@
+parameters:
+    tables.ideas_ideas: '%core.table_prefix%ideas_ideas'
+    tables.ideas_votes: '%core.table_prefix%ideas_votes'
