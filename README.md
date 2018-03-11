@@ -2,7 +2,7 @@
 
 phpBB Ideas is an ideas centre for phpBB. It is based on [WordPress ideas](http://wordpress.org/extend/ideas/), and allows users to suggest and vote on "ideas" that would help improve and enhance phpBB.
 
-## Installation ##
+## Installation
 
 To install, copy `config.sample.php` to `config.php` and change the configuration. The current configuration settings:
 
@@ -23,3 +23,12 @@ Finally, add two BBCodes, similar to these:
 ```
 
 Those BBCodes are used in the forum topics created by phpBB Ideas to link back to the ideas. Make sure you change the URLs so that they are correct.
+
+## Contributing
+
+Please fork this repository and submit a pull request to contribute to phpBB Ideas
+
+## Bug Reporting & Support
+
+You can report bugs or suggest features in the [issue tracker](https://www.phpbb.com/bugs/website/).
+Support is not available for phpBB Ideas however you may email `website [at] phpbb [dot] com` where you may recieve some limited support should the problem be with phpBB Ideas.
