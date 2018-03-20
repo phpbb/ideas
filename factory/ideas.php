@@ -154,8 +154,11 @@ class ideas
 			$where .= ' AND i.idea_votes_up > i.idea_votes_down';
 		}
 
-		// Only get approved topics
-		$where .= ' AND t.topic_visibility = ' . ITEM_APPROVED;
+		// Only get approved topics for regular users, Moderators can see unapproved topics
+		if (!$this->auth->acl_get('m_', (int) $this->config['ideas_forum_id']))
+		{
+			$where .= ' AND t.topic_visibility = ' . ITEM_APPROVED;
+		}
 
 		// Only get ideas that are actually in the ideas forum (not ones that have been moved)
 		$where .= ' AND t.forum_id = ' . (int) $this->config['ideas_forum_id'];
@@ -178,7 +181,7 @@ class ideas
 
 		if ($sortby !== 'TOP' && $sortby !== 'ALL')
 		{
-			$sql = 'SELECT t.topic_last_post_time, t.topic_status, i.*
+			$sql = 'SELECT t.topic_last_post_time, t.topic_status, t.topic_visibility, i.*
 				FROM ' . $this->table_ideas . ' i
 				INNER JOIN ' . $this->table_topics . " t 
 					ON i.topic_id = t.topic_id
@@ -189,7 +192,7 @@ class ideas
 		{
 			// YEEEEEEEEAAAAAAAAAAAAAHHHHHHH
 			// From http://evanmiller.org/how-not-to-sort-by-average-rating.html
-			$sql = 'SELECT t.topic_last_post_time, t.topic_status, i.*,
+			$sql = 'SELECT t.topic_last_post_time, t.topic_status, t.topic_visibility, i.*,
 				((i.idea_votes_up + 1.9208) / (i.idea_votes_up + i.idea_votes_down) -
 	            1.96 * SQRT((i.idea_votes_up * i.idea_votes_down) / (i.idea_votes_up + i.idea_votes_down) + 0.9604) /
 	            (i.idea_votes_up + i.idea_votes_down)) / (1 + 3.8416 / (i.idea_votes_up + i.idea_votes_down))
