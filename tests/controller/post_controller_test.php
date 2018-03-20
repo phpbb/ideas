@@ -92,7 +92,25 @@ class post_controller_test extends controller_base
 		}
 	}
 
-	public function test_submit_success()
+	/**
+	 * Test data for the test_submit_success test
+	 *
+	 * @return array Array of test data
+	 */
+	public function submit_success_data()
+	{
+		return array(
+			array(true),
+			array(false),
+		);
+	}
+
+	/**
+	 * Test submit
+	 *
+	 * @dataProvider submit_success_data
+	 */
+	public function test_submit_success($is_newly_registered_user)
 	{
 		/** @var \phpbb\ideas\controller\post_controller $controller */
 		$controller = $this->get_controller('post_controller');
@@ -111,7 +129,12 @@ class post_controller_test extends controller_base
 		$this->auth->expects($this->any())
 			->method('acl_get')
 			->with('f_noapprove', $this->config['ideas_forum_id'])
-			->will($this->returnValue(true));
+			->will($this->returnValue(!$is_newly_registered_user));
+
+		if ($is_newly_registered_user)
+		{
+			$this->setExpectedException('\phpbb\exception\http_exception', 'IDEA_STORED_MOD');
+		}
 
 		// ideas->submit() will return an idea id on successful submit
 		$this->ideas->expects($this->any())
@@ -122,6 +145,9 @@ class post_controller_test extends controller_base
 		$this->assertInstanceOf('\Symfony\Component\HttpFoundation\RedirectResponse', $response);
 	}
 
+	/**
+	 * Test submit errors
+	 */
 	public function test_submit_errors()
 	{
 		/** @var \phpbb\ideas\controller\post_controller $controller */
