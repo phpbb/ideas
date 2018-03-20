@@ -10,6 +10,7 @@
 
 namespace phpbb\ideas\factory;
 
+use phpbb\auth\auth;
 use phpbb\config\config;
 use phpbb\db\driver\driver_interface;
 use phpbb\language\language;
@@ -35,6 +36,9 @@ class ideas
 		'DUPLICATE'		=> 4,
 		'INVALID'		=> 5,
 	);
+
+	/** @var auth */
+	protected $auth;
 
 	/* @var config */
 	protected $config;
@@ -67,6 +71,7 @@ class ideas
 	protected $profile_url;
 
 	/**
+	 * @param auth             $auth
 	 * @param config           $config
 	 * @param driver_interface $db
 	 * @param language         $language
@@ -76,8 +81,9 @@ class ideas
 	 * @param string           $table_topics
 	 * @param string           $phpEx
 	 */
-	public function __construct(config $config, driver_interface $db, language $language, user $user, $table_ideas, $table_votes, $table_topics, $phpEx)
+	public function __construct(auth $auth, config $config, driver_interface $db, language $language, user $user, $table_ideas, $table_votes, $table_topics, $phpEx)
 	{
+		$this->auth = $auth;
 		$this->config = $config;
 		$this->db = $db;
 		$this->language = $language;
@@ -645,7 +651,7 @@ class ideas
 
 			'enable_indexing'	=> true,
 
-			'force_approved_state'	=> true,
+			'force_approved_state'	=> (!$this->auth->acl_get('f_noapprove', $this->config['ideas_forum_id'])) ? ITEM_UNAPPROVED : true,
 		);
 
 		// Get Ideas Bot info

@@ -60,6 +60,11 @@ class post_controller extends base
 					'MESSAGE'	=> $message,
 				));
 			}
+			else if (!$this->auth->acl_get('f_noapprove', $this->config['ideas_forum_id']))
+			{
+				// Show users who's posts need approval a special message
+				throw new http_exception(200, 'IDEA_STORED_MOD', array($this->helper->route('phpbb_ideas_index_controller')));
+			}
 			else
 			{
 				return new RedirectResponse($this->helper->route('phpbb_ideas_idea_controller', array('idea_id' => $submit)));

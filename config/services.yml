@@ -65,6 +65,7 @@ services:
     phpbb.ideas.ideas:
         class: phpbb\ideas\factory\ideas
         arguments:
+            - '@auth'
             - '@config'
             - '@dbal.conn'
             - '@language'
