@@ -155,7 +155,7 @@ class ideas
 		}
 
 		// Only get approved topics for regular users, Moderators can see unapproved topics
-		if (!$this->auth->acl_get('m_', (int) $this->config['ideas_forum_id']))
+		if (!$this->auth->acl_get('m_', $this->config['ideas_forum_id']))
 		{
 			$where .= ' AND t.topic_visibility = ' . ITEM_APPROVED;
 		}
