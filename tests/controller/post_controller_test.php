@@ -108,6 +108,11 @@ class post_controller_test extends controller_base
 				array('mode', '', false, \phpbb\request\request_interface::REQUEST, 'submit'),
 			)));
 
+		$this->auth->expects($this->any())
+			->method('acl_get')
+			->with('f_noapprove', $this->config['ideas_forum_id'])
+			->will($this->returnValue(true));
+
 		// ideas->submit() will return an idea id on successful submit
 		$this->ideas->expects($this->any())
 			->method('submit')
