@@ -126,6 +126,7 @@ abstract class base
 				'POINTS'     => $row['idea_votes_up'] - $row['idea_votes_down'],
 				'STATUS'     => $row['idea_status'], // for status icons (not currently implemented)
 				'LOCKED'     => $row['topic_status'] == ITEM_LOCKED,
+				'U_UNAPPROVED_IDEA'	=> (($row['topic_visibility'] == ITEM_UNAPPROVED || $row['topic_visibility'] == ITEM_REAPPROVE) && $this->auth->acl_get('m_approve', $this->config['ideas_forum_id'])) ? append_sid("{$this->root_path}mcp.{$this->php_ext}", 'i=queue&amp;mode=approve_details&amp;t=' . $row['topic_id'], true, $this->user->session_id) : '',
 			));
 		}
 	}

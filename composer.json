@@ -4,7 +4,7 @@
 	"description": "phpBB Ideas centre for phpBB 3.2.",
 	"homepage": "https://www.phpbb.com",
 	"version": "2.1.8",
-	"license": "GPL-2.0",
+	"license": "GPL-2.0-only",
 	"authors": [
 		{
 			"name": "phpBB Website Team",

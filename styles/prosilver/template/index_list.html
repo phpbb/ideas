@@ -5,7 +5,13 @@
 				<dt title="{{ lang(idea.READ ? 'NO_UNREAD_POSTS' : 'UNREAD_POSTS') }}">
 					{% if not idea.READ and not S_IS_BOT %}<a href="{{ idea.LINK }}?view=unread" class="row-item-link"></a>{% endif %}
 					<div class="list-inner">
-						<a href="{{ idea.LINK }}" class="forumtitle">{{ idea.TITLE }}</a><br />
+						<a href="{{ idea.LINK }}" class="forumtitle">{{ idea.TITLE }}</a>
+						{% if idea.U_UNAPPROVED_IDEA %}
+							<a href="{{ idea.U_UNAPPROVED_IDEA }}" title="{{ lang('TOPIC_UNAPPROVED') }}">
+								<i class="icon fa-question fa-fw icon-blue" aria-hidden="true"></i><span class="sr-only">{{ lang('TOPIC_UNAPPROVED') }}</span>
+							</a>
+						{% endif %}
+						<br />
 						{{ lang('POST_BY_AUTHOR') }} <strong>{{ idea.AUTHOR }}</strong> &raquo; {{ idea.DATE }}
 					</div>
 				</dt>

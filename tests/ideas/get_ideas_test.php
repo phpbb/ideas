@@ -258,4 +258,34 @@ class get_ideas_test extends ideas_base
 			),
 		);
 	}
+
+	/**
+	 * Test of get_ideas() when user is a moderator or not a moderator
+	 *
+	 * @dataProvider get_ideas_permissions_data
+	 */
+	public function test_get_ideas_permissions($is_mod, $expected)
+	{
+		$this->auth->expects($this->any())
+			->method('acl_get')
+			->with('m_', $this->config['ideas_forum_id'])
+			->will($this->returnValue($is_mod));
+
+		$ideas = $this->get_ideas_object();
+
+		$this->assertCount($expected, $ideas->get_ideas());
+	}
+
+	/**
+	 * test_get_ideas_permissions() data
+	 *
+	 * @return array
+	 */
+	public function get_ideas_permissions_data()
+	{
+		return array(
+			array(true, 4), // mod should see the unapproved ideas
+			array(false, 3), // non-mod won't see unapproved ideas
+		);
+	}
 }

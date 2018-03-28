@@ -85,6 +85,8 @@ class list_controller extends base
 			'SORT_ARY'			=> array(ideas::SORT_AUTHOR, ideas::SORT_DATE, ideas::SORT_SCORE, ideas::SORT_TITLE, ideas::SORT_TOP, ideas::SORT_VOTES),
 			'SORT'				=> $sort,
 			'SORT_DIRECTION'	=> $sort_direction,
+			'U_MCP' 			=> ($this->auth->acl_get('m_', $this->config['ideas_forum_id'])) ? append_sid("{$this->root_path}mcp.{$this->php_ext}", "f={$this->config['ideas_forum_id']}&amp;i=main&amp;mode=forum_view", true, $this->user->session_id) : '',
+
 		));
 
 		// Recreate the url parameters for the current list

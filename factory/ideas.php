@@ -10,6 +10,7 @@
 
 namespace phpbb\ideas\factory;
 
+use phpbb\auth\auth;
 use phpbb\config\config;
 use phpbb\db\driver\driver_interface;
 use phpbb\language\language;
@@ -35,6 +36,9 @@ class ideas
 		'DUPLICATE'		=> 4,
 		'INVALID'		=> 5,
 	);
+
+	/** @var auth */
+	protected $auth;
 
 	/* @var config */
 	protected $config;
@@ -67,6 +71,7 @@ class ideas
 	protected $profile_url;
 
 	/**
+	 * @param auth             $auth
 	 * @param config           $config
 	 * @param driver_interface $db
 	 * @param language         $language
@@ -76,8 +81,9 @@ class ideas
 	 * @param string           $table_topics
 	 * @param string           $phpEx
 	 */
-	public function __construct(config $config, driver_interface $db, language $language, user $user, $table_ideas, $table_votes, $table_topics, $phpEx)
+	public function __construct(auth $auth, config $config, driver_interface $db, language $language, user $user, $table_ideas, $table_votes, $table_topics, $phpEx)
 	{
+		$this->auth = $auth;
 		$this->config = $config;
 		$this->db = $db;
 		$this->language = $language;
@@ -148,8 +154,11 @@ class ideas
 			$where .= ' AND i.idea_votes_up > i.idea_votes_down';
 		}
 
-		// Only get approved topics
-		$where .= ' AND t.topic_visibility = ' . ITEM_APPROVED;
+		// Only get approved topics for regular users, Moderators can see unapproved topics
+		if (!$this->auth->acl_get('m_', $this->config['ideas_forum_id']))
+		{
+			$where .= ' AND t.topic_visibility = ' . ITEM_APPROVED;
+		}
 
 		// Only get ideas that are actually in the ideas forum (not ones that have been moved)
 		$where .= ' AND t.forum_id = ' . (int) $this->config['ideas_forum_id'];
@@ -172,7 +181,7 @@ class ideas
 
 		if ($sortby !== 'TOP' && $sortby !== 'ALL')
 		{
-			$sql = 'SELECT t.topic_last_post_time, t.topic_status, i.*
+			$sql = 'SELECT t.topic_last_post_time, t.topic_status, t.topic_visibility, i.*
 				FROM ' . $this->table_ideas . ' i
 				INNER JOIN ' . $this->table_topics . " t 
 					ON i.topic_id = t.topic_id
@@ -183,7 +192,7 @@ class ideas
 		{
 			// YEEEEEEEEAAAAAAAAAAAAAHHHHHHH
 			// From http://evanmiller.org/how-not-to-sort-by-average-rating.html
-			$sql = 'SELECT t.topic_last_post_time, t.topic_status, i.*,
+			$sql = 'SELECT t.topic_last_post_time, t.topic_status, t.topic_visibility, i.*,
 				((i.idea_votes_up + 1.9208) / (i.idea_votes_up + i.idea_votes_down) -
 	            1.96 * SQRT((i.idea_votes_up * i.idea_votes_down) / (i.idea_votes_up + i.idea_votes_down) + 0.9604) /
 	            (i.idea_votes_up + i.idea_votes_down)) / (1 + 3.8416 / (i.idea_votes_up + i.idea_votes_down))
@@ -645,7 +654,7 @@ class ideas
 
 			'enable_indexing'	=> true,
 
-			'force_approved_state'	=> true,
+			'force_approved_state'	=> (!$this->auth->acl_get('f_noapprove', $this->config['ideas_forum_id'])) ? ITEM_UNAPPROVED : true,
 		);
 
 		// Get Ideas Bot info
