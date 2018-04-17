@@ -28,8 +28,8 @@
 			successVoted: $('.successvoted'),
 			votes: $('.votes'),
 			votesList: $('.voteslist'),
-			voteDown: $('.votedown'),
-			voteUp: $('.voteup'),
+			voteDown: $('.minivotedown'),
+			voteUp: $('.minivoteup'),
 			voteRemove: $('#vote-remove')
 		};
 
