@@ -121,14 +121,14 @@ class listener implements EventSubscriberInterface
 			return;
 		}
 
-		if ($event['topic_data']['topic_first_post_id'] == $event['row']['post_id'])
+		if ($event['topic_data']['topic_first_post_id'] == $event['row']['post_id'] && $event['topic_data']['topic_time'] < strtotime('September 1, 2017'))
 		{
 			$post_row = $event['post_row'];
 			$message = $post_row['MESSAGE'];
 
 			// This freakish looking regex pattern should
 			// remove the old ideas link-backs from the message.
-			$message = preg_replace('/(<br[^>]*>\\n?)\\1-{10}\\1\\1.*/s', '', $message);
+			$message = preg_replace('/(<br[^>]*>\\n?)\\1-{10}\\1\\1.*]/s', '', $message);
 
 			$post_row['MESSAGE'] = $message;
 			$event['post_row'] = $post_row;
