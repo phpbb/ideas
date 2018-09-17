@@ -17,8 +17,12 @@ class post_controller_test extends controller_base
 		parent::setUp();
 
 		global $db, $phpbb_container;
-		$db = $this->getMock('\phpbb\db\driver\driver_interface');
-		$phpbb_container = $this->getMock('Symfony\Component\DependencyInjection\ContainerInterface');
+		$db = $this->getMockBuilder('\phpbb\db\driver\driver_interface')
+			->disableOriginalConstructor()
+			->getMock();
+		$phpbb_container = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerInterface')
+			->disableOriginalConstructor()
+			->getMock();
 	}
 
 	/**

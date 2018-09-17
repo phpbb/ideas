@@ -57,7 +57,9 @@ class controller_base extends \phpbb_test_case
 		$phpbb_dispatcher = new \phpbb_mock_event_dispatcher();
 
 		// Constructor arguments
-		$this->auth = $this->getMock('\phpbb\auth\auth');
+		$this->auth = $this->getMockBuilder('\phpbb\auth\auth')
+			->disableOriginalConstructor()
+			->getMock();
 		$this->config = new \phpbb\config\config(array('ideas_forum_id' => 2, 'ideas_poster_id' => 2));
 		$this->controller_helper = $this->getMockBuilder('\phpbb\controller\helper')
 			->disableOriginalConstructor()
@@ -84,10 +86,17 @@ class controller_base extends \phpbb_test_case
 		$this->pagination = $this->getMockBuilder('\phpbb\pagination')
 			->disableOriginalConstructor()
 			->getMock();
-		$this->request = $request = $this->getMock('\phpbb\request\request');
+		$this->request = $request = $this->getMockBuilder('\phpbb\request\request')
+			->disableOriginalConstructor()
+			->getMock();
 		$this->template = $this->getMockBuilder('\phpbb\template\template')
 			->getMock();
-		$this->user = $this->getMock('\phpbb\user', array(), array($this->lang, '\phpbb\datetime'));
+		$this->user = $this->getMockBuilder('\phpbb\user')
+			->setConstructorArgs(array(
+				$this->lang,
+				'\phpbb\datetime'
+			))
+			->getMock();
 		$this->root_path = $phpbb_root_path;
 		$this->php_ext = $phpEx;
 	}

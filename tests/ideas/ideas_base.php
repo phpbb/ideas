@@ -46,7 +46,9 @@ class ideas_base extends \phpbb_database_test_case
 
 		global $auth, $config, $db, $phpbb_dispatcher, $phpbb_root_path, $phpEx, $request;
 
-		$this->auth = $auth = $this->getMock('\phpbb\auth\auth');
+		$this->auth = $auth = $this->getMockBuilder('\phpbb\auth\auth')
+			->disableOriginalConstructor()
+			->getMock();
 		$this->config = $config = new \phpbb\config\config(array(
 			'posts_per_page' => 10,
 			'ideas_forum_id' => 2,
@@ -56,12 +58,16 @@ class ideas_base extends \phpbb_database_test_case
 		$phpbb_dispatcher = new \phpbb_mock_event_dispatcher();
 		$lang_loader = new \phpbb\language\language_file_loader($phpbb_root_path, $phpEx);
 		$this->lang = new \phpbb\language\language($lang_loader);
-		$this->user = $this->getMock('\phpbb\user', array(), array(
-			$this->lang,
-			'\phpbb\datetime'
-		));
+		$this->user = $this->getMockBuilder('\phpbb\user')
+			->setConstructorArgs(array(
+				$this->lang,
+				'\phpbb\datetime'
+			))
+			->getMock();
 		$this->php_ext = $phpEx;
-		$request = $this->getMock('\phpbb\request\request');
+		$request = $this->getMockBuilder('\phpbb\request\request')
+			->disableOriginalConstructor()
+			->getMock();
 	}
 
 	/**
