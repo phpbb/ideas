@@ -49,7 +49,9 @@ class linkhelper_test extends \phpbb_database_test_case
 		$this->user_loader = new \phpbb\user_loader($this->db, $phpbb_root_path, $phpEx, 'phpbb_users');
 
 		$phpbb_dispatcher = new \phpbb_mock_event_dispatcher();
-		$auth = $this->getMock('\phpbb\auth\auth');
+		$auth = $this->getMockBuilder('\phpbb\auth\auth')
+			->disableOriginalConstructor()
+			->getMock();
 		$auth->expects($this->any())
 			->method('acl_get')
 			->with($this->stringContains('_'), $this->anything())

@@ -58,9 +58,12 @@ class idea_controller_test extends \phpbb\ideas\tests\controller\controller_base
 			->will($this->returnValue(array('idea_id' => $idea_id, 'idea_author' => 2)));
 
 		// mock a result from each method called by the idea controller
-		$this->ideas->expects(($callback !== '' ? $this->once() : $this->never()))
-			->method($callback)
-			->will($this->returnValue($authorised));
+		if ($callback !== '')
+		{
+			$this->ideas->expects($this->once())
+				->method(($callback))
+				->will($this->returnValue($authorised));
+		}
 
 		// set if using ajax or not
 		$this->request->expects($this->any())
