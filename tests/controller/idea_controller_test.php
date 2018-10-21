@@ -28,8 +28,10 @@ class idea_controller_test extends \phpbb\ideas\tests\controller\controller_base
 			array(2, 'delete', 'delete', true, true, 'trigger_error', 200), // ajax delete success (confirm true)
 			array(3, 'duplicate', 'set_duplicate', true, true, 'true', 200), // ajax set duplicate success
 			array(3, 'duplicate', '', true, false, 'false', 200), // ajax set duplicate fail
-			array(4, 'removevote', 'remove_vote', true, true, 'true', 200), // ajax set title success
-			array(4, 'removevote', '', true, false, '"You do not have the necessary permissions to complete this operation."', 200), // ajax set title fail
+			array(4, 'removevote', 'remove_vote', true, true, 'true', 200), // ajax remove vote success
+			array(4, 'removevote', 'remove_vote', true, true, 'false', 200, ['idea_status' => \phpbb\ideas\factory\ideas::$statuses['DUPLICATE']]), // ajax remove vote not allowed
+			array(4, 'removevote', 'remove_vote', true, true, 'false', 200, ['idea_status' => \phpbb\ideas\factory\ideas::$statuses['IMPLEMENTED']]), // ajax remove vote not allowed
+			array(4, 'removevote', '', true, false, '"You do not have the necessary permissions to complete this operation."', 200), // ajax remove vote fail
 			array(5, 'rfc', 'set_rfc', true, true, 'true', 200), // ajax set rfc success
 			array(5, 'rfc', '', true, false, 'false', 200), // ajax set rfc fail
 			array(6, 'status', 'change_status', true, true, 'true', 200), // ajax set status success
@@ -38,8 +40,10 @@ class idea_controller_test extends \phpbb\ideas\tests\controller\controller_base
 			array(7, 'ticket', '', true, false, 'false', 200), // ajax set ticket fail
 			array(8, 'title', 'set_title', true, true, 'true', 200), // ajax set title success
 			array(8, 'title', '', true, false, 'false', 200), // ajax set title fail
-			array(9, 'vote', 'vote', true, true, 'true', 200), // ajax set title success
-			array(9, 'vote', '', true, false, '"You do not have the necessary permissions to complete this operation."', 200), // ajax set title fail
+			array(9, 'vote', 'vote', true, true, 'true', 200), // ajax vote success
+			array(9, 'vote', 'vote', true, true, 'false', 200, ['idea_status' => \phpbb\ideas\factory\ideas::$statuses['DUPLICATE']]), // ajax vote not allowed
+			array(9, 'vote', 'vote', true, true, 'false', 200, ['idea_status' => \phpbb\ideas\factory\ideas::$statuses['IMPLEMENTED']]), // ajax vote not allowed
+			array(9, 'vote', '', true, false, '"You do not have the necessary permissions to complete this operation."', 200), // ajax vote fail
 			array(10, 'implemented', 'set_implemented', true, true, 'true', 200), // ajax set implemented success
 			array(10, 'implemented', '', true, false, 'false', 200), // ajax set implemented fail
 		);
@@ -50,15 +54,21 @@ class idea_controller_test extends \phpbb\ideas\tests\controller\controller_base
 	 *
 	 * @dataProvider controller_test_data
 	 */
-	public function test_controller($idea_id, $mode, $callback, $is_ajax, $authorised, $expected, $status_code)
+	public function test_controller($idea_id, $mode, $callback, $is_ajax, $authorised, $expected, $status_code, $additional_data = [])
 	{
 		// mock some basic idea data
 		$this->ideas->expects($this->any())
 			->method('get_idea')
-			->will($this->returnValue(array('idea_id' => $idea_id, 'idea_author' => 2)));
+			->will($this->returnValue(
+				array_merge(array(
+					'idea_id'		=> $idea_id,
+					'idea_author'	=> 2,
+					'idea_status'	=> \phpbb\ideas\factory\ideas::$statuses['NEW']
+				), $additional_data))
+			);
 
 		// mock a result from each method called by the idea controller
-		if ($callback !== '')
+		if ($expected === 'true')
 		{
 			$this->ideas->expects($this->once())
 				->method(($callback))
