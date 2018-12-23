@@ -52,7 +52,7 @@ class listener_test extends \phpbb_test_case
 		$this->auth = $this->getMockBuilder('\phpbb\auth\auth')
 			->disableOriginalConstructor()
 			->getMock();
-		$this->config = new \phpbb\config\config(array('ideas_forum_id' => 2, 'ideas_poster_id' => 2));
+		$this->config = new \phpbb\config\config(array('ideas_forum_id' => 2));
 		$this->helper = $this->getMockBuilder('\phpbb\controller\helper')
 			->disableOriginalConstructor()
 			->getMock();

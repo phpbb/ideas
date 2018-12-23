@@ -49,9 +49,8 @@ class index_controller_test extends controller_base
 	public function controller_exception_test_data()
 	{
 		return array(
-			array(2, 0),
-			array(0, 2),
-			array('', ''),
+			array(0),
+			array(''),
 		);
 	}
 
@@ -61,10 +60,9 @@ class index_controller_test extends controller_base
 	 * @dataProvider controller_exception_test_data
 	 * @expectedException \phpbb\exception\http_exception
 	 */
-	public function test_controller_exception($idea_bot, $forum)
+	public function test_controller_exception($forum)
 	{
 		$this->config['ideas_forum_id'] = $forum;
-		$this->config['ideas_poster_id'] = $idea_bot;
 
 		/** @var \phpbb\ideas\controller\index_controller $controller */
 		$controller = $this->get_controller('index_controller');
