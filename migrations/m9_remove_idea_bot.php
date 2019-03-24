@@ -73,10 +73,10 @@ class m9_remove_idea_bot extends \phpbb\db\migration\migration
 		while ($row = $this->db->sql_fetchrow($result))
 		{
 			$topics[$row['topic_id']] = [
-				'topic_poster_id'     => $row['idea_author'],
-				'topic_poster_name'   => $row['username'],
-				'topic_poster_colour' => $row['user_colour'],
-				'topic_first_post_id' => $row['topic_first_post_id'],
+				'topic_poster_id'     => $row['idea_author'] ?: ANONYMOUS,
+				'topic_poster_name'   => $row['username'] ?: '',
+				'topic_poster_colour' => $row['user_colour'] ?: '',
+				'topic_first_post_id' => $row['topic_first_post_id'] ?: 0,
 			];
 		}
 		$this->db->sql_freeresult($result);
