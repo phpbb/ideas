@@ -52,7 +52,6 @@ class ideas_base extends \phpbb_database_test_case
 		$this->config = $config = new \phpbb\config\config(array(
 			'posts_per_page' => 10,
 			'ideas_forum_id' => 2,
-			'ideas_poster_id' => 2,
 		));
 		$this->db = $db = $this->new_dbal();
 		$phpbb_dispatcher = new \phpbb_mock_event_dispatcher();

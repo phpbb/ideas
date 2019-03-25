@@ -631,7 +631,7 @@ class ideas
 			'forum_id'			=> (int) $this->config['ideas_forum_id'],
 			'topic_id'			=> 0,
 			'icon_id'			=> false,
-			'poster_id'			=> (int) $this->config['ideas_poster_id'],
+			'poster_id'			=> (int) $this->user->data['user_id'],
 
 			'enable_bbcode'		=> true,
 			'enable_smilies'	=> true,
@@ -657,23 +657,8 @@ class ideas
 			'force_approved_state'	=> (!$this->auth->acl_get('f_noapprove', $this->config['ideas_forum_id'])) ? ITEM_UNAPPROVED : true,
 		);
 
-		// Get Ideas Bot info
-		$sql = 'SELECT *
-			FROM ' . USERS_TABLE . '
-			WHERE user_id = ' . (int) $this->config['ideas_poster_id'];
-		$result = $this->db->sql_query_limit($sql, 1);
-		$poster_bot = $this->db->sql_fetchrow($result);
-		$this->db->sql_freeresult($result);
-
-		$poster_bot['is_registered'] = true;
-
-		$tmpdata = $this->user->data;
-		$this->user->data = $poster_bot;
-
 		$poll = array();
 		submit_post('post', $title, $this->user->data['username'], POST_NORMAL, $poll, $data);
-
-		$this->user->data = $tmpdata;
 
 		// Edit topic ID into idea; both should link to each other
 		$sql_ary = array(

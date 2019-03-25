@@ -49,12 +49,6 @@ class ideas_functional_base extends \phpbb_functional_test_case
 
 		$this->db->sql_query($sql);
 
-		$sql = "UPDATE phpbb_config
-			SET config_value = '2'
-			WHERE config_name = 'ideas_poster_id'";
-
-		$this->db->sql_query($sql);
-
 		$this->purge_cache();
 	}
 
@@ -68,12 +62,6 @@ class ideas_functional_base extends \phpbb_functional_test_case
 		$sql = "UPDATE phpbb_config
 			SET config_value = ''
 			WHERE config_name = 'ideas_forum_id'";
-
-		$this->db->sql_query($sql);
-
-		$sql = "UPDATE phpbb_config
-			SET config_value = ''
-			WHERE config_name = 'ideas_poster_id'";
 
 		$this->db->sql_query($sql);
 

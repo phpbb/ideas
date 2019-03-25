@@ -93,13 +93,13 @@ abstract class base
 
 	/**
 	 * Check if Ideas is properly configured after installation
-	 * Ideas is available only after forum and poster settings have been set in ACP
+	 * Ideas is available only after forum settings have been set in ACP
 	 *
 	 * @return bool Depending on whether or not the extension is properly configured
 	 */
 	public function is_available()
 	{
-		return (bool) $this->config['ideas_forum_id'] && (bool) $this->config['ideas_poster_id'];
+		return (bool) $this->config['ideas_forum_id'];
 	}
 
 	/**

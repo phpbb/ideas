@@ -151,13 +151,8 @@ class listener implements EventSubscriberInterface
 
 		if ($event['topic_data']['topic_first_post_id'] == $event['row']['post_id'])
 		{
-			$post_row = $event['post_row'];
-
-			$post_row['U_DELETE'] = false;
-			$post_row['U_QUOTE']  = false;
-			$post_row['U_WARN']   = false;
-
-			$event['post_row'] = $post_row;
+			$event->update_subarray('post_row', 'U_DELETE', false);
+			$event->update_subarray('post_row', 'U_WARN', false);
 		}
 	}
 

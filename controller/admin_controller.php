@@ -84,14 +84,12 @@ class admin_controller
 	public function display_options()
 	{
 		$this->template->assign_vars(array(
-			'IDEAS_POSTER'		=> $this->get_ideas_topics_poster_username(),
 			'IDEAS_BASE_URL'	=> $this->config['ideas_base_url'] ?: '',
 
 			'S_FORUM_SELECT_BOX'	=> $this->select_ideas_forum(),
 			'S_IDEAS_FORUM_ID'		=> !empty($this->config['ideas_forum_id']),
 
 			'U_ACTION'			=> $this->u_action,
-			'U_FIND_USERNAME'	=> append_sid("{$this->phpbb_root_path}memberlist.{$this->php_ext}", 'mode=searchuser&amp;form=acp_phpbb_ideas_settings&amp;field=ideas_poster_id&amp;select_single=true'),
 		));
 	}
 
@@ -116,15 +114,8 @@ class admin_controller
 			$errors[] = $this->language->lang('FORM_INVALID');
 		}
 
-		// Check if selected user exists
-		$user_id = $this->get_ideas_topics_poster_id();
-		if (!$user_id)
-		{
-			$errors[] = $this->language->lang('NO_USER');
-		}
-
 		// Don't save settings if errors have occurred
-		if (sizeof($errors))
+		if (count($errors))
 		{
 			$submit = false;
 
@@ -136,13 +127,9 @@ class admin_controller
 
 		if ($submit)
 		{
-			// If selected user does exist, reassign the config value to its ID
-			$this->cfg_array['ideas_poster_id'] = $user_id;
-
 			// Configuration options to list through
 			$display_vars = array(
 				'ideas_forum_id',
-				'ideas_poster_id',
 				'ideas_base_url',
 				'ideas_forum_setup',
 			);
@@ -223,40 +210,6 @@ class admin_controller
 				'ideas_forum_setup'	=> $this->request->is_set_post('ideas_forum_setup'),
 			)));
 		}
-	}
-
-	/**
-	 * Get Ideas poster bot user ID
-	 *
-	 * @return int user_id Ideas bot user ID
-	 * @access protected
-	 */
-	protected function get_ideas_topics_poster_id()
-	{
-		$sql = 'SELECT user_id
-			FROM ' . USERS_TABLE . "
-			WHERE username_clean = '" . $this->db->sql_escape(utf8_clean_string($this->cfg_array['ideas_poster_id'])) . "'";
-		$result = $this->db->sql_query($sql);
-		$user_id = (int) $this->db->sql_fetchfield('user_id');
-		$this->db->sql_freeresult($result);
-
-		return $user_id;
-	}
-
-	/**
-	 * Get Ideas poster bot username
-	 *
-	 * @return string Ideas bot username
-	 * @access protected
-	 */
-	protected function get_ideas_topics_poster_username()
-	{
-		$sql = 'SELECT username FROM ' . USERS_TABLE . '
-			WHERE user_id = ' . (int) $this->config['ideas_poster_id'];
-		$this->db->sql_query($sql);
-		$username = $this->db->sql_fetchfield('username');
-
-		return ($username !== false) ? $username : '';
 	}
 
 	/**

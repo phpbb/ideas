@@ -62,10 +62,9 @@ class post_controller_test extends controller_base
 	public function controller_exception_test_data()
 	{
 		return array(
-			array(2, 0, 2, 404, 'IDEAS_NOT_AVAILABLE'), // forum id is bad
-			array(0, 2, 2, 404, 'IDEAS_NOT_AVAILABLE'), // idea bot is bad
-			array('', '', 2, 404, 'IDEAS_NOT_AVAILABLE'), // forum id and idea bot are bad
-			array(2, 2, 1, 404, 'LOGGED_OUT'), // user id is anonymous
+			array(0, 2, 404, 'IDEAS_NOT_AVAILABLE'), // forum id is bad
+			array('', 2, 404, 'IDEAS_NOT_AVAILABLE'), // forum id is bad
+			array(2, 1, 404, 'LOGGED_OUT'), // user id is anonymous
 		);
 	}
 
@@ -74,10 +73,9 @@ class post_controller_test extends controller_base
 	 *
 	 * @dataProvider controller_exception_test_data
 	 */
-	public function test_controller_exception($idea_bot, $forum, $user_id, $status_code, $page_content)
+	public function test_controller_exception($forum, $user_id, $status_code, $page_content)
 	{
 		$this->config['ideas_forum_id'] = $forum;
-		$this->config['ideas_poster_id'] = $idea_bot;
 		$this->user->data['user_id'] = $user_id;
 
 		/** @var \phpbb\ideas\controller\post_controller $controller */

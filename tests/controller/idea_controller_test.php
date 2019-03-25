@@ -139,10 +139,9 @@ class idea_controller_test extends \phpbb\ideas\tests\controller\controller_base
 	public function display_fails_data()
 	{
 		return array(
-			array(1, 2, 0, 404, 'IDEAS_NOT_AVAILABLE'), // no ideas_poster_id
-			array(1, 0, 2, 404, 'IDEAS_NOT_AVAILABLE'), // no ideas_forum_id
-			array(1, '', '', 404, 'IDEAS_NOT_AVAILABLE'), // no ideas_poster_id or ideas_forum_id
-			array(0, 2, 2, 404, 'IDEA_NOT_FOUND'), // no idea data
+			array(0, 2, 404, 'IDEA_NOT_FOUND'), // no idea data
+			array(1, 0, 404, 'IDEAS_NOT_AVAILABLE'), // no ideas_forum_id
+			array(1, '', 404, 'IDEAS_NOT_AVAILABLE'), // no ideas_forum_id
 		);
 	}
 
@@ -151,10 +150,9 @@ class idea_controller_test extends \phpbb\ideas\tests\controller\controller_base
 	 *
 	 * @dataProvider display_fails_data
 	 */
-	public function test_controller_exception($idea_id, $idea_bot, $forum, $status_code, $page_content)
+	public function test_controller_exception($idea_id, $forum, $status_code, $page_content)
 	{
 		$this->config['ideas_forum_id'] = $forum;
-		$this->config['ideas_poster_id'] = $idea_bot;
 
 		/** @var \phpbb\ideas\controller\idea_controller $controller */
 		$controller = $this->get_controller('idea_controller');
