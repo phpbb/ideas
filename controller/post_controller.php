@@ -45,11 +45,10 @@ class post_controller extends base
 			include $this->root_path . 'includes/functions_display.' . $this->php_ext;
 		}
 
-		$mode = $this->request->variable('mode', '');
 		$title = $this->request->variable('title', '', true);
 		$message = $this->request->variable('message', '', true);
 
-		if ($mode === 'submit')
+		if ($this->request->is_set_post('post'))
 		{
 			$submit = $this->ideas->submit($title, $message, $this->user->data['user_id']);
 
@@ -71,6 +70,17 @@ class post_controller extends base
 			}
 		}
 
+		if ($this->request->is_set_post('preview'))
+		{
+			$preview_message = $this->ideas->preview($message);
+
+			$this->template->assign_vars(array(
+				'S_DISPLAY_PREVIEW'	=> !empty($preview_message),
+				'PREVIEW_SUBJECT'	=> $title,
+				'PREVIEW_MESSAGE'	=> $preview_message,
+			));
+		}
+
 		display_custom_bbcodes();
 		generate_smilies('inline', 0);
 
@@ -83,8 +93,9 @@ class post_controller extends base
 
 		$this->template->assign_vars(array(
 			'TITLE'				=> $title,
+			'MESSAGE'			=> $message,
 
-			'S_POST_ACTION'		=> $this->helper->route('phpbb_ideas_post_controller', array('mode' => 'submit')),
+			'S_POST_ACTION'		=> $this->helper->route('phpbb_ideas_post_controller'),
 			'S_BBCODE_ALLOWED'	=> $bbcode_status,
 			'S_SMILIES_ALLOWED'	=> $smilies_status,
 			'S_LINKS_ALLOWED'	=> $url_status,
