@@ -95,11 +95,11 @@ class post_controller_test extends controller_base
 	}
 
 	/**
-	 * Test data for the test_submit_success test
+	 * Test data for the test_post_success test
 	 *
 	 * @return array Array of test data
 	 */
-	public function submit_success_data()
+	public function post_success_data()
 	{
 		return array(
 			array(true),
@@ -108,27 +108,27 @@ class post_controller_test extends controller_base
 	}
 
 	/**
-	 * Test submit
+	 * Test post
 	 *
-	 * @dataProvider submit_success_data
+	 * @dataProvider post_success_data
 	 */
-	public function test_submit_success($is_newly_registered_user)
+	public function test_post_success($is_newly_registered_user)
 	{
 		/** @var \phpbb\ideas\controller\post_controller $controller */
 		$controller = $this->get_controller('post_controller');
 		$this->assertInstanceOf('phpbb\ideas\controller\post_controller', $controller);
 
-		$this->controller_helper->expects($this->any())
+		$this->controller_helper->expects($this->once())
 			->method('route')
 			->will($this->returnValue('phpbb_ideas_idea_controller'));
 
-		$this->request->expects($this->any())
-			->method('variable')
+		$this->request->expects($this->once())
+			->method('is_set_post')
 			->will($this->returnValueMap(array(
-				array('mode', '', false, \phpbb\request\request_interface::REQUEST, 'submit'),
+				array('post', true),
 			)));
 
-		$this->auth->expects($this->any())
+		$this->auth->expects($this->once())
 			->method('acl_get')
 			->with('f_noapprove', $this->config['ideas_forum_id'])
 			->will($this->returnValue(!$is_newly_registered_user));
@@ -139,12 +139,53 @@ class post_controller_test extends controller_base
 		}
 
 		// ideas->submit() will return an idea id on successful submit
-		$this->ideas->expects($this->any())
+		$this->ideas->expects($this->once())
 			->method('submit')
 			->will($this->returnValue(1));
 
 		$response = $controller->post();
 		$this->assertInstanceOf('\Symfony\Component\HttpFoundation\RedirectResponse', $response);
+	}
+
+	/**
+	 * Test preview
+	 */
+	public function test_preview()
+	{
+		/** @var \phpbb\ideas\controller\post_controller $controller */
+		$controller = $this->get_controller('post_controller');
+		$this->assertInstanceOf('phpbb\ideas\controller\post_controller', $controller);
+
+		$this->request->expects($this->any())
+			->method('is_set_post')
+			->will($this->returnValueMap(array(
+				array('post', false),
+				array('preview', true),
+			)));
+
+		$this->request->expects($this->atLeastOnce())
+			->method('variable')
+			->will($this->returnValueMap(array(
+				array('title', '', true, \phpbb\request\request_interface::REQUEST, 'test title'),
+				array('message', '', true, \phpbb\request\request_interface::REQUEST, 'test message'),
+			)));
+
+		$this->ideas->expects($this->never())
+			->method('submit');
+
+		$this->ideas->expects($this->once())
+			->method('preview')
+			->willReturn('test message');
+
+		$this->template->expects($this->at(0))
+			->method('assign_vars')
+			->with(array(
+				'S_DISPLAY_PREVIEW' => true,
+				'PREVIEW_SUBJECT'   => 'test title',
+				'PREVIEW_MESSAGE'   => 'test message'
+			));
+
+		$controller->post();
 	}
 
 	/**
@@ -156,16 +197,22 @@ class post_controller_test extends controller_base
 		$controller = $this->get_controller('post_controller');
 		$this->assertInstanceOf('phpbb\ideas\controller\post_controller', $controller);
 
-		$this->request->expects($this->any())
+		$this->request->expects($this->atLeastOnce())
+			->method('is_set_post')
+			->will($this->returnValueMap(array(
+				array('post', true),
+				array('preview', false),
+			)));
+
+		$this->request->expects($this->atLeastOnce())
 			->method('variable')
 			->will($this->returnValueMap(array(
-				array('mode', '', false, \phpbb\request\request_interface::REQUEST, 'submit'),
 				array('title', '', true, \phpbb\request\request_interface::REQUEST, 'test title'),
 				array('message', '', true, \phpbb\request\request_interface::REQUEST, 'test message'),
 			)));
 
 		// ideas->submit() will return an array of error messages on submit error
-		$this->ideas->expects($this->any())
+		$this->ideas->expects($this->once())
 			->method('submit')
 			->will($this->returnValue(array('error1', 'error2')));
 
