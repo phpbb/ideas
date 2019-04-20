@@ -671,6 +671,19 @@ class ideas
 	}
 
 	/**
+	 * Preview a new idea.
+	 *
+	 * @param string $message The description of the idea.
+	 * @return string The idea parsed for display in preview.
+	 */
+	public function preview($message)
+	{
+		$uid = $bitfield = $flags = '';
+		generate_text_for_storage($message, $uid, $bitfield, $flags, true, true, true);
+		return generate_text_for_display($message, $uid, $bitfield, $flags);
+	}
+
+	/**
 	 * Deletes an idea and the topic to go with it.
 	 *
 	 * @param int $id       The ID of the idea to be deleted.
