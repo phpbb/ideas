@@ -12,7 +12,7 @@ namespace phpbb\ideas\tests\factory;
 
 class linkhelper_test extends \phpbb_database_test_case
 {
-	static protected function setup_extensions()
+	protected static function setup_extensions()
 	{
 		return array('phpbb/ideas');
 	}

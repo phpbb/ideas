@@ -16,10 +16,11 @@ class ideas_module
 	public $u_action;
 
 	/**
-	* Main ACP module
-	*
-	* @access public
-	*/
+	 * Main ACP module
+	 *
+	 * @access public
+	 * @throws \Exception
+	 */
 	public function main()
 	{
 		global $phpbb_container;

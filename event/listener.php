@@ -78,7 +78,7 @@ class listener implements EventSubscriberInterface
 	/**
 	 * @inheritDoc
 	 */
-	static public function getSubscribedEvents()
+	public static function getSubscribedEvents()
 	{
 		return array(
 			'core.viewforum_get_topic_data'				=> 'ideas_forum_redirect',
@@ -334,9 +334,9 @@ class listener implements EventSubscriberInterface
 	public function edit_idea_title($event)
 	{
 		if ($event['mode'] !== 'edit' ||
+			$event['post_data']['topic_first_post_id'] != $event['post_id'] ||
 			!$event['update_subject'] ||
-			!$this->is_ideas_forum($event['forum_id']) ||
-			$event['post_data']['topic_first_post_id'] != $event['post_id'])
+			!$this->is_ideas_forum($event['forum_id']))
 		{
 			return;
 		}

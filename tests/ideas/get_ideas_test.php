@@ -32,7 +32,7 @@ class get_ideas_test extends ideas_base
 	public function test_get_ideas($test_data, $expected)
 	{
 		// Initialize get_ideas argument values
-		$number = $sort = $sort_direction = $status = $where = $start = null;
+		$number = $sort = $sort_direction = $status = $start = null;
 
 		// Update the default values array with test values
 		foreach ($test_data as $key => $var)
