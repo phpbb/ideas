@@ -10,8 +10,6 @@ matrix:
     - php: 7.1
       env: DB=postgres
     - php: 7.1
-      env: DB=sqlite3
-    - php: 7.1
       env: DB=mysqli # MyISAM
     - php: 7.2
       env: DB=mysqli
