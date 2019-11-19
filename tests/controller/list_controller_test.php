@@ -150,15 +150,15 @@ class list_controller_test extends controller_base
 	 */
 	public function test_controller($status_code, $page_content, $params, $expected)
 	{
-		$this->request->expects($this->any())
+		$this->request->expects($this->atMost(3))
 			->method('variable')
-			->will($this->returnValueMap(array(
+			->willReturnMap(array(
 				array('sd', 'd', false, \phpbb\request\request_interface::REQUEST, ''),
 				array('status', 0, false, \phpbb\request\request_interface::REQUEST, $params['status']),
 				array('start', 0, false, \phpbb\request\request_interface::REQUEST, 0),
-			)));
+			));
 
-		$this->ideas->expects($this->any())
+		$this->ideas->expects($this->once())
 			->method('get_ideas')
 			->with('', $expected['sort'], 'ASC', $expected['status'], 0);
 

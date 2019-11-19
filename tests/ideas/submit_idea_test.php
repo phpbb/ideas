@@ -12,7 +12,7 @@ namespace phpbb\ideas\factory;
 
 class submit_idea_test extends \phpbb\ideas\tests\ideas\ideas_base
 {
-	public function setUp()
+	public function setUp(): void
 	{
 		parent::setUp();
 

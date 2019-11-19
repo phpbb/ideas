@@ -266,10 +266,10 @@ class get_ideas_test extends ideas_base
 	 */
 	public function test_get_ideas_permissions($is_mod, $expected)
 	{
-		$this->auth->expects($this->any())
+		$this->auth
 			->method('acl_get')
 			->with('m_', $this->config['ideas_forum_id'])
-			->will($this->returnValue($is_mod));
+			->willReturn($is_mod);
 
 		$ideas = $this->get_ideas_object();
 

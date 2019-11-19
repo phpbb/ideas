@@ -34,6 +34,7 @@ class ideas_test extends \phpbb_ui_test_case
 	 *
 	 * @throws \Facebook\WebDriver\Exception\NoSuchElementException
 	 * @throws \Facebook\WebDriver\Exception\TimeOutException
+	 * @throws \Facebook\WebDriver\Exception\WebDriverCurlException
 	 */
 	public function test_js_actions()
 	{
@@ -78,38 +79,5 @@ class ideas_test extends \phpbb_ui_test_case
 		$input->sendKeys([$test, WebDriverKeys::ENTER]);
 		$this->waitForAjax();
 		$this->assertEquals($test, $this->find_element('cssSelector', '#ticketlink')->getText());
-	}
-
-	/**
-	 * Wait for AJAX, this should be added to the framework.
-	 *
-	 * @param string $framework javascript frameworks jquery|prototype|dojo
-	 * @throws \Facebook\WebDriver\Exception\NoSuchElementException
-	 * @throws \Facebook\WebDriver\Exception\TimeOutException
-	 */
-	public function waitForAjax($framework = 'jquery')
-	{
-		switch ($framework)
-		{
-			case 'jquery':
-				$code = 'return jQuery.active;';
-			break;
-			case 'prototype':
-				$code = 'return Ajax.activeRequestCount;';
-			break;
-			case 'dojo':
-				$code = 'return dojo.io.XMLHTTPTransport.inFlight.length;';
-			break;
-			default:
-				throw new \RuntimeException('Unsupported framework');
-			break;
-		}
-		// wait for at most 30s, retry every 2000ms (2s)
-		$driver = $this->getDriver();
-		$driver->wait(30, 2000)->until(
-			function () use ($driver, $code) {
-				return !$driver->executeScript($code);
-			}
-		);
 	}
 }
