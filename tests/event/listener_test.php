@@ -56,7 +56,7 @@ class listener_test extends \phpbb_test_case
 		$this->helper = $this->getMockBuilder('\phpbb\controller\helper')
 			->disableOriginalConstructor()
 			->getMock();
-		$this->helper->expects($this->any())
+		$this->helper->expects($this->atMost(1))
 			->method('route')
 			->willReturnCallback(function ($route, array $params = array()) {
 				return $route . '#' . serialize($params);

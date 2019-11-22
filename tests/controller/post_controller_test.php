@@ -120,28 +120,29 @@ class post_controller_test extends controller_base
 
 		$this->controller_helper->expects($this->once())
 			->method('route')
-			->will($this->returnValue('phpbb_ideas_idea_controller'));
+			->willReturn('phpbb_ideas_idea_controller');
 
 		$this->request->expects($this->once())
 			->method('is_set_post')
-			->will($this->returnValueMap(array(
+			->willReturnMap(array(
 				array('post', true),
-			)));
+			));
 
 		$this->auth->expects($this->once())
 			->method('acl_get')
 			->with('f_noapprove', $this->config['ideas_forum_id'])
-			->will($this->returnValue(!$is_newly_registered_user));
+			->willReturn(!$is_newly_registered_user);
 
 		if ($is_newly_registered_user)
 		{
-			$this->setExpectedException('\phpbb\exception\http_exception', 'IDEA_STORED_MOD');
+			$this->expectException('\phpbb\exception\http_exception');
+			$this->expectExceptionMessage('IDEA_STORED_MOD');
 		}
 
 		// ideas->submit() will return an idea id on successful submit
 		$this->ideas->expects($this->once())
 			->method('submit')
-			->will($this->returnValue(1));
+			->willReturn(1);
 
 		$response = $controller->post();
 		$this->assertInstanceOf('\Symfony\Component\HttpFoundation\RedirectResponse', $response);
@@ -156,19 +157,19 @@ class post_controller_test extends controller_base
 		$controller = $this->get_controller('post_controller');
 		$this->assertInstanceOf('phpbb\ideas\controller\post_controller', $controller);
 
-		$this->request->expects($this->any())
+		$this->request->expects($this->atLeastOnce())
 			->method('is_set_post')
-			->will($this->returnValueMap(array(
+			->willReturnMap(array(
 				array('post', false),
 				array('preview', true),
-			)));
+			));
 
 		$this->request->expects($this->atLeastOnce())
 			->method('variable')
-			->will($this->returnValueMap(array(
+			->willReturnMap(array(
 				array('title', '', true, \phpbb\request\request_interface::REQUEST, 'test title'),
 				array('message', '', true, \phpbb\request\request_interface::REQUEST, 'test message'),
-			)));
+			));
 
 		$this->ideas->expects($this->never())
 			->method('submit');
@@ -199,22 +200,22 @@ class post_controller_test extends controller_base
 
 		$this->request->expects($this->atLeastOnce())
 			->method('is_set_post')
-			->will($this->returnValueMap(array(
+			->willReturnMap(array(
 				array('post', true),
 				array('preview', false),
-			)));
+			));
 
 		$this->request->expects($this->atLeastOnce())
 			->method('variable')
-			->will($this->returnValueMap(array(
+			->willReturnMap(array(
 				array('title', '', true, \phpbb\request\request_interface::REQUEST, 'test title'),
 				array('message', '', true, \phpbb\request\request_interface::REQUEST, 'test message'),
-			)));
+			));
 
 		// ideas->submit() will return an array of error messages on submit error
 		$this->ideas->expects($this->once())
 			->method('submit')
-			->will($this->returnValue(array('error1', 'error2')));
+			->willReturn(array('error1', 'error2'));
 
 		$this->template->expects($this->at(0))
 			->method('assign_vars')

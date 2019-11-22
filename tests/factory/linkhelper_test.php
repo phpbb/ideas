@@ -12,7 +12,7 @@ namespace phpbb\ideas\tests\factory;
 
 class linkhelper_test extends \phpbb_database_test_case
 {
-	static protected function setup_extensions()
+	protected static function setup_extensions()
 	{
 		return array('phpbb/ideas');
 	}
@@ -31,7 +31,7 @@ class linkhelper_test extends \phpbb_database_test_case
 		return $this->createXMLDataSet(__DIR__ . '/../fixtures/ideas.xml');
 	}
 
-	public function setUp()
+	public function setUp(): void
 	{
 		parent::setUp();
 
@@ -41,7 +41,7 @@ class linkhelper_test extends \phpbb_database_test_case
 		$this->helper = $this->getMockBuilder('\phpbb\controller\helper')
 			->disableOriginalConstructor()
 			->getMock();
-		$this->helper->expects($this->any())
+		$this->helper->expects($this->atMost(3))
 			->method('route')
 			->willReturnCallback(function ($route, array $params = array()) {
 				return $route . '#' . json_encode($params);
@@ -52,12 +52,12 @@ class linkhelper_test extends \phpbb_database_test_case
 		$auth = $this->getMockBuilder('\phpbb\auth\auth')
 			->disableOriginalConstructor()
 			->getMock();
-		$auth->expects($this->any())
+		$auth
 			->method('acl_get')
 			->with($this->stringContains('_'), $this->anything())
-			->will($this->returnValueMap(array(
+			->willReturnMap(array(
 				array('u_viewprofile', true),
-			)));
+			));
 		$user->data['user_id'] = ANONYMOUS;
 	}
 

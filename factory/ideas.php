@@ -421,7 +421,7 @@ class ideas
 	 * @param int   $user_id The ID of the user voting.
 	 * @param int   $value   Up (1) or down (0)?
 	 *
-	 * @return array Array of information.
+	 * @return array|string Array of information or string on error.
 	 */
 	public function vote(&$idea, $user_id, $value)
 	{

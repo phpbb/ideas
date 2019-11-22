@@ -64,7 +64,7 @@ class controller_base extends \phpbb_test_case
 		$this->controller_helper = $this->getMockBuilder('\phpbb\controller\helper')
 			->disableOriginalConstructor()
 			->getMock();
-		$this->controller_helper->expects($this->any())
+		$this->controller_helper->expects($this->atMost(1))
 			->method('render')
 			->willReturnCallback(function ($template_file, $page_title = '', $status_code = 200, $display_online_list = false) {
 				return new \Symfony\Component\HttpFoundation\Response($template_file, $status_code);
@@ -72,17 +72,17 @@ class controller_base extends \phpbb_test_case
 		$this->ideas = $this->getMockBuilder('\phpbb\ideas\factory\ideas')
 			->disableOriginalConstructor()
 			->getMock();
-		$this->ideas->expects($this->any())
+		$this->ideas->expects($this->atMost(3))
 			->method('get_ideas')
-			->will($this->returnValue(array(array())));
+			->willReturn(array(array()));
 		$lang_loader = new \phpbb\language\language_file_loader($phpbb_root_path, $phpEx);
 		$this->lang = new \phpbb\language\language($lang_loader);
 		$this->link_helper = $this->getMockBuilder('\phpbb\ideas\factory\linkhelper')
 			->disableOriginalConstructor()
 			->getMock();
-		$this->link_helper->expects($this->any())
+		$this->link_helper->expects($this->atMost(3))
 			->method('get_list_link')
-			->will($this->returnValue(''));
+			->willReturn('');
 		$this->pagination = $this->getMockBuilder('\phpbb\pagination')
 			->disableOriginalConstructor()
 			->getMock();

@@ -42,7 +42,7 @@ class idea_controller extends base
 		$mode = $this->request->variable('mode', '');
 		if (!empty($mode) && $this->request->is_ajax())
 		{
-			$result = call_user_func(array($this, $mode));
+			$result = $this->$mode();
 
 			return new \Symfony\Component\HttpFoundation\JsonResponse($result);
 		}

@@ -12,7 +12,7 @@ namespace phpbb\ideas\tests\ideas;
 
 class ideas_base extends \phpbb_database_test_case
 {
-	static protected function setup_extensions()
+	protected static function setup_extensions()
 	{
 		return array('phpbb/ideas');
 	}
@@ -40,7 +40,7 @@ class ideas_base extends \phpbb_database_test_case
 		return $this->createXMLDataSet(__DIR__ . '/../fixtures/ideas.xml');
 	}
 
-	public function setUp()
+	public function setUp(): void
 	{
 		parent::setUp();
 

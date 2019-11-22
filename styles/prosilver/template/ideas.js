@@ -140,7 +140,7 @@
 		e.preventDefault();
 
 		$obj.rfcEdit.add($obj.rfcLink).hide();
-		$obj.rfcEditInput.show().focus();
+		$obj.rfcEditInput.show().trigger('focus');
 	});
 
 	$obj.rfcEditInput.on('keydown', function(e) {
@@ -190,7 +190,7 @@
 		e.preventDefault();
 
 		$obj.ticketEdit.add($obj.ticketLink).hide();
-		$obj.ticketEditInput.show().focus();
+		$obj.ticketEditInput.show().trigger('focus');
 	});
 
 	$obj.ticketEditInput.on('keydown', function(e) {
@@ -245,7 +245,7 @@
 		e.preventDefault();
 
 		$obj.duplicateEdit.add($obj.duplicateLink).hide();
-		$obj.duplicateEditInput.show().focus();
+		$obj.duplicateEditInput.show().trigger('focus');
 	});
 
 	$obj.duplicateEditInput.on('keydown', function(e) {
@@ -301,7 +301,7 @@
 		e.preventDefault();
 
 		$obj.implementedEdit.add($obj.implementedVersion).hide();
-		$obj.implementedEditInput.show().focus();
+		$obj.implementedEditInput.show().trigger('focus');
 	});
 
 	$obj.implementedEditInput.on('keydown', function(e) {
@@ -310,7 +310,7 @@
 			e.stopPropagation();
 
 			var $this = $(this),
-				find = /^\d\.\d\.\d+(\-\w+)?$/,
+				find = /^\d\.\d\.\d+(-\w+)?$/,
 				url = $obj.implementedEdit.attr('href'),
 				value = $this.val();
 

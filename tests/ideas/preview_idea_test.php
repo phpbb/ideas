@@ -12,7 +12,7 @@ namespace phpbb\ideas\factory;
 
 class preview_idea_test extends \phpbb\ideas\tests\ideas\ideas_base
 {
-	public function setUp()
+	public function setUp(): void
 	{
 		parent::setUp();
 

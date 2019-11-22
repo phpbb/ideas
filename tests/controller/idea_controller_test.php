@@ -57,14 +57,13 @@ class idea_controller_test extends \phpbb\ideas\tests\controller\controller_base
 	public function test_controller($idea_id, $mode, $callback, $is_ajax, $authorised, $expected, $status_code, $additional_data = [])
 	{
 		// mock some basic idea data
-		$this->ideas->expects($this->any())
+		$this->ideas->expects($this->once())
 			->method('get_idea')
-			->will($this->returnValue(
-				array_merge(array(
-					'idea_id'		=> $idea_id,
-					'idea_author'	=> 2,
-					'idea_status'	=> \phpbb\ideas\factory\ideas::$statuses['NEW']
-				), $additional_data))
+			->willReturn(array_merge(array(
+					'idea_id'     => $idea_id,
+					'idea_author' => 2,
+					'idea_status' => \phpbb\ideas\factory\ideas::$statuses['NEW']
+				), $additional_data)
 			);
 
 		// mock a result from each method called by the idea controller
@@ -72,33 +71,33 @@ class idea_controller_test extends \phpbb\ideas\tests\controller\controller_base
 		{
 			$this->ideas->expects($this->once())
 				->method(($callback))
-				->will($this->returnValue($authorised));
+				->willReturn($authorised);
 		}
 
 		// set if using ajax or not
-		$this->request->expects($this->any())
+		$this->request->expects($is_ajax ? $this->once() : $this->never())
 			->method('is_ajax')
-			->will($this->returnValue($is_ajax));
+			->willReturn($is_ajax);
 
 		// mock some useful variables requested by the idea controller
-		$this->request->expects($this->any())
+		$this->request->expects($this->atLeastOnce())
 			->method('variable')
 			->with($this->anything())
-			->will($this->returnValueMap(array(
+			->willReturnMap(array(
 				array('mode', '', false, \phpbb\request\request_interface::REQUEST, $mode),
 				array('hash', '', false, \phpbb\request\request_interface::REQUEST, generate_link_hash("{$mode}_{$idea_id}")),
 				array('status', 0, false, \phpbb\request\request_interface::REQUEST, 1),
 				array('v', 1, false, \phpbb\request\request_interface::REQUEST, 1),
-			)));
+			));
 
 		// mock some user permissions during testing
-		$this->auth->expects($this->any())
+		$this->auth
 			->method('acl_get')
 			->with($this->stringContains('_'), $this->anything())
-			->will($this->returnValueMap(array(
+			->willReturnMap(array(
 				array('m_', 2, $authorised),
 				array('f_vote', 2, $authorised),
-			)));
+			));
 
 		// special case, expect trigger_error when a confirm_box return true
 		if ($expected === 'trigger_error')
@@ -109,7 +108,8 @@ class idea_controller_test extends \phpbb\ideas\tests\controller\controller_base
 
 		if ($status_code === 403)
 		{
-			$this->setExpectedException('\phpbb\exception\http_exception', 'NO_AUTH_OPERATION');
+			$this->expectException('\phpbb\exception\http_exception');
+			$this->expectExceptionMessage('NO_AUTH_OPERATION');
 		}
 
 		/** @var \phpbb\ideas\controller\idea_controller $controller */

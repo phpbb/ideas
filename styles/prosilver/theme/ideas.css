@@ -14,9 +14,9 @@ dd.topics {
 	font-family: Arial, Helvetica, sans-serif;
 	font-size: 14px;
 	font-weight: bold;
-	background: url('images/button-sprite.png') no-repeat;
-	color: #ffffff !important;
+	background: url("images/button-sprite.png") no-repeat;
 	text-shadow: 0 -1px 0 rgba(0, 0, 0, 1);
+	color: #ffffff !important;
 	display: inline-block;
 	float: left;
 	width: 65px;
