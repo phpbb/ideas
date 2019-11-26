@@ -60,6 +60,6 @@ class index_controller extends base
 		// Display the search ideas field
 		$this->display_search_ideas();
 
-		return $this->helper->render('index_body.html', $this->language->lang('IDEAS_TITLE'));
+		return $this->helper->render('@phpbb_ideas/index_body.html', $this->language->lang('IDEAS_TITLE'));
 	}
 }

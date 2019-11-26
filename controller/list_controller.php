@@ -121,6 +121,6 @@ class list_controller extends base
 		// Display the search ideas field
 		$this->display_search_ideas();
 
-		return $this->helper->render('list_body.html', $this->language->lang('IDEA_LIST'));
+		return $this->helper->render('@phpbb_ideas/list_body.html', $this->language->lang('IDEA_LIST'));
 	}
 }

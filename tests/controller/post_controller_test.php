@@ -33,7 +33,7 @@ class post_controller_test extends controller_base
 	public function controller_test_data()
 	{
 		return array(
-			array(200, 'idea_new.html'),
+			array(200, '@phpbb_ideas/idea_new.html'),
 		);
 	}
 

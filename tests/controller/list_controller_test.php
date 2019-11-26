@@ -24,7 +24,7 @@ class list_controller_test extends controller_base
 			// Call top ideas list
 			array(
 				200,
-				'list_body.html',
+				'@phpbb_ideas/list_body.html',
 				array(
 					'sort' => \phpbb\ideas\factory\ideas::SORT_TOP,
 					'status' => 0,
@@ -37,7 +37,7 @@ class list_controller_test extends controller_base
 			// Call latest ideas list
 			array(
 				200,
-				'list_body.html',
+				'@phpbb_ideas/list_body.html',
 				array(
 					'sort' => '',
 					'status' => 0,
@@ -50,7 +50,7 @@ class list_controller_test extends controller_base
 			// Call implemented ideas list
 			array(
 				200,
-				'list_body.html',
+				'@phpbb_ideas/list_body.html',
 				array(
 					'sort' => \phpbb\ideas\factory\ideas::SORT_IMPLEMENTED,
 					'status' => 0,
@@ -65,7 +65,7 @@ class list_controller_test extends controller_base
 			// New ideas sorted by date
 			array(
 				200,
-				'list_body.html',
+				'@phpbb_ideas/list_body.html',
 				array(
 					'sort' => \phpbb\ideas\factory\ideas::SORT_NEW,
 					'status' => \phpbb\ideas\factory\ideas::$statuses['NEW'],
@@ -78,7 +78,7 @@ class list_controller_test extends controller_base
 			// In progress ideas sorted by score
 			array(
 				200,
-				'list_body.html',
+				'@phpbb_ideas/list_body.html',
 				array(
 					'sort' => \phpbb\ideas\factory\ideas::SORT_SCORE,
 					'status' => \phpbb\ideas\factory\ideas::$statuses['IN_PROGRESS'],
@@ -91,7 +91,7 @@ class list_controller_test extends controller_base
 			// Duplicate ideas sorted by author
 			array(
 				200,
-				'list_body.html',
+				'@phpbb_ideas/list_body.html',
 				array(
 					'sort' => \phpbb\ideas\factory\ideas::SORT_AUTHOR,
 					'status' => \phpbb\ideas\factory\ideas::$statuses['DUPLICATE'],
@@ -104,7 +104,7 @@ class list_controller_test extends controller_base
 			// Invalid ideas sorted by date
 			array(
 				200,
-				'list_body.html',
+				'@phpbb_ideas/list_body.html',
 				array(
 					'sort' => \phpbb\ideas\factory\ideas::SORT_DATE,
 					'status' => \phpbb\ideas\factory\ideas::$statuses['INVALID'],
@@ -117,7 +117,7 @@ class list_controller_test extends controller_base
 			// Implemented ideas sorted by top
 			array(
 				200,
-				'list_body.html',
+				'@phpbb_ideas/list_body.html',
 				array(
 					'sort' => \phpbb\ideas\factory\ideas::SORT_TOP,
 					'status' => \phpbb\ideas\factory\ideas::$statuses['IMPLEMENTED'],
@@ -130,7 +130,7 @@ class list_controller_test extends controller_base
 			// All ideas sorted by date
 			array(
 				200,
-				'list_body.html',
+				'@phpbb_ideas/list_body.html',
 				array(
 					'sort' => \phpbb\ideas\factory\ideas::SORT_NEW,
 					'status' => -1,

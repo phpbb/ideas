@@ -122,6 +122,6 @@ class post_controller extends base
 			),
 		));
 
-		return $this->helper->render('idea_new.html', $this->language->lang('NEW_IDEA'));
+		return $this->helper->render('@phpbb_ideas/idea_new.html', $this->language->lang('NEW_IDEA'));
 	}
 }
