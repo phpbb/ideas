@@ -107,7 +107,7 @@
 		}).fail(voteFailure);
 	});
 
-	$obj.status.change(function() {
+	$obj.status.on('change', function() {
 		var $this = $(this),
 			data = {
 				mode: 'status',
