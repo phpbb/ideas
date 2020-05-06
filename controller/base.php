@@ -123,6 +123,7 @@ abstract class base
 				'READ'       => $row['read'],
 				'VOTES_UP'   => $row['idea_votes_up'],
 				'VOTES_DOWN' => $row['idea_votes_down'],
+				'USER_VOTED' => $row['u_voted'],
 				'POINTS'     => $row['idea_votes_up'] - $row['idea_votes_down'],
 				'STATUS'     => $row['idea_status'], // for status icons (not currently implemented)
 				'LOCKED'     => $row['topic_status'] == ITEM_LOCKED,

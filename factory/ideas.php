@@ -214,11 +214,15 @@ class ideas
 				return $row['topic_id'];
 			}, $rows);
 
+			$idea_ids = array_column($rows, 'idea_id');
+
 			$topic_tracking_info = get_complete_topic_tracking((int) $this->config['ideas_forum_id'], $topic_ids);
+			$user_voting_info = $this->get_users_votes($this->user->id, $idea_ids);
 
 			foreach ($rows as &$row)
 			{
 				$row['read'] = !(isset($topic_tracking_info[$row['topic_id']]) && $row['topic_last_post_time'] > $topic_tracking_info[$row['topic_id']]);
+				$row['u_voted'] = isset($user_voting_info[$row['idea_id']]) ? (string) $user_voting_info[$row['idea_id']] : '';
 			}
 		}
 
@@ -826,5 +830,31 @@ class ideas
 		}
 
 		return $this->profile_url;
+	}
+
+	/**
+	 * Get the ideas a user voted on from a group of ideas
+	 *
+	 * @param int $user_id The user's id
+	 * @param array $ids An array of idea identifiers
+	 * @return array An array of ideas the user voted on with their vote result, or empty otherwise.
+	 *               example: [idea_id => vote_result]
+	 *               		  [1 => 1, 2 => 0] Voted up idea 1, voted down idea 2
+	 */
+	protected function get_users_votes($user_id, $ids = [])
+	{
+		$results = [];
+		$sql = 'SELECT idea_id, vote_value
+			FROM ' . $this->table_votes . '
+			WHERE user_id = ' . (int) $user_id . '
+			AND ' . $this->db->sql_in_set('idea_id', $ids, false, true);
+		$result = $this->db->sql_query($sql);
+		while ($row = $this->db->sql_fetchrow($result))
+		{
+			$results[$row['idea_id']] = $row['vote_value'];
+		}
+		$this->db->sql_freeresult($result);
+
+		return $results;
 	}
 }

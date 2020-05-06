@@ -17,8 +17,8 @@
 				</dt>
 
 				<dd class="topics">
-					<div class="minivoteup"><span>{{ idea.VOTES_UP }}</span></div>
-					<div class="minivotedown"><span>{{ idea.VOTES_DOWN }}</span></div>
+					<div class="minivoteup{% if idea.USER_VOTED == '1' %} voted{% endif %}"><span>{{ idea.VOTES_UP }}</span></div>
+					<div class="minivotedown{% if idea.USER_VOTED == '0' %} voted{% endif %}"><span>{{ idea.VOTES_DOWN }}</span></div>
 				</dd>
 			</dl>
 		</li>
