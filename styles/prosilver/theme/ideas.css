@@ -66,6 +66,10 @@ dd.topics {
 	background-position: -65px 0;
 }
 
+.voted {
+	color: orange !important;
+}
+
 /* Ideas Lists Styles */
 .view-all {
 	color: #536482;
