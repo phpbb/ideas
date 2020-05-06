@@ -168,7 +168,7 @@ class ideas
 		{
 			$sql = 'SELECT COUNT(i.idea_id) as num_ideas
 				FROM ' . $this->table_ideas . ' i
-       			INNER JOIN ' . $this->table_topics . " t 
+       			INNER JOIN ' . $this->table_topics . " t
        				ON i.topic_id = t.topic_id
 				WHERE $where";
 			$result = $this->db->sql_query($sql);
@@ -183,7 +183,7 @@ class ideas
 		{
 			$sql = 'SELECT t.topic_last_post_time, t.topic_status, t.topic_visibility, i.*
 				FROM ' . $this->table_ideas . ' i
-				INNER JOIN ' . $this->table_topics . " t 
+				INNER JOIN ' . $this->table_topics . " t
 					ON i.topic_id = t.topic_id
 				WHERE $where
 				ORDER BY " . $this->db->sql_escape($sortby);
@@ -196,12 +196,12 @@ class ideas
 				((i.idea_votes_up + 1.9208) / (i.idea_votes_up + i.idea_votes_down) -
 	            1.96 * SQRT((i.idea_votes_up * i.idea_votes_down) / (i.idea_votes_up + i.idea_votes_down) + 0.9604) /
 	            (i.idea_votes_up + i.idea_votes_down)) / (1 + 3.8416 / (i.idea_votes_up + i.idea_votes_down))
-	            AS ci_lower_bound
-       				FROM ' . $this->table_ideas . ' i
-       				INNER JOIN ' . $this->table_topics . " t 
-       					ON i.topic_id = t.topic_id
-       				WHERE $where
-       			ORDER BY ci_lower_bound " . $this->db->sql_escape($sort_direction);
+				AS ci_lower_bound
+					FROM ' . $this->table_ideas . ' i
+					INNER JOIN ' . $this->table_topics . " t
+						ON i.topic_id = t.topic_id
+					WHERE $where
+				ORDER BY ci_lower_bound " . $this->db->sql_escape($sort_direction);
 		}
 
 		$result = $this->db->sql_query_limit($sql, $number, $start);
@@ -210,16 +210,18 @@ class ideas
 
 		if (count($rows))
 		{
-			$topic_ids = array_map(function($row) {
-				return $row['topic_id'];
-			}, $rows);
+			$topic_ids = array_column($rows, 'topic_id');
+			$idea_ids = array_column($rows, 'idea_id');
 
 			$topic_tracking_info = get_complete_topic_tracking((int) $this->config['ideas_forum_id'], $topic_ids);
+			$user_voting_info = $this->get_users_votes($this->user->id, $idea_ids);
 
 			foreach ($rows as &$row)
 			{
 				$row['read'] = !(isset($topic_tracking_info[$row['topic_id']]) && $row['topic_last_post_time'] > $topic_tracking_info[$row['topic_id']]);
+				$row['u_voted'] = isset($user_voting_info[$row['idea_id']]) ? (string) $user_voting_info[$row['idea_id']] : '';
 			}
+			unset ($row);
 		}
 
 		return $rows;
@@ -721,7 +723,7 @@ class ideas
 	{
 		// Find any orphans
 		$sql = 'SELECT idea_id FROM ' . $this->table_ideas . '
- 			WHERE topic_id NOT IN (SELECT t.topic_id 
+ 			WHERE topic_id NOT IN (SELECT t.topic_id
  			FROM ' . $this->table_topics . ' t
  				WHERE t.forum_id = ' . (int) $this->config['ideas_forum_id'] . ')';
 		$result = $this->db->sql_query($sql);
@@ -826,5 +828,32 @@ class ideas
 		}
 
 		return $this->profile_url;
+	}
+
+	/**
+	 * Get a user's votes from a group of ideas
+	 *
+	 * @param int $user_id The user's id
+	 * @param array $ids An array of idea ids
+	 * @return array An array of ideas the user voted on and their vote result, or empty otherwise.
+	 *               example: [idea_id => vote_result]
+	 *                         1 => 1, idea 1, voted up by the user
+	 *                         2 => 0, idea 2, voted down by the user
+	 */
+	protected function get_users_votes($user_id, $ids = [])
+	{
+		$results = [];
+		$sql = 'SELECT idea_id, vote_value
+			FROM ' . $this->table_votes . '
+			WHERE user_id = ' . (int) $user_id . '
+			AND ' . $this->db->sql_in_set('idea_id', $ids, false, true);
+		$result = $this->db->sql_query($sql);
+		while ($row = $this->db->sql_fetchrow($result))
+		{
+			$results[$row['idea_id']] = $row['vote_value'];
+		}
+		$this->db->sql_freeresult($result);
+
+		return $results;
 	}
 }
