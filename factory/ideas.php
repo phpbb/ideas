@@ -831,13 +831,14 @@ class ideas
 	}
 
 	/**
-	 * Get the ideas a user voted on from a group of ideas
+	 * Get a user's votes from a group of ideas
 	 *
 	 * @param int $user_id The user's id
-	 * @param array $ids An array of idea identifiers
-	 * @return array An array of ideas the user voted on with their vote result, or empty otherwise.
+	 * @param array $ids An array of idea ids
+	 * @return array An array of ideas the user voted on and their vote result, or empty otherwise.
 	 *               example: [idea_id => vote_result]
-	 *               		  [1 => 1, 2 => 0] Voted up idea 1, voted down idea 2
+	 *                         1 => 1, idea 1, voted up by the user
+	 *                         2 => 0, idea 2, voted down by the user
 	 */
 	protected function get_users_votes($user_id, $ids = [])
 	{
