@@ -579,6 +579,33 @@ class ideas
 	}
 
 	/**
+	 * Get a user's votes from a group of ideas
+	 *
+	 * @param int $user_id The user's id
+	 * @param array $ids An array of idea ids
+	 * @return array An array of ideas the user voted on and their vote result, or empty otherwise.
+	 *               example: [idea_id => vote_result]
+	 *                         1 => 1, idea 1, voted up by the user
+	 *                         2 => 0, idea 2, voted down by the user
+	 */
+	public function get_users_votes($user_id, array $ids)
+	{
+		$results = [];
+		$sql = 'SELECT idea_id, vote_value
+			FROM ' . $this->table_votes . '
+			WHERE user_id = ' . (int) $user_id . '
+			AND ' . $this->db->sql_in_set('idea_id', $ids, false, true);
+		$result = $this->db->sql_query($sql);
+		while ($row = $this->db->sql_fetchrow($result))
+		{
+			$results[$row['idea_id']] = $row['vote_value'];
+		}
+		$this->db->sql_freeresult($result);
+
+		return $results;
+	}
+
+	/**
 	 * Submits a new idea.
 	 *
 	 * @param string $title   The title of the idea.
@@ -828,32 +855,5 @@ class ideas
 		}
 
 		return $this->profile_url;
-	}
-
-	/**
-	 * Get a user's votes from a group of ideas
-	 *
-	 * @param int $user_id The user's id
-	 * @param array $ids An array of idea ids
-	 * @return array An array of ideas the user voted on and their vote result, or empty otherwise.
-	 *               example: [idea_id => vote_result]
-	 *                         1 => 1, idea 1, voted up by the user
-	 *                         2 => 0, idea 2, voted down by the user
-	 */
-	protected function get_users_votes($user_id, $ids = [])
-	{
-		$results = [];
-		$sql = 'SELECT idea_id, vote_value
-			FROM ' . $this->table_votes . '
-			WHERE user_id = ' . (int) $user_id . '
-			AND ' . $this->db->sql_in_set('idea_id', $ids, false, true);
-		$result = $this->db->sql_query($sql);
-		while ($row = $this->db->sql_fetchrow($result))
-		{
-			$results[$row['idea_id']] = $row['vote_value'];
-		}
-		$this->db->sql_freeresult($result);
-
-		return $results;
 	}
 }
