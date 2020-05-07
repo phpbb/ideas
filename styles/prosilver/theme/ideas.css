@@ -12,8 +12,10 @@ dd.topics {
 .minivoteup,
 .minivotedown {
 	line-height: normal;
+	white-space: nowrap;
 	border-radius: 6px;
 	color: #ffffff !important;
+	position: relative;
 	display: inline-block;
 	float: left;
 	box-sizing: border-box;
@@ -78,6 +80,14 @@ dd.topics {
 .minivotedown.votedown.dead:hover {
 	background: rgb(166, 42, 45);
 	background: linear-gradient(180deg, rgba(166, 42, 45, 1) 0%, rgba(147, 37, 40, 1) 100%);
+}
+
+.user-voted {
+	font-size: 16px;
+	color: #f5b041;
+	position: absolute;
+	top: -4px;
+	right: -4px;
 }
 
 /* Ideas Lists Styles */
