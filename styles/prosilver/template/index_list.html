@@ -16,9 +16,13 @@
 					</div>
 				</dt>
 
-				<dd class="topics">
-					<div class="minivoteup{% if idea.USER_VOTED == '1' %} voted{% endif %}"><span>{{ idea.VOTES_UP }}</span></div>
-					<div class="minivotedown{% if idea.USER_VOTED == '0' %} voted{% endif %}"><span>{{ idea.VOTES_DOWN }}</span></div>
+				<dd class="topics"{% if idea.USER_VOTED !== '' %} title="{{ lang('USER_ALREADY_VOTED', idea.USER_VOTED) }}{% endif %}">
+					<div class="minivoteup">
+						<i class="icon fa {% if idea.USER_VOTED === 1 %}fa-thumbs-o-up{% else %}fa-thumbs-up{% endif %}"></i><span>{{ idea.VOTES_UP }}</span>
+					</div>
+					<div class="minivotedown">
+						<i class="icon fa {% if idea.USER_VOTED === 0 %}fa-thumbs-o-down{% else %}fa-thumbs-down{% endif %}"></i><span>{{ idea.VOTES_DOWN }}</span>
+					</div>
 				</dd>
 			</dl>
 		</li>

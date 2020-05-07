@@ -219,7 +219,7 @@ class ideas
 			foreach ($rows as &$row)
 			{
 				$row['read'] = !(isset($topic_tracking_info[$row['topic_id']]) && $row['topic_last_post_time'] > $topic_tracking_info[$row['topic_id']]);
-				$row['u_voted'] = isset($user_voting_info[$row['idea_id']]) ? (string) $user_voting_info[$row['idea_id']] : '';
+				$row['u_voted'] = isset($user_voting_info[$row['idea_id']]) ? (int) $user_voting_info[$row['idea_id']] : '';
 			}
 			unset ($row);
 		}
