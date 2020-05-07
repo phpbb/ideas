@@ -11,31 +11,31 @@ dd.topics {
 
 .minivoteup,
 .minivotedown {
+	line-height: normal;
+	border-radius: 6px;
+	color: #ffffff !important;
 	display: inline-block;
 	float: left;
-	margin-right: 10px;
-	width: 80px;
-	padding: 6px 10px;
-	border-radius: 6px;
-	color: #ffffff !important;;
 	box-sizing: border-box;
-	line-height: normal;
+	width: 80px;
+	margin-right: 10px;
+	padding: 6px 10px;
 }
 
 .minivoteup .icon,
 .minivotedown .icon {
+	font-size: 16px;
 	padding-right: 0;
 	padding-left: 0;
-	font-size: 16px;
 }
 
 .minivoteup span,
 .minivotedown span {
 	font-family: Verdana, Arial, sans-serif;
 	font-size: 14px;
+	text-align: center;
 	display: inline-block;
 	width: 40px;
-	text-align: center;
 }
 
 .minivoteup {
@@ -115,6 +115,7 @@ dd.topics {
 
 .votes {
 	display: inline-block;
+	margin-top: 3px;
 }
 
 .successvoted {
