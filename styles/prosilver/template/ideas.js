@@ -70,7 +70,7 @@
 
 		var $this = $(this),
 			url = $this.attr('href'),
-			vote = $this.is('.voteup') ? 1 : 0;
+			vote = $this.is('.minivoteup') ? 1 : 0;
 
 		if ($this.is('.dead')) {
 			return false;
