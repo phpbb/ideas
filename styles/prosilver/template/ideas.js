@@ -400,8 +400,10 @@
 
 	function resetVoteButtons($this) {
 		$obj.voteUp.add($obj.voteDown).removeClass('dead');
+		$obj.voteUp.add($obj.voteDown).find('.user-voted').hide();
+
 		if ($this) {
-			$this.addClass('dead');
+			$this.addClass('dead').find('.user-voted').show();
 		}
 	}
 
