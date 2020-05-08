@@ -17,10 +17,10 @@
 				</dt>
 
 				<dd class="topics"{% if idea.USER_VOTED !== '' %} title="{{ lang('USER_ALREADY_VOTED', idea.USER_VOTED) }}{% endif %}">
-					<div class="minivoteup">
+					<div class="minivoteup dead">
 						<i class="icon fa-thumbs-up"></i><span>{{ idea.VOTES_UP }}</span>{% if idea.USER_VOTED === 1 %}<i class="icon fa-check-circle user-voted" aria-hidden="true"></i>{% endif %}
 					</div>
-					<div class="minivotedown">
+					<div class="minivotedown dead">
 						<i class="icon fa-thumbs-down"></i><span>{{ idea.VOTES_DOWN }}</span>{% if idea.USER_VOTED === 0 %}<i class="icon fa-check-circle user-voted" aria-hidden="true"></i>{% endif %}
 					</div>
 				</dd>
