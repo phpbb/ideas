@@ -37,8 +37,8 @@
 		if (typeof result === 'string') {
 			phpbb.alert($this.attr('data-l-err'), $this.attr('data-l-msg') + ' ' + result);
 		} else {
-			$obj.voteUp.find('span').eq(0).html('<span>' + result.votes_up + '</span>');
-			$obj.voteDown.find('span').eq(0).html('<span>' + result.votes_down + '</span>');
+			$obj.voteUp.find('span').html('<span>' + result.votes_up + '</span>');
+			$obj.voteDown.find('span').html('<span>' + result.votes_down + '</span>');
 			$obj.votes.hide().text(function() {
 				return result.points + ' ' + $(this).attr('data-l-msg');
 			});
