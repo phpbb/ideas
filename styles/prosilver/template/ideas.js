@@ -26,6 +26,7 @@
 			removeVote: $('.removevote'),
 			status: $('#status'),
 			successVoted: $('.successvoted'),
+			userVoted: $('.user-voted'),
 			votes: $('.votes'),
 			votesList: $('.voteslist'),
 			voteDown: $('.minivotedown'),
@@ -400,10 +401,10 @@
 
 	function resetVoteButtons($this) {
 		$obj.voteUp.add($obj.voteDown).removeClass('dead');
-		$obj.voteUp.add($obj.voteDown).find('.user-voted').hide();
+		$obj.userVoted.hide();
 
 		if ($this) {
-			$this.addClass('dead').find('.user-voted').show();
+			$this.addClass('dead').find($obj.userVoted).show();
 		}
 	}
 
