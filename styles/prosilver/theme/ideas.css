@@ -120,12 +120,12 @@ dd.topics {
 .successvoted {
 	font-weight: bold;
 	border-radius: 4px;
+	margin-top: 3px;
 	padding: 6px;
 }
 
 .votes {
 	display: inline-block;
-	margin-top: 3px;
 }
 
 .successvoted {
