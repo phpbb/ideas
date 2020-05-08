@@ -40,51 +40,37 @@ dd.topics {
 	width: 40px;
 }
 
-.minivoteup {
-	background: rgb(128, 166, 52);
-	background: linear-gradient(180deg, rgba(128, 166, 52, 1) 0%, rgba(114, 148, 46, 1) 100%);
-	border: solid 1px #68872a;
+.minivoteup,
+.minivoteup.dead:hover {
+	background: #00a9e2;
+	border: solid 1px #00a9e2;
 }
 
 .minivoteup:hover {
-	background: rgb(143, 187, 57);
-	background: linear-gradient(180deg, rgba(143, 187, 57, 1) 0%, rgba(115, 149, 46, 1) 100%);
+	background: #009ad1;
 }
 
 .minivoteup:active {
-	background: rgb(114, 148, 46);
-	background: linear-gradient(180deg, rgba(114, 148, 46, 1) 0%, rgba(128, 166, 52, 1) 100%);
+	background: #10b2e5;
 }
 
-.minivoteup.dead:hover {
-	background: rgb(128, 166, 52);
-	background: linear-gradient(180deg, rgba(128, 166, 52, 1) 0%, rgba(114, 148, 46, 1) 100%);
-}
-
-.minivotedown {
-	background: rgb(166, 42, 45);
-	background: linear-gradient(180deg, rgba(166, 42, 45, 1) 0%, rgba(147, 37, 40, 1) 100%);
-	border: solid 1px #862224;
+.minivotedown,
+.minivotedown.dead:hover {
+	background: #f28482;
+	border: solid 1px #f28482;
 }
 
 .minivotedown:hover {
-	background: rgb(183, 41, 44);
-	background: linear-gradient(180deg, rgba(183, 41, 44, 1) 0%, rgba(148, 37, 40, 1) 100%);
+	background: #df7775;
 }
 
 .minivotedown:active {
-	background: rgb(147, 37, 40);
-	background: linear-gradient(180deg, rgba(147, 37, 40, 1) 0%, rgba(166, 42, 45, 1) 100%);
-}
-
-.minivotedown.dead:hover {
-	background: rgb(166, 42, 45);
-	background: linear-gradient(180deg, rgba(166, 42, 45, 1) 0%, rgba(147, 37, 40, 1) 100%);
+	background: #f38d8b;
 }
 
 .user-voted {
 	font-size: 16px;
-	color: #f5b041;
+	color: #fffaf0;
 	position: absolute;
 	top: -4px;
 	right: -4px;
