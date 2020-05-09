@@ -56,16 +56,16 @@ dd.topics {
 
 .minivotedown,
 .minivotedown.dead:hover {
-	background: #f28482;
-	border: solid 1px #f28482;
+	background: #f76c5e;
+	border: solid 1px #f76c5e;
 }
 
 .minivotedown:hover {
-	background: #df7775;
+	background: #e56155;
 }
 
 .minivotedown:active {
-	background: #f38d8b;
+	background: #f87768;
 }
 
 .user-voted {
