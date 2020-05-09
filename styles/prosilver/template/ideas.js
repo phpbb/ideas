@@ -70,9 +70,9 @@
 
 		var $this = $(this),
 			url = $this.attr('href'),
-			vote = $this.is('.minivoteup') ? 1 : 0;
+			vote = $this.hasClass('minivoteup') ? 1 : 0;
 
-		if ($this.is('.dead')) {
+		if ($this.hasClass('dead')) {
 			return false;
 		}
 
@@ -97,7 +97,7 @@
 		var $this = $(this),
 			url = $this.attr('href');
 
-		if ($this.is('.dead')) {
+		if ($this.hasClass('dead')) {
 			return false;
 		}
 
