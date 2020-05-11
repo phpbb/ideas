@@ -9,6 +9,7 @@ dd.topics {
 	margin: 0 5px 0 0;
 }
 
+/* Vote buttons */
 .minivoteup,
 .minivotedown {
 	line-height: normal;
@@ -74,6 +75,18 @@ dd.topics {
 	position: absolute;
 	top: -4px;
 	right: -4px;
+}
+
+.rtl .minivoteup,
+.rtl .minivotedown {
+	float: right;
+	margin-right: auto;
+	margin-left: 10px;
+}
+
+.rtl .user-voted {
+	right: auto;
+	left: -4px;
 }
 
 /* Ideas Lists Styles */
