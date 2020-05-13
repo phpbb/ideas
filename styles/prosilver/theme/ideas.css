@@ -9,6 +9,10 @@ dd.topics {
 	margin: 0 5px 0 0;
 }
 
+.fa-lightbulb-o {
+	font-weight: 400 !important;
+}
+
 /* Vote buttons */
 .minivoteup,
 .minivotedown {
