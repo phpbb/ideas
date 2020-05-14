@@ -14,8 +14,7 @@ dd.topics {
 }
 
 /* Vote buttons */
-.minivoteup,
-.minivotedown {
+.minivote {
 	line-height: normal;
 	white-space: nowrap;
 	border-radius: 6px;
@@ -29,15 +28,13 @@ dd.topics {
 	padding: 6px 10px;
 }
 
-.minivoteup .icon,
-.minivotedown .icon {
+.minivote .icon {
 	font-size: 16px;
 	padding-right: 0;
 	padding-left: 0;
 }
 
-.minivoteup span,
-.minivotedown span {
+.minivote .vote-count {
 	font-family: Verdana, Arial, sans-serif;
 	font-size: 14px;
 	text-align: center;
@@ -45,31 +42,37 @@ dd.topics {
 	width: 40px;
 }
 
-.minivoteup,
-.minivoteup.dead:hover {
+.rtl .minivote {
+	float: right;
+	margin-right: auto;
+	margin-left: 10px;
+}
+
+.vote-up,
+.vote-up.vote-disabled:hover {
 	background: #00a9e2;
 	border: solid 1px #00a9e2;
 }
 
-.minivoteup:hover {
+.vote-up:hover {
 	background: #009ad1;
 }
 
-.minivoteup:active {
+.vote-up:active {
 	background: #10b2e5;
 }
 
-.minivotedown,
-.minivotedown.dead:hover {
+.vote-down,
+.vote-down.vote-disabled:hover {
 	background: #f76c5e;
 	border: solid 1px #f76c5e;
 }
 
-.minivotedown:hover {
+.vote-down:hover {
 	background: #e56155;
 }
 
-.minivotedown:active {
+.vote-down:active {
 	background: #f87768;
 }
 
@@ -79,13 +82,6 @@ dd.topics {
 	position: absolute;
 	top: -4px;
 	right: -4px;
-}
-
-.rtl .minivoteup,
-.rtl .minivotedown {
-	float: right;
-	margin-right: auto;
-	margin-left: 10px;
 }
 
 .rtl .user-voted {
@@ -152,15 +148,15 @@ dd.topics {
 	border-top: dashed 1px #b9b9b9;
 }
 
-.dead {
+.vote-disabled {
 	cursor: default;
 }
 
-.dead:hover {
+.vote-disabled:hover {
 	text-decoration: none;
 }
 
-.dead.removevote {
+.vote-disabled.removevote {
 	display: none;
 }
 
@@ -169,7 +165,7 @@ dd.topics {
 }
 
 .idealabel {
-	width: 10% !important;
+	width: 120px !important;
 }
 
 .ideainput {

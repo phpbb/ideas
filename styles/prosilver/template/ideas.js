@@ -29,8 +29,8 @@
 			userVoted: $('.user-voted'),
 			votes: $('.votes'),
 			votesList: $('.voteslist'),
-			voteDown: $('.minivotedown'),
-			voteUp: $('.minivoteup'),
+			voteDown: $('.vote-down'),
+			voteUp: $('.vote-up'),
 			voteRemove: $('#vote-remove')
 		}, $loadingIndicator;
 
@@ -70,9 +70,9 @@
 
 		var $this = $(this),
 			url = $this.attr('href'),
-			vote = $this.hasClass('minivoteup') ? 1 : 0;
+			vote = $this.is($obj.voteUp) ? 1 : 0;
 
-		if ($this.hasClass('dead')) {
+		if ($this.hasClass('vote-disabled')) {
 			return false;
 		}
 
@@ -98,7 +98,7 @@
 		var $this = $(this),
 			url = $this.attr('href');
 
-		if ($this.hasClass('dead')) {
+		if ($this.hasClass('vote-disabled')) {
 			return false;
 		}
 
@@ -407,11 +407,11 @@
 	}
 
 	function resetVoteButtons($this) {
-		$obj.voteUp.add($obj.voteDown).removeClass('dead');
+		$obj.voteUp.add($obj.voteDown).removeClass('vote-disabled');
 		$obj.userVoted.hide();
 
 		if ($this) {
-			$this.addClass('dead').find($obj.userVoted).show();
+			$this.addClass('vote-disabled').find($obj.userVoted).show();
 		}
 	}
 

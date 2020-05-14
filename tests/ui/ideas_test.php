@@ -50,11 +50,11 @@ class ideas_test extends \phpbb_ui_test_case
 		$this->assertEquals('block', $votes->getCSSValue('display'));
 
 		// test voting
-		$votedown = $this->find_element('className', 'minivotedown');
+		$votedown = $this->find_element('className', 'vote-down');
 		$this->assertEquals('0', $votedown->getText());
 		$votedown->click();
 		$this->waitForAjax();
-		$this->assertEquals('1', $this->find_element('className', 'minivotedown')->getText());
+		$this->assertEquals('1', $this->find_element('className', 'vote-down')->getText());
 
 		// test changing the status
 		$this->assertEquals('New', $this->find_element('className', 'status-badge')->getText());
