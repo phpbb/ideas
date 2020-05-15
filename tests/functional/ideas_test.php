@@ -44,8 +44,8 @@ class ideas_test extends ideas_functional_base
 		$this->assertContains($this->lang('IDEAS'), $crawler->filter('#nav-breadcrumbs')->text());
 		$this->assertContains($idea['title'], $crawler->filter('h2')->text());
 		$this->assertContains($idea['message'], $crawler->filter('.content')->text());
-		$this->assertContains('1', $crawler->filter('.rating > .minivoteup')->text());
-		$this->assertContains('0', $crawler->filter('.rating > .minivotedown')->text());
+		$this->assertContains('1', $crawler->filter('.rating > .vote-up')->text());
+		$this->assertContains('0', $crawler->filter('.rating > .vote-down')->text());
 	}
 
 	/**

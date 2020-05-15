@@ -95,6 +95,11 @@ $lang = array_merge($lang, array(
 
 	'UPDATED_VOTE'			=> 'Successfully updated vote!',
 
+	'USER_ALREADY_VOTED'	=> [
+		0 => 'You voted against this idea',
+		1 => 'You voted for this idea',
+	],
+
 	'VIEW_IDEA'				=> 'View Idea',
 	'VIEW_IMPLEMENTED'		=> 'View all implemented ideas',
 	'VIEW_LATEST'			=> 'View all open ideas',

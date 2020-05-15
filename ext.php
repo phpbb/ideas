@@ -26,14 +26,12 @@ class ext extends \phpbb\extension\base
 	 * the minimum version required by this extension:
 	 *
 	 * Requires phpBB 3.2.1 due to use of $event->update_subarray()
-	 * 	and PHP 5.5.0 due to use of array_column()
 	 *
 	 * @return bool
 	 * @access public
 	 */
 	public function is_enableable()
 	{
-		return phpbb_version_compare(PHPBB_VERSION, '3.2.1', '>=')
-			&& phpbb_version_compare(PHP_VERSION, '5.5.0', '>=');
+		return phpbb_version_compare(PHPBB_VERSION, '3.2.1', '>=');
 	}
 }

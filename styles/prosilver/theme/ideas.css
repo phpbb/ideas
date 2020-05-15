@@ -9,65 +9,84 @@ dd.topics {
 	margin: 0 5px 0 0;
 }
 
-.minivoteup,
-.minivotedown {
-	font-family: Arial, Helvetica, sans-serif;
-	font-size: 14px;
-	font-weight: bold;
-	background: url("images/button-sprite.png") no-repeat;
-	text-shadow: 0 -1px 0 rgba(0, 0, 0, 1);
-	color: #ffffff !important;
-	display: inline-block;
-	float: left;
-	width: 65px;
-	height: 25px;
-	margin-right: 10px;
+.fa-lightbulb-o {
+	font-weight: 400 !important;
 }
 
-.minivoteup span,
-.minivotedown span {
+/* Vote buttons */
+.minivote {
 	line-height: normal;
+	white-space: nowrap;
+	border-radius: 6px;
+	color: #ffffff !important;
+	position: relative;
+	display: inline-block;
+	float: left;
+	box-sizing: border-box;
+	width: 80px;
+	margin-right: 10px;
+	padding: 6px 10px;
+}
+
+.minivote .icon {
+	font-size: 16px;
+	padding-right: 0;
+	padding-left: 0;
+}
+
+.minivote .vote-count {
+	font-family: Verdana, Arial, sans-serif;
+	font-size: 14px;
 	text-align: center;
 	display: inline-block;
 	width: 40px;
-	margin-top: 5px;
-	margin-left: 25px;
 }
 
-.minivoteup {
-	background-position: 0 0;
+.rtl .minivote {
+	float: right;
+	margin-right: auto;
+	margin-left: 10px;
 }
 
-.minivoteup.voteup:hover {
-	background-position: 0 -25px;
+.vote-up,
+.vote-up.vote-disabled:hover {
+	background: #00a9e2;
+	border: solid 1px #00a9e2;
 }
 
-.minivoteup.voteup:active {
-	background-position: 0 -50px;
+.vote-up:hover {
+	background: #009ad1;
 }
 
-.minivoteup.voteup.dead:hover {
-	background-position: 0 0;
+.vote-up:active {
+	background: #10b2e5;
 }
 
-.minivotedown {
-	background-position: -65px 0;
+.vote-down,
+.vote-down.vote-disabled:hover {
+	background: #f76c5e;
+	border: solid 1px #f76c5e;
 }
 
-.minivotedown.votedown:hover {
-	background-position: -65px -25px;
+.vote-down:hover {
+	background: #e56155;
 }
 
-.minivotedown.votedown:active {
-	background-position: -65px -50px;
+.vote-down:active {
+	background: #f87768;
 }
 
-.minivotedown.votedown.dead:hover {
-	background-position: -65px 0;
+.user-voted {
+	font-size: 16px;
+	color: #fffaf0;
+	position: absolute;
+	top: -4px;
+	right: -4px;
 }
 
-.voted {
-	color: orange !important;
+.rtl .user-voted {
+	right: auto;
+	left: -4px;
 }
 
 /* Ideas Lists Styles */
@@ -100,6 +119,7 @@ dd.topics {
 .successvoted {
 	font-weight: bold;
 	border-radius: 4px;
+	margin-top: 3px;
 	padding: 6px;
 }
 
@@ -128,20 +148,24 @@ dd.topics {
 	border-top: dashed 1px #b9b9b9;
 }
 
-.dead {
+.vote-disabled {
 	cursor: default;
 }
 
-.dead:hover {
+.vote-disabled:hover {
 	text-decoration: none;
 }
 
-.dead.removevote {
+.vote-disabled.removevote {
+	display: none;
+}
+
+.hidden {
 	display: none;
 }
 
 .idealabel {
-	width: 10% !important;
+	width: 120px !important;
 }
 
 .ideainput {
@@ -164,7 +188,7 @@ dd.topics {
 }
 
 .status-2 {
-	background-color: #f08080;
+	background-color: #9acd32;
 }
 
 .status-3 {
@@ -182,4 +206,8 @@ dd.topics {
 .idea-panel {
 	line-height: 1.48em;
 	width: 100%;
+}
+
+.rating {
+	margin-top: 4px;
 }

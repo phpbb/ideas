@@ -26,19 +26,20 @@
 			removeVote: $('.removevote'),
 			status: $('#status'),
 			successVoted: $('.successvoted'),
+			userVoted: $('.user-voted'),
 			votes: $('.votes'),
 			votesList: $('.voteslist'),
-			voteDown: $('.minivotedown'),
-			voteUp: $('.minivoteup'),
+			voteDown: $('.vote-down'),
+			voteUp: $('.vote-up'),
 			voteRemove: $('#vote-remove')
-		};
+		}, $loadingIndicator;
 
 	function voteSuccess(result, $this) {
 		if (typeof result === 'string') {
 			phpbb.alert($this.attr('data-l-err'), $this.attr('data-l-msg') + ' ' + result);
 		} else {
-			$obj.voteUp.first().html('<span>' + result.votes_up + '</span>');
-			$obj.voteDown.first().html('<span>' + result.votes_down + '</span>');
+			$obj.voteUp.find('.vote-count').text(result.votes_up);
+			$obj.voteDown.find('.vote-count').text(result.votes_down);
 			$obj.votes.hide().text(function() {
 				return result.points + ' ' + $(this).attr('data-l-msg');
 			});
@@ -69,17 +70,18 @@
 
 		var $this = $(this),
 			url = $this.attr('href'),
-			vote = $this.is('.voteup') ? 1 : 0;
+			vote = $this.is($obj.voteUp) ? 1 : 0;
 
-		if ($this.is('.dead')) {
+		if ($this.hasClass('vote-disabled')) {
 			return false;
 		}
 
+		showLoadingIndicator();
 		$.get(url, {v: vote}, function(data) {
 			voteSuccess(data, $this);
 			resetVoteButtons($this);
 			$obj.voteRemove.show();
-		}).fail(voteFailure);
+		}).fail(voteFailure).always(hideLoadingIndicator);
 	});
 
 	$obj.votes.on('click', function(e) {
@@ -96,15 +98,16 @@
 		var $this = $(this),
 			url = $this.attr('href');
 
-		if ($this.is('.dead')) {
+		if ($this.hasClass('vote-disabled')) {
 			return false;
 		}
 
+		showLoadingIndicator();
 		$.get(url, function(data) {
 			voteSuccess(data, $this);
 			resetVoteButtons();
 			$obj.voteRemove.hide();
-		}).fail(voteFailure);
+		}).fail(voteFailure).always(hideLoadingIndicator);
 	});
 
 	$obj.status.on('change', function() {
@@ -118,6 +121,7 @@
 			return;
 		}
 
+		showLoadingIndicator();
 		$.get($this.attr('data-url'), data, function(res) {
 			if (res) {
 				var anchor = $this.prev('a'),
@@ -133,7 +137,7 @@
 				$obj.duplicateToggle.toggle(idea_is_duplicate());
 				$obj.implementedToggle.toggle(idea_is_implemented());
 			}
-		});
+		}).always(hideLoadingIndicator);
 	});
 
 	$obj.rfcEdit.on('click', function(e) {
@@ -158,6 +162,7 @@
 				return;
 			}
 
+			showLoadingIndicator();
 			$.get(url, {rfc: value}, function(res) {
 				if (res) {
 					$obj.rfcLink.text(value)
@@ -171,7 +176,7 @@
 
 					$obj.rfcEdit.toggleAddEdit(value);
 				}
-			});
+			}).always(hideLoadingIndicator);
 		} else if (e.keyCode === keymap.ESC) {
 			e.preventDefault();
 
@@ -212,6 +217,7 @@
 				value = 'PHPBB3-' + info[1];
 			}
 
+			showLoadingIndicator();
 			$.get(url, {ticket: value && info[1]}, function(res) {
 				if (res) {
 					$obj.ticketLink.text(value)
@@ -226,7 +232,7 @@
 					$obj.ticketEdit.toggleAddEdit(value);
 				}
 
-			});
+			}).always(hideLoadingIndicator);
 		} else if (e.keyCode === keymap.ESC) {
 			e.preventDefault();
 
@@ -262,6 +268,7 @@
 				return;
 			}
 
+			showLoadingIndicator();
 			$.get(url, {duplicate: Number(value)}, function(res) {
 				if (res) {
 					if (value) {
@@ -282,7 +289,7 @@
 
 					$obj.duplicateEdit.toggleAddEdit(value);
 				}
-			});
+			}).always(hideLoadingIndicator);
 		} else if (e.keyCode === keymap.ESC) {
 			e.preventDefault();
 
@@ -319,6 +326,7 @@
 				return;
 			}
 
+			showLoadingIndicator();
 			$.get(url, {implemented: value}, function(res) {
 				if (res) {
 					$obj.implementedVersion.text(value);
@@ -331,7 +339,7 @@
 
 					$obj.implementedEdit.toggleAddEdit(value);
 				}
-			});
+			}).always(hideLoadingIndicator);
 		} else if (e.keyCode === keymap.ESC) {
 			e.preventDefault();
 
@@ -347,7 +355,7 @@
 	$.fn.toggleAddEdit = function(value) {
 		$(this).text(function() {
 			return value ? $(this).attr('data-l-edit') : $(this).attr('data-l-add');
-		}).prepend($('<i class="fa fa-fw"></i>').addClass(function() {
+		}).prepend($('<i class="icon fa-fw"></i>').addClass(function() {
 			return value ? 'fa-pencil' : 'fa-plus-circle';
 		})).show();
 	};
@@ -399,9 +407,21 @@
 	}
 
 	function resetVoteButtons($this) {
-		$obj.voteUp.add($obj.voteDown).removeClass('dead');
+		$obj.voteUp.add($obj.voteDown).removeClass('vote-disabled');
+		$obj.userVoted.hide();
+
 		if ($this) {
-			$this.addClass('dead');
+			$this.addClass('vote-disabled').find($obj.userVoted).show();
+		}
+	}
+
+	function showLoadingIndicator() {
+		$loadingIndicator = phpbb.loadingIndicator();
+	}
+
+	function hideLoadingIndicator() {
+		if ($loadingIndicator && $loadingIndicator.is(':visible')) {
+			$loadingIndicator.fadeOut(phpbb.alertTime);
 		}
 	}
 
