@@ -355,7 +355,7 @@
 	$.fn.toggleAddEdit = function(value) {
 		$(this).text(function() {
 			return value ? $(this).attr('data-l-edit') : $(this).attr('data-l-add');
-		}).prepend($('<i class="fa fa-fw"></i>').addClass(function() {
+		}).prepend($('<i class="icon fa-fw"></i>').addClass(function() {
 			return value ? 'fa-pencil' : 'fa-plus-circle';
 		})).show();
 	};
