@@ -15,8 +15,8 @@
 			<dt class="idealabel">{{ lang('RATING') ~ lang('COLON') }}</dt>
 			<dd>
 				<div class="rating">
-					<a {% if S_CAN_VOTE %}href="{{ U_IDEA_VOTE }}"{% endif %} class="minivote vote-up{{ not S_CAN_VOTE_UP ? ' vote-disabled' }}" title="{{ lang('VOTE_UP') }}" data-l-err="{{ lang('ERROR') }}" data-l-msg="{{ lang('VOTE_ERROR') ~ lang('COLON') }}"><i class="icon fa-check-circle user-voted{{ not S_VOTED or S_CAN_VOTE_UP ? ' hidden' }}" aria-hidden="true"></i><i class="icon fa-thumbs-up"></i><span class="vote-count">{{ IDEA_VOTES_UP }}</span></a> &nbsp;
-					<a {% if S_CAN_VOTE %}href="{{ U_IDEA_VOTE }}"{% endif %} class="minivote vote-down{{ not S_CAN_VOTE_DOWN ? ' vote-disabled' }}" title="{{ lang('VOTE_DOWN') }}" data-l-err="{{ lang('ERROR') }}" data-l-msg="{{ lang('VOTE_ERROR') ~ lang('COLON') }}"><i class="icon fa-check-circle user-voted{{ not S_VOTED or S_CAN_VOTE_DOWN ? ' hidden' }}" aria-hidden="true"></i><i class="icon fa-thumbs-down"></i><span class="vote-count">{{ IDEA_VOTES_DOWN }}</span></a>
+					<a {% if S_CAN_VOTE %}href="{{ U_IDEA_VOTE }}"{% endif %} class="minivote vote-up{{ not S_CAN_VOTE_UP ? ' vote-disabled' }}" title="{{ lang('VOTE_UP') }}" data-l-err="{{ lang('ERROR') }}" data-l-msg="{{ lang('VOTE_ERROR') ~ lang('COLON') }}"><i class="icon fa-check-circle user-voted{{ not S_VOTED_UP ? ' hidden' }}" aria-hidden="true"></i><i class="icon fa-thumbs-up"></i><span class="vote-count">{{ IDEA_VOTES_UP }}</span></a> &nbsp;
+					<a {% if S_CAN_VOTE %}href="{{ U_IDEA_VOTE }}"{% endif %} class="minivote vote-down{{ not S_CAN_VOTE_DOWN ? ' vote-disabled' }}" title="{{ lang('VOTE_DOWN') }}" data-l-err="{{ lang('ERROR') }}" data-l-msg="{{ lang('VOTE_ERROR') ~ lang('COLON') }}"><i class="icon fa-check-circle user-voted{{ not S_VOTED_DOWN ? ' hidden' }}" aria-hidden="true"></i><i class="icon fa-thumbs-down"></i><span class="vote-count">{{ IDEA_VOTES_DOWN }}</span></a>
 					<a href="#" class="votes bg3" data-l-msg="{{ lang('CLICK_TO_VIEW') }}">{{ lang('TOTAL_POINTS', IDEA_POINTS) }} {{ IDEA_VOTES ? lang('CLICK_TO_VIEW') }}</a> <span class="successvoted bg3" data-l-err="{{ lang('VOTE_FAIL') }}"></span>
 				</div>
 				<div class="clear"></div>
@@ -39,7 +39,7 @@
 							</span>
 						</li>
 						{% if S_CAN_VOTE %}
-							<li id="vote-remove"{% if S_VOTED == false %} style="display:none;"{% endif %}>
+							<li id="vote-remove"{% if not S_VOTED_UP and not S_VOTED_DOWN %} class="hidden"{% endif %}>
 								<i class="fa fa-fw fa-times"></i> <a href="{{ U_REMOVE_VOTE }}" class="removevote" data-l-err="{{ lang('ERROR') }}" data-l-msg="{{ lang('VOTE_ERROR') ~ lang('COLON') }}">{{ lang('REMOVE_VOTE') }}</a>
 							</li>
 						{% endif %}
