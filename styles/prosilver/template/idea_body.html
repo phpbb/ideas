@@ -39,7 +39,7 @@
 							</span>
 						</li>
 						{% if S_CAN_VOTE %}
-							<li id="vote-remove"{% if not S_VOTED_UP and not S_VOTED_DOWN %} class="hidden"{% endif %}>
+							<li id="vote-remove"{% if S_VOTED == false %} class="hidden"{% endif %}>
 								<i class="icon icon-tiny fa-fw fa-times"></i> <a href="{{ U_REMOVE_VOTE }}" class="removevote" data-l-err="{{ lang('ERROR') }}" data-l-msg="{{ lang('VOTE_ERROR') ~ lang('COLON') }}">{{ lang('REMOVE_VOTE') }}</a>
 							</li>
 						{% endif %}

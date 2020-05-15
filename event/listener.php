@@ -242,6 +242,7 @@ class listener implements EventSubscriberInterface
 			'S_CAN_VOTE'		=> $can_vote,
 			'S_CAN_VOTE_UP'		=> $can_vote && !$s_voted_up,
 			'S_CAN_VOTE_DOWN'	=> $can_vote && !$s_voted_down,
+			'S_VOTED'			=> $s_voted_up || $s_voted_down,
 			'S_VOTED_UP'		=> $s_voted_up,
 			'S_VOTED_DOWN'		=> $s_voted_down,
 
