@@ -47,12 +47,25 @@
 				</div>
 			</dd>
 			<dt class="idealabel">{{ lang('STATUS') ~ lang('COLON') }}</dt>
-			<dd>
-				<a href="{{ IDEA_STATUS_LINK }}" class="status-badge status-{{ IDEA_STATUS_ID }}">{{ IDEA_STATUS_NAME }}</a>
-				{% if STATUS_ARY %}&nbsp; <select id="status" data-url="{{ U_CHANGE_STATUS }}">
-					<option value="0">{{ lang('CHANGE_STATUS') }}</option>
-					{% for status, id in STATUS_ARY %}<option value="{{ id }}">{{ lang(status) }}</option>{% endfor %}
-				</select>{% endif %}
+			<dd class="status-dropdown-container dropdown-container">
+				<span class="status-badge status-{{ IDEA_STATUS_ID }}">
+					<a href="{{ IDEA_STATUS_LINK }}" id="status-link">{{ IDEA_STATUS_NAME }}</a>
+					{% if STATUS_ARY %}
+						<a href="#" class="dropdown-trigger"><i class="icon fa-fw fa-caret-down"></i></a>
+					{% endif %}
+				</span>
+				{% if STATUS_ARY %}
+					<div class="status-dropdown dropdown">
+						<div class="pointer"><div class="pointer-inner"></div></div>
+						<ul class="dropdown-contents">
+							{% for status, id in STATUS_ARY %}
+								<li>
+									<a href="{{ U_CHANGE_STATUS }}" data-status="{{ id }}" class="change-status">{{ lang(status) }}</a>
+								</li>
+							{% endfor %}
+						</ul>
+					</div>
+				{% endif %}
 			</dd>
 			{% if IDEA_RFC %}
 				<dt class="idealabel">{{ lang('RFC') ~ lang('COLON') }}</dt>

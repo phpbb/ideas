@@ -176,11 +176,24 @@ dd.topics {
 .status-badge {
 	border-radius: 3px;
 	color: #ffffff;
+	display: inline-block;
 	padding: 3px 6px;
 }
 
-.status-badge:hover {
+.status-badge a {
 	color: #ffffff;
+}
+
+.status-badge a:hover {
+	color: #ffffff;
+}
+
+.status-dropdown-container {
+	overflow: visible !important;
+}
+
+.status-dropdown {
+	margin-top: 4px;
 }
 
 .status-1 {
