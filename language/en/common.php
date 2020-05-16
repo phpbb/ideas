@@ -34,6 +34,12 @@ $lang = array_merge($lang, array(
 	'EDIT'					=> 'Edit',
 	'ENABLE_JS'             => 'Please enable JavaScript in your browser to use phpBB Ideas effectively.',
 
+	'FA_NEW'				=> 'fa-lightbulb-o',
+	'FA_IN_PROGRESS'		=> 'fa-code-fork',
+	'FA_IMPLEMENTED'		=> 'fa-check',
+	'FA_DUPLICATE'			=> 'fa-files-o',
+	'FA_INVALID'			=> 'fa-ban',
+
 	'IDEAS'					=> 'Ideas',
 	'IDEA_DELETED'			=> 'Idea successfully deleted.',
 	'IDEA_ID'				=> 'Idea ID',

@@ -129,7 +129,7 @@
 				var href = $obj.statusLink.attr('href').replace(/status=\d/, 'status=' + data.status);
 
 				$obj.statusLink.attr('href', href)
-					.text($this.text())
+					.html($this.html())
 					.closest('span')
 					.removeClass()
 					.addClass('status-badge status-' + data.status);
