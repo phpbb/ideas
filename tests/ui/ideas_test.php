@@ -10,6 +10,7 @@
 
 namespace phpbb\ideas\tests\ui;
 
+use Facebook\WebDriver\WebDriverBy;
 use Facebook\WebDriver\WebDriverKeys;
 
 /**
@@ -58,13 +59,18 @@ class ideas_test extends \phpbb_ui_test_case
 
 		// test changing the status
 		$this->assertEquals('New', $this->find_element('className', 'status-badge')->getText());
-		$elements = $this->find_element('cssSelector', 'select#status')
-			->findElements(\Facebook\WebDriver\WebDriverBy::tagName('option'));
-		foreach ($elements as $element)
+		$dropdown_container = $this->find_element('className', 'status-dropdown-container');
+		$dropdown = $dropdown_container->findElement(WebDriverBy::className('dropdown'));
+		$this->assertEmpty($dropdown->getText());
+		$dropdown_container->findElement(WebDriverBy::className('dropdown-toggle'))->click();
+		$this->assertNotNull($dropdown->getText());
+		$statuses = $dropdown->findElements(WebDriverBy::className('change-status'));
+		foreach ($statuses as $status)
 		{
-			if ($element->getText() === 'In Progress')
+			if ($status->getText() === 'In Progress')
 			{
-				$element->click();
+				$status->click();
+				break;
 			}
 		}
 		$this->waitForAjax();
