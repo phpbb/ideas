@@ -254,53 +254,81 @@
 		$obj.duplicateEditInput.show().trigger('focus');
 	});
 
-	$obj.duplicateEditInput.on('keydown', function(e) {
-		if (e.keyCode === keymap.ENTER) {
-			e.preventDefault();
-			e.stopPropagation();
+	/**
+	 * This callback handles live idea title searches for duplicate ideas.
+	 */
+	phpbb.addAjaxCallback('idea_search', function(res) {
+		phpbb.search.handleResponse(res, $(this), false, phpbb.getFunctionByName('phpbb.search.setDuplicateOnEvent'));
+	});
 
-			var $this = $(this),
-				url = $obj.duplicateEdit.attr('href'),
-				value = $this.val();
+	/**
+	 * This performs actions on each result from the live idea title search for duplicate ideas.
+	 *
+	 * @param {jQuery|JQuery} $input		Search input|textarea.
+	 * @param {object}        value			Result object.
+	 * @param {jQuery|JQuery} $row			Result element.
+	 * @param {jQuery|JQuery} $container	jQuery object for the search container.
+	 */
+	phpbb.search.setDuplicateOnEvent = function($input, value, $row, $container) {
+		$row.on('click', function() {
+			setDuplicate($input, value);
+			phpbb.search.closeResults($input, $container);
+		});
+	};
 
-			if (value && isNaN(Number(value))) {
-				phpbb.alert($this.attr('data-l-err'), $this.attr('data-l-msg'));
-				return;
-			}
-
-			showLoadingIndicator();
-			$.get(url, {duplicate: Number(value)}, function(res) {
-				if (res) {
-					if (value) {
-						var msg = $obj.duplicateLink.attr('data-l-msg');
-						var link = $obj.duplicateLink.attr('data-link').replace(/^(.*\/)(\d+)$/, '$1');
-
-						$obj.duplicateLink
-							.text(msg + value)
-							.attr('href', link + value)
-							.show();
-					} else {
-						$obj.duplicateLink
-							.text(value)
-							.attr('href', value);
-					}
-
-					$this.hide();
-
-					$obj.duplicateEdit.toggleAddEdit(value);
+	/**
+	 * Assign a duplicate idea identifier to a given idea.
+	 *
+	 * @param {jQuery|JQuery} $input	Search input|textarea.
+	 * @param {object}        value		Result object.
+	 */
+	function setDuplicate($input, value) {
+		if (value.result && isNaN(Number(value.result))) {
+			phpbb.alert($input.attr('data-l-err'), $input.attr('data-l-msg'));
+			return;
+		}
+		$input.val(value.clean_title);
+		showLoadingIndicator();
+		$.get($obj.duplicateEdit.attr('href'), {duplicate: Number(value.result)}, function(res) {
+			if (res) {
+				if (value.result) {
+					$obj.duplicateLink
+						.text(value.clean_title)
+						.attr('href', $obj.duplicateLink.attr('data-link').replace(/^(.*\/)(\d+)$/, '$1') + value.result)
+						.show();
+				} else {
+					$obj.duplicateLink
+						.empty()
+						.removeAttr('href');
 				}
-			}).always(hideLoadingIndicator);
-		} else if (e.keyCode === keymap.ESC) {
-			e.preventDefault();
-
-			var $link = $obj.duplicateLink;
-
-			$(this).hide();
-			$obj.duplicateEdit.show();
-
-			if ($link.html()) {
-				$link.show();
+				$input.hide();
+				$obj.duplicateEdit.toggleAddEdit(value.result);
 			}
+		}).always(hideLoadingIndicator);
+	}
+
+	/**
+	 * Handling of the duplicate idea input field.
+	 * ENTER: When the input field is empty clear any existing duplicate entry. Otherwise just show an alert message.
+	 * ESC: Will clear and close the input field (if it isn't cleared, live search may unexpectedly run).
+	 */
+	$obj.duplicateEditInput.on('keydown.duplicate', function(e) {
+		var $this = $(this),
+			key = e.keyCode || e.which;
+		switch (key) {
+			case keymap.ESC:
+				$this.val('').hide();
+				$obj.duplicateEdit.show();
+				$obj.duplicateLink.toggle($obj.duplicateLink.html().length !== 0);
+			break;
+			case keymap.ENTER:
+				if ($this.val().length === 0) {
+					setDuplicate($this, {'result': '', 'clean_title': ''});
+				} else {
+					e.stopPropagation();
+					phpbb.alert($this.attr('data-l-err'), $this.attr('data-l-msg'));
+				}
+			break;
 		}
 	});
 

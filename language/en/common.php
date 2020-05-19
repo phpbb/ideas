@@ -30,6 +30,7 @@ $lang = array_merge($lang, array(
 	'DATE'					=> 'Date',
 	'DELETE_IDEA'			=> 'Delete idea',
 	'DUPLICATE'				=> 'Duplicate',
+	'DUPLICATE_PLACEHOLDER'	=> 'Start typing a title',
 
 	'EDIT'					=> 'Edit',
 	'ENABLE_JS'             => 'Please enable JavaScript in your browser to use phpBB Ideas effectively.',
@@ -38,7 +39,6 @@ $lang = array_merge($lang, array(
 	'IDEA_DELETED'			=> 'Idea successfully deleted.',
 	'IDEA_ID'				=> 'Idea ID',
 	'IDEA_LIST'				=> 'Idea List',
-	'IDEA_NUM'				=> 'Idea #',
 	'IDEA_NOT_FOUND'		=> 'Idea not found',
 	'IDEA_STORED_MOD'		=> 'Your idea has been submitted successfully, but it will need to be approved by a moderator before it is publicly viewable. You will be notified when your idea has been approved.<br /><br /><a href="%s">Return to Ideas</a>.',
 	'IDEAS_TITLE'			=> 'phpBB Ideas',
@@ -78,7 +78,7 @@ $lang = array_merge($lang, array(
 
 	'TICKET'				=> 'Ticket',
 	'TICKET_ERROR'			=> 'Ticket ID must be of the format “PHPBB3-#####”.',
-	'TICKET_ERROR_DUP'		=> 'Please use the Idea ID number.',
+	'TICKET_ERROR_DUP'		=> 'You must click on an idea title from the live search results. To delete the duplicate, clear the field and hit ENTER. To exit this field click ESC.',
 	'TITLE'					=> 'Title',
 	'TITLE_TOO_LONG'		=> 'Subject must be under %d characters long.',
 	'TITLE_TOO_SHORT'		=> 'You must specify a subject when posting a new idea.',

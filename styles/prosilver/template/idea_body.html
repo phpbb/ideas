@@ -90,10 +90,33 @@
 			{% if IDEA_DUPLICATE or S_IS_MOD %}
 				<dt class="duplicatetoggle idealabel"{% if IDEA_STATUS_ID != STATUS_ARY.DUPLICATE %} style="display:none"{% endif %}>{{ lang('DUPLICATE') ~ lang('COLON') }}</dt>
 				<dd class="duplicatetoggle" {% if IDEA_STATUS_ID != STATUS_ARY.DUPLICATE %}style="display:none"{% endif %}>
-					<a id="duplicatelink" data-link="{{ U_IDEA_DUPLICATE }}" data-l-msg="{{ lang('IDEA_NUM') }}" {% if IDEA_DUPLICATE %}href="{{ U_IDEA_DUPLICATE }}">{{ lang('IDEA_NUM') ~ IDEA_DUPLICATE }}{% else %}style="display:none">{% endif %}</a>
+					<a id="duplicatelink" data-link="{{ U_IDEA_DUPLICATE }}" {% if IDEA_DUPLICATE %}href="{{ U_IDEA_DUPLICATE }}">{{ IDEA_DUPLICATE }}{% else %}style="display:none">{% endif %}</a>
 					{% if S_IS_MOD %}
 						<a href="{{ U_EDIT_DUPLICATE }}" id="duplicateedit" data-l-add="{{ lang('ADD') }}" data-l-edit="{{ lang('EDIT') }}">{% if IDEA_DUPLICATE %}<i class="icon fa-fw fa-pencil"></i>{{ lang('EDIT') }}{% else %}<i class="icon fa-fw fa-plus-circle"></i>{{ lang('ADD') }}{% endif %}</a>
-						<input type="text" id="duplicateeditinput" class="ideainput"{% if IDEA_DUPLICATE %} value="{{ IDEA_DUPLICATE }}"{% endif %} placeholder="###" data-l-err="{{ lang('ERROR') }}" data-l-msg="{{ lang('TICKET_ERROR_DUP') }}" />
+						<div class="dropdown-container dropdown-{{ S_CONTENT_FLOW_END }}">
+							<input
+								type="text"
+								name="duplicateeditinput"
+								id="duplicateeditinput"
+								value="{{ IDEA_DUPLICATE ? IDEA_DUPLICATE }}"
+								placeholder="{{ lang('DUPLICATE_PLACEHOLDER') }}"
+								class="ideainput"
+								autocomplete="off"
+								data-filter="phpbb.search.filter"
+								data-ajax="idea_search"
+								data-min-length="3"
+								data-url="{{ U_TITLE_LIVESEARCH }}"
+								data-results="#live-search"
+								data-l-err="{{ lang('ERROR') }}"
+								data-l-msg="{{ lang('TICKET_ERROR_DUP') }}"
+							/>
+							<div class="dropdown live-search hidden" id="live-search">
+								<div class="pointer"><div class="pointer-inner"></div></div>
+								<ul class="dropdown-contents search-results">
+									<li class="search-result-tpl"><span class="search-result"></span></li>
+								</ul>
+							</div>
+						</div>
 					{% endif %}
 				</dd>
 			{% endif %}
