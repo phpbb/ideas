@@ -445,6 +445,25 @@ class ideas
 	}
 
 	/**
+	 * Get the title of an idea.
+	 *
+	 * @param int $id ID of an idea
+	 *
+	 * @return string The idea's title
+	 */
+	public function get_title($id)
+	{
+		$sql = 'SELECT idea_title
+			FROM ' . $this->table_ideas . '
+			WHERE idea_id = ' . (int) $id;
+		$result = $this->db->sql_query_limit($sql, 1);
+		$idea_title = $this->db->sql_fetchfield('idea_title');
+		$this->db->sql_freeresult($result);
+
+		return $idea_title;
+	}
+
+	/**
 	 * Submits a vote on an idea.
 	 *
 	 * @param array $idea    The idea returned by get_idea().

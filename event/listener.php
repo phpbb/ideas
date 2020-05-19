@@ -230,7 +230,7 @@ class listener implements EventSubscriberInterface
 			'IDEA_STATUS_NAME'	=> $this->ideas->get_status_from_id($idea['idea_status']),
 			'IDEA_STATUS_LINK'	=> $this->helper->route('phpbb_ideas_list_controller', array('status' => $idea['idea_status'])),
 
-			'IDEA_DUPLICATE'	=> $idea['duplicate_id'],
+			'IDEA_DUPLICATE'	=> $idea['duplicate_id'] ? $this->ideas->get_title($idea['duplicate_id']) : '',
 			'IDEA_RFC'			=> $idea['rfc_link'],
 			'IDEA_TICKET'		=> $idea['ticket_id'],
 			'IDEA_IMPLEMENTED'	=> $idea['implemented_version'],
