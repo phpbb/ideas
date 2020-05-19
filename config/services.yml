@@ -62,6 +62,10 @@ services:
         class: phpbb\ideas\controller\idea_controller
         parent: phpbb.ideas.controller.base
 
+    phpbb.ideas.livesearch_controller:
+        class: phpbb\ideas\controller\livesearch_controller
+        parent: phpbb.ideas.controller.base
+
     phpbb.ideas.ideas:
         class: phpbb\ideas\factory\ideas
         arguments:

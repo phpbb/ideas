@@ -266,6 +266,34 @@ class ideas
 	}
 
 	/**
+	 * Do a live search on idea titles. Return any matches based on a given search query.
+	 *
+	 * @param string $search The string of characters to search using LIKE
+	 * @param int    $limit  The number of results to return
+	 * @return array An array of matching idea id/key and title/values
+	 */
+	public function ideas_title_livesearch($search, $limit = 10)
+	{
+		$results = [];
+		$sql = 'SELECT idea_title, idea_id
+			FROM ' . $this->table_ideas . '
+			WHERE idea_title ' . $this->db->sql_like_expression($search . $this->db->get_any_char());
+		$result = $this->db->sql_query_limit($sql, $limit);
+		while ($row = $this->db->sql_fetchrow($result))
+		{
+			$results[] = [
+				'idea_id'     => $row['idea_id'],
+				'result'      => $row['idea_id'],
+				'clean_title' => $row['idea_title'],
+				'display'     => "<span>{$row['idea_title']}</span>",
+			];
+		}
+		$this->db->sql_freeresult($result);
+
+		return $results;
+	}
+
+	/**
 	 * Returns the status name from the status ID specified.
 	 *
 	 * @param int $id ID of the status.

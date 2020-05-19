@@ -253,6 +253,7 @@ class listener implements EventSubscriberInterface
 			'U_EDIT_TICKET'		=> $this->link_helper->get_idea_link($idea['idea_id'], 'ticket', true),
 			'U_REMOVE_VOTE'		=> $this->link_helper->get_idea_link($idea['idea_id'], 'removevote', true),
 			'U_IDEA_VOTE'		=> $this->link_helper->get_idea_link($idea['idea_id'], 'vote', true),
+			'U_TITLE_LIVESEARCH'=> $this->helper->route('phpbb_ideas_livesearch_controller'),
 		));
 
 		// Use Ideas breadcrumbs
