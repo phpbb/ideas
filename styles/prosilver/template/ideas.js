@@ -24,7 +24,8 @@
 			implementedVersion: $('#implementedversion'),
 			implementedToggle: $('.implementedtoggle'),
 			removeVote: $('.removevote'),
-			status: $('#status'),
+			status: $('.change-status'),
+			statusLink: $('#status-link'),
 			successVoted: $('.successvoted'),
 			userVoted: $('.user-voted'),
 			votes: $('.votes'),
@@ -110,11 +111,12 @@
 		}).fail(voteFailure).always(hideLoadingIndicator);
 	});
 
-	$obj.status.on('change', function() {
+	$obj.status.on('click', function(e) {
+		e.preventDefault();
+
 		var $this = $(this),
 			data = {
-				mode: 'status',
-				status: $this.val()
+				status: $this.attr('data-status')
 			};
 
 		if (!data.status) {
@@ -122,22 +124,20 @@
 		}
 
 		showLoadingIndicator();
-		$.get($this.attr('data-url'), data, function(res) {
+		$.get($this.attr('href'), data, function(res) {
 			if (res) {
-				var anchor = $this.prev('a'),
-					href = anchor.attr('href');
+				var href = $obj.statusLink.attr('href').replace(/status=\d/, 'status=' + data.status);
 
-				href = href.replace(/status=\d/, 'status=' + data.status);
-
-				anchor.attr('href', href)
-					.text($this.find(':selected').text())
+				$obj.statusLink.attr('href', href)
+					.html($this.html())
+					.closest('span')
 					.removeClass()
-					.addClass('status-badge status-' + $this.find(':selected').val());
+					.addClass('status-badge status-' + data.status);
 
-				$obj.duplicateToggle.toggle(idea_is_duplicate());
-				$obj.implementedToggle.toggle(idea_is_implemented());
+				$obj.duplicateToggle.toggle(data.status === '4');
+				$obj.implementedToggle.toggle(data.status === '3');
 			}
-		}).always(hideLoadingIndicator);
+		}).always([hideLoadingIndicator, hideStatusDropDown]);
 	});
 
 	$obj.rfcEdit.on('click', function(e) {
@@ -360,20 +360,8 @@
 		})).show();
 	};
 
-	/**
-	 * Returns true if idea is a duplicate. Bit hacky.
-	 */
-	function idea_is_duplicate() {
-		var href = $obj.status.prev('a').attr('href');
-		return href && href.indexOf('status=4') !== -1;
-	}
-
-	/**
-	 * Returns true if idea is implemented. Bit hacky.
-	 */
-	function idea_is_implemented() {
-		var href = $obj.status.prev('a').attr('href');
-		return href && href.indexOf('status=3') !== -1;
+	function hideStatusDropDown() {
+		$('.status-dropdown').hide();
 	}
 
 	function displayVoters(data) {
