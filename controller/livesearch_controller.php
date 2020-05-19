@@ -22,9 +22,9 @@ class livesearch_controller extends base
 		$matches = $this->ideas->ideas_title_livesearch($title_chars, 10);
 
 		$json_response = new \phpbb\json_response();
-		$json_response->send(array(
+		$json_response->send([
 			'keyword' => $title_chars,
 			'results' => $matches,
-		));
+		]);
 	}
 }

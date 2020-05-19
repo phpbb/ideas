@@ -285,7 +285,7 @@ class ideas
 				'idea_id'     => $row['idea_id'],
 				'result'      => $row['idea_id'],
 				'clean_title' => $row['idea_title'],
-				'display'     => "<span>{$row['idea_title']}</span>",
+				'display'     => "<span>{$row['idea_title']}</span>", // spans are expected in phpBB's live search JS
 			];
 		}
 		$this->db->sql_freeresult($result);
