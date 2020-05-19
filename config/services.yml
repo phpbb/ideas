@@ -81,6 +81,11 @@ services:
             - '@controller.helper'
             - '@user_loader'
 
+    phpbb.ideas.twig.extension.ideas_status_icon:
+        class: phpbb\ideas\template\twig\extension\ideas_status_icon
+        tags:
+            - { name: twig.extension }
+
 # ----- Cron tasks -----
     phpbb.ideas.cron.task.prune_orphaned_ideas:
         class: phpbb\ideas\cron\prune_orphaned_ideas
