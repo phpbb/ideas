@@ -9,6 +9,10 @@ dd.topics {
 	font-weight: 400 !important;
 }
 
+.idea-panel dd {
+	overflow: visible !important;
+}
+
 /* Vote buttons */
 .minivote {
 	line-height: normal;
@@ -182,10 +186,6 @@ dd.topics {
 
 .status-badge a:hover {
 	color: #ffffff;
-}
-
-.status-dropdown-container {
-	overflow: visible !important;
 }
 
 .status-dropdown {
