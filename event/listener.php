@@ -228,14 +228,11 @@ class listener implements EventSubscriberInterface
 			'IDEA_POINTS'		=> $points,
 			'IDEA_STATUS_ID'	=> $idea['idea_status'],
 			'IDEA_STATUS_NAME'	=> $this->ideas->get_status_from_id($idea['idea_status']),
-			'IDEA_STATUS_LINK'	=> $this->helper->route('phpbb_ideas_list_controller', array('status' => $idea['idea_status'])),
 
 			'IDEA_DUPLICATE'	=> $idea['duplicate_id'],
 			'IDEA_RFC'			=> $idea['rfc_link'],
 			'IDEA_TICKET'		=> $idea['ticket_id'],
 			'IDEA_IMPLEMENTED'	=> $idea['implemented_version'],
-
-			'U_IDEA_DUPLICATE'	=> $this->link_helper->get_idea_link((int) $idea['duplicate_id']),
 
 			'S_IS_MOD'			=> $mod,
 			'S_CAN_EDIT'		=> $mod || $own,
@@ -253,6 +250,8 @@ class listener implements EventSubscriberInterface
 			'U_EDIT_TICKET'		=> $this->link_helper->get_idea_link($idea['idea_id'], 'ticket', true),
 			'U_REMOVE_VOTE'		=> $this->link_helper->get_idea_link($idea['idea_id'], 'removevote', true),
 			'U_IDEA_VOTE'		=> $this->link_helper->get_idea_link($idea['idea_id'], 'vote', true),
+			'U_IDEA_DUPLICATE'	=> $this->link_helper->get_idea_link($idea['duplicate_id']),
+			'U_IDEA_STATUS_LINK'=> $this->helper->route('phpbb_ideas_list_controller', array('status' => $idea['idea_status'])),
 		));
 
 		// Use Ideas breadcrumbs
