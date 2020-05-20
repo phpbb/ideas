@@ -13,6 +13,12 @@ namespace phpbb\ideas\acp;
 class ideas_module
 {
 	/** @var string */
+	public $page_title;
+
+	/** @var string */
+	public $tpl_name;
+
+	/** @var string */
 	public $u_action;
 
 	/**

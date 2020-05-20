@@ -58,10 +58,10 @@ class index_controller_test extends controller_base
 	 * Basic controller exception test
 	 *
 	 * @dataProvider controller_exception_test_data
-	 * @expectedException \phpbb\exception\http_exception
 	 */
 	public function test_controller_exception($forum)
 	{
+		$this->expectException(\phpbb\exception\http_exception::class);
 		$this->config['ideas_forum_id'] = $forum;
 
 		/** @var \phpbb\ideas\controller\index_controller $controller */

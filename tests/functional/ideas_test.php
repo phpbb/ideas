@@ -44,8 +44,8 @@ class ideas_test extends ideas_functional_base
 		$this->assertContains($this->lang('IDEAS'), $crawler->filter('#nav-breadcrumbs')->text());
 		$this->assertContains($idea['title'], $crawler->filter('h2')->text());
 		$this->assertContains($idea['message'], $crawler->filter('.content')->text());
-		$this->assertContains('1', $crawler->filter('.rating > .vote-up')->text());
-		$this->assertContains('0', $crawler->filter('.rating > .vote-down')->text());
+		$this->assertStringContainsString('1', $crawler->filter('.rating > .vote-up')->text());
+		$this->assertStringContainsString('0', $crawler->filter('.rating > .vote-down')->text());
 	}
 
 	/**
@@ -131,7 +131,7 @@ class ideas_test extends ideas_functional_base
 
 		// Submit and verify success
 		$crawler = self::submit($form);
-		$this->assertContains($data['title'], $crawler->filter('h2')->text());
+		$this->assertStringContainsString($data['title'], $crawler->filter('h2')->text());
 
 		// Get the new idea's ID and add it to the data array
 		$url = $crawler->selectLink($this->lang('REMOVE_VOTE'))->link()->getUri();

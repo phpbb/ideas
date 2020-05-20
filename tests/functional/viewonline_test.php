@@ -41,7 +41,7 @@ class viewonline_test extends ideas_functional_base
 		$crawler = self::request('GET', "viewonline.php?sid={$this->sid}");
 
 		// Is admin still viewing Ideas page
-		$this->assertContains('admin', $crawler->filter('#page-body table.table1')->text());
+		$this->assertStringContainsString('admin', $crawler->filter('#page-body table.table1')->text());
 
 		$session_entries = $crawler->filter('#page-body table.table1 tr')->count();
 		$this->assertGreaterThanOrEqual(3, $session_entries, 'Too few session entries found');
@@ -54,7 +54,7 @@ class viewonline_test extends ideas_functional_base
 			$subcrawler = $crawler->filter('#page-body table.table1 tr')->eq($i);
 			if (strpos($subcrawler->filter('td')->text(), 'admin') !== false)
 			{
-				$this->assertContains($this->lang('VIEWING_IDEAS'), $subcrawler->filter('td.info')->text());
+				$this->assertContainsLang('VIEWING_IDEAS', $subcrawler->filter('td.info')->text());
 				return;
 			}
 		}

@@ -1,6 +1,6 @@
 # phpBB Ideas
 
-phpBB Ideas is an ideas centre for phpBB 3.2. It is based on [WordPress ideas](http://wordpress.org/extend/ideas/), and allows users to suggest and vote on "ideas" that would help improve and enhance phpBB.
+The official Ideas Centre used at [phpBB.com](https://www.phpbb.com/ideas/). This phpBB extension allows community members to suggest and vote on ideas that can help to improve and enhance phpBB software.
 
 [![Build Status](https://travis-ci.org/phpbb/ideas.svg?branch=master)](https://travis-ci.org/phpbb/ideas)
 
@@ -23,4 +23,4 @@ Support is not available for phpBB Ideas however you may email `website [at] php
 Note: This extension is currently under development and is not recommended for use on any live forum.
 
 ## License
-[GNU General Public License v2](http://opensource.org/licenses/GPL-2.0)
+[GNU General Public License v2](license.txt)

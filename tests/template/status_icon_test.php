@@ -41,7 +41,6 @@ class status_icon_test extends \phpbb_template_template_test_case
 
 		$this->template_path = $this->test_path . '/templates';
 
-		$container = new \phpbb_mock_container_builder();
 		$cache_path = $phpbb_root_path . 'cache/twig';
 		$context = new \phpbb\template\context();
 		$loader = new \phpbb\template\twig\loader(new \phpbb\filesystem\filesystem(), '');
@@ -52,7 +51,7 @@ class status_icon_test extends \phpbb_template_template_test_case
 			$cache_path,
 			null,
 			$loader,
-			new \phpbb\event\dispatcher($container),
+			new \phpbb\event\dispatcher(),
 			[
 				'cache'			=> false,
 				'debug'			=> false,
