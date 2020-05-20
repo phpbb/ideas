@@ -1,7 +1,7 @@
 {
 	"name": "phpbb/ideas",
 	"type": "phpbb-extension",
-	"description": "phpBB Ideas centre for phpBB 3.2.",
+	"description": "phpBB Ideas centre",
 	"homepage": "https://www.phpbb.com",
 	"version": "2.2.2-dev",
 	"license": "GPL-2.0-only",

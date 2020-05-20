@@ -47,9 +47,9 @@
 				</div>
 			</dd>
 			<dt class="idealabel">{{ lang('STATUS') ~ lang('COLON') }}</dt>
-			<dd class="status-dropdown-container dropdown-container">
+			<dd class="status-dropdown-container dropdown-container dropdown-{S_CONTENT_FLOW_END}">
 				<span class="status-badge status-{{ IDEA_STATUS_ID }}">
-					<a href="{{ IDEA_STATUS_LINK }}" id="status-link"><i class="icon fa-fw {{ ideas_status_icon(IDEA_STATUS_ID) }}"></i>{{ IDEA_STATUS_NAME }}</a>
+					<a href="{{ U_IDEA_STATUS_LINK }}" id="status-link"><i class="icon fa-fw {{ ideas_status_icon(IDEA_STATUS_ID) }}"></i>{{ IDEA_STATUS_NAME }}</a>
 					{% if STATUS_ARY %}
 						<a href="#" class="dropdown-trigger"><i class="icon fa-fw fa-caret-down"></i></a>
 					{% endif %}
