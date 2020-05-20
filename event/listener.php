@@ -128,7 +128,7 @@ class listener implements EventSubscriberInterface
 
 			// This freakish looking regex pattern should
 			// remove the old ideas link-backs from the message.
-			$message = preg_replace('/(<br[^>]*>\\n?)\\1-{10}\\1\\1.*]/s', '', $message);
+			$message = preg_replace('/(<br[^>]*>\\n?)?\\1?-{10}\\1?\\1?.*]/s', '', $message);
 
 			$post_row['MESSAGE'] = $message;
 			$event['post_row'] = $post_row;
