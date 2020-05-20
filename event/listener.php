@@ -229,7 +229,7 @@ class listener implements EventSubscriberInterface
 			'IDEA_STATUS_ID'	=> $idea['idea_status'],
 			'IDEA_STATUS_NAME'	=> $this->ideas->get_status_from_id($idea['idea_status']),
 
-			'IDEA_DUPLICATE'	=> $idea['duplicate_id'],
+			'IDEA_DUPLICATE'	=> $idea['duplicate_id'] ? $this->ideas->get_title($idea['duplicate_id']) : '',
 			'IDEA_RFC'			=> $idea['rfc_link'],
 			'IDEA_TICKET'		=> $idea['ticket_id'],
 			'IDEA_IMPLEMENTED'	=> $idea['implemented_version'],
@@ -252,6 +252,7 @@ class listener implements EventSubscriberInterface
 			'U_IDEA_VOTE'		=> $this->link_helper->get_idea_link($idea['idea_id'], 'vote', true),
 			'U_IDEA_DUPLICATE'	=> $this->link_helper->get_idea_link($idea['duplicate_id']),
 			'U_IDEA_STATUS_LINK'=> $this->helper->route('phpbb_ideas_list_controller', array('status' => $idea['idea_status'])),
+			'U_TITLE_LIVESEARCH'=> $this->helper->route('phpbb_ideas_livesearch_controller'),
 		));
 
 		// Use Ideas breadcrumbs

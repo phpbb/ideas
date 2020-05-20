@@ -17,3 +17,7 @@ phpbb_ideas_list_controller:
 phpbb_ideas_post_controller:
     path: /ideas/post
     defaults: { _controller: phpbb.ideas.post_controller:post }
+
+phpbb_ideas_livesearch_controller:
+    path: /ideas/livesearch/title
+    defaults: { _controller: phpbb.ideas.livesearch_controller:title_search }
