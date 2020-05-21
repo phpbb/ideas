@@ -15,14 +15,6 @@ class m11_reparse_old_ideas extends \phpbb\db\migration\container_aware_migratio
 	/**
 	 * {@inheritDoc}
 	 */
-	public function effectively_installed()
-	{
-		return $this->config->offsetExists('phpbb.ideas.text_reparser.clean_old_ideas');
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
 	public static function depends_on()
 	{
 		return [
@@ -32,6 +24,17 @@ class m11_reparse_old_ideas extends \phpbb\db\migration\container_aware_migratio
 			'\phpbb\ideas\migrations\m8_implemented_version',
 			'\phpbb\ideas\migrations\m10_update_idea_schema',
 		];
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function effectively_installed()
+	{
+		/** @var \phpbb\textreparser\manager $reparser_manager */
+		$reparser_manager = $this->container->get('text_reparser.manager');
+
+		return !empty($reparser_manager->get_resume_data('phpbb.ideas.text_reparser.clean_old_ideas'));
 	}
 
 	/**
