@@ -108,7 +108,7 @@ class listener implements EventSubscriberInterface
 	}
 
 	/**
-	 * Clean obsolete link-backs from idea topics
+	 * Clean obsolete link-backs from idea topics posted prior to Sep. 2017
 	 *
 	 * @param \phpbb\event\data $event The event object
 	 * @return void
@@ -121,17 +121,14 @@ class listener implements EventSubscriberInterface
 			return;
 		}
 
-		if ($event['topic_data']['topic_first_post_id'] == $event['row']['post_id'] && $event['topic_data']['topic_time'] < strtotime('September 1, 2017'))
+		if ($this->is_first_post($event['topic_data']['topic_first_post_id'], $event['row']['post_id']) && $event['topic_data']['topic_time'] < strtotime('September 1, 2017'))
 		{
-			$post_row = $event['post_row'];
-			$message = $post_row['MESSAGE'];
-
-			// This freakish looking regex pattern should
-			// remove the old ideas link-backs from the message.
-			$message = preg_replace('/(<br[^>]*>\\n?)?\\1?-{10}\\1?\\1?.*]/s', '', $message);
-
-			$post_row['MESSAGE'] = $message;
-			$event['post_row'] = $post_row;
+			// This freakish looking regex pattern should remove the old ideas link-backs from the message.
+			$event->update_subarray(
+				'post_row',
+				'MESSAGE',
+				preg_replace('/(<br[^>]*>\\n?)?\\1?-{10}\\1?\\1?(?:(?!<\/[rt]>).)*/s', '', $event['post_row']['MESSAGE'])
+			);
 		}
 	}
 
@@ -357,5 +354,18 @@ class listener implements EventSubscriberInterface
 	protected function is_ideas_forum($forum_id)
 	{
 		return (int) $forum_id === (int) $this->config['ideas_forum_id'];
+	}
+
+	/**
+	 * Check if a post is the first post in a topic
+	 *
+	 * @param int|string $topic_first_post_id
+	 * @param int|string $post_id
+	 * @return bool
+	 * @access protected
+	 */
+	protected function is_first_post($topic_first_post_id, $post_id)
+	{
+		return (int) $topic_first_post_id === (int) $post_id;
 	}
 }
