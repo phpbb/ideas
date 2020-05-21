@@ -146,7 +146,7 @@ class listener implements EventSubscriberInterface
 			return;
 		}
 
-		if ($event['topic_data']['topic_first_post_id'] == $event['row']['post_id'])
+		if ($this->is_first_post($event['topic_data']['topic_first_post_id'], $event['row']['post_id']))
 		{
 			$event->update_subarray('post_row', 'U_DELETE', false);
 			$event->update_subarray('post_row', 'U_WARN', false);
@@ -333,9 +333,9 @@ class listener implements EventSubscriberInterface
 	public function edit_idea_title($event)
 	{
 		if ($event['mode'] !== 'edit' ||
-			$event['post_data']['topic_first_post_id'] != $event['post_id'] ||
 			!$event['update_subject'] ||
-			!$this->is_ideas_forum($event['forum_id']))
+			!$this->is_ideas_forum($event['forum_id']) ||
+			!$this->is_first_post($event['post_data']['topic_first_post_id'], $event['post_id']))
 		{
 			return;
 		}
