@@ -70,13 +70,14 @@ class clean_old_ideas extends \phpbb\textreparser\row_based_plugin
 	{
 		$columns = $this->get_columns();
 
+		$fields = [];
 		foreach ($columns as $field_name => $column_name)
 		{
 			$fields[] = 'p.' . $column_name . ' AS ' . $field_name;
 		}
 
-		// Get the the first post's text for ideas created prior to Sep. 2017
-		$sql = 'SELECT ' . implode(', ', $fields) . '
+		// Query the first post's text for ideas created prior to Sep. 2017
+		return 'SELECT ' . implode(', ', $fields) . '
 			FROM ' . $this->table . ' p
 			INNER JOIN ' . $this->ideas_table . ' i
 				ON i.topic_id = p.topic_id
@@ -84,8 +85,6 @@ class clean_old_ideas extends \phpbb\textreparser\row_based_plugin
 				ON p.' . $columns['id'] . ' = t.topic_first_post_id
 			WHERE i.idea_date < ' . strtotime('September 1, 2017') . '
 				AND  i.idea_id BETWEEN ' . $min_id . ' AND ' . $max_id;
-
-		return $sql;
 	}
 
 	/**
