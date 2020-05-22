@@ -83,7 +83,7 @@ class clean_old_ideas extends \phpbb\textreparser\row_based_plugin
 				ON i.topic_id = p.topic_id
 			INNER JOIN ' . $this->topics_table . ' t
 				ON p.' . $columns['id'] . ' = t.topic_first_post_id
-			WHERE i.idea_date < ' . strtotime('September 1, 2017') . '
+			WHERE p.post_time < ' . strtotime('September 1, 2017') . '
 				AND  i.idea_id BETWEEN ' . $min_id . ' AND ' . $max_id;
 	}
 
