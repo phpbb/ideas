@@ -34,7 +34,7 @@ class m11_reparse_old_ideas extends \phpbb\db\migration\container_aware_migratio
 		/** @var \phpbb\textreparser\manager $reparser_manager */
 		$reparser_manager = $this->container->get('text_reparser.manager');
 
-		return !empty($reparser_manager->get_resume_data('phpbb.ideas.text_reparser.clean_old_ideas'));
+		return !empty($reparser_manager->get_resume_data('phpbb.ideas.text_reparser.clean_old_ideas') || !$this->bbcode_exists('idea'));
 	}
 
 	/**
@@ -91,5 +91,24 @@ class m11_reparse_old_ideas extends \phpbb\db\migration\container_aware_migratio
 		}
 
 		return $current;
+	}
+
+	/**
+	 * Check if a bbcode exists
+	 *
+	 * @param  string $tag BBCode's tag
+	 * @return bool        True if bbcode exists, false if not
+	 */
+	public function bbcode_exists($tag)
+	{
+		$sql = 'SELECT bbcode_id
+			FROM ' . $this->table_prefix . "bbcodes
+			WHERE LOWER(bbcode_tag) = '" . $this->db->sql_escape(strtolower($tag)) . "'
+			OR LOWER(bbcode_tag) = '" . $this->db->sql_escape(strtolower($tag)) . "='";
+		$result = $this->db->sql_query_limit($sql, 1);
+		$bbcode_id = $this->db->sql_fetchfield('bbcode_id');
+		$this->db->sql_freeresult($result);
+
+		return $bbcode_id !== false;
 	}
 }
