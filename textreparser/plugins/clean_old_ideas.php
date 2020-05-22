@@ -101,7 +101,11 @@ class clean_old_ideas extends \phpbb\textreparser\row_based_plugin
 		$text = $this->text_formatter_utils->remove_bbcode($text, 'idea');
 
 		// Remove old strings from the idea post
-		$text = str_replace(['----------', 'View idea at: ', 'Posted by '], ['', '', ''], $text);
+		$text = str_replace([
+			"<br/>\n<br/>\n----------",
+			"<br/>\n<br/>\nView idea at: ",
+			"<br/>\n<br/>\nPosted by "
+		], ['', '', ''], $text);
 
 		// Save the new text if it has changed and it's not a dry run
 		if ($text !== $record['text'] && $this->save_changes)
