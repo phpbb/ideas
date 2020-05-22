@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dataset>
+	<table name="phpbb_posts">
+		<column>post_id</column>
+		<column>post_text</column>
+		<column>post_time</column>
+		<column>topic_id</column>
+		<row>
+			<value>100</value>
+			<value>This post has nothing to change</value>
+			<value>1402532621</value>
+			<value>11</value>
+		</row>
+		<row>
+			<value>200</value>
+			<value><![CDATA[<r>This post is too new to be cleaned<IDEA idea="1000"><s>[idea=1000]</s>Linked Idea<e>[/idea]</e></IDEA><USER user="1000"><s>[user=1000]</s>testuser<e>[/user]</e></USER></r>]]></value>
+			<value>1577836800</value>
+			<value>22</value>
+		</row>
+		<row>
+			<value>300</value>
+			<value><![CDATA[<r>This post should be cleaned<br/>
+<br/>
+----------<br/>
+<br/>
+View idea at: <IDEA idea="1000"><s>[idea=1000]</s>Linked Idea<e>[/idea]</e></IDEA><br/>
+<br/>
+Posted by <USER user="1000"><s>[user=1000]</s>testuser<e>[/user]</e></USER></r>]]></value>
+			<value>1402532621</value>
+			<value>33</value>
+		</row>
+		<row>
+			<value>400</value>
+			<value><![CDATA[<r>This post is a reply and should not be changed<IDEA idea="1000"><s>[idea=1000]</s>Linked Idea<e>[/idea]</e></IDEA><USER user="1000"><s>[user=1000]</s>testuser<e>[/user]</e></USER></r>]]></value>
+			<value>1402532621</value>
+			<value>33</value>
+		</row>
+		<row>
+			<value>101010</value>
+			<value><![CDATA[<r>This post is out of range<IDEA idea="1000"><s>[idea=1000]</s>Linked Idea<e>[/idea]</e></IDEA><USER user="1000"><s>[user=1000]</s>testuser<e>[/user]</e></USER></r>]]></value>
+			<value>1402532621</value>
+			<value>1010</value>
+		</row>
+	</table>
+	<table name="phpbb_topics">
+		<column>topic_id</column>
+		<column>topic_first_post_id</column>
+		<row>
+			<value>11</value>
+			<value>100</value>
+		</row>
+		<row>
+			<value>22</value>
+			<value>200</value>
+		</row>
+		<row>
+			<value>33</value>
+			<value>300</value>
+		</row>
+		<row>
+			<value>1010</value>
+			<value>101010</value>
+		</row>
+	</table>
+	<table name="phpbb_ideas_ideas">
+		<column>idea_id</column>
+		<column>topic_id</column>
+		<row>
+			<value>1</value>
+			<value>11</value>
+		</row>
+		<row>
+			<value>2</value>
+			<value>22</value>
+		</row>
+		<row>
+			<value>3</value>
+			<value>33</value>
+		</row>
+		<row>
+			<value>1000</value>
+			<value>1010</value>
+		</row>
+	</table>
+</dataset>
