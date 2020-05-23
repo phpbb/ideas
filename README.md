@@ -1,26 +1,18 @@
 # phpBB Ideas
 
-The official Ideas Centre used at [phpBB.com](https://www.phpbb.com/ideas/). This phpBB extension allows community members to suggest and vote on ideas that can help to improve and enhance phpBB software.
+The official Ideas Centre used at [phpBB.com](https://www.phpbb.com/ideas/). This phpBB extension lets phpBB.com community members propose and vote on ideas to improve and enhance phpBB software.
 
 [![Build Status](https://travis-ci.org/phpbb/ideas.svg?branch=master)](https://travis-ci.org/phpbb/ideas)
 
-## Installation
+## Contribute
 
-1. Upload the package to `phpBB3/ext/phpbb/ideas`.
-2. Navigate in the ACP to `Customise -> Manage extensions`.
-3. Look for `phpBB Ideas` under the Disabled Extensions list, and click its `Enable` link.
-4. Configure Ideas in the ACP at `Extensions -> phpBB Ideas`.
+We welcome contributions to help make this Ideas extension even better. Please fork this repository, install it to a local development copy of phpBB, and send us a pull request with your bug fixes or feature improvements.
 
-## Contributing
+## Bugs and Support
 
-Please fork this repository and submit a pull request to contribute to phpBB Ideas
+You can report bugs and suggest features in the [issue tracker](https://github.com/phpbb/ideas/issues).
 
-## Bug Reporting & Support
-
-You can report bugs or suggest features in the [issue tracker](https://tracker.phpbb.com/projects/WEBSITE).
-Support is not available for phpBB Ideas however you may email `website [at] phpbb [dot] com` where you may receive some limited support should the problem be with phpBB Ideas.
-
-Note: This extension is currently under development and is not recommended for use on any live forum.
+Support is not available for phpBB Ideas because it is not an officially released extension from the phpBB Extensions Team. It is also not recommended for use on any live phpBB forum.
 
 ## License
 [GNU General Public License v2](license.txt)
