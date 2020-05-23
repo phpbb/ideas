@@ -119,46 +119,6 @@ class listener_test extends \phpbb_test_case
 	}
 
 	/**
-	 * Data set for test_clean_message
-	 *
-	 * @return array Array of test data
-	 */
-	public function clean_message_data()
-	{
-		return array(
-			array(1, 1, 1, 'Foo Bar', 'Foo Bar'), // Invalid forum, nothing cleaned
-			array(2, 1, 2, 'Foo Bar', 'Foo Bar'), // Invalid post, nothing clean
-			array(2, 1, 1, 'Foo Bar', 'Foo Bar'), // Valid post, nothing to clean
-			array(2, 1, 1, 'Foo Bar<br />----------<br>BarFoo<br>', 'Foo Bar'), // Valid post, requires cleaning
-			array(2, 1, 1, 'Foo Bar<br />\n\n----------<br>\nBarFoo<br>', 'Foo Bar'), // Valid post, requires cleaning
-			array(2, 1, 1, 'Foo Bar<br />--------<br>BarFoo<br>', 'Foo Bar<br />--------<br>BarFoo<br>'), // Valid post, nothing to clean
-		);
-	}
-
-	/**
-	 * Test the clean_message event
-	 *
-	 * @dataProvider clean_message_data
-	 */
-	public function test_clean_message($forum_id, $post_id, $first_post_id, $message, $expected)
-	{
-		$listener = $this->get_listener();
-
-		$event = new \phpbb\event\data(array(
-			'row' 			=> array(
-				'forum_id'	=> $forum_id,
-				'post_id'	=> $post_id,
-			),
-			'post_row'		=> array('MESSAGE' => $message),
-			'topic_data'	=> array('topic_first_post_id' => $first_post_id),
-		));
-
-		$listener->clean_message($event);
-
-		$this->assertContains($expected, $event['post_row']['MESSAGE']);
-	}
-
-	/**
 	 * Data set for show_post_buttons
 	 *
 	 * @return array Array of test data

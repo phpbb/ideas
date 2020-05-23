@@ -82,7 +82,7 @@ class listener implements EventSubscriberInterface
 	{
 		return array(
 			'core.viewforum_get_topic_data'				=> 'ideas_forum_redirect',
-			'core.viewtopic_modify_post_row'			=> array(array('clean_message'), array('show_post_buttons')),
+			'core.viewtopic_modify_post_row'			=> 'show_post_buttons',
 			'core.viewtopic_modify_page_title'			=> 'show_idea',
 			'core.viewtopic_add_quickmod_option_before'	=> 'adjust_quickmod_tools',
 			'core.viewonline_overwrite_location'		=> 'viewonline_ideas',
@@ -104,31 +104,6 @@ class listener implements EventSubscriberInterface
 			// Use the custom base url if set, otherwise default to normal routing
 			$url = $this->config['ideas_base_url'] ?: $this->helper->route('phpbb_ideas_index_controller');
 			redirect($url);
-		}
-	}
-
-	/**
-	 * Clean obsolete link-backs from idea topics posted prior to Sep. 2017
-	 *
-	 * @param \phpbb\event\data $event The event object
-	 * @return void
-	 * @access public
-	 */
-	public function clean_message($event)
-	{
-		if (!$this->is_ideas_forum($event['row']['forum_id']))
-		{
-			return;
-		}
-
-		if ($this->is_first_post($event['topic_data']['topic_first_post_id'], $event['row']['post_id']) && $event['topic_data']['topic_time'] < strtotime('September 1, 2017'))
-		{
-			// This freakish looking regex pattern should remove the old ideas link-backs from the message.
-			$event->update_subarray(
-				'post_row',
-				'MESSAGE',
-				preg_replace('/(<br[^>]*>\\n?)?\\1?-{10}\\1?\\1?(?:(?!<\/[rt]>).)*/s', '', $event['post_row']['MESSAGE'])
-			);
 		}
 	}
 
