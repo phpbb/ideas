@@ -21,7 +21,6 @@ class ideas
 {
 	const SORT_AUTHOR = 'author';
 	const SORT_DATE = 'date';
-	const SORT_IMPLEMENTED = 'implemented';
 	const SORT_NEW = 'new';
 	const SORT_SCORE = 'score';
 	const SORT_TITLE = 'title';

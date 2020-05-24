@@ -55,6 +55,14 @@ $lang = array_merge($lang, array(
 	'JS_DISABLED'           => 'JavaScript is disabled',
 
 	'LATEST_IDEAS'			=> 'Latest Ideas',
+	'LIST_DUPLICATE'  		=> 'Duplicate ideas',
+	'LIST_EGOSEARCH'		=> 'My ideas',
+	'LIST_IMPLEMENTED' 		=> 'Implemented ideas',
+	'LIST_IN_PROGRESS' 		=> 'In Progress ideas',
+	'LIST_INVALID'    		=> 'Invalid ideas',
+	'LIST_NEW'				=> 'New ideas',
+	'LIST_TOP'				=> 'Top ideas',
+
 	'LOGGED_OUT'			=> 'You must be logged in to do this.',
 
 	'NEW'					=> 'New',

@@ -52,22 +52,16 @@ class list_controller extends base
 			$sort = ideas::SORT_DATE;
 		}
 
-		// if sort by "implemented", sort ideas with status implemented by date
-		if ($sort === ideas::SORT_IMPLEMENTED)
-		{
-			$status = ideas::$statuses['IMPLEMENTED'];
-			$sort = ideas::SORT_DATE;
-		}
-
-		// Set the status name for displaying in the template
-		$status_name = (!$status && $sort === ideas::SORT_TOP) ? $this->language->lang('TOP_IDEAS') : $this->ideas->get_status_from_id($status);
+		// Set the name for displaying in the template
+		$status_name = 'LIST_' . strtoupper($status > 0 ? array_search($status, ideas::$statuses) : $sort);
+		$status_name = $this->language->is_set($status_name) ? $this->language->lang($status_name) : '';
 
 		// For special case where we want to request ALL ideas,
 		// including the statuses normally hidden from lists.
 		if ($status === -1)
 		{
 			$status = ideas::$statuses;
-			$status_name = $this->language->lang('ALL_IDEAS');
+			$status_name = $status_name ?: $this->language->lang('ALL_IDEAS');
 		}
 
 		// Generate ideas

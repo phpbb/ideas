@@ -52,8 +52,8 @@ class list_controller_test extends controller_base
 				200,
 				'list_body.html',
 				array(
-					'sort' => \phpbb\ideas\factory\ideas::SORT_IMPLEMENTED,
-					'status' => 0,
+					'sort' => \phpbb\ideas\factory\ideas::SORT_DATE,
+					'status' => \phpbb\ideas\factory\ideas::$statuses['IMPLEMENTED'],
 				),
 				array(
 					'sort' => \phpbb\ideas\factory\ideas::SORT_DATE,
