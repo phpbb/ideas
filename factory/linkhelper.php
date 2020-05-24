@@ -50,19 +50,6 @@ class linkhelper
 	}
 
 	/**
-	 * Get the ideas list controller URL
-	 *
-	 * @param string $sort Optional value to sort the list by (top, new, date, etc.)
-	 * @return string The route
-	 */
-	public function get_list_link($sort = 'date')
-	{
-		return $this->helper->route('phpbb_ideas_list_controller', array(
-			'sort' => $sort,
-		));
-	}
-
-	/**
 	 * Returns a link to the users profile, complete with colour.
 	 *
 	 * Is there a function that already does this? This seems fairly database heavy.

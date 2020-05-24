@@ -85,24 +85,6 @@ class linkhelper_test extends \phpbb_database_test_case
 		$this->assertEquals($expected, $linkhelper->get_idea_link($idea_id, $mode, $hash));
 	}
 
-	public function get_list_link_test_data()
-	{
-		return array(
-			array('top', 'phpbb_ideas_list_controller#{"sort":"top"}'),
-			array('foo', 'phpbb_ideas_list_controller#{"sort":"foo"}'),
-		);
-	}
-
-	/**
-	 * @dataProvider get_list_link_test_data
-	 */
-	public function test_get_list_link($sort, $expected)
-	{
-		$linkhelper = $this->get_linkhelper();
-
-		$this->assertEquals($expected, $linkhelper->get_list_link($sort));
-	}
-
 	public function get_user_link_test_data()
 	{
 		return array(
