@@ -12,6 +12,7 @@ namespace phpbb\ideas\controller;
 
 use phpbb\exception\http_exception;
 use phpbb\ideas\factory\ideas;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class idea_controller extends base
@@ -24,7 +25,7 @@ class idea_controller extends base
 	 *
 	 * @param $idea_id int The ID of the requested idea, maybe?
 	 * @throws http_exception
-	 * @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
+	 * @return JsonResponse|RedirectResponse
 	 */
 	public function idea($idea_id)
 	{
@@ -44,7 +45,7 @@ class idea_controller extends base
 		{
 			$result = $this->$mode();
 
-			return new \Symfony\Component\HttpFoundation\JsonResponse($result);
+			return new JsonResponse($result);
 		}
 
 		$params = array(
