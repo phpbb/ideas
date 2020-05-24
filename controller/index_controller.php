@@ -57,8 +57,8 @@ class index_controller extends base
 			'FORUM_NAME'		=> $this->language->lang('IDEAS'),
 		));
 
-		// Display the search ideas field
-		$this->display_search_ideas();
+		// Display common ideas template vars
+		$this->display_common_vars();
 
 		return $this->helper->render('index_body.html', $this->language->lang('IDEAS_TITLE'));
 	}

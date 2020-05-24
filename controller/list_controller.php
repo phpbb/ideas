@@ -112,8 +112,8 @@ class list_controller extends base
 			$start
 		);
 
-		// Display the search ideas field
-		$this->display_search_ideas();
+		// Display common ideas template vars
+		$this->display_common_vars();
 
 		return $this->helper->render('list_body.html', $this->language->lang('IDEA_LIST'));
 	}
