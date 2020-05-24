@@ -26,6 +26,7 @@ class ideas
 	const SORT_TITLE = 'title';
 	const SORT_TOP = 'top';
 	const SORT_VOTES = 'votes';
+	const SORT_MYIDEAS = 'egosearch';
 	const SUBJECT_LENGTH = 120;
 
 	/** @var array Idea status names and IDs */
@@ -196,6 +197,11 @@ class ideas
 
 			case self::SORT_VOTES:
 				$this->sql['ORDER_BY'] = 'i.idea_votes_up + i.idea_votes_down ' . $direction;
+			break;
+
+			case self::SORT_MYIDEAS:
+				$this->sql['WHERE'][] = 'i.idea_author = ' . (int) $this->user->data['user_id'];
+				$this->sql['ORDER_BY'] = "i.idea_date DESC";
 			break;
 
 			case self::SORT_TOP:

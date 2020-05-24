@@ -140,6 +140,19 @@ class list_controller_test extends controller_base
 					'status' => \phpbb\ideas\factory\ideas::$statuses,
 				),
 			),
+			// My ideas list
+			array(
+				200,
+				'list_body.html',
+				array(
+					'sort' => \phpbb\ideas\factory\ideas::SORT_MYIDEAS,
+					'status' => -1,
+				),
+				array(
+					'sort' => \phpbb\ideas\factory\ideas::SORT_MYIDEAS,
+					'status' => \phpbb\ideas\factory\ideas::$statuses,
+				),
+			),
 		);
 	}
 

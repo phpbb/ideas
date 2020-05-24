@@ -53,25 +53,38 @@ class ideas_test extends ideas_functional_base
 	 */
 	public function test_view_ideas_lists()
 	{
-		// Access new ideas list
+		// Test new ideas list
 		$crawler = self::request('GET', "app.php/ideas/list?sid={$this->sid}");
 		$this->assertContainsLang('OPEN_IDEAS', $crawler->filter('h2')->text());
 		$this->assertNotContainsLang('NO_IDEAS_DISPLAY', $crawler->filter('.topiclist.forums')->text());
 
-		// Access top ideas list
+		// Test top ideas list
 		$crawler = self::request('GET', "app.php/ideas/list/top?sid={$this->sid}");
-		$this->assertContainsLang('TOP_IDEAS', $crawler->filter('h2')->text());
+		$this->assertContainsLang('LIST_TOP', $crawler->filter('h2')->text());
 		$this->assertNotContainsLang('NO_IDEAS_DISPLAY', $crawler->filter('.topiclist.forums')->text());
 
-		// Access all ideas list
+		// Test all ideas list
 		$crawler = self::request('GET', "app.php/ideas/list/date?status=-1&sid={$this->sid}");
 		$this->assertContainsLang('ALL_IDEAS', $crawler->filter('h2')->text());
 		$this->assertNotContainsLang('NO_IDEAS_DISPLAY', $crawler->filter('.topiclist.forums')->text());
 
-		// Access implemented ideas list (should be empty list)
+		// Test implemented ideas list (should be empty list)
 		$crawler = self::request('GET', "app.php/ideas/list/date?status=3&sid={$this->sid}");
-		$this->assertContainsLang('IMPLEMENTED', $crawler->filter('h2')->text());
+		$this->assertContainsLang('LIST_IMPLEMENTED', $crawler->filter('h2')->text());
 		$this->assertContainsLang('NO_IDEAS_DISPLAY', $crawler->filter('.topiclist.forums')->text());
+
+		// Test my ideas list is empty when logged out
+		$crawler = self::request('GET', "app.php/ideas/list/egosearch?status=-1&sid={$this->sid}");
+		$this->assertNotContainsLang('LIST_EGOSEARCH', $crawler->filter('#quick-links')->text());
+		$this->assertContainsLang('LIST_EGOSEARCH', $crawler->filter('h2')->text());
+		$this->assertContainsLang('NO_IDEAS_DISPLAY', $crawler->filter('.topiclist.forums')->text());
+
+		// Test my ideas list works when logged in
+		$this->login();
+		$crawler = self::request('GET', "app.php/ideas/list/egosearch?status=-1&sid={$this->sid}");
+		$this->assertContainsLang('LIST_EGOSEARCH', $crawler->filter('#quick-links')->text());
+		$this->assertContainsLang('LIST_EGOSEARCH', $crawler->filter('h2')->text());
+		$this->assertNotContainsLang('NO_IDEAS_DISPLAY', $crawler->filter('.topiclist.forums')->text());
 	}
 
 	/**
