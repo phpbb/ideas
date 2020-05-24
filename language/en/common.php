@@ -49,6 +49,7 @@ $lang = array_merge($lang, array(
 	'IMPLEMENTED_VERSION'	=> 'phpBB version',
 	'IN_PROGRESS'           => 'In Progress',
 	'INVALID'				=> 'Invalid',
+	'INVALID_IDEA_QUERY'	=> 'Invalid SQL query. Ideas failed to load.',
 	'INVALID_VOTE'			=> 'Invalid vote; the number you entered was invalid.',
 
 	'JS_DISABLED'           => 'JavaScript is disabled',

@@ -13,6 +13,7 @@ namespace phpbb\ideas\factory;
 use phpbb\auth\auth;
 use phpbb\config\config;
 use phpbb\db\driver\driver_interface;
+use phpbb\exception\runtime_exception;
 use phpbb\language\language;
 use phpbb\user;
 
@@ -70,6 +71,9 @@ class ideas
 	/** @var string */
 	protected $profile_url;
 
+	/** @var array */
+	protected $sql;
+
 	/**
 	 * @param auth             $auth
 	 * @param config           $config
@@ -100,131 +104,186 @@ class ideas
 	 * Returns an array of ideas. Defaults to ten ideas ordered by date
 	 * excluding implemented, duplicate or invalid ideas.
 	 *
-	 * @param int       $number         The number of ideas to return.
-	 * @param string    $sort           Thing to sort by.
-	 * @param string    $sort_direction ASC / DESC.
+	 * @param int       $number         The number of ideas to return
+	 * @param string    $sort           A sorting option/collection
+	 * @param string    $sort_direction Should either be ASC or DESC
 	 * @param array|int $status         The id of the status(es) to load
 	 * @param int       $start          Start value for pagination
 	 *
 	 * @return array Array of row data
 	 */
-	public function get_ideas($number = 10, $sort = 'date', $sort_direction = 'DESC', $status = array(), $start = 0)
+	public function get_ideas($number = 10, $sort = 'date', $sort_direction = 'DESC', $status = [], $start = 0)
 	{
-		switch (strtolower($sort))
-		{
-			case self::SORT_AUTHOR:
-				$sortby = 'i.idea_author ' . $sort_direction;
-			break;
+		// Initialize a query to request ideas
+		$this->query_ideas()
+			->query_sort($sort, $sort_direction)
+			->query_status($status);
 
+		// For pagination, get a count of the total ideas being requested
+		if ($number >= $this->config['posts_per_page'])
+		{
+			$this->idea_count = $this->query_count();
+		}
+
+		$ideas = $this->query_get($number, $start);
+
+		if (count($ideas))
+		{
+			$topic_ids = array_column($ideas, 'topic_id');
+			$idea_ids = array_column($ideas, 'idea_id');
+
+			$topic_tracking_info = get_complete_topic_tracking((int) $this->config['ideas_forum_id'], $topic_ids);
+			$user_voting_info = $this->get_users_votes($this->user->data['user_id'], $idea_ids);
+
+			foreach ($ideas as &$idea)
+			{
+				$idea['read'] = !(isset($topic_tracking_info[$idea['topic_id']]) && $idea['topic_last_post_time'] > $topic_tracking_info[$idea['topic_id']]);
+				$idea['u_voted'] = isset($user_voting_info[$idea['idea_id']]) ? (int) $user_voting_info[$idea['idea_id']] : '';
+			}
+			unset ($idea);
+		}
+
+		return $ideas;
+	}
+
+	/**
+	 * Initialize the $sql property with necessary SQL statements.
+	 *
+	 * @return \phpbb\ideas\factory\ideas $this For chaining calls
+	 */
+	protected function query_ideas()
+	{
+		$this->sql = [];
+
+		$this->sql['SELECT'][]  = 't.topic_last_post_time, t.topic_status, t.topic_visibility, i.*';
+		$this->sql['FROM']    = "{$this->table_ideas} i";
+		$this->sql['JOIN']    = "{$this->table_topics} t ON i.topic_id = t.topic_id";
+		$this->sql['WHERE'][] = 't.forum_id = ' . (int) $this->config['ideas_forum_id'];
+
+		// Only get approved topics for regular users, Moderators will see unapproved topics
+		if (!$this->auth->acl_get('m_', $this->config['ideas_forum_id']))
+		{
+			$this->sql['WHERE'][] = 't.topic_visibility = ' . ITEM_APPROVED;
+		}
+
+		return $this;
+	}
+
+	/**
+	 * Update the $sql property with ORDER BY statements to obtain
+	 * the requested collection of Ideas. Some instances may add
+	 * additional WHERE or SELECT statements.
+	 *
+	 * @param string $sort      A sorting option/collection
+	 * @param string $direction Will either be ASC or DESC
+	 * @return \phpbb\ideas\factory\ideas $this For chaining calls
+	 */
+	protected function query_sort($sort, $direction)
+	{
+		$sort = strtolower($sort);
+		$direction = $direction === 'DESC' ? 'DESC' : 'ASC';
+
+		switch ($sort)
+		{
 			case self::SORT_DATE:
-				$sortby = 'i.idea_date ' . $sort_direction;
+			case self::SORT_TITLE:
+			case self::SORT_AUTHOR:
+				$this->sql['ORDER_BY'] = "i.idea_{$sort} {$direction}";
 			break;
 
 			case self::SORT_SCORE:
-				$sortby = 'CAST(i.idea_votes_up AS decimal) - CAST(i.idea_votes_down AS decimal) ' . $sort_direction;
-			break;
-
-			case self::SORT_TITLE:
-				$sortby = 'i.idea_title ' . $sort_direction;
+				$this->sql['ORDER_BY'] = 'CAST(i.idea_votes_up AS decimal) - CAST(i.idea_votes_down AS decimal) ' . $direction;
 			break;
 
 			case self::SORT_VOTES:
-				$sortby = 'i.idea_votes_up + i.idea_votes_down ' . $sort_direction;
+				$this->sql['ORDER_BY'] = 'i.idea_votes_up + i.idea_votes_down ' . $direction;
 			break;
 
 			case self::SORT_TOP:
-				// Special case!
-				$sortby = 'TOP';
-			break;
+				$this->sql['WHERE'][] = 'i.idea_votes_up > i.idea_votes_down';
+			// no break
 
 			default:
-				// Special case!
-				$sortby = 'ALL';
-			break;
+				// From http://evanmiller.org/how-not-to-sort-by-average-rating.html
+				$this->sql['SELECT'][] = '((i.idea_votes_up + 1.9208) / (i.idea_votes_up + i.idea_votes_down) -
+	            	1.96 * SQRT((i.idea_votes_up * i.idea_votes_down) / (i.idea_votes_up + i.idea_votes_down) + 0.9604) /
+	            	(i.idea_votes_up + i.idea_votes_down)) / (1 + 3.8416 / (i.idea_votes_up + i.idea_votes_down))
+					AS ci_lower_bound';
+
+				$this->sql['ORDER_BY'] = 'ci_lower_bound ' . $direction;
 		}
 
-		// If we have a $status value or array lets use it,
-		// otherwise lets exclude implemented, invalid and duplicate by default
-		$where = (!empty($status)) ? $this->db->sql_in_set('i.idea_status', $status) : $this->db->sql_in_set(
-			'i.idea_status', array(self::$statuses['IMPLEMENTED'], self::$statuses['DUPLICATE'], self::$statuses['INVALID'],
-		), true);
+		return $this;
+	}
 
-		if ($sortby === 'TOP')
+	/**
+	 * Update $sql property with additional SQL statements that will filter
+	 * the query to get ideas within or without certain statuses.
+	 *
+	 * @param array|int $status The id of the status(es) to load
+	 * @return \phpbb\ideas\factory\ideas $this For chaining calls
+	 */
+	protected function query_status($status = [])
+	{
+		// If we are given some statuses, get ideas from those. Otherwise the default is
+		// to get ideas excluding Duplicates, Invalid and Implemented statuses.
+		$this->sql['WHERE'][] = !empty($status) ? $this->db->sql_in_set('i.idea_status', $status) : $this->db->sql_in_set(
+			'i.idea_status', [self::$statuses['IMPLEMENTED'], self::$statuses['DUPLICATE'], self::$statuses['INVALID'],
+		], true);
+
+		return $this;
+	}
+
+	/**
+	 * Run a query using the $sql property to get a collection of ideas.
+	 *
+	 * @param int $number The number of ideas to return
+	 * @param int $start  Start value for pagination
+	 * @return mixed      Nested array if the query had rows, false otherwise
+	 * @throws \phpbb\exception\runtime_exception
+	 */
+	protected function query_get($number = 10, $start = 0)
+	{
+		if (empty($this->sql))
 		{
-			$where .= ' AND i.idea_votes_up > i.idea_votes_down';
+			throw new runtime_exception('INVALID_IDEA_QUERY');
 		}
 
-		// Only get approved topics for regular users, Moderators can see unapproved topics
-		if (!$this->auth->acl_get('m_', $this->config['ideas_forum_id']))
-		{
-			$where .= ' AND t.topic_visibility = ' . ITEM_APPROVED;
-		}
-
-		// Only get ideas that are actually in the ideas forum (not ones that have been moved)
-		$where .= ' AND t.forum_id = ' . (int) $this->config['ideas_forum_id'];
-
-		// Count the total number of ideas for pagination
-		if ($number >= $this->config['posts_per_page'])
-		{
-			$sql = 'SELECT COUNT(i.idea_id) as num_ideas
-				FROM ' . $this->table_ideas . ' i
-       			INNER JOIN ' . $this->table_topics . " t
-       				ON i.topic_id = t.topic_id
-				WHERE $where";
-			$result = $this->db->sql_query($sql);
-			$num_ideas = (int) $this->db->sql_fetchfield('num_ideas');
-			$this->db->sql_freeresult($result);
-
-			// Set the total number of ideas for pagination
-			$this->idea_count = $num_ideas;
-		}
-
-		if ($sortby !== 'TOP' && $sortby !== 'ALL')
-		{
-			$sql = 'SELECT t.topic_last_post_time, t.topic_status, t.topic_visibility, i.*
-				FROM ' . $this->table_ideas . ' i
-				INNER JOIN ' . $this->table_topics . " t
-					ON i.topic_id = t.topic_id
-				WHERE $where
-				ORDER BY " . $this->db->sql_escape($sortby);
-		}
-		else
-		{
-			// YEEEEEEEEAAAAAAAAAAAAAHHHHHHH
-			// From http://evanmiller.org/how-not-to-sort-by-average-rating.html
-			$sql = 'SELECT t.topic_last_post_time, t.topic_status, t.topic_visibility, i.*,
-				((i.idea_votes_up + 1.9208) / (i.idea_votes_up + i.idea_votes_down) -
-	            1.96 * SQRT((i.idea_votes_up * i.idea_votes_down) / (i.idea_votes_up + i.idea_votes_down) + 0.9604) /
-	            (i.idea_votes_up + i.idea_votes_down)) / (1 + 3.8416 / (i.idea_votes_up + i.idea_votes_down))
-				AS ci_lower_bound
-					FROM ' . $this->table_ideas . ' i
-					INNER JOIN ' . $this->table_topics . " t
-						ON i.topic_id = t.topic_id
-					WHERE $where
-				ORDER BY ci_lower_bound " . $this->db->sql_escape($sort_direction);
-		}
+		$sql = 'SELECT ' . implode(', ', $this->sql['SELECT']) . '
+			FROM ' . $this->sql['FROM'] . '
+			INNER JOIN ' . $this->sql['JOIN'] . '
+			WHERE ' . implode(' AND ', $this->sql['WHERE']) . '
+			ORDER BY ' . $this->db->sql_escape($this->sql['ORDER_BY']);
 
 		$result = $this->db->sql_query_limit($sql, $number, $start);
 		$rows = $this->db->sql_fetchrowset($result);
 		$this->db->sql_freeresult($result);
 
-		if (count($rows))
+		return $rows;
+	}
+
+	/**
+	 * Run a query using the $sql property to get a count of ideas.
+	 *
+	 * @return int The number of ideas
+	 * @throws \phpbb\exception\runtime_exception
+	 */
+	protected function query_count()
+	{
+		if (empty($this->sql))
 		{
-			$topic_ids = array_column($rows, 'topic_id');
-			$idea_ids = array_column($rows, 'idea_id');
-
-			$topic_tracking_info = get_complete_topic_tracking((int) $this->config['ideas_forum_id'], $topic_ids);
-			$user_voting_info = $this->get_users_votes($this->user->data['user_id'], $idea_ids);
-
-			foreach ($rows as &$row)
-			{
-				$row['read'] = !(isset($topic_tracking_info[$row['topic_id']]) && $row['topic_last_post_time'] > $topic_tracking_info[$row['topic_id']]);
-				$row['u_voted'] = isset($user_voting_info[$row['idea_id']]) ? (int) $user_voting_info[$row['idea_id']] : '';
-			}
-			unset ($row);
+			throw new runtime_exception('INVALID_IDEA_QUERY');
 		}
 
-		return $rows;
+		$sql = 'SELECT COUNT(i.idea_id) as count
+			FROM ' . $this->sql['FROM'] . '
+       		INNER JOIN ' . $this->sql['JOIN'] . '
+			WHERE ' . implode(' AND ', $this->sql['WHERE']);
+		$result = $this->db->sql_query($sql);
+		$count = (int) $this->db->sql_fetchfield('count');
+		$this->db->sql_freeresult($result);
+
+		return $count;
 	}
 
 	/**
