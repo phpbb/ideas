@@ -104,19 +104,19 @@ class ideas
 	 * Returns an array of ideas. Defaults to ten ideas ordered by date
 	 * excluding implemented, duplicate or invalid ideas.
 	 *
-	 * @param int       $number         The number of ideas to return
-	 * @param string    $sort           A sorting option/collection
-	 * @param string    $sort_direction Should either be ASC or DESC
-	 * @param array|int $status         The id of the status(es) to load
-	 * @param int       $start          Start value for pagination
+	 * @param int       $number    The number of ideas to return
+	 * @param string    $sort      A sorting option/collection
+	 * @param string    $direction Should either be ASC or DESC
+	 * @param array|int $status    The id of the status(es) to load
+	 * @param int       $start     Start value for pagination
 	 *
 	 * @return array Array of row data
 	 */
-	public function get_ideas($number = 10, $sort = 'date', $sort_direction = 'DESC', $status = [], $start = 0)
+	public function get_ideas($number = 10, $sort = 'date', $direction = 'DESC', $status = [], $start = 0)
 	{
 		// Initialize a query to request ideas
 		$this->query_ideas()
-			->query_sort($sort, $sort_direction)
+			->query_sort($sort, $direction)
 			->query_status($status);
 
 		// For pagination, get a count of the total ideas being requested
@@ -155,9 +155,9 @@ class ideas
 	{
 		$this->sql = [];
 
-		$this->sql['SELECT'][]  = 't.topic_last_post_time, t.topic_status, t.topic_visibility, i.*';
-		$this->sql['FROM']    = "{$this->table_ideas} i";
-		$this->sql['JOIN']    = "{$this->table_topics} t ON i.topic_id = t.topic_id";
+		$this->sql['SELECT'][] = 't.topic_last_post_time, t.topic_status, t.topic_visibility, i.*';
+		$this->sql['FROM'] = "{$this->table_ideas} i";
+		$this->sql['JOIN'] = "{$this->table_topics} t ON i.topic_id = t.topic_id";
 		$this->sql['WHERE'][] = 't.forum_id = ' . (int) $this->config['ideas_forum_id'];
 
 		// Only get approved topics for regular users, Moderators will see unapproved topics
@@ -183,39 +183,38 @@ class ideas
 		$sort = strtolower($sort);
 		$direction = $direction === 'DESC' ? 'DESC' : 'ASC';
 
-		switch ($sort)
+		// Most sorting relies on simple ORDER BY statements, but some may use a WHERE statement
+		$sorting = [
+			self::SORT_DATE    => ['ORDER_BY' => 'i.idea_date'],
+			self::SORT_TITLE   => ['ORDER_BY' => 'i.idea_title'],
+			self::SORT_AUTHOR  => ['ORDER_BY' => 'i.idea_author'],
+			self::SORT_SCORE   => ['ORDER_BY' => 'CAST(i.idea_votes_up AS decimal) - CAST(i.idea_votes_down AS decimal)'],
+			self::SORT_VOTES   => ['ORDER_BY' => 'i.idea_votes_up + i.idea_votes_down'],
+			self::SORT_TOP     => ['WHERE' => 'i.idea_votes_up > i.idea_votes_down'],
+			self::SORT_MYIDEAS => ['ORDER_BY' => 'i.idea_date', 'WHERE' => 'i.idea_author = ' . (int) $this->user->data['user_id']],
+		];
+
+		// Append the new WHERE statement if the sort has one
+		if (isset($sorting[$sort]['WHERE']))
 		{
-			case self::SORT_DATE:
-			case self::SORT_TITLE:
-			case self::SORT_AUTHOR:
-				$this->sql['ORDER_BY'] = "i.idea_{$sort} {$direction}";
-			break;
+			$this->sql['WHERE'][] = $sorting[$sort]['WHERE'];
+		}
 
-			case self::SORT_SCORE:
-				$this->sql['ORDER_BY'] = 'CAST(i.idea_votes_up AS decimal) - CAST(i.idea_votes_down AS decimal) ' . $direction;
-			break;
+		// If we have an ORDER BY that is our sort mode. The absence of an ORDER BY
+		// means we will by default sort ideas based on their calculated score.
+		if (isset($sorting[$sort]['ORDER_BY']))
+		{
+			$this->sql['ORDER_BY'] = "{$sorting[$sort]['ORDER_BY']} $direction";
+		}
+		else
+		{
+			// https://www.evanmiller.org/how-not-to-sort-by-average-rating.html
+			$this->sql['SELECT'][] = '((i.idea_votes_up + 1.9208) / (i.idea_votes_up + i.idea_votes_down) -
+				1.96 * SQRT((i.idea_votes_up * i.idea_votes_down) / (i.idea_votes_up + i.idea_votes_down) + 0.9604) /
+				(i.idea_votes_up + i.idea_votes_down)) / (1 + 3.8416 / (i.idea_votes_up + i.idea_votes_down))
+				AS ci_lower_bound';
 
-			case self::SORT_VOTES:
-				$this->sql['ORDER_BY'] = 'i.idea_votes_up + i.idea_votes_down ' . $direction;
-			break;
-
-			case self::SORT_MYIDEAS:
-				$this->sql['WHERE'][] = 'i.idea_author = ' . (int) $this->user->data['user_id'];
-				$this->sql['ORDER_BY'] = "i.idea_date DESC";
-			break;
-
-			case self::SORT_TOP:
-				$this->sql['WHERE'][] = 'i.idea_votes_up > i.idea_votes_down';
-			// no break
-
-			default:
-				// From http://evanmiller.org/how-not-to-sort-by-average-rating.html
-				$this->sql['SELECT'][] = '((i.idea_votes_up + 1.9208) / (i.idea_votes_up + i.idea_votes_down) -
-	            	1.96 * SQRT((i.idea_votes_up * i.idea_votes_down) / (i.idea_votes_up + i.idea_votes_down) + 0.9604) /
-	            	(i.idea_votes_up + i.idea_votes_down)) / (1 + 3.8416 / (i.idea_votes_up + i.idea_votes_down))
-					AS ci_lower_bound';
-
-				$this->sql['ORDER_BY'] = 'ci_lower_bound ' . $direction;
+			$this->sql['ORDER_BY'] = 'ci_lower_bound ' . $direction;
 		}
 
 		return $this;
