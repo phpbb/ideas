@@ -115,17 +115,17 @@ class ideas
 	public function get_ideas($number = 10, $sort = 'date', $direction = 'DESC', $status = [], $start = 0)
 	{
 		// Initialize a query to request ideas
-		$this->query_ideas()
+		$sql = $this->query_ideas()
 			->query_sort($sort, $direction)
 			->query_status($status);
 
 		// For pagination, get a count of the total ideas being requested
 		if ($number >= $this->config['posts_per_page'])
 		{
-			$this->idea_count = $this->query_count();
+			$this->idea_count = $sql->query_count();
 		}
 
-		$ideas = $this->query_get($number, $start);
+		$ideas = $sql->query_get($number, $start);
 
 		if (count($ideas))
 		{
@@ -172,10 +172,11 @@ class ideas
 	/**
 	 * Update the $sql property with ORDER BY statements to obtain
 	 * the requested collection of Ideas. Some instances may add
-	 * additional WHERE or SELECT statements.
+	 * additional WHERE or SELECT statements to refine the collection.
 	 *
 	 * @param string $sort      A sorting option/collection
 	 * @param string $direction Will either be ASC or DESC
+	 *
 	 * @return \phpbb\ideas\factory\ideas $this For chaining calls
 	 */
 	protected function query_sort($sort, $direction)
@@ -184,7 +185,7 @@ class ideas
 		$direction = $direction === 'DESC' ? 'DESC' : 'ASC';
 
 		// Most sorting relies on simple ORDER BY statements, but some may use a WHERE statement
-		$sorting = [
+		$statements = [
 			self::SORT_DATE    => ['ORDER_BY' => 'i.idea_date'],
 			self::SORT_TITLE   => ['ORDER_BY' => 'i.idea_title'],
 			self::SORT_AUTHOR  => ['ORDER_BY' => 'i.idea_author'],
@@ -194,17 +195,17 @@ class ideas
 			self::SORT_MYIDEAS => ['ORDER_BY' => 'i.idea_date', 'WHERE' => 'i.idea_author = ' . (int) $this->user->data['user_id']],
 		];
 
-		// Append the new WHERE statement if the sort has one
-		if (isset($sorting[$sort]['WHERE']))
+		// Append a new WHERE statement if the sort has one
+		if (isset($statements[$sort]['WHERE']))
 		{
-			$this->sql['WHERE'][] = $sorting[$sort]['WHERE'];
+			$this->sql['WHERE'][] = $statements[$sort]['WHERE'];
 		}
 
-		// If we have an ORDER BY that is our sort mode. The absence of an ORDER BY
-		// means we will by default sort ideas based on their calculated score.
-		if (isset($sorting[$sort]['ORDER_BY']))
+		// If we have an ORDER BY we use that. The absence of an ORDER BY
+		// means we will default to sorting ideas by their calculated score.
+		if (isset($statements[$sort]['ORDER_BY']))
 		{
-			$this->sql['ORDER_BY'] = "{$sorting[$sort]['ORDER_BY']} $direction";
+			$this->sql['ORDER_BY'] = "{$statements[$sort]['ORDER_BY']} $direction";
 		}
 		else
 		{
@@ -214,7 +215,7 @@ class ideas
 				(i.idea_votes_up + i.idea_votes_down)) / (1 + 3.8416 / (i.idea_votes_up + i.idea_votes_down))
 				AS ci_lower_bound';
 
-			$this->sql['ORDER_BY'] = 'ci_lower_bound ' . $direction;
+			$this->sql['ORDER_BY'] = "ci_lower_bound $direction";
 		}
 
 		return $this;
@@ -225,6 +226,7 @@ class ideas
 	 * the query to get ideas within or without certain statuses.
 	 *
 	 * @param array|int $status The id of the status(es) to load
+	 *
 	 * @return \phpbb\ideas\factory\ideas $this For chaining calls
 	 */
 	protected function query_status($status = [])
@@ -243,10 +245,11 @@ class ideas
 	 *
 	 * @param int $number The number of ideas to return
 	 * @param int $start  Start value for pagination
+	 *
 	 * @return mixed      Nested array if the query had rows, false otherwise
 	 * @throws \phpbb\exception\runtime_exception
 	 */
-	protected function query_get($number = 10, $start = 0)
+	protected function query_get($number, $start)
 	{
 		if (empty($this->sql))
 		{
@@ -257,7 +260,7 @@ class ideas
 			FROM ' . $this->sql['FROM'] . '
 			INNER JOIN ' . $this->sql['JOIN'] . '
 			WHERE ' . implode(' AND ', $this->sql['WHERE']) . '
-			ORDER BY ' . $this->db->sql_escape($this->sql['ORDER_BY']);
+			ORDER BY ' . $this->sql['ORDER_BY'];
 
 		$result = $this->db->sql_query_limit($sql, $number, $start);
 		$rows = $this->db->sql_fetchrowset($result);
@@ -283,6 +286,7 @@ class ideas
 			FROM ' . $this->sql['FROM'] . '
        		INNER JOIN ' . $this->sql['JOIN'] . '
 			WHERE ' . implode(' AND ', $this->sql['WHERE']);
+
 		$result = $this->db->sql_query($sql);
 		$count = (int) $this->db->sql_fetchfield('count');
 		$this->db->sql_freeresult($result);
