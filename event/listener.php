@@ -82,7 +82,7 @@ class listener implements EventSubscriberInterface
 	{
 		return array(
 			'core.viewforum_get_topic_data'				=> 'ideas_forum_redirect',
-			'core.viewtopic_modify_post_row'			=> array(array('clean_message'), array('show_post_buttons')),
+			'core.viewtopic_modify_post_row'			=> 'show_post_buttons',
 			'core.viewtopic_modify_page_title'			=> 'show_idea',
 			'core.viewtopic_add_quickmod_option_before'	=> 'adjust_quickmod_tools',
 			'core.viewonline_overwrite_location'		=> 'viewonline_ideas',
@@ -108,34 +108,6 @@ class listener implements EventSubscriberInterface
 	}
 
 	/**
-	 * Clean obsolete link-backs from idea topics
-	 *
-	 * @param \phpbb\event\data $event The event object
-	 * @return void
-	 * @access public
-	 */
-	public function clean_message($event)
-	{
-		if (!$this->is_ideas_forum($event['row']['forum_id']))
-		{
-			return;
-		}
-
-		if ($event['topic_data']['topic_first_post_id'] == $event['row']['post_id'] && $event['topic_data']['topic_time'] < strtotime('September 1, 2017'))
-		{
-			$post_row = $event['post_row'];
-			$message = $post_row['MESSAGE'];
-
-			// This freakish looking regex pattern should
-			// remove the old ideas link-backs from the message.
-			$message = preg_replace('/(<br[^>]*>\\n?)?\\1?-{10}\\1?\\1?.*]/s', '', $message);
-
-			$post_row['MESSAGE'] = $message;
-			$event['post_row'] = $post_row;
-		}
-	}
-
-	/**
 	 * Show post buttons (hide delete, quote or warn user buttons)
 	 *
 	 * @param \phpbb\event\data $event The event object
@@ -149,7 +121,7 @@ class listener implements EventSubscriberInterface
 			return;
 		}
 
-		if ($event['topic_data']['topic_first_post_id'] == $event['row']['post_id'])
+		if ($this->is_first_post($event['topic_data']['topic_first_post_id'], $event['row']['post_id']))
 		{
 			$event->update_subarray('post_row', 'U_DELETE', false);
 			$event->update_subarray('post_row', 'U_WARN', false);
@@ -336,9 +308,9 @@ class listener implements EventSubscriberInterface
 	public function edit_idea_title($event)
 	{
 		if ($event['mode'] !== 'edit' ||
-			$event['post_data']['topic_first_post_id'] != $event['post_id'] ||
 			!$event['update_subject'] ||
-			!$this->is_ideas_forum($event['forum_id']))
+			!$this->is_ideas_forum($event['forum_id']) ||
+			!$this->is_first_post($event['post_data']['topic_first_post_id'], $event['post_id']))
 		{
 			return;
 		}
@@ -357,5 +329,18 @@ class listener implements EventSubscriberInterface
 	protected function is_ideas_forum($forum_id)
 	{
 		return (int) $forum_id === (int) $this->config['ideas_forum_id'];
+	}
+
+	/**
+	 * Check if a post is the first post in a topic
+	 *
+	 * @param int|string $topic_first_post_id
+	 * @param int|string $post_id
+	 * @return bool
+	 * @access protected
+	 */
+	protected function is_first_post($topic_first_post_id, $post_id)
+	{
+		return (int) $topic_first_post_id === (int) $post_id;
 	}
 }
