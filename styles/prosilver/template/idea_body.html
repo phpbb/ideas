@@ -8,12 +8,9 @@
 </noscript>
 <div class="panel">
 	<div class="inner">
-		<dl class="left-box details idea-panel">
-			{% if S_IS_MOD %}<dt class="idealabel">{{ lang('IDEA_ID') ~ lang('COLON') }}</dt> <dd>{{ IDEA_ID }}</dd>{% endif %}
-			<dt class="idealabel">{{ lang('AUTHOR') ~ lang('COLON') }}</dt> <dd><strong>{{ IDEA_AUTHOR }}</strong></dd>
-			<dt class="idealabel">{{ lang('POSTED') ~ lang('COLON') }}</dt> <dd>{{ IDEA_DATE }}</dd>
-			<dt class="idealabel">{{ lang('RATING') ~ lang('COLON') }}</dt>
-			<dd>
+		<div class="idea-panel">
+			<div class="idea-panel-inner">
+				<h3>{{ lang('VOTES') }}</h3>
 				<div class="rating">
 					<a {% if S_CAN_VOTE %}href="{{ U_IDEA_VOTE }}"{% endif %} class="minivote vote-up{{ not S_CAN_VOTE_UP ? ' vote-disabled' }}" title="{{ lang('VOTE_UP') }}" data-l-err="{{ lang('ERROR') }}" data-l-msg="{{ lang('VOTE_ERROR') ~ lang('COLON') }}"><i class="icon fa-check-circle user-voted{{ not S_VOTED_UP ? ' hidden' }}" aria-hidden="true"></i><i class="icon fa-thumbs-up"></i><span class="vote-count">{{ IDEA_VOTES_UP }}</span></a> &nbsp;
 					<a {% if S_CAN_VOTE %}href="{{ U_IDEA_VOTE }}"{% endif %} class="minivote vote-down{{ not S_CAN_VOTE_DOWN ? ' vote-disabled' }}" title="{{ lang('VOTE_DOWN') }}" data-l-err="{{ lang('ERROR') }}" data-l-msg="{{ lang('VOTE_ERROR') ~ lang('COLON') }}"><i class="icon fa-check-circle user-voted{{ not S_VOTED_DOWN ? ' hidden' }}" aria-hidden="true"></i><i class="icon fa-thumbs-down"></i><span class="vote-count">{{ IDEA_VOTES_DOWN }}</span></a>
@@ -45,91 +42,93 @@
 						{% endif %}
 					</ul>
 				</div>
-			</dd>
-			<dt class="idealabel">{{ lang('STATUS') ~ lang('COLON') }}</dt>
-			<dd class="status-dropdown-container dropdown-container dropdown-{S_CONTENT_FLOW_END}">
-				<span class="status-badge status-{{ IDEA_STATUS_ID }}">
-					<a href="{{ U_IDEA_STATUS_LINK }}" id="status-link"><i class="icon fa-fw {{ ideas_status_icon(IDEA_STATUS_ID) }}"></i>{{ IDEA_STATUS_NAME }}</a>
+			</div>
+			<div class="idea-panel-inner">
+				<h3>{{ lang('STATUS') }}</h3>
+				<div class="status-dropdown-container dropdown-container dropdown-{S_CONTENT_FLOW_END}">
+					<span class="status-badge status-{{ IDEA_STATUS_ID }}">
+						<a href="{{ U_IDEA_STATUS_LINK }}" id="status-link"><i class="icon fa-fw {{ ideas_status_icon(IDEA_STATUS_ID) }}"></i>{{ IDEA_STATUS_NAME }}</a>
+						{% if STATUS_ARY %}
+							<a href="#" class="dropdown-trigger"><i class="icon fa-fw fa-caret-down"></i></a>
+						{% endif %}
+					</span>
 					{% if STATUS_ARY %}
-						<a href="#" class="dropdown-trigger"><i class="icon fa-fw fa-caret-down"></i></a>
-					{% endif %}
-				</span>
-				{% if STATUS_ARY %}
-					<div class="status-dropdown dropdown">
-						<div class="pointer"><div class="pointer-inner"></div></div>
-						<ul class="dropdown-contents">
-							{% for status, id in STATUS_ARY %}
-								<li>
-									<a href="{{ U_CHANGE_STATUS }}" data-status="{{ id }}" class="change-status"><i class="icon fa-fw {{ ideas_status_icon(id) }}"></i>{{ lang(status) }}</a>
-								</li>
-							{% endfor %}
-						</ul>
-					</div>
-				{% endif %}
-			</dd>
-			{% if IDEA_RFC %}
-				<dt class="idealabel">{{ lang('RFC') ~ lang('COLON') }}</dt>
-				<dd>
-					<a id="rfclink" href="{{ IDEA_RFC }}"{% if not IDEA_RFC %} style="display:none"{% endif %}>{{ IDEA_RFC }}</a>
-					{% if S_CAN_EDIT %}
-						<a href="{{ U_EDIT_RFC }}" id="rfcedit" data-l-add="{{ lang('ADD') }}" data-l-edit="{{ lang('EDIT') }}">{% if IDEA_RFC %}<i class="icon fa-fw fa-pencil"></i>{{ lang('EDIT') }}{% else %}<i class="icon fa-fw fa-plus-circle"></i>{{ lang('ADD') }}{% endif %}</a>
-						<input type="text" id="rfceditinput" class="ideainput" value="{{ IDEA_RFC }}" data-l-err="{{ lang('ERROR') }}" data-l-msg="{{ lang('RFC_ERROR') }}" />
-					{% endif %}
-				</dd>
-			{% endif %}
-			{% if IDEA_TICKET or S_CAN_EDIT %}
-				<dt class="idealabel">{{ lang('TICKET') ~ lang('COLON') }}</dt>
-				<dd>
-					<a id="ticketlink" {% if IDEA_TICKET %}href="https://tracker.phpbb.com/browse/PHPBB3-{{ IDEA_TICKET }}">PHPBB3-{{ IDEA_TICKET }}{% else %}style="display:none">{% endif %}</a>
-					{% if S_CAN_EDIT %}
-						<a href="{{ U_EDIT_TICKET }}" id="ticketedit" data-l-add="{{ lang('ADD') }}" data-l-edit="{{ lang('EDIT') }}">{% if IDEA_TICKET %}<i class="icon fa-fw fa-pencil"></i>{{ lang('EDIT') }}{% else %}<i class="icon fa-fw fa-plus-circle"></i>{{ lang('ADD') }}{% endif %}</a>
-						<input type="text" id="ticketeditinput" class="ideainput"{% if IDEA_TICKET %} value="PHPBB3-{{ IDEA_TICKET }}"{% endif %} placeholder="PHPBB3-#####" data-l-err="{{ lang('ERROR') }}" data-l-msg="{{ lang('TICKET_ERROR') }}" />
-					{% endif %}
-				</dd>
-			{% endif %}
-			{% if IDEA_DUPLICATE or S_IS_MOD %}
-				<dt class="duplicatetoggle idealabel"{% if IDEA_STATUS_ID != STATUS_ARY.DUPLICATE %} style="display:none"{% endif %}>{{ lang('DUPLICATE') ~ lang('COLON') }}</dt>
-				<dd class="duplicatetoggle" {% if IDEA_STATUS_ID != STATUS_ARY.DUPLICATE %}style="display:none"{% endif %}>
-					<a id="duplicatelink" data-link="{{ U_IDEA_DUPLICATE }}" {% if IDEA_DUPLICATE %}href="{{ U_IDEA_DUPLICATE }}">{{ IDEA_DUPLICATE }}{% else %}style="display:none">{% endif %}</a>
-					{% if S_IS_MOD %}
-						<a href="{{ U_EDIT_DUPLICATE }}" id="duplicateedit" data-l-add="{{ lang('ADD') }}" data-l-edit="{{ lang('EDIT') }}">{% if IDEA_DUPLICATE %}<i class="icon fa-fw fa-pencil"></i>{{ lang('EDIT') }}{% else %}<i class="icon fa-fw fa-plus-circle"></i>{{ lang('ADD') }}{% endif %}</a>
-						<div class="dropdown-container dropdown-{{ S_CONTENT_FLOW_END }}">
-							<input
-								type="text"
-								name="duplicateeditinput"
-								id="duplicateeditinput"
-								value="{{ IDEA_DUPLICATE ? IDEA_DUPLICATE }}"
-								placeholder="{{ lang('DUPLICATE_PLACEHOLDER') }}"
-								class="ideainput"
-								autocomplete="off"
-								data-filter="phpbb.search.filter"
-								data-ajax="idea_search"
-								data-min-length="3"
-								data-url="{{ U_TITLE_LIVESEARCH }}"
-								data-results="#live-search"
-								data-l-err="{{ lang('ERROR') }}"
-								data-l-msg="{{ lang('TICKET_ERROR_DUP') }}"
-							/>
-							<div class="dropdown live-search hidden" id="live-search">
-								<div class="pointer"><div class="pointer-inner"></div></div>
-								<ul class="dropdown-contents search-results">
-									<li class="search-result-tpl"><span class="search-result"></span></li>
-								</ul>
-							</div>
+						<div class="status-dropdown dropdown">
+							<div class="pointer"><div class="pointer-inner"></div></div>
+							<ul class="dropdown-contents">
+								{% for status, id in STATUS_ARY %}
+									<li>
+										<a href="{{ U_CHANGE_STATUS }}" data-status="{{ id }}" class="change-status"><i class="icon fa-fw {{ ideas_status_icon(id) }}"></i>{{ lang(status) }}</a>
+									</li>
+								{% endfor %}
+							</ul>
 						</div>
 					{% endif %}
-				</dd>
-			{% endif %}
-			{% if IDEA_IMPLEMENTED or S_IS_MOD %}
-				<dt class="implementedtoggle idealabel"{% if IDEA_STATUS_ID != STATUS_ARY.IMPLEMENTED %} style="display:none"{% endif %}>{{ lang('IMPLEMENTED_VERSION') ~ lang('COLON') }}</dt>
-				<dd class="implementedtoggle" {% if IDEA_STATUS_ID != STATUS_ARY.IMPLEMENTED %}style="display:none"{% endif %}>
-					<span id="implementedversion"{% if not IDEA_IMPLEMENTED %} style="display:none;"{% endif %}>{{ IDEA_IMPLEMENTED }}</span>
-					{% if S_IS_MOD %}
-						<a href="{{ U_EDIT_IMPLEMENTED }}" id="implementededit" data-l-add="{{ lang('ADD') }}" data-l-edit="{{ lang('EDIT') }}">{% if IDEA_IMPLEMENTED %}<i class="icon fa-fw fa-pencil"></i>{{ lang('EDIT') }}{% else %}<i class="icon fa-fw fa-plus-circle"></i>{{ lang('ADD') }}{% endif %}</a>
-						<input type="text" id="implementededitinput" class="ideainput"{% if IDEA_IMPLEMENTED %} value="{{ IDEA_IMPLEMENTED }}"{% endif %} placeholder="3.x.x" data-l-err="{{ lang('ERROR') }}" data-l-msg="{{ lang('IMPLEMENTED_ERROR') }}" />
-					{% endif %}
-				</dd>
-			{% endif %}
-		</dl>
+				</div>
+				{% if IDEA_RFC %}
+					<div class="status-item">
+						{{ lang('RFC') ~ lang('COLON') }}
+						<a id="rfclink" href="{{ IDEA_RFC }}" style="{% if not IDEA_RFC %}display:none;{% endif %}overflow:hidden;text-overflow:ellipsis;white-space:nowrap;{% if S_CAN_EDIT %}max-width:75%;{% endif %}">{{ IDEA_RFC }}</a>
+						{% if S_CAN_EDIT %}
+							<a href="{{ U_EDIT_RFC }}" id="rfcedit" data-l-add="{{ lang('ADD') }}" data-l-edit="{{ lang('EDIT') }}">{% if IDEA_RFC %}<i class="icon fa-fw fa-pencil"></i>{{ lang('EDIT') }}{% else %}<i class="icon fa-fw fa-plus-circle"></i>{{ lang('ADD') }}{% endif %}</a>
+							<input type="text" id="rfceditinput" class="ideainput" value="{{ IDEA_RFC }}" data-l-err="{{ lang('ERROR') }}" data-l-msg="{{ lang('RFC_ERROR') }}" />
+						{% endif %}
+					</div>
+				{% endif %}
+				{% if IDEA_TICKET or S_CAN_EDIT %}
+					<div class="status-item">
+						{{ lang('TICKET') ~ lang('COLON') }}
+						<a id="ticketlink" {% if IDEA_TICKET %}href="https://tracker.phpbb.com/browse/PHPBB3-{{ IDEA_TICKET }}">PHPBB3-{{ IDEA_TICKET }}{% else %}style="display:none">{% endif %}</a>
+						{% if S_CAN_EDIT %}
+							<a href="{{ U_EDIT_TICKET }}" id="ticketedit" data-l-add="{{ lang('ADD') }}" data-l-edit="{{ lang('EDIT') }}">{% if IDEA_TICKET %}<i class="icon fa-fw fa-pencil"></i>{{ lang('EDIT') }}{% else %}<i class="icon fa-fw fa-plus-circle"></i>{{ lang('ADD') }}{% endif %}</a>
+							<input type="text" id="ticketeditinput" class="ideainput"{% if IDEA_TICKET %} value="PHPBB3-{{ IDEA_TICKET }}"{% endif %} placeholder="PHPBB3-#####" data-l-err="{{ lang('ERROR') }}" data-l-msg="{{ lang('TICKET_ERROR') }}" />
+						{% endif %}
+					</div>
+				{% endif %}
+				{% if IDEA_DUPLICATE or S_IS_MOD %}
+					<div class="status-item duplicatetoggle" {% if IDEA_STATUS_ID != STATUS_ARY.DUPLICATE %}style="display:none"{% endif %}>
+						{{ lang('DUPLICATE') ~ lang('COLON') }}
+						<a id="duplicatelink" data-link="{{ U_IDEA_DUPLICATE }}" {% if IDEA_DUPLICATE %}href="{{ U_IDEA_DUPLICATE }}">{{ IDEA_DUPLICATE }}{% else %}style="display:none">{% endif %}</a>
+						{% if S_IS_MOD %}
+							<a href="{{ U_EDIT_DUPLICATE }}" id="duplicateedit" data-l-add="{{ lang('ADD') }}" data-l-edit="{{ lang('EDIT') }}">{% if IDEA_DUPLICATE %}<i class="icon fa-fw fa-pencil"></i>{{ lang('EDIT') }}{% else %}<i class="icon fa-fw fa-plus-circle"></i>{{ lang('ADD') }}{% endif %}</a>
+							<div class="dropdown-container dropdown-{{ S_CONTENT_FLOW_END }}">
+								<input
+									type="text"
+									name="duplicateeditinput"
+									id="duplicateeditinput"
+									value="{{ IDEA_DUPLICATE ? IDEA_DUPLICATE }}"
+									placeholder="{{ lang('DUPLICATE_PLACEHOLDER') }}"
+									class="ideainput"
+									autocomplete="off"
+									data-filter="phpbb.search.filter"
+									data-ajax="idea_search"
+									data-min-length="3"
+									data-url="{{ U_TITLE_LIVESEARCH }}"
+									data-results="#live-search"
+									data-l-err="{{ lang('ERROR') }}"
+									data-l-msg="{{ lang('TICKET_ERROR_DUP') }}"
+								/>
+								<div class="dropdown live-search hidden" id="live-search">
+									<div class="pointer"><div class="pointer-inner"></div></div>
+									<ul class="dropdown-contents search-results">
+										<li class="search-result-tpl"><span class="search-result"></span></li>
+									</ul>
+								</div>
+							</div>
+						{% endif %}
+					</div>
+				{% endif %}
+				{% if IDEA_IMPLEMENTED or S_IS_MOD %}
+					<div class="status-item implementedtoggle" {% if IDEA_STATUS_ID != STATUS_ARY.IMPLEMENTED %}style="display:none"{% endif %}>
+						{{ lang('IMPLEMENTED_VERSION') ~ lang('COLON') }}
+						<span id="implementedversion"{% if not IDEA_IMPLEMENTED %} style="display:none;"{% endif %}>{{ IDEA_IMPLEMENTED }}</span>
+						{% if S_IS_MOD %}
+							<a href="{{ U_EDIT_IMPLEMENTED }}" id="implementededit" data-l-add="{{ lang('ADD') }}" data-l-edit="{{ lang('EDIT') }}">{% if IDEA_IMPLEMENTED %}<i class="icon fa-fw fa-pencil"></i>{{ lang('EDIT') }}{% else %}<i class="icon fa-fw fa-plus-circle"></i>{{ lang('ADD') }}{% endif %}</a>
+							<input type="text" id="implementededitinput" class="ideainput"{% if IDEA_IMPLEMENTED %} value="{{ IDEA_IMPLEMENTED }}"{% endif %} placeholder="3.x.x" data-l-err="{{ lang('ERROR') }}" data-l-msg="{{ lang('IMPLEMENTED_ERROR') }}" />
+						{% endif %}
+					</div>
+				{% endif %}
+			</div>
+		</div>
 	</div>
 </div>

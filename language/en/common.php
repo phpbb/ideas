@@ -65,7 +65,6 @@ $lang = array_merge($lang, array(
 	'POST_IDEA'				=> 'Post a new idea',
 	'POSTING_NEW_IDEA'		=> 'Posting a new idea',
 
-	'RATING'                => 'Rating',
 	'REMOVE_VOTE'			=> 'Remove my vote',
 	'RETURN_IDEAS'			=> '%sReturn to Ideas%s',
 	'RFC'					=> 'RFC',
@@ -103,7 +102,7 @@ $lang = array_merge($lang, array(
 	'VIEW_IDEA'				=> 'View Idea',
 	'VIEW_IMPLEMENTED'		=> 'View all implemented ideas',
 	'VIEW_LATEST'			=> 'View all open ideas',
-	'VIEW_TOP'				=> 'View all top rated ideas',
+	'VIEW_TOP'				=> 'View all top voted ideas',
 	'VIEWING_IDEAS'			=> 'Viewing Ideas',
 	'VOTE'					=> 'Vote',
 	'VOTE_DOWN'				=> 'Vote Down',
