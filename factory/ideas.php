@@ -222,17 +222,18 @@ class ideas
 	}
 
 	/**
-	 * Update $sql property with additional SQL statements that will filter
-	 * the query to get ideas within or without certain statuses.
+	 * Update $sql property with additional SQL statements to filter ideas
+	 * by status. If $status is given we'll get those ideas. If no $status
+	 * is given, the default is to get all ideas excluding Duplicates, Invalid
+	 * and Implemented statuses (because they are considered done & dusted,
+	 * if they were gases they'd be inert).
 	 *
-	 * @param array|int $status The id of the status(es) to load
+	 * @param array|int $status The id(s) of the status(es) to load
 	 *
 	 * @return \phpbb\ideas\factory\ideas $this For chaining calls
 	 */
 	protected function query_status($status = [])
 	{
-		// If we are given some statuses, get ideas from those. Otherwise the default is
-		// to get ideas excluding Duplicates, Invalid and Implemented statuses.
 		$this->sql['WHERE'][] = !empty($status) ? $this->db->sql_in_set('i.idea_status', $status) : $this->db->sql_in_set(
 			'i.idea_status', [self::$statuses['IMPLEMENTED'], self::$statuses['DUPLICATE'], self::$statuses['INVALID'],
 		], true);
