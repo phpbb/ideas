@@ -118,13 +118,15 @@ dd.topics {
 /* Idea Body Styles */
 .idea-panel {
 	font-size: 11px;
+	display: flex;
+	flex-wrap: wrap;
 	width: 100%;
 }
 
 .idea-panel-inner {
-	float: left;
+	flex-grow: 1;
 	box-sizing: border-box;
-	width: 50%;
+	width: 400px;
 	padding: 0 3px;
 }
 
@@ -235,15 +237,4 @@ dd.topics {
 
 .rating {
 	margin-top: 4px;
-}
-
-@media (max-width: 900px) {
-	.idea-panel-inner {
-		float: none;
-		width: 100%;
-	}
-
-	.status-item {
-		align-items: flex-start;
-	}
 }
