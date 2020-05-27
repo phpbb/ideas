@@ -69,6 +69,7 @@ $lang = array_merge($lang, array(
 	'RETURN_IDEAS'			=> '%sReturn to Ideas%s',
 	'RFC'					=> 'RFC',
 	'RFC_ERROR'				=> 'RFC must be a topic on Area51.',
+	'RFC_LINK_TEXT'			=> 'View RFC discussion on Area51',
 
 	'SEARCH_IDEAS'			=> 'Search ideas...',
 	'SCORE'                 => 'Score',

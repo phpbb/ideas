@@ -68,7 +68,7 @@
 				{% if IDEA_RFC %}
 					<div class="status-item">
 						{{ lang('RFC') ~ lang('COLON') }}
-						<a id="rfclink" href="{{ IDEA_RFC }}" style="{% if not IDEA_RFC %}display:none;{% endif %}overflow:hidden;text-overflow:ellipsis;white-space:nowrap;{% if S_CAN_EDIT %}max-width:75%;{% endif %}">{{ IDEA_RFC }}</a>
+						<a id="rfclink" href="{{ IDEA_RFC }}" style="{% if not IDEA_RFC %}display:none;{% endif %}overflow:hidden;text-overflow:ellipsis;white-space:nowrap;{% if S_CAN_EDIT %}max-width:75%;{% endif %}">{{ lang('RFC_LINK_TEXT') }}</a>
 						{% if S_CAN_EDIT %}
 							<a href="{{ U_EDIT_RFC }}" id="rfcedit" data-l-add="{{ lang('ADD') }}" data-l-edit="{{ lang('EDIT') }}">{% if IDEA_RFC %}<i class="icon fa-fw fa-pencil"></i>{{ lang('EDIT') }}{% else %}<i class="icon fa-fw fa-plus-circle"></i>{{ lang('ADD') }}{% endif %}</a>
 							<input type="text" id="rfceditinput" class="ideainput" value="{{ IDEA_RFC }}" data-l-err="{{ lang('ERROR') }}" data-l-msg="{{ lang('RFC_ERROR') }}" />
