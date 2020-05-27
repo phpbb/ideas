@@ -1,6 +1,6 @@
 /* flex box classes */
 .flex-box {
-	display: flex !important;
+	display: flex;
 }
 
 .flex-wrap {
@@ -248,8 +248,4 @@ dd.topics {
 
 .status-5 {
 	background-color: #b22222;
-}
-
-.rating {
-	margin-top: 4px;
 }
