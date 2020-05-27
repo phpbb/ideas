@@ -8,8 +8,8 @@
 </noscript>
 <div class="panel">
 	<div class="inner">
-		<div class="idea-panel">
-			<div class="idea-panel-inner">
+		<div class="idea-panel flex-box flex-wrap">
+			<div class="idea-panel-inner flex-grow">
 				<h3>{{ lang('VOTES') }}</h3>
 				<div class="rating">
 					<a {% if S_CAN_VOTE %}href="{{ U_IDEA_VOTE }}"{% endif %} class="minivote vote-up{{ not S_CAN_VOTE_UP ? ' vote-disabled' }}" title="{{ lang('VOTE_UP') }}" data-l-err="{{ lang('ERROR') }}" data-l-msg="{{ lang('VOTE_ERROR') ~ lang('COLON') }}"><i class="icon fa-check-circle user-voted{{ not S_VOTED_UP ? ' hidden' }}" aria-hidden="true"></i><i class="icon fa-thumbs-up"></i><span class="vote-count">{{ IDEA_VOTES_UP }}</span></a> &nbsp;
@@ -43,7 +43,7 @@
 					</ul>
 				</div>
 			</div>
-			<div class="idea-panel-inner">
+			<div class="idea-panel-inner flex-grow">
 				<h3>{{ lang('STATUS') }}</h3>
 				<div class="status-dropdown-container dropdown-container dropdown-{S_CONTENT_FLOW_END}">
 					<span class="status-badge status-{{ IDEA_STATUS_ID }}">
@@ -66,7 +66,7 @@
 					{% endif %}
 				</div>
 				{% if IDEA_RFC %}
-					<div class="status-item">
+					<div class="status-item flex-box flex-align-end">
 						{{ lang('RFC') ~ lang('COLON') }}
 						<a id="rfclink" href="{{ IDEA_RFC }}" style="{% if not IDEA_RFC %}display:none;{% endif %}overflow:hidden;text-overflow:ellipsis;white-space:nowrap;{% if S_CAN_EDIT %}max-width:75%;{% endif %}">{{ lang('RFC_LINK_TEXT') }}</a>
 						{% if S_CAN_EDIT %}
@@ -76,7 +76,7 @@
 					</div>
 				{% endif %}
 				{% if IDEA_TICKET or S_CAN_EDIT %}
-					<div class="status-item">
+					<div class="status-item flex-box flex-align-end">
 						{{ lang('TICKET') ~ lang('COLON') }}
 						<a id="ticketlink" {% if IDEA_TICKET %}href="https://tracker.phpbb.com/browse/PHPBB3-{{ IDEA_TICKET }}">PHPBB3-{{ IDEA_TICKET }}{% else %}style="display:none">{% endif %}</a>
 						{% if S_CAN_EDIT %}
@@ -86,7 +86,7 @@
 					</div>
 				{% endif %}
 				{% if IDEA_DUPLICATE or S_IS_MOD %}
-					<div class="status-item duplicatetoggle" {% if IDEA_STATUS_ID != STATUS_ARY.DUPLICATE %}style="display:none"{% endif %}>
+					<div class="status-item flex-box flex-align-end duplicatetoggle" {% if IDEA_STATUS_ID != STATUS_ARY.DUPLICATE %}style="display:none"{% endif %}>
 						{{ lang('DUPLICATE') ~ lang('COLON') }}
 						<a id="duplicatelink" data-link="{{ U_IDEA_DUPLICATE }}" {% if IDEA_DUPLICATE %}href="{{ U_IDEA_DUPLICATE }}">{{ IDEA_DUPLICATE }}{% else %}style="display:none">{% endif %}</a>
 						{% if S_IS_MOD %}
@@ -119,7 +119,7 @@
 					</div>
 				{% endif %}
 				{% if IDEA_IMPLEMENTED or S_IS_MOD %}
-					<div class="status-item implementedtoggle" {% if IDEA_STATUS_ID != STATUS_ARY.IMPLEMENTED %}style="display:none"{% endif %}>
+					<div class="status-item flex-box flex-align-end implementedtoggle" {% if IDEA_STATUS_ID != STATUS_ARY.IMPLEMENTED %}style="display:none"{% endif %}>
 						{{ lang('IMPLEMENTED_VERSION') ~ lang('COLON') }}
 						<span id="implementedversion"{% if not IDEA_IMPLEMENTED %} style="display:none;"{% endif %}>{{ IDEA_IMPLEMENTED }}</span>
 						{% if S_IS_MOD %}

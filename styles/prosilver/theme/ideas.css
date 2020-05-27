@@ -1,3 +1,28 @@
+/* flex box classes */
+.flex-box {
+	display: flex !important;
+}
+
+.flex-wrap {
+	flex-wrap: wrap;
+}
+
+.flex-grow {
+	flex-grow: 1;
+}
+
+.flex-justify {
+	justify-content: space-between;
+}
+
+.flex-align-end {
+	align-items: flex-end;
+}
+
+.flex-align-center {
+	align-items: center;
+}
+
 /* Common Styles */
 dd.topics {
 	text-align: left;
@@ -93,16 +118,11 @@ dd.topics {
 /* Ideas Lists Styles */
 .view-all {
 	color: #536482;
-	float: right;
 	margin: 0.8em 0 0.2em;
 }
 
 .view-all:hover {
 	color: #536482;
-}
-
-.push-left {
-	float: left;
 }
 
 @media (min-width: 701px) and (max-width: 950px) {
@@ -118,13 +138,10 @@ dd.topics {
 /* Idea Body Styles */
 .idea-panel {
 	font-size: 11px;
-	display: flex;
-	flex-wrap: wrap;
 	width: 100%;
 }
 
 .idea-panel-inner {
-	flex-grow: 1;
 	box-sizing: border-box;
 	width: 400px;
 	padding: 0 3px;
@@ -185,8 +202,6 @@ dd.topics {
 }
 
 .status-item {
-	display: flex;
-	align-items: flex-end;
 	min-height: 18px;
 	margin: 4px 0;
 }

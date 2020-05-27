@@ -7,10 +7,12 @@
 {% include 'action_bar_top.html' %}
 
 {# TOP IDEAS #}
-<h2 class="push-left">{{ lang('TOP_IDEAS') }}</h2>
-{% if top_ideas %}
-	<a class="button view-all" href="{{ U_VIEW_TOP }}"><i class="icon fa-fw fa-line-chart"></i> <span>{{ lang('VIEW_TOP') }}</span></a>
-{% endif %}
+<div class="flex-box flex-align-end flex-justify">
+	<h2>{{ lang('TOP_IDEAS') }}</h2>
+	{% if top_ideas %}
+		<a class="button view-all" href="{{ U_VIEW_TOP }}"><i class="icon fa-fw fa-line-chart"></i> <span>{{ lang('VIEW_TOP') }}</span></a>
+	{% endif %}
+</div>
 <div class="forumbg">
 	<div class="inner">
 		<ul class="topiclist">
@@ -27,11 +29,13 @@
 </div>
 
 {# LATEST IDEAS #}
-<h2 class="push-left">{{ lang('LATEST_IDEAS') }}</h2>
-{% if latest_ideas %}
-	<a class="button view-all" href="{{ U_VIEW_LATEST }}"><i class="icon fa-fw fa-lightbulb-o"></i> <span>{{ lang('VIEW_LATEST') }}</span></a>
-{% endif %}
-<div class="forumbg" style="margin-top: 10px">
+<div class="flex-box flex-align-end flex-justify">
+	<h2>{{ lang('LATEST_IDEAS') }}</h2>
+	{% if latest_ideas %}
+		<a class="button view-all" href="{{ U_VIEW_LATEST }}"><i class="icon fa-fw fa-lightbulb-o"></i> <span>{{ lang('VIEW_LATEST') }}</span></a>
+	{% endif %}
+</div>
+<div class="forumbg">
 	<div class="inner">
 		<ul class="topiclist">
 			<li class="header">
@@ -47,11 +51,13 @@
 </div>
 
 {# IMPLEMENTED IDEAS #}
-<h2 class="push-left">{{ lang('IMPLEMENTED_IDEAS') }}</h2>
-{% if implemented_ideas %}
-	<a class="button view-all" href="{{ U_VIEW_IMPLEMENTED }}"><i class="icon fa-fw fa-code-fork fa-flip-vertical"></i> <span>{{ lang('VIEW_IMPLEMENTED') }}</span></a>
-{% endif %}
-<div class="forumbg" style="margin-top: 10px">
+<div class="flex-box flex-align-end flex-justify">
+	<h2>{{ lang('IMPLEMENTED_IDEAS') }}</h2>
+	{% if implemented_ideas %}
+		<a class="button view-all" href="{{ U_VIEW_IMPLEMENTED }}"><i class="icon fa-fw fa-code-fork fa-flip-vertical"></i> <span>{{ lang('VIEW_IMPLEMENTED') }}</span></a>
+	{% endif %}
+</div>
+<div class="forumbg">
 	<div class="inner">
 		<ul class="topiclist">
 			<li class="header">
