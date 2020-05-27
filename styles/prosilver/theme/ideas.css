@@ -5,6 +5,11 @@ dd.topics {
 	padding-left: 10px !important;
 }
 
+.rtl dd.topics {
+	text-align: right;
+	padding-right: 10px !important;
+}
+
 .fa-lightbulb-o {
 	font-weight: 400 !important;
 }
