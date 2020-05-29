@@ -37,7 +37,6 @@ $lang = array_merge($lang, array(
 
 	'IDEAS'					=> 'Ideas',
 	'IDEA_DELETED'			=> 'Idea successfully deleted.',
-	'IDEA_ID'				=> 'Idea ID',
 	'IDEA_LIST'				=> 'Idea List',
 	'IDEA_NOT_FOUND'		=> 'Idea not found',
 	'IDEA_STORED_MOD'		=> 'Your idea has been submitted successfully, but it will need to be approved by a moderator before it is publicly viewable. You will be notified when your idea has been approved.<br /><br /><a href="%s">Return to Ideas</a>.',
