@@ -133,16 +133,18 @@ abstract class base
 	}
 
 	/**
-	 * Assign template variables for a search ideas field
+	 * Assign common template variables for Ideas pages
 	 *
 	 * @return void
 	 */
-	protected function display_search_ideas()
+	protected function display_common_vars()
 	{
-		$this->template->assign_vars(array(
+		$this->template->assign_vars([
 			'S_DISPLAY_SEARCHBOX'	=> (bool) $this->auth->acl_get('u_search') && $this->auth->acl_get('f_search', $this->config['ideas_forum_id']) && $this->config['load_search'],
 			'S_SEARCHBOX_ACTION'	=> append_sid("{$this->root_path}search.{$this->php_ext}"),
-			'S_SEARCH_IDEAS_HIDDEN_FIELDS'	=> build_hidden_fields(array('fid' => array($this->config['ideas_forum_id']))),
-		));
+			'S_SEARCH_IDEAS_HIDDEN_FIELDS'	=> build_hidden_fields(['fid' => [$this->config['ideas_forum_id']]]),
+
+			'U_SEARCH_MY_IDEAS' 	=> $this->helper->route('phpbb_ideas_list_controller', ['sort' => ideas::SORT_MYIDEAS, 'status' => '-1']),
+		]);
 	}
 }

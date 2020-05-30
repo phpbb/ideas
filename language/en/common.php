@@ -49,11 +49,20 @@ $lang = array_merge($lang, array(
 	'IMPLEMENTED_VERSION'	=> 'phpBB version',
 	'IN_PROGRESS'           => 'In Progress',
 	'INVALID'				=> 'Invalid',
+	'INVALID_IDEA_QUERY'	=> 'Invalid SQL query. Ideas failed to load.',
 	'INVALID_VOTE'			=> 'Invalid vote; the number you entered was invalid.',
 
 	'JS_DISABLED'           => 'JavaScript is disabled',
 
 	'LATEST_IDEAS'			=> 'Latest Ideas',
+	'LIST_DUPLICATE'		=> 'Duplicate ideas',
+	'LIST_EGOSEARCH'		=> 'Your ideas',
+	'LIST_IMPLEMENTED'		=> 'Implemented ideas',
+	'LIST_IN_PROGRESS'		=> 'In Progress ideas',
+	'LIST_INVALID'			=> 'Invalid ideas',
+	'LIST_NEW'				=> 'New ideas',
+	'LIST_TOP'				=> 'Top ideas',
+
 	'LOGGED_OUT'			=> 'You must be logged in to do this.',
 
 	'NEW'					=> 'New',

@@ -223,7 +223,8 @@ class listener implements EventSubscriberInterface
 			'U_REMOVE_VOTE'		=> $this->link_helper->get_idea_link($idea['idea_id'], 'removevote', true),
 			'U_IDEA_VOTE'		=> $this->link_helper->get_idea_link($idea['idea_id'], 'vote', true),
 			'U_IDEA_DUPLICATE'	=> $this->link_helper->get_idea_link($idea['duplicate_id']),
-			'U_IDEA_STATUS_LINK'=> $this->helper->route('phpbb_ideas_list_controller', array('status' => $idea['idea_status'])),
+			'U_IDEA_STATUS_LINK'=> $this->helper->route('phpbb_ideas_list_controller', ['status' => $idea['idea_status']]),
+			'U_SEARCH_MY_IDEAS' => $this->helper->route('phpbb_ideas_list_controller', ['sort' => ideas::SORT_MYIDEAS, 'status' => '-1']),
 			'U_TITLE_LIVESEARCH'=> $this->helper->route('phpbb_ideas_livesearch_controller'),
 		));
 

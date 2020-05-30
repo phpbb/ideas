@@ -80,9 +80,6 @@ class controller_base extends \phpbb_test_case
 		$this->link_helper = $this->getMockBuilder('\phpbb\ideas\factory\linkhelper')
 			->disableOriginalConstructor()
 			->getMock();
-		$this->link_helper->expects($this->atMost(3))
-			->method('get_list_link')
-			->willReturn('');
 		$this->pagination = $this->getMockBuilder('\phpbb\pagination')
 			->disableOriginalConstructor()
 			->getMock();

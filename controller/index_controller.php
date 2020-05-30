@@ -43,9 +43,9 @@ class index_controller extends base
 		$this->assign_template_block_vars('implemented_ideas', $ideas);
 
 		$this->template->assign_vars(array(
-			'U_VIEW_TOP'		=> $this->link_helper->get_list_link(ideas::SORT_TOP),
-			'U_VIEW_LATEST'		=> $this->link_helper->get_list_link(ideas::SORT_NEW),
-			'U_VIEW_IMPLEMENTED'=> $this->link_helper->get_list_link(ideas::SORT_IMPLEMENTED),
+			'U_VIEW_TOP'		=> $this->helper->route('phpbb_ideas_list_controller', ['sort' => ideas::SORT_TOP]),
+			'U_VIEW_LATEST'		=> $this->helper->route('phpbb_ideas_list_controller', ['sort' => ideas::SORT_NEW]),
+			'U_VIEW_IMPLEMENTED'=> $this->helper->route('phpbb_ideas_list_controller', ['sort' => ideas::SORT_DATE, 'status' => ideas::$statuses['IMPLEMENTED']]),
 			'U_POST_ACTION'		=> $this->helper->route('phpbb_ideas_post_controller'),
 			'U_MCP' 			=> ($this->auth->acl_get('m_', $this->config['ideas_forum_id'])) ? append_sid("{$this->root_path}mcp.{$this->php_ext}", "f={$this->config['ideas_forum_id']}&amp;i=main&amp;mode=forum_view", true, $this->user->session_id) : '',
 
@@ -57,8 +57,8 @@ class index_controller extends base
 			'FORUM_NAME'		=> $this->language->lang('IDEAS'),
 		));
 
-		// Display the search ideas field
-		$this->display_search_ideas();
+		// Display common ideas template vars
+		$this->display_common_vars();
 
 		return $this->helper->render('index_body.html', $this->language->lang('IDEAS_TITLE'));
 	}
