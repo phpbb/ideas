@@ -338,6 +338,7 @@ class ideas
 	 *
 	 * @param string $search The string of characters to search using LIKE
 	 * @param int    $limit  The number of results to return
+	 *
 	 * @return array An array of matching idea id/key and title/values
 	 */
 	public function ideas_title_livesearch($search, $limit = 10)
@@ -698,6 +699,7 @@ class ideas
 	 *
 	 * @param int $user_id The user's id
 	 * @param array $ids An array of idea ids
+	 *
 	 * @return array An array of ideas the user voted on and their vote result, or empty otherwise.
 	 *               example: [idea_id => vote_result]
 	 *                         1 => 1, idea 1, voted up by the user
@@ -804,6 +806,7 @@ class ideas
 	 * Preview a new idea.
 	 *
 	 * @param string $message The description of the idea.
+	 *
 	 * @return string The idea parsed for display in preview.
 	 */
 	public function preview($message)
