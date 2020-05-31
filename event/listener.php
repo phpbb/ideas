@@ -192,8 +192,6 @@ class listener implements EventSubscriberInterface
 		$this->template->assign_vars(array(
 			'IDEA_ID'			=> $idea['idea_id'],
 			'IDEA_TITLE'		=> $idea['idea_title'],
-			'IDEA_AUTHOR'		=> $this->link_helper->get_user_link($idea['idea_author']),
-			'IDEA_DATE'			=> $this->user->format_date($idea['idea_date']),
 			'IDEA_VOTES'		=> $idea['idea_votes_up'] + $idea['idea_votes_down'],
 			'IDEA_VOTES_UP'		=> $idea['idea_votes_up'],
 			'IDEA_VOTES_DOWN'	=> $idea['idea_votes_down'],

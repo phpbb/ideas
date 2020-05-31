@@ -37,7 +37,6 @@ $lang = array_merge($lang, array(
 
 	'IDEAS'					=> 'Ideas',
 	'IDEA_DELETED'			=> 'Idea successfully deleted.',
-	'IDEA_ID'				=> 'Idea ID',
 	'IDEA_LIST'				=> 'Idea List',
 	'IDEA_NOT_FOUND'		=> 'Idea not found',
 	'IDEA_STORED_MOD'		=> 'Your idea has been submitted successfully, but it will need to be approved by a moderator before it is publicly viewable. You will be notified when your idea has been approved.<br /><br /><a href="%s">Return to Ideas</a>.',
@@ -74,11 +73,11 @@ $lang = array_merge($lang, array(
 	'POST_IDEA'				=> 'Post a new idea',
 	'POSTING_NEW_IDEA'		=> 'Posting a new idea',
 
-	'RATING'                => 'Rating',
 	'REMOVE_VOTE'			=> 'Remove my vote',
 	'RETURN_IDEAS'			=> '%sReturn to Ideas%s',
 	'RFC'					=> 'RFC',
 	'RFC_ERROR'				=> 'RFC must be a topic on Area51.',
+	'RFC_LINK_TEXT'			=> 'View RFC discussion on Area51',
 
 	'SEARCH_IDEAS'			=> 'Search ideas...',
 	'SCORE'                 => 'Score',
@@ -111,7 +110,7 @@ $lang = array_merge($lang, array(
 	'VIEW_IDEA'				=> 'View Idea',
 	'VIEW_IMPLEMENTED'		=> 'View all implemented ideas',
 	'VIEW_LATEST'			=> 'View all open ideas',
-	'VIEW_TOP'				=> 'View all top rated ideas',
+	'VIEW_TOP'				=> 'View all top voted ideas',
 	'VIEWING_IDEAS'			=> 'Viewing Ideas',
 	'VOTE'					=> 'Vote',
 	'VOTE_DOWN'				=> 'Vote Down',
