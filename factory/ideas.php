@@ -731,10 +731,10 @@ class ideas
 	 */
 	public function submit($title, $message, $user_id)
 	{
-		$error = array();
+		$error = [];
 		if (utf8_clean_string($title) === '')
 		{
-			$error[] = $this->language->lang('TITLE_TOO_SHORT');
+			$error[] = $this->language->lang('EMPTY_SUBJECT');
 		}
 		if (utf8_strlen($title) > self::SUBJECT_LENGTH)
 		{
@@ -754,62 +754,48 @@ class ideas
 			return $error;
 		}
 
-		// Submit idea
-		$sql_ary = array(
-			'idea_title'		=> $title,
-			'idea_author'		=> $user_id,
-			'idea_date'			=> time(),
+		// Submit idea to the posts table
+		$uid = $bitfield = $options = '';
+		generate_text_for_storage($message, $uid, $bitfield, $options, true, true, true);
+
+		$data = [
+			'forum_id'			=> (int) $this->config['ideas_forum_id'],
 			'topic_id'			=> 0,
-		);
+			'icon_id'			=> false,
+			'poster_id'			=> $user_id,
+			'enable_bbcode'		=> true,
+			'enable_smilies'	=> true,
+			'enable_urls'		=> true,
+			'enable_sig'		=> true,
+			'message'			=> $message,
+			'message_md5'		=> md5($message),
+			'bbcode_bitfield'	=> $bitfield,
+			'bbcode_uid'		=> $uid,
+			'post_edit_locked'	=> 0,
+			'topic_title'		=> $title,
+			'notify_set'		=> false,
+			'notify'			=> false,
+			'post_time'			=> time(),
+			'enable_indexing'	=> true,
+			'force_approved_state'	=> (!$this->auth->acl_get('f_noapprove', $this->config['ideas_forum_id'])) ? ITEM_UNAPPROVED : true,
+		];
+
+		$poll = [];
+		submit_post('post', $title, $this->user->data['username'], POST_NORMAL, $poll, $data);
+
+		// Submit the idea to the ideas table
+		$sql_ary = [
+			'idea_title'	=> $data['topic_title'],
+			'idea_author'	=> $data['poster_id'],
+			'idea_date'		=> $data['post_time'],
+			'topic_id'		=> $data['topic_id'],
+		];
 
 		$idea_id = $this->insert_idea_data($sql_ary, $this->table_ideas);
 
 		// Initial vote
 		$idea = $this->get_idea($idea_id);
 		$this->vote($idea, $this->user->data['user_id'], 1);
-
-		$uid = $bitfield = $options = '';
-		generate_text_for_storage($message, $uid, $bitfield, $options, true, true, true);
-
-		$data = array(
-			'forum_id'			=> (int) $this->config['ideas_forum_id'],
-			'topic_id'			=> 0,
-			'icon_id'			=> false,
-			'poster_id'			=> (int) $this->user->data['user_id'],
-
-			'enable_bbcode'		=> true,
-			'enable_smilies'	=> true,
-			'enable_urls'		=> true,
-			'enable_sig'		=> true,
-
-			'message'			=> $message,
-			'message_md5'		=> md5($message),
-
-			'bbcode_bitfield'	=> $bitfield,
-			'bbcode_uid'		=> $uid,
-
-			'post_edit_locked'	=> 0,
-			'topic_title'		=> $title,
-
-			'notify_set'		=> false,
-			'notify'			=> false,
-			'post_time'			=> 0,
-			'forum_name'		=> 'Ideas forum',
-
-			'enable_indexing'	=> true,
-
-			'force_approved_state'	=> (!$this->auth->acl_get('f_noapprove', $this->config['ideas_forum_id'])) ? ITEM_UNAPPROVED : true,
-		);
-
-		$poll = array();
-		submit_post('post', $title, $this->user->data['username'], POST_NORMAL, $poll, $data);
-
-		// Edit topic ID into idea; both should link to each other
-		$sql_ary = array(
-			'topic_id' => $data['topic_id'],
-		);
-
-		$this->update_idea_data($sql_ary, $idea_id, $this->table_ideas);
 
 		return $idea_id;
 	}

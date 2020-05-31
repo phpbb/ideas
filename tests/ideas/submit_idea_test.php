@@ -66,11 +66,11 @@ class submit_idea_test extends \phpbb\ideas\tests\ideas\ideas_base
 	public function submit_fails_test_data()
 	{
 		return array(
-			array(4, '', '', array('TITLE_TOO_SHORT', 'TOO_FEW_CHARS')),
+			array(4, '', '', array('EMPTY_SUBJECT', 'TOO_FEW_CHARS')),
 			array(4, str_repeat('a', (\phpbb\ideas\factory\ideas::SUBJECT_LENGTH + 1)), '', array('TITLE_TOO_LONG', 'TOO_FEW_CHARS')),
-			array(4, '', str_repeat('a', 101), array('TITLE_TOO_SHORT', 'TOO_MANY_CHARS')),
+			array(4, '', str_repeat('a', 101), array('EMPTY_SUBJECT', 'TOO_MANY_CHARS')),
 			array(4, 'Foo', '', array('TOO_FEW_CHARS')),
-			array(4, '', 'Foo', array('TITLE_TOO_SHORT')),
+			array(4, '', 'Foo', array('EMPTY_SUBJECT')),
 		);
 	}
 
