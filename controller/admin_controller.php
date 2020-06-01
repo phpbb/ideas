@@ -84,8 +84,6 @@ class admin_controller
 	public function display_options()
 	{
 		$this->template->assign_vars(array(
-			'IDEAS_BASE_URL'	=> $this->config['ideas_base_url'] ?: '',
-
 			'S_FORUM_SELECT_BOX'	=> $this->select_ideas_forum(),
 			'S_IDEAS_FORUM_ID'		=> !empty($this->config['ideas_forum_id']),
 
@@ -130,7 +128,6 @@ class admin_controller
 			// Configuration options to list through
 			$display_vars = array(
 				'ideas_forum_id',
-				'ideas_base_url',
 				'ideas_forum_setup',
 			);
 
