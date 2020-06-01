@@ -723,69 +723,14 @@ class ideas
 	}
 
 	/**
-	 * Submits a new idea.
+	 * Submit new idea data to the ideas table
 	 *
-	 * @param string $title   The title of the idea.
-	 * @param string $message The description of the idea.
-	 * @param int    $user_id The ID of the author.
+	 * @param array $data An array of post data from a newly posted idea
 	 *
-	 * @return array|int Either an array of errors, or the ID of the new idea.
+	 * @return int The ID of the new idea.
 	 */
-	public function submit($title, $message, $user_id)
+	public function submit($data)
 	{
-		$error = [];
-		if (utf8_clean_string($title) === '')
-		{
-			$error[] = $this->language->lang('EMPTY_SUBJECT');
-		}
-		if (utf8_strlen($title) > self::SUBJECT_LENGTH)
-		{
-			$error[] = $this->language->lang('TITLE_TOO_LONG', self::SUBJECT_LENGTH);
-		}
-		if (utf8_strlen($message) < $this->config['min_post_chars'])
-		{
-			$error[] = $this->language->lang('TOO_FEW_CHARS');
-		}
-		if ($this->config['max_post_chars'] != 0 && utf8_strlen($message) > $this->config['max_post_chars'])
-		{
-			$error[] = $this->language->lang('TOO_MANY_CHARS');
-		}
-
-		if (count($error))
-		{
-			return $error;
-		}
-
-		// Submit idea to the posts table
-		$uid = $bitfield = $options = '';
-		generate_text_for_storage($message, $uid, $bitfield, $options, true, true, true);
-
-		$data = [
-			'forum_id'			=> (int) $this->config['ideas_forum_id'],
-			'topic_id'			=> 0,
-			'icon_id'			=> false,
-			'poster_id'			=> $user_id,
-			'enable_bbcode'		=> true,
-			'enable_smilies'	=> true,
-			'enable_urls'		=> true,
-			'enable_sig'		=> true,
-			'message'			=> $message,
-			'message_md5'		=> md5($message),
-			'bbcode_bitfield'	=> $bitfield,
-			'bbcode_uid'		=> $uid,
-			'post_edit_locked'	=> 0,
-			'topic_title'		=> $title,
-			'notify_set'		=> false,
-			'notify'			=> false,
-			'post_time'			=> time(),
-			'enable_indexing'	=> true,
-			'force_approved_state'	=> (!$this->auth->acl_get('f_noapprove', $this->config['ideas_forum_id'])) ? ITEM_UNAPPROVED : true,
-		];
-
-		$poll = [];
-		submit_post('post', $title, $this->user->data['username'], POST_NORMAL, $poll, $data);
-
-		// Submit the idea to the ideas table
 		$sql_ary = [
 			'idea_title'	=> $data['topic_title'],
 			'idea_author'	=> $data['poster_id'],

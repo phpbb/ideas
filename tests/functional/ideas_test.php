@@ -42,7 +42,7 @@ class ideas_test extends ideas_functional_base
 		// Visit the new idea page and verify data
 		$crawler = self::request('GET', "app.php/idea/{$idea['idea_id']}?sid={$this->sid}");
 		$this->assertContains($this->lang('IDEAS'), $crawler->filter('#nav-breadcrumbs')->text());
-		$this->assertContains($idea['title'], $crawler->filter('h2')->text());
+		$this->assertContains($idea['subject'], $crawler->filter('h2')->text());
 		$this->assertContains($idea['message'], $crawler->filter('.content')->text());
 		$this->assertStringContainsString('1', $crawler->filter('.rating > .vote-up')->text());
 		$this->assertStringContainsString('0', $crawler->filter('.rating > .vote-down')->text());
@@ -125,11 +125,11 @@ class ideas_test extends ideas_functional_base
 	 * Create a new idea
 	 * Make sure to be logged in before calling
 	 *
-	 * @param string $title   The title of the new idea
+	 * @param string $subject The title of the new idea
 	 * @param string $message The message of the new idea
 	 * @return array Array containing the idea id, title and message
 	 */
-	public function create_idea($title, $message)
+	public function create_idea($subject, $message)
 	{
 		// Visit Ideas post controller
 		$crawler = self::request('GET', "app.php/ideas/post?sid={$this->sid}");
@@ -137,14 +137,14 @@ class ideas_test extends ideas_functional_base
 		// Set the form field data
 		$form = $crawler->selectButton($this->lang('SUBMIT'))->form();
 		$data = array(
-			'title'		=> $title,
+			'subject'	=> $subject,
 			'message'	=> $message,
 		);
 		$form->setValues($data);
 
 		// Submit and verify success
 		$crawler = self::submit($form);
-		$this->assertStringContainsString($data['title'], $crawler->filter('h2')->text());
+		$this->assertStringContainsString($data['subject'], $crawler->filter('h2')->text());
 
 		// Get the new idea's ID and add it to the data array
 		$url = $crawler->selectLink($this->lang('REMOVE_VOTE'))->link()->getUri();

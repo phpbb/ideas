@@ -86,7 +86,9 @@ class listener implements EventSubscriberInterface
 			'core.viewtopic_modify_page_title'			=> 'show_idea',
 			'core.viewtopic_add_quickmod_option_before'	=> 'adjust_quickmod_tools',
 			'core.viewonline_overwrite_location'		=> 'viewonline_ideas',
-			'core.posting_modify_submit_post_after'		=> 'edit_idea_title',
+			'core.posting_modify_template_vars'			=> 'submit_idea_template',
+			'core.posting_modify_submit_post_before'	=> 'submit_idea_before',
+			'core.posting_modify_submit_post_after'		=> ['submit_idea_after', 'edit_idea_title'],
 		);
 	}
 
@@ -298,6 +300,78 @@ class listener implements EventSubscriberInterface
 	}
 
 	/**
+	 * Modify template vars on the post a new idea page
+	 *
+	 * @param \phpbb\event\data $event The event object
+	 */
+	public function submit_idea_template($event)
+	{
+		if (!$this->in_post_idea($event['mode'], $event['forum_id']))
+		{
+			return;
+		}
+
+		// Alter posting page template vars
+		$event['page_title'] = $this->language->lang('NEW_IDEA');
+		$event->update_subarray('page_data', 'L_POST_A', $this->language->lang('POST_IDEA'));
+		$event->update_subarray('page_data', 'U_VIEW_FORUM', $this->helper->route('phpbb_ideas_index_controller'));
+
+		// Do not show the Save Draft button
+		$event->update_subarray('page_data', 'S_SAVE_ALLOWED', false);
+		$event->update_subarray('page_data', 'S_HAS_DRAFTS', false);
+
+		// Alter posting page breadcrumbs
+		$this->template->alter_block_array('navlinks', [
+			'U_BREADCRUMB'		=> $this->helper->route('phpbb_ideas_index_controller'),
+			'BREADCRUMB_NAME'	=> $this->language->lang('IDEAS'),
+		], false, 'change');
+
+		$this->template->alter_block_array('navlinks', [
+			'U_VIEW_FORUM'	=> $this->helper->route('phpbb_ideas_post_controller'),
+			'FORUM_NAME'	=> $this->language->lang('NEW_IDEA'),
+		], true, 'insert');
+	}
+
+	/**
+	 * Prepare posting parameters before posting a new idea/topic.
+	 *
+	 * @param \phpbb\event\data $event The event object
+	 */
+	public function submit_idea_before($event)
+	{
+		if (!$this->in_post_idea($event['mode'], $event['data']['forum_id'], empty($event['data']['topic_id'])))
+		{
+			return;
+		}
+
+		$event->update_subarray('data', 'post_time', time());
+	}
+
+	/**
+	 * Submit an idea after submit_post when posting a new idea/topic.
+	 *
+	 * @param \phpbb\event\data $event The event object
+	 */
+	public function submit_idea_after($event)
+	{
+		if (!$this->in_post_idea($event['mode'], $event['data']['forum_id'], !empty($event['data']['topic_id'])))
+		{
+			return;
+		}
+
+		$this->ideas->submit($event['data']);
+
+		// Show users who's posts need approval a special message
+		if (!$this->auth->acl_get('f_noapprove', $this->config['ideas_forum_id']))
+		{
+			// Use refresh and trigger error because we can't throw http_exceptions from posting.php
+			$url = $this->helper->route('phpbb_ideas_index_controller');
+			meta_refresh(10, $url);
+			trigger_error($this->language->lang('IDEA_STORED_MOD', $url));
+		}
+	}
+
+	/**
 	 * Update the idea's title when post title is edited.
 	 *
 	 * @param \phpbb\event\data $event The event object
@@ -316,6 +390,31 @@ class listener implements EventSubscriberInterface
 
 		$idea = $this->ideas->get_idea_by_topic_id($event['topic_id']);
 		$this->ideas->set_title($idea['idea_id'], $event['post_data']['post_subject']);
+	}
+
+	/**
+	 * Test if we are on the posting page for a new idea
+	 *
+	 * @param string $mode       Mode should be post
+	 * @param int    $forum_id   The forum posting is being made in
+	 * @param bool   $topic_flag Is there a topic_id?
+	 *
+	 * @return bool True if mode is post, forum is Ideas forum, and a topic id is
+	 *              expected to exist yet, false if any of these tests failed.
+	 */
+	protected function in_post_idea($mode, $forum_id, $topic_flag = true)
+	{
+		if ($mode !== 'post')
+		{
+			return false;
+		}
+
+		if (!$this->is_ideas_forum($forum_id))
+		{
+			return false;
+		}
+
+		return $topic_flag;
 	}
 
 	/**

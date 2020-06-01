@@ -8,7 +8,7 @@
  *
  */
 
-namespace phpbb\ideas\tests\event;
+namespace phpbb\ideas\event;
 
 class listener_test extends \phpbb_test_case
 {
@@ -56,11 +56,6 @@ class listener_test extends \phpbb_test_case
 		$this->helper = $this->getMockBuilder('\phpbb\controller\helper')
 			->disableOriginalConstructor()
 			->getMock();
-		$this->helper->expects($this->atMost(1))
-			->method('route')
-			->willReturnCallback(function ($route, array $params = array()) {
-				return $route . '#' . serialize($params);
-			});
 		$this->ideas = $this->getMockBuilder('\phpbb\ideas\factory\ideas')
 			->disableOriginalConstructor()
 			->getMock();
@@ -114,6 +109,8 @@ class listener_test extends \phpbb_test_case
 			'core.viewtopic_modify_page_title',
 			'core.viewtopic_add_quickmod_option_before',
 			'core.viewonline_overwrite_location',
+			'core.posting_modify_template_vars',
+			'core.posting_modify_submit_post_before',
 			'core.posting_modify_submit_post_after',
 		), array_keys(\phpbb\ideas\event\listener::getSubscribedEvents()));
 	}
@@ -267,6 +264,12 @@ class listener_test extends \phpbb_test_case
 	 */
 	public function test_viewonline($on_page, $row, $location_url, $location, $expected_location_url, $expected_location)
 	{
+		$this->helper->expects($this->atMost(1))
+			->method('route')
+			->willReturnCallback(function ($route, array $params = array()) {
+				return $route . '#' . serialize($params);
+			});
+
 		$listener = $this->get_listener();
 
 		$dispatcher = new \Symfony\Component\EventDispatcher\EventDispatcher();
@@ -390,4 +393,111 @@ class listener_test extends \phpbb_test_case
 
 		$listener->edit_idea_title($event);
 	}
+
+	public function submit_idea_data()
+	{
+		return [
+			['post', 2, 0, true, true], // all good
+			['post', 1, 0, true, false], // all good except forum id
+			['post', 2, 1, true, false], // all good except topic id
+			['post', 2, 0, false, true], // all good but not approved
+			['edit', 2, 0, true, false], // wrong mode
+			['reply', 2, 0, true, false], // wrong mode
+		];
+	}
+
+	/**
+	 * @dataProvider submit_idea_data
+	 */
+	public function test_submit_idea($mode, $forum_id, $topic_id, $approved, $success)
+	{
+		// Set up the listener and event data
+		$listener = $this->get_listener();
+		$event = new \phpbb\event\data([
+			'mode'     => $mode,
+			'forum_id' => $forum_id,
+			'data'     => [
+				'forum_id' => $forum_id,
+				'topic_id' => $topic_id,
+			],
+		]);
+
+		// test submit_idea_template()
+		$page_data = $event['page_data'];
+		$page_data['U_VIEW_FORUM'] = '';
+		$page_data['L_POST_A'] = '';
+		$page_data['S_SAVE_ALLOWED'] = '';
+		$page_data['S_HAS_DRAFTS'] = '';
+		$event['page_data'] = $page_data;
+		$event['page_title'] = 'NEW_POST';
+
+		$this->helper
+			->method('route')
+			->willReturn('phpbb_ideas_index_controller');
+
+		$listener->submit_idea_template($event);
+
+		if ($mode === 'post' && $forum_id === 2)
+		{
+			$this->assertStringContainsString('NEW_IDEA', $event['page_title']);
+			$this->assertSame('phpbb_ideas_index_controller', $event['page_data']['U_VIEW_FORUM']);
+			$this->assertSame('POST_IDEA', $event['page_data']['L_POST_A']);
+			$this->assertFalse($event['page_data']['S_SAVE_ALLOWED']);
+			$this->assertFalse($event['page_data']['S_HAS_DRAFTS']);
+		}
+		else
+		{
+			$this->assertStringContainsString('NEW_POST', $event['page_title']);
+			$this->assertEmpty($event['page_data']['U_VIEW_FORUM']);
+			$this->assertEmpty($event['page_data']['L_POST_A']);
+			$this->assertEmpty($event['page_data']['S_SAVE_ALLOWED']);
+			$this->assertEmpty($event['page_data']['S_HAS_DRAFTS']);
+		}
+
+		// Test submit_idea_before()
+		$listener->submit_idea_before($event);
+		if ($success)
+		{
+			$this->assertArrayHasKey('post_time', $event['data']);
+			$this->assertGreaterThan(0, $event['data']['post_time']);
+			$topic_id++;
+		}
+		else
+		{
+			$this->assertArrayNotHasKey('post_time', $event['data']);
+			$topic_id = 0;
+		}
+
+		// Update the topic_id like it would be after posting
+		$data = $event['data'];
+		$data['topic_id'] = $topic_id;
+		$event['data'] = $data;
+
+		// Test submit_idea_after()
+		$this->auth->expects($success ? $this->once() : $this->never())
+			->method('acl_get')
+			->willReturn($approved);
+
+		$this->ideas->expects($success ? $this->once() : $this->never())
+			->method('submit')
+			->with($data)
+			->willReturn($this->greaterThan(0));
+
+		if (!$approved)
+		{
+			$this->setExpectedTriggerError(E_USER_NOTICE,'IDEA_STORED_MOD');
+		}
+
+		$listener->submit_idea_after($event);
+	}
+}
+
+/**
+ * Mock meta_refresh()
+ * Note: use the same namespace as the idea_controller
+ *
+ * @return void
+ */
+function meta_refresh()
+{
 }
