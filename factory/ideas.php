@@ -742,7 +742,7 @@ class ideas
 
 		// Initial vote
 		$idea = $this->get_idea($idea_id);
-		$this->vote($idea, $this->user->data['user_id'], 1);
+		$this->vote($idea, $data['poster_id'], 1);
 
 		return $idea_id;
 	}
