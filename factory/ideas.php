@@ -741,8 +741,10 @@ class ideas
 		$idea_id = $this->insert_idea_data($sql_ary, $this->table_ideas);
 
 		// Initial vote
-		$idea = $this->get_idea($idea_id);
-		$this->vote($idea, $data['poster_id'], 1);
+		if (($idea = $this->get_idea($idea_id)) !== false)
+		{
+			$this->vote($idea, $data['poster_id'], 1);
+		}
 
 		return $idea_id;
 	}
