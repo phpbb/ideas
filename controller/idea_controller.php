@@ -225,6 +225,8 @@ class idea_controller extends base
 	 *
 	 * @return bool True if set, false if not
 	 * @access public
+	 *
+	 * @deprecated 2.1.0 (No longer used, may be removed one day)
 	 */
 	public function title()
 	{
