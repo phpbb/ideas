@@ -279,20 +279,8 @@ class listener implements EventSubscriberInterface
 	 */
 	public function viewonline_ideas($event)
 	{
-		if ($event['on_page'][1] === 'app')
-		{
-			if (strrpos($event['row']['session_page'], 'app.' . $this->php_ext . '/ideas/post') === 0)
-			{
-				$event['location'] = $this->language->lang('POSTING_NEW_IDEA');
-				$event['location_url'] = $this->helper->route('phpbb_ideas_index_controller');
-			}
-			else if (strrpos($event['row']['session_page'], 'app.' . $this->php_ext . '/ideas') === 0)
-			{
-				$event['location'] = $this->language->lang('VIEWING_IDEAS');
-				$event['location_url'] = $this->helper->route('phpbb_ideas_index_controller');
-			}
-		}
-		else if ($event['on_page'][1] === 'viewtopic' && $event['row']['session_forum_id'] == $this->config['ideas_forum_id'])
+		if (($event['on_page'][1] === 'app' && strrpos($event['row']['session_page'], 'app.' . $this->php_ext . '/ideas') === 0) ||
+			($event['on_page'][1] === 'viewtopic' && $event['row']['session_forum_id'] == $this->config['ideas_forum_id']))
 		{
 			$event['location'] = $this->language->lang('VIEWING_IDEAS');
 			$event['location_url'] = $this->helper->route('phpbb_ideas_index_controller');
