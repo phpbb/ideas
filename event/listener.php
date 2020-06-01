@@ -397,7 +397,7 @@ class listener implements EventSubscriberInterface
 	 *
 	 * @param string $mode       Mode should be post
 	 * @param int    $forum_id   The forum posting is being made in
-	 * @param bool   $topic_flag Is there a topic_id?
+	 * @param bool   $topic_flag Flag for the state of the topic_id
 	 *
 	 * @return bool True if mode is post, forum is Ideas forum, and a topic id is
 	 *              expected to exist yet, false if any of these tests failed.

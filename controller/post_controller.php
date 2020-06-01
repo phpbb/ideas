@@ -20,7 +20,7 @@ class post_controller extends base
 	 * Redirects to the idea forum's posting page.
 	 *
 	 * @throws http_exception
-	 * @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
+	 * @return \Symfony\Component\HttpFoundation\RedirectResponse A Symfony Response object
 	 */
 	public function post()
 	{
@@ -34,10 +34,10 @@ class post_controller extends base
 			throw new http_exception(404, 'LOGGED_OUT');
 		}
 
-		$params = array(
+		$params = [
 			'mode'	=> 'post',
 			'f'		=> $this->config['ideas_forum_id'],
-		);
+		];
 
 		$url = append_sid(generate_board_url() . "/posting.{$this->php_ext}", $params, false);
 
