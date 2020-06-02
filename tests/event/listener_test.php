@@ -169,6 +169,68 @@ class listener_test extends \phpbb_test_case
 	}
 
 	/**
+	 * Data set for adjust_quickmod_tools
+	 *
+	 * @return array Array of test data
+	 */
+	public function adjust_quickmod_tools_data()
+	{
+		$quickmod_array = [
+			'lock'          => [1 => true],
+			'unlock'        => [1 => true],
+			'delete_topic'  => [1 => true],
+			'restore_topic' => [1 => true],
+			'move'          => [1 => true],
+			'split'         => [1 => true],
+			'merge'         => [1 => true],
+			'merge_topic'   => [1 => true],
+			'fork'          => [1 => true],
+			'make_normal'   => [1 => true],
+			'make_sticky'   => [1 => true],
+			'make_announce' => [1 => true],
+			'make_global'   => [1 => true],
+		];
+
+		return [
+			[2, $quickmod_array, false], // Valid
+			[1, $quickmod_array, true], // Invalid forum
+		];
+	}
+
+	/**
+	 * Test the adjust_quickmod_tools event
+	 *
+	 * @dataProvider adjust_quickmod_tools_data
+	 */
+	public function test_adjust_quickmod_tools($forum_id, $quickmod_array, $expected)
+	{
+		$listener = $this->get_listener();
+
+		$event = new \phpbb\event\data([
+			'forum_id' 			=> $forum_id,
+			'quickmod_array'	=> $quickmod_array,
+		]);
+
+		$listener->adjust_quickmod_tools($event);
+
+		$this->assertEquals($expected, $event['quickmod_array']['delete_topic'][1]);
+		$this->assertEquals($expected, $event['quickmod_array']['restore_topic'][1]);
+		$this->assertEquals($expected, $event['quickmod_array']['make_normal'][1]);
+		$this->assertEquals($expected, $event['quickmod_array']['make_sticky'][1]);
+		$this->assertEquals($expected, $event['quickmod_array']['make_announce'][1]);
+		$this->assertEquals($expected, $event['quickmod_array']['make_global'][1]);
+
+		// These should always be true since we're not changing them
+		$this->assertTrue($event['quickmod_array']['lock'][1]);
+		$this->assertTrue($event['quickmod_array']['unlock'][1]);
+		$this->assertTrue($event['quickmod_array']['move'][1]);
+		$this->assertTrue($event['quickmod_array']['split'][1]);
+		$this->assertTrue($event['quickmod_array']['merge'][1]);
+		$this->assertTrue($event['quickmod_array']['merge_topic'][1]);
+		$this->assertTrue($event['quickmod_array']['fork'][1]);
+	}
+
+	/**
 	 * Data set for test_viewonline
 	 *
 	 * @return array Array of test data
@@ -381,6 +443,41 @@ class listener_test extends \phpbb_test_case
 		$listener->edit_idea_title($event);
 	}
 
+	/**
+	 * Test data for test_ideas_forum_redirect
+	 */
+	public function ideas_forum_redirect_data()
+	{
+		return [
+			[2, '$url', true],
+			[4, '$url', false],
+		];
+	}
+
+	/**
+	 * Test the ideas_forum_redirect() method
+	 *
+	 * @dataProvider ideas_forum_redirect_data
+	 */
+	public function test_ideas_forum_redirect($forum_id, $url, $expected)
+	{
+		if ($expected)
+		{
+			$this->setExpectedTriggerError(E_USER_NOTICE, "Redirected to $url");
+		}
+		$this->helper->expects($expected ? $this->once() : $this->never())
+			->method('route')
+			->willReturn($url);
+
+		$listener = $this->get_listener();
+
+		$event = new \phpbb\event\data([
+			'forum_id' => $forum_id,
+		]);
+
+		$listener->ideas_forum_redirect($event);
+	}
+
 	public function submit_idea_data()
 	{
 		return [
@@ -476,8 +573,19 @@ class listener_test extends \phpbb_test_case
 }
 
 /**
+ * Mock redirect()
+ * Note: use the same namespace as the ideas
+ *
+ * @return void
+ */
+function redirect($url)
+{
+	trigger_error("Redirected to $url", E_USER_NOTICE);
+}
+
+/**
  * Mock meta_refresh()
- * Note: use the same namespace as the idea_controller
+ * Note: use the same namespace as the ideas
  *
  * @return void
  */
