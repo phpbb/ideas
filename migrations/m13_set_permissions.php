@@ -10,7 +10,7 @@
 
 namespace phpbb\ideas\migrations;
 
-class m12_set_permissions extends \phpbb\db\migration\migration
+class m13_set_permissions extends \phpbb\db\migration\migration
 {
 	/**
 	 * {@inheritDoc}
@@ -20,7 +20,7 @@ class m12_set_permissions extends \phpbb\db\migration\migration
 		return [
 			'\phpbb\ideas\migrations\m1_initial_schema',
 			'\phpbb\ideas\migrations\m3_acp_data',
-			'\phpbb\ideas\migrations\m11_reparse_old_ideas',
+			'\phpbb\ideas\migrations\m12_drop_base_url_config',
 		];
 	}
 
