@@ -16,38 +16,15 @@ class live_search_test extends \phpbb\ideas\tests\ideas\ideas_base
 	{
 		return [
 			['Foo', [
-				0    => [
-					'idea_id'     => 1,
-					'result'      => 1,
-					'clean_title' => 'Foo Idea #1 New with 3 up votes',
-					'display'     => '<span>Foo Idea #1 New with 3 up votes</span>',
-				], 1 => [
-					'idea_id'     => 3,
-					'result'      => 3,
-					'clean_title' => 'Foo Idea #3 In Progress with 1 up and 1 down vote',
-					'display'     => '<span>Foo Idea #3 In Progress with 1 up and 1 down vote</span>',
-				],
+				'Foo Idea #1 New with 3 up votes',
+				'Foo Idea #3 In Progress with 1 up and 1 down vote',
 			]],
 			['bar', [
-				0    => [
-					'idea_id'     => 2,
-					'result'      => 2,
-					'clean_title' => 'Bar Idea #2 New with 1 down vote',
-					'display'     => '<span>Bar Idea #2 New with 1 down vote</span>',
-				], 1 => [
-					'idea_id'     => 4,
-					'result'      => 4,
-					'clean_title' => 'Bar Idea #4 Implemented with 0 votes',
-					'display'     => '<span>Bar Idea #4 Implemented with 0 votes</span>',
-				],
+				'Bar Idea #2 New with 1 down vote',
+				'Bar Idea #4 Implemented with 0 votes',
 			]],
 			['roved', [
-				0    => [
-					'idea_id'     => 5,
-					'result'      => 5,
-					'clean_title' => 'Unapproved Idea #5 New with 0 votes',
-					'display'     => '<span>Unapproved Idea #5 New with 0 votes</span>',
-				],
+				'Unapproved Idea #5 New with 0 votes',
 			]],
 			['xxx', []],
 		];
@@ -60,6 +37,16 @@ class live_search_test extends \phpbb\ideas\tests\ideas\ideas_base
 	{
 		$ideas = $this->get_ideas_object();
 
-		$this->assertEquals($expected, $ideas->ideas_title_livesearch($input));
+		$results = $ideas->ideas_title_livesearch($input);
+
+		if (empty($expected))
+		{
+			$this->assertEmpty($results);
+		}
+
+		foreach ($results as $result)
+		{
+			$this->assertContains($result['clean_title'], $expected);
+		}
 	}
 }
