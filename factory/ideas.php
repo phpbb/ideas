@@ -345,7 +345,7 @@ class ideas
 		$results = [];
 		$sql = 'SELECT idea_title, idea_id
 			FROM ' . $this->table_ideas . '
-			WHERE idea_title ' . $this->db->sql_like_expression($search . $this->db->get_any_char());
+			WHERE idea_title ' . $this->db->sql_like_expression($this->db->get_any_char() . $search . $this->db->get_any_char());
 		$result = $this->db->sql_query_limit($sql, $limit);
 		while ($row = $this->db->sql_fetchrow($result))
 		{
@@ -517,7 +517,7 @@ class ideas
 	 *
 	 * @param int $id ID of an idea
 	 *
-	 * @return string The idea's title
+	 * @return string The idea's title, empty string if not found
 	 */
 	public function get_title($id)
 	{
@@ -528,7 +528,7 @@ class ideas
 		$idea_title = $this->db->sql_fetchfield('idea_title');
 		$this->db->sql_freeresult($result);
 
-		return $idea_title;
+		return $idea_title ?: '';
 	}
 
 	/**

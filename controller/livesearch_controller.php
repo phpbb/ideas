@@ -15,14 +15,18 @@ namespace phpbb\ideas\controller;
  */
 class livesearch_controller extends base
 {
+	/**
+	 * Title search handler
+	 *
+	 * @return \Symfony\Component\HttpFoundation\JsonResponse
+	 */
 	public function title_search()
 	{
 		$title_chars = $this->request->variable('duplicateeditinput', '', true);
 
 		$matches = $this->ideas->ideas_title_livesearch($title_chars, 10);
 
-		$json_response = new \phpbb\json_response();
-		$json_response->send([
+		return new \Symfony\Component\HttpFoundation\JsonResponse([
 			'keyword' => $title_chars,
 			'results' => $matches,
 		]);
