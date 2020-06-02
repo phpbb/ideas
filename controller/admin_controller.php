@@ -84,8 +84,6 @@ class admin_controller
 	public function display_options()
 	{
 		$this->template->assign_vars(array(
-			'IDEAS_BASE_URL'	=> $this->config['ideas_base_url'] ?: '',
-
 			'S_FORUM_SELECT_BOX'	=> $this->select_ideas_forum(),
 			'S_IDEAS_FORUM_ID'		=> !empty($this->config['ideas_forum_id']),
 
@@ -130,7 +128,6 @@ class admin_controller
 			// Configuration options to list through
 			$display_vars = array(
 				'ideas_forum_id',
-				'ideas_base_url',
 				'ideas_forum_setup',
 			);
 
@@ -169,31 +166,10 @@ class admin_controller
 				trigger_error($this->language->lang('ACP_IDEAS_NO_FORUM') . adm_back_link($this->u_action), E_USER_WARNING);
 			}
 
-			if (!class_exists('auth_admin'))
-			{
-				include $this->phpbb_root_path . 'includes/acp/auth.' . $this->php_ext;
-			}
-			$auth_admin = new \auth_admin();
-
 			$forum_id = (int) $this->config['ideas_forum_id'];
 
-			// Get the REGISTERED usergroup ID
-			$sql = 'SELECT group_id
-				FROM ' . GROUPS_TABLE . "
-				WHERE group_name = '" . $this->db->sql_escape('REGISTERED') . "'";
-			$this->db->sql_query($sql);
-			$group_id = (int) $this->db->sql_fetchfield('group_id');
-
-			// Get 'f_' local REGISTERED users group permissions array for the ideas forum
-			// Default undefined permissions to ACL_NO
-			$hold_ary = $auth_admin->get_mask('set', false, $group_id, $forum_id, 'f_', 'local', ACL_NO);
-			$auth_settings = $hold_ary[$group_id][$forum_id];
-
-			// Set 'Can start new topics' permissions to 'Never' for the ideas forum
-			$auth_settings['f_post'] = ACL_NEVER;
-
-			// Update the registered usergroup permissions for selected Ideas forum...
-			$auth_admin->acl_set('group', $forum_id, $group_id, $auth_settings);
+			$permission_helper = new \phpbb\ideas\factory\permission_helper($this->config, $this->db, $this->phpbb_root_path, $this->php_ext);
+			$permission_helper->set_ideas_forum_permissions($forum_id);
 
 			// Disable auto-pruning for ideas forum
 			$sql = 'UPDATE ' . FORUMS_TABLE . '

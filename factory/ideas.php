@@ -338,6 +338,7 @@ class ideas
 	 *
 	 * @param string $search The string of characters to search using LIKE
 	 * @param int    $limit  The number of results to return
+	 *
 	 * @return array An array of matching idea id/key and title/values
 	 */
 	public function ideas_title_livesearch($search, $limit = 10)
@@ -698,6 +699,7 @@ class ideas
 	 *
 	 * @param int $user_id The user's id
 	 * @param array $ids An array of idea ids
+	 *
 	 * @return array An array of ideas the user voted on and their vote result, or empty otherwise.
 	 *               example: [idea_id => vote_result]
 	 *                         1 => 1, idea 1, voted up by the user
@@ -721,95 +723,28 @@ class ideas
 	}
 
 	/**
-	 * Submits a new idea.
+	 * Submit new idea data to the ideas table
 	 *
-	 * @param string $title   The title of the idea.
-	 * @param string $message The description of the idea.
-	 * @param int    $user_id The ID of the author.
+	 * @param array $data An array of post data from a newly posted idea
 	 *
-	 * @return array|int Either an array of errors, or the ID of the new idea.
+	 * @return int The ID of the new idea.
 	 */
-	public function submit($title, $message, $user_id)
+	public function submit($data)
 	{
-		$error = array();
-		if (utf8_clean_string($title) === '')
-		{
-			$error[] = $this->language->lang('TITLE_TOO_SHORT');
-		}
-		if (utf8_strlen($title) > self::SUBJECT_LENGTH)
-		{
-			$error[] = $this->language->lang('TITLE_TOO_LONG', self::SUBJECT_LENGTH);
-		}
-		if (utf8_strlen($message) < $this->config['min_post_chars'])
-		{
-			$error[] = $this->language->lang('TOO_FEW_CHARS');
-		}
-		if ($this->config['max_post_chars'] != 0 && utf8_strlen($message) > $this->config['max_post_chars'])
-		{
-			$error[] = $this->language->lang('TOO_MANY_CHARS');
-		}
-
-		if (count($error))
-		{
-			return $error;
-		}
-
-		// Submit idea
-		$sql_ary = array(
-			'idea_title'		=> $title,
-			'idea_author'		=> $user_id,
-			'idea_date'			=> time(),
-			'topic_id'			=> 0,
-		);
+		$sql_ary = [
+			'idea_title'	=> $data['topic_title'],
+			'idea_author'	=> $data['poster_id'],
+			'idea_date'		=> $data['post_time'],
+			'topic_id'		=> $data['topic_id'],
+		];
 
 		$idea_id = $this->insert_idea_data($sql_ary, $this->table_ideas);
 
 		// Initial vote
-		$idea = $this->get_idea($idea_id);
-		$this->vote($idea, $this->user->data['user_id'], 1);
-
-		$uid = $bitfield = $options = '';
-		generate_text_for_storage($message, $uid, $bitfield, $options, true, true, true);
-
-		$data = array(
-			'forum_id'			=> (int) $this->config['ideas_forum_id'],
-			'topic_id'			=> 0,
-			'icon_id'			=> false,
-			'poster_id'			=> (int) $this->user->data['user_id'],
-
-			'enable_bbcode'		=> true,
-			'enable_smilies'	=> true,
-			'enable_urls'		=> true,
-			'enable_sig'		=> true,
-
-			'message'			=> $message,
-			'message_md5'		=> md5($message),
-
-			'bbcode_bitfield'	=> $bitfield,
-			'bbcode_uid'		=> $uid,
-
-			'post_edit_locked'	=> 0,
-			'topic_title'		=> $title,
-
-			'notify_set'		=> false,
-			'notify'			=> false,
-			'post_time'			=> 0,
-			'forum_name'		=> 'Ideas forum',
-
-			'enable_indexing'	=> true,
-
-			'force_approved_state'	=> (!$this->auth->acl_get('f_noapprove', $this->config['ideas_forum_id'])) ? ITEM_UNAPPROVED : true,
-		);
-
-		$poll = array();
-		submit_post('post', $title, $this->user->data['username'], POST_NORMAL, $poll, $data);
-
-		// Edit topic ID into idea; both should link to each other
-		$sql_ary = array(
-			'topic_id' => $data['topic_id'],
-		);
-
-		$this->update_idea_data($sql_ary, $idea_id, $this->table_ideas);
+		if (($idea = $this->get_idea($idea_id)) !== false)
+		{
+			$this->vote($idea, $data['poster_id'], 1);
+		}
 
 		return $idea_id;
 	}
@@ -818,6 +753,7 @@ class ideas
 	 * Preview a new idea.
 	 *
 	 * @param string $message The description of the idea.
+	 *
 	 * @return string The idea parsed for display in preview.
 	 */
 	public function preview($message)

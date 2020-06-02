@@ -27,7 +27,6 @@ $lang = array_merge($lang, array(
 	'CLICK_TO_VIEW'			=> 'Click to view votes.',
 	'CONFIRM_DELETE'		=> 'Are you sure you want to delete this idea?',
 
-	'DATE'					=> 'Date',
 	'DELETE_IDEA'			=> 'Delete idea',
 	'DUPLICATE'				=> 'Duplicate',
 	'DUPLICATE_PLACEHOLDER'	=> 'Start typing a title',
@@ -87,9 +86,6 @@ $lang = array_merge($lang, array(
 	'TICKET'				=> 'Ticket',
 	'TICKET_ERROR'			=> 'Ticket ID must be of the format “PHPBB3-#####”.',
 	'TICKET_ERROR_DUP'		=> 'You must click on an idea title from the live search results. To delete the duplicate, clear the field and press ENTER. To exit this field press ESC.',
-	'TITLE'					=> 'Title',
-	'TITLE_TOO_LONG'		=> 'Subject must be under %d characters long.',
-	'TITLE_TOO_SHORT'		=> 'You must specify a subject when posting a new idea.',
 	'TOP'                   => 'Top',
 	'TOP_IDEAS'				=> 'Top Ideas',
 	'TOTAL_IDEAS'			=> [
