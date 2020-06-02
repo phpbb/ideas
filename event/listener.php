@@ -279,8 +279,8 @@ class listener implements EventSubscriberInterface
 	 */
 	public function viewonline_ideas($event)
 	{
-		if (($event['on_page'][1] === 'app' && strrpos($event['row']['session_page'], 'app.' . $this->php_ext . '/ideas') === 0) ||
-			($event['on_page'][1] === 'viewtopic' && $event['row']['session_forum_id'] == $this->config['ideas_forum_id']))
+		if (($event['on_page'][1] === 'viewtopic' && $event['row']['session_forum_id'] == $this->config['ideas_forum_id']) ||
+			($event['on_page'][1] === 'app' && strrpos($event['row']['session_page'], 'app.' . $this->php_ext . '/ideas') === 0))
 		{
 			$event['location'] = $this->language->lang('VIEWING_IDEAS');
 			$event['location_url'] = $this->helper->route('phpbb_ideas_index_controller');
@@ -288,61 +288,56 @@ class listener implements EventSubscriberInterface
 	}
 
 	/**
-	 * Modify template vars on the post a new idea page
+	 * Modify the Ideas forum's posting page
 	 *
 	 * @param \phpbb\event\data $event The event object
 	 */
 	public function submit_idea_template($event)
 	{
-		if (!$this->in_post_idea($event['mode'], $event['forum_id']))
+		if (!$this->is_ideas_forum($event['forum_id']))
 		{
 			return;
 		}
 
-		// Alter posting page template vars
-		$event['page_title'] = $this->language->lang('NEW_IDEA');
-		$event->update_subarray('page_data', 'L_POST_A', $this->language->lang('POST_IDEA'));
-		$event->update_subarray('page_data', 'U_VIEW_FORUM', $this->helper->route('phpbb_ideas_index_controller'));
+		// Alter some posting page template vars
+		if ($event['mode'] === 'post')
+		{
+			$event['page_title'] = $this->language->lang('POST_IDEA');
+			$event->update_subarray('page_data', 'L_POST_A', $this->language->lang('POST_IDEA'));
+			$event->update_subarray('page_data', 'U_VIEW_FORUM', $this->helper->route('phpbb_ideas_index_controller'));
+		}
 
-		// Do not show the Save Draft button
-		$event->update_subarray('page_data', 'S_SAVE_ALLOWED', false);
-		$event->update_subarray('page_data', 'S_HAS_DRAFTS', false);
-
-		// Alter posting page breadcrumbs
+		// Alter posting page breadcrumbs to link to the ideas controller
 		$this->template->alter_block_array('navlinks', [
 			'U_BREADCRUMB'		=> $this->helper->route('phpbb_ideas_index_controller'),
 			'BREADCRUMB_NAME'	=> $this->language->lang('IDEAS'),
 		], false, 'change');
-
-		$this->template->alter_block_array('navlinks', [
-			'U_VIEW_FORUM'	=> $this->helper->route('phpbb_ideas_post_controller'),
-			'FORUM_NAME'	=> $this->language->lang('NEW_IDEA'),
-		], true, 'insert');
 	}
 
 	/**
-	 * Prepare posting parameters before posting a new idea/topic.
+	 * Prepare post data vars before posting a new idea/topic.
 	 *
 	 * @param \phpbb\event\data $event The event object
 	 */
 	public function submit_idea_before($event)
 	{
-		if (!$this->in_post_idea($event['mode'], $event['data']['forum_id'], empty($event['data']['topic_id'])))
+		if (!$this->is_post_idea($event['mode'], $event['data']['forum_id'], empty($event['data']['topic_id'])))
 		{
 			return;
 		}
 
+		// We need $post_time after submit_post(), but it's not available in the post $data, unless we set it now
 		$event->update_subarray('data', 'post_time', time());
 	}
 
 	/**
-	 * Submit an idea after submit_post when posting a new idea/topic.
+	 * Submit the idea data after posting a new idea/topic.
 	 *
 	 * @param \phpbb\event\data $event The event object
 	 */
 	public function submit_idea_after($event)
 	{
-		if (!$this->in_post_idea($event['mode'], $event['data']['forum_id'], !empty($event['data']['topic_id'])))
+		if (!$this->is_post_idea($event['mode'], $event['data']['forum_id'], !empty($event['data']['topic_id'])))
 		{
 			return;
 		}
@@ -350,9 +345,9 @@ class listener implements EventSubscriberInterface
 		$this->ideas->submit($event['data']);
 
 		// Show users who's posts need approval a special message
-		if (!$this->auth->acl_get('f_noapprove', $this->config['ideas_forum_id']))
+		if (!$this->auth->acl_get('f_noapprove', $event['data']['forum_id']))
 		{
-			// Use refresh and trigger error because we can't throw http_exceptions from posting.php
+			// Using refresh and trigger error because we can't throw http_exceptions from posting.php
 			$url = $this->helper->route('phpbb_ideas_index_controller');
 			meta_refresh(10, $url);
 			trigger_error($this->language->lang('IDEA_STORED_MOD', $url));
@@ -390,7 +385,7 @@ class listener implements EventSubscriberInterface
 	 * @return bool True if mode is post, forum is Ideas forum, and a topic id is
 	 *              expected to exist yet, false if any of these tests failed.
 	 */
-	protected function in_post_idea($mode, $forum_id, $topic_flag = true)
+	protected function is_post_idea($mode, $forum_id, $topic_flag = true)
 	{
 		if ($mode !== 'post')
 		{

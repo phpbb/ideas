@@ -426,19 +426,15 @@ class listener_test extends \phpbb_test_case
 
 		if ($mode === 'post' && $forum_id === 2)
 		{
-			$this->assertStringContainsString('NEW_IDEA', $event['page_title']);
+			$this->assertStringContainsString('POST_IDEA', $event['page_title']);
 			$this->assertSame('phpbb_ideas_index_controller', $event['page_data']['U_VIEW_FORUM']);
 			$this->assertSame('POST_IDEA', $event['page_data']['L_POST_A']);
-			$this->assertFalse($event['page_data']['S_SAVE_ALLOWED']);
-			$this->assertFalse($event['page_data']['S_HAS_DRAFTS']);
 		}
 		else
 		{
 			$this->assertStringContainsString('NEW_POST', $event['page_title']);
 			$this->assertEmpty($event['page_data']['U_VIEW_FORUM']);
 			$this->assertEmpty($event['page_data']['L_POST_A']);
-			$this->assertEmpty($event['page_data']['S_SAVE_ALLOWED']);
-			$this->assertEmpty($event['page_data']['S_HAS_DRAFTS']);
 		}
 
 		// Test submit_idea_before()
