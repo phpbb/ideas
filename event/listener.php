@@ -86,7 +86,9 @@ class listener implements EventSubscriberInterface
 			'core.viewtopic_modify_page_title'			=> 'show_idea',
 			'core.viewtopic_add_quickmod_option_before'	=> 'adjust_quickmod_tools',
 			'core.viewonline_overwrite_location'		=> 'viewonline_ideas',
-			'core.posting_modify_submit_post_after'		=> 'edit_idea_title',
+			'core.posting_modify_template_vars'			=> 'submit_idea_template',
+			'core.posting_modify_submit_post_before'	=> 'submit_idea_before',
+			'core.posting_modify_submit_post_after'		=> ['submit_idea_after', 'edit_idea_title'],
 		);
 	}
 
@@ -275,23 +277,78 @@ class listener implements EventSubscriberInterface
 	 */
 	public function viewonline_ideas($event)
 	{
-		if ($event['on_page'][1] === 'app')
-		{
-			if (strrpos($event['row']['session_page'], 'app.' . $this->php_ext . '/ideas/post') === 0)
-			{
-				$event['location'] = $this->language->lang('POSTING_NEW_IDEA');
-				$event['location_url'] = $this->helper->route('phpbb_ideas_index_controller');
-			}
-			else if (strrpos($event['row']['session_page'], 'app.' . $this->php_ext . '/ideas') === 0)
-			{
-				$event['location'] = $this->language->lang('VIEWING_IDEAS');
-				$event['location_url'] = $this->helper->route('phpbb_ideas_index_controller');
-			}
-		}
-		else if ($event['on_page'][1] === 'viewtopic' && $event['row']['session_forum_id'] == $this->config['ideas_forum_id'])
+		if (($event['on_page'][1] === 'viewtopic' && $event['row']['session_forum_id'] == $this->config['ideas_forum_id']) ||
+			($event['on_page'][1] === 'app' && strrpos($event['row']['session_page'], 'app.' . $this->php_ext . '/ideas') === 0))
 		{
 			$event['location'] = $this->language->lang('VIEWING_IDEAS');
 			$event['location_url'] = $this->helper->route('phpbb_ideas_index_controller');
+		}
+	}
+
+	/**
+	 * Modify the Ideas forum's posting page
+	 *
+	 * @param \phpbb\event\data $event The event object
+	 */
+	public function submit_idea_template($event)
+	{
+		if (!$this->is_ideas_forum($event['forum_id']))
+		{
+			return;
+		}
+
+		// Alter some posting page template vars
+		if ($event['mode'] === 'post')
+		{
+			$event['page_title'] = $this->language->lang('POST_IDEA');
+			$event->update_subarray('page_data', 'L_POST_A', $this->language->lang('POST_IDEA'));
+			$event->update_subarray('page_data', 'U_VIEW_FORUM', $this->helper->route('phpbb_ideas_index_controller'));
+		}
+
+		// Alter posting page breadcrumbs to link to the ideas controller
+		$this->template->alter_block_array('navlinks', [
+			'U_BREADCRUMB'		=> $this->helper->route('phpbb_ideas_index_controller'),
+			'BREADCRUMB_NAME'	=> $this->language->lang('IDEAS'),
+		], false, 'change');
+	}
+
+	/**
+	 * Prepare post data vars before posting a new idea/topic.
+	 *
+	 * @param \phpbb\event\data $event The event object
+	 */
+	public function submit_idea_before($event)
+	{
+		if (!$this->is_post_idea($event['mode'], $event['data']['forum_id'], empty($event['data']['topic_id'])))
+		{
+			return;
+		}
+
+		// We need $post_time after submit_post(), but it's not available in the post $data, unless we set it now
+		$event->update_subarray('data', 'post_time', time());
+	}
+
+	/**
+	 * Submit the idea data after posting a new idea/topic.
+	 *
+	 * @param \phpbb\event\data $event The event object
+	 */
+	public function submit_idea_after($event)
+	{
+		if (!$this->is_post_idea($event['mode'], $event['data']['forum_id'], !empty($event['data']['topic_id'])))
+		{
+			return;
+		}
+
+		$this->ideas->submit($event['data']);
+
+		// Show users who's posts need approval a special message
+		if (!$this->auth->acl_get('f_noapprove', $event['data']['forum_id']))
+		{
+			// Using refresh and trigger error because we can't throw http_exceptions from posting.php
+			$url = $this->helper->route('phpbb_ideas_index_controller');
+			meta_refresh(10, $url);
+			trigger_error($this->language->lang('IDEA_STORED_MOD', $url));
 		}
 	}
 
@@ -314,6 +371,31 @@ class listener implements EventSubscriberInterface
 
 		$idea = $this->ideas->get_idea_by_topic_id($event['topic_id']);
 		$this->ideas->set_title($idea['idea_id'], $event['post_data']['post_subject']);
+	}
+
+	/**
+	 * Test if we are on the posting page for a new idea
+	 *
+	 * @param string $mode       Mode should be post
+	 * @param int    $forum_id   The forum posting is being made in
+	 * @param bool   $topic_flag Flag for the state of the topic_id
+	 *
+	 * @return bool True if mode is post, forum is Ideas forum, and a topic id is
+	 *              expected to exist yet, false if any of these tests failed.
+	 */
+	protected function is_post_idea($mode, $forum_id, $topic_flag = true)
+	{
+		if ($mode !== 'post')
+		{
+			return false;
+		}
+
+		if (!$this->is_ideas_forum($forum_id))
+		{
+			return false;
+		}
+
+		return $topic_flag;
 	}
 
 	/**
