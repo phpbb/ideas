@@ -101,9 +101,7 @@ class listener implements EventSubscriberInterface
 	{
 		if ($this->is_ideas_forum($event['forum_id']))
 		{
-			// Use the custom base url if set, otherwise default to normal routing
-			$url = $this->config['ideas_base_url'] ?: $this->helper->route('phpbb_ideas_index_controller');
-			redirect($url);
+			redirect($this->helper->route('phpbb_ideas_index_controller'));
 		}
 	}
 
