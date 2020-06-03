@@ -8,7 +8,7 @@ services:
             - '@auth'
             - '@config'
             - '@controller.helper'
-            - '@phpbb.ideas.ideas'
+            - '@phpbb.ideas.manager'
             - '@language'
             - '@phpbb.ideas.linkhelper'
             - '@template'
@@ -17,6 +17,7 @@ services:
         tags:
             - { name: event.listener }
 
+# ----- Controllers -----
     phpbb.ideas.admin.controller:
         class: phpbb\ideas\controller\admin_controller
         arguments:
@@ -36,7 +37,7 @@ services:
             - '@auth'
             - '@config'
             - '@controller.helper'
-            - '@phpbb.ideas.ideas'
+            - '@phpbb.ideas.manager'
             - '@language'
             - '@phpbb.ideas.linkhelper'
             - '@pagination'
@@ -66,7 +67,15 @@ services:
         class: phpbb\ideas\controller\livesearch_controller
         parent: phpbb.ideas.controller.base
 
-    phpbb.ideas.ideas:
+# ----- Idea Factory Classes -----
+    phpbb.ideas.manager:
+        class: phpbb\ideas\factory\manager
+        arguments:
+            - '@phpbb.ideas.idea'
+            - '@phpbb.ideas.ideas'
+            - '@phpbb.ideas.vote'
+
+    phpbb.ideas.base:
         class: phpbb\ideas\factory\ideas
         arguments:
             - '@auth'
@@ -79,12 +88,27 @@ services:
             - '%tables.topics%'
             - '%core.php_ext%'
 
+    phpbb.ideas.ideas:
+        class: phpbb\ideas\factory\ideas
+        parent: phpbb.ideas.base
+
+    phpbb.ideas.idea:
+        class: phpbb\ideas\factory\idea
+        parent: phpbb.ideas.base
+        arguments:
+            - '@phpbb.ideas.vote'
+
+    phpbb.ideas.vote:
+        class: phpbb\ideas\factory\vote
+        parent: phpbb.ideas.base
+
     phpbb.ideas.linkhelper:
         class: phpbb\ideas\factory\linkhelper
         arguments:
             - '@controller.helper'
             - '@user_loader'
 
+# ----- Twig extensions -----
     phpbb.ideas.twig.extension.ideas_status_icon:
         class: phpbb\ideas\template\twig\extension\ideas_status_icon
         tags:
@@ -95,7 +119,7 @@ services:
         class: phpbb\ideas\cron\prune_orphaned_ideas
         arguments:
             - '@config'
-            - '@phpbb.ideas.ideas'
+            - '@phpbb.ideas.manager'
         calls:
             - [set_name, [cron.task.prune_orphaned_ideas]]
         tags:

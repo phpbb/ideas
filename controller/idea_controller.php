@@ -11,7 +11,7 @@
 namespace phpbb\ideas\controller;
 
 use phpbb\exception\http_exception;
-use phpbb\ideas\factory\ideas;
+use phpbb\ideas\factory\base as factory;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
@@ -133,7 +133,7 @@ class idea_controller extends base
 	 */
 	public function removevote()
 	{
-		if ($this->data['idea_status'] === ideas::$statuses['IMPLEMENTED'] || $this->data['idea_status'] === ideas::$statuses['DUPLICATE'] || !check_link_hash($this->get_hash(), "removevote_{$this->data['idea_id']}"))
+		if ($this->data['idea_status'] === factory::$statuses['IMPLEMENTED'] || $this->data['idea_status'] === factory::$statuses['DUPLICATE'] || !check_link_hash($this->get_hash(), "removevote_{$this->data['idea_id']}"))
 		{
 			return false;
 		}
@@ -179,7 +179,7 @@ class idea_controller extends base
 
 		if ($status && $this->is_mod() && check_link_hash($this->get_hash(), "status_{$this->data['idea_id']}"))
 		{
-			$this->ideas->change_status($this->data['idea_id'], $status);
+			$this->ideas->set_status($this->data['idea_id'], $status);
 			return true;
 		}
 
@@ -249,7 +249,7 @@ class idea_controller extends base
 	{
 		$vote = $this->request->variable('v', 1);
 
-		if ($this->data['idea_status'] === ideas::$statuses['IMPLEMENTED'] || $this->data['idea_status'] === ideas::$statuses['DUPLICATE'] || !check_link_hash($this->get_hash(), "vote_{$this->data['idea_id']}"))
+		if ($this->data['idea_status'] === factory::$statuses['IMPLEMENTED'] || $this->data['idea_status'] === factory::$statuses['DUPLICATE'] || !check_link_hash($this->get_hash(), "vote_{$this->data['idea_id']}"))
 		{
 			return false;
 		}
