@@ -11,7 +11,7 @@
 namespace phpbb\ideas\controller;
 
 use phpbb\exception\http_exception;
-use phpbb\ideas\factory\ideas;
+use phpbb\ideas\ext;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
@@ -133,7 +133,7 @@ class idea_controller extends base
 	 */
 	public function removevote()
 	{
-		if ($this->data['idea_status'] === ideas::$statuses['IMPLEMENTED'] || $this->data['idea_status'] === ideas::$statuses['DUPLICATE'] || !check_link_hash($this->get_hash(), "removevote_{$this->data['idea_id']}"))
+		if ($this->data['idea_status'] === ext::$statuses['IMPLEMENTED'] || $this->data['idea_status'] === ext::$statuses['DUPLICATE'] || !check_link_hash($this->get_hash(), "removevote_{$this->data['idea_id']}"))
 		{
 			return false;
 		}
@@ -179,7 +179,7 @@ class idea_controller extends base
 
 		if ($status && $this->is_mod() && check_link_hash($this->get_hash(), "status_{$this->data['idea_id']}"))
 		{
-			$this->ideas->change_status($this->data['idea_id'], $status);
+			$this->ideas->set_status($this->data['idea_id'], $status);
 			return true;
 		}
 
@@ -221,25 +221,6 @@ class idea_controller extends base
 	}
 
 	/**
-	 * Title action (sets an idea's title)
-	 *
-	 * @return bool True if set, false if not
-	 * @access public
-	 *
-	 * @deprecated 2.1.0 (No longer used, may be removed one day)
-	 */
-	public function title()
-	{
-		if (($this->is_own() || $this->is_mod()) && check_link_hash($this->get_hash(), "title_{$this->data['idea_id']}"))
-		{
-			$title = $this->request->variable('title', '', true);
-			return $this->ideas->set_title($this->data['idea_id'], $title);
-		}
-
-		return false;
-	}
-
-	/**
 	 * Vote action (sets an idea's vote)
 	 *
 	 * @return mixed Array of vote data, an error message, or false if failed
@@ -249,7 +230,7 @@ class idea_controller extends base
 	{
 		$vote = $this->request->variable('v', 1);
 
-		if ($this->data['idea_status'] === ideas::$statuses['IMPLEMENTED'] || $this->data['idea_status'] === ideas::$statuses['DUPLICATE'] || !check_link_hash($this->get_hash(), "vote_{$this->data['idea_id']}"))
+		if ($this->data['idea_status'] === ext::$statuses['IMPLEMENTED'] || $this->data['idea_status'] === ext::$statuses['DUPLICATE'] || !check_link_hash($this->get_hash(), "vote_{$this->data['idea_id']}"))
 		{
 			return false;
 		}

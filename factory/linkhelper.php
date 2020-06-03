@@ -13,6 +13,9 @@ namespace phpbb\ideas\factory;
 use phpbb\controller\helper;
 use phpbb\user_loader;
 
+/**
+ * Class for helping with common links
+ */
 class linkhelper
 {
 	/* @var helper */

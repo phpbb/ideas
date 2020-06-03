@@ -13,7 +13,8 @@ namespace phpbb\ideas\event;
 use phpbb\auth\auth;
 use phpbb\config\config;
 use phpbb\controller\helper;
-use phpbb\ideas\factory\ideas;
+use phpbb\ideas\ext;
+use phpbb\ideas\factory\manager as ideas;
 use phpbb\ideas\factory\linkhelper;
 use phpbb\language\language;
 use phpbb\template\template;
@@ -53,7 +54,7 @@ class listener implements EventSubscriberInterface
 	 * @param \phpbb\auth\auth                $auth
 	 * @param \phpbb\config\config            $config
 	 * @param \phpbb\controller\helper        $helper
-	 * @param \phpbb\ideas\factory\ideas      $ideas
+	 * @param \phpbb\ideas\factory\manager    $ideas
 	 * @param \phpbb\language\language        $language
 	 * @param \phpbb\ideas\factory\linkhelper $link_helper
 	 * @param \phpbb\template\template        $template
@@ -154,7 +155,7 @@ class listener implements EventSubscriberInterface
 
 		if ($mod)
 		{
-			$this->template->assign_var('STATUS_ARY', ideas::$statuses);
+			$this->template->assign_var('STATUS_ARY', ext::$statuses);
 
 			// Add quick mod option for deleting an idea
 			$this->template->alter_block_array('quickmod', array(
@@ -165,8 +166,8 @@ class listener implements EventSubscriberInterface
 		}
 
 		$points = $idea['idea_votes_up'] - $idea['idea_votes_down'];
-		$can_vote = (bool) ($idea['idea_status'] != ideas::$statuses['IMPLEMENTED'] &&
-			$idea['idea_status'] != ideas::$statuses['DUPLICATE'] &&
+		$can_vote = (bool) ($idea['idea_status'] != ext::$statuses['IMPLEMENTED'] &&
+			$idea['idea_status'] != ext::$statuses['DUPLICATE'] &&
 			$this->auth->acl_get('f_vote', (int) $this->config['ideas_forum_id']) &&
 			$event['topic_data']['topic_status'] != ITEM_LOCKED);
 
@@ -222,7 +223,7 @@ class listener implements EventSubscriberInterface
 			'U_IDEA_VOTE'		=> $this->link_helper->get_idea_link($idea['idea_id'], 'vote', true),
 			'U_IDEA_DUPLICATE'	=> $this->link_helper->get_idea_link($idea['duplicate_id']),
 			'U_IDEA_STATUS_LINK'=> $this->helper->route('phpbb_ideas_list_controller', ['status' => $idea['idea_status']]),
-			'U_SEARCH_MY_IDEAS' => $this->helper->route('phpbb_ideas_list_controller', ['sort' => ideas::SORT_MYIDEAS, 'status' => '-1']),
+			'U_SEARCH_MY_IDEAS' => $this->helper->route('phpbb_ideas_list_controller', ['sort' => ext::SORT_MYIDEAS, 'status' => '-1']),
 			'U_TITLE_LIVESEARCH'=> $this->helper->route('phpbb_ideas_livesearch_controller'),
 		));
 
