@@ -17,9 +17,6 @@ use phpbb\ideas\ext;
  */
 class idea extends base
 {
-	/** @var string */
-	protected $profile_url;
-
 	/**
 	 * Returns the specified idea.
 	 *
@@ -56,18 +53,6 @@ class idea extends base
 		$this->db->sql_freeresult($result);
 
 		return $this->get_idea($idea_id);
-	}
-
-	/**
-	 * Returns the status name from the status ID specified.
-	 *
-	 * @param int $id ID of the status.
-	 *
-	 * @return string|bool The status name if it exists, false otherwise.
-	 */
-	public function get_status_from_id($id)
-	{
-		return $this->language->lang(array_search($id, ext::$statuses));
 	}
 
 	/**
@@ -437,28 +422,12 @@ class idea extends base
 
 		// Process the username for the template now, so it is
 		// ready to use in AJAX responses and DOM injections.
+		$profile_url = append_sid(generate_board_url() . "/memberlist.{$this->php_ext}", array('mode' => 'viewprofile'));
 		foreach ($rows as &$row)
 		{
-			$row['user'] = get_username_string('full', $row['user_id'], $row['username'], $row['user_colour'], false, $this->profile_url());
+			$row['user'] = get_username_string('full', $row['user_id'], $row['username'], $row['user_colour'], false, $profile_url);
 		}
 
 		return $rows;
-	}
-
-	/**
-	 * Helper to generate the user profile URL with an
-	 * absolute URL, which helps avoid problems when
-	 * used in AJAX requests.
-	 *
-	 * @return string User profile URL
-	 */
-	protected function profile_url()
-	{
-		if (!isset($this->profile_url))
-		{
-			$this->profile_url = append_sid(generate_board_url() . "/memberlist.{$this->php_ext}", array('mode' => 'viewprofile'));
-		}
-
-		return $this->profile_url;
 	}
 }

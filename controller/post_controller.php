@@ -10,7 +10,7 @@
 
 namespace phpbb\ideas\controller;
 
-use \phpbb\exception\http_exception;
+use phpbb\exception\http_exception;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class post_controller extends base

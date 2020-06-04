@@ -92,7 +92,7 @@ abstract class base
 	/**
 	 * Set the Ideas entity
 	 *
-	 * @param string $entity
+	 * @param \phpbb\ideas\factory\ideas|\phpbb\ideas\factory\idea $entity
 	 */
 	public function get_entity($entity)
 	{

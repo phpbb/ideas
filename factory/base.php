@@ -13,6 +13,7 @@ namespace phpbb\ideas\factory;
 use phpbb\auth\auth;
 use phpbb\config\config;
 use phpbb\db\driver\driver_interface;
+use phpbb\ideas\ext;
 use phpbb\language\language;
 use phpbb\user;
 
@@ -74,6 +75,18 @@ class base
 		$this->table_ideas = $table_ideas;
 		$this->table_votes = $table_votes;
 		$this->table_topics = $table_topics;
+	}
+
+	/**
+	 * Returns the status name from the status ID specified.
+	 *
+	 * @param int $id ID of the status.
+	 *
+	 * @return string|bool The status name if it exists, false otherwise.
+	 */
+	public function get_status_from_id($id)
+	{
+		return $this->language->lang(array_search($id, ext::$statuses));
 	}
 
 	/**
