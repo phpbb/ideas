@@ -36,7 +36,7 @@ class ideas extends base
 	 *
 	 * @return array Array of row data
 	 */
-	public function get($number = 10, $sort = 'date', $direction = 'DESC', $status = [], $start = 0)
+	public function get_ideas($number = 10, $sort = 'date', $direction = 'DESC', $status = [], $start = 0)
 	{
 		// Initialize a query to request ideas
 		$sql = $this->query_ideas()
@@ -320,7 +320,7 @@ class ideas extends base
 	 *
 	 * @return int Count of ideas
 	 */
-	public function count()
+	public function get_idea_count()
 	{
 		return isset($this->idea_count) ? $this->idea_count : 0;
 	}

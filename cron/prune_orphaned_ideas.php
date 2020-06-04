@@ -18,17 +18,17 @@ class prune_orphaned_ideas extends \phpbb\cron\task\base
 	/** @var \phpbb\config\config */
 	protected $config;
 
-	/** @var \phpbb\ideas\factory\manager */
+	/** @var \phpbb\ideas\factory\ideas */
 	protected $ideas;
 
 	/**
 	 * Constructor
 	 *
-	 * @param \phpbb\config\config         $config Config object
-	 * @param \phpbb\ideas\factory\manager $ideas  Ideas factory object
+	 * @param \phpbb\config\config       $config Config object
+	 * @param \phpbb\ideas\factory\ideas $ideas  Ideas factory object
 	 * @access public
 	 */
-	public function __construct(\phpbb\config\config $config, \phpbb\ideas\factory\manager $ideas)
+	public function __construct(\phpbb\config\config $config, \phpbb\ideas\factory\ideas $ideas)
 	{
 		$this->config = $config;
 		$this->ideas = $ideas;

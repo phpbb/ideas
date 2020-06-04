@@ -14,7 +14,6 @@ use phpbb\auth\auth;
 use phpbb\config\config;
 use phpbb\controller\helper;
 use phpbb\ideas\ext;
-use phpbb\ideas\factory\manager as ideas;
 use phpbb\ideas\factory\linkhelper;
 use phpbb\language\language;
 use phpbb\pagination;
@@ -33,7 +32,7 @@ abstract class base
 	/* @var helper */
 	protected $helper;
 
-	/* @var ideas */
+	/* @var \phpbb\ideas\factory\ideas|\phpbb\ideas\factory\idea */
 	protected $ideas;
 
 	/** @var language  */
@@ -64,7 +63,6 @@ abstract class base
 	 * @param auth       $auth
 	 * @param config     $config
 	 * @param helper     $helper
-	 * @param ideas      $ideas
 	 * @param language   $language
 	 * @param linkhelper $link_helper
 	 * @param pagination $pagination
@@ -74,12 +72,11 @@ abstract class base
 	 * @param string     $root_path
 	 * @param string     $php_ext
 	 */
-	public function __construct(auth $auth, config $config, helper $helper, ideas $ideas, language $language, linkhelper $link_helper, pagination $pagination, request $request, template $template, user $user, $root_path, $php_ext)
+	public function __construct(auth $auth, config $config, helper $helper, language $language, linkhelper $link_helper, pagination $pagination, request $request, template $template, user $user, $root_path, $php_ext)
 	{
 		$this->auth = $auth;
 		$this->config = $config;
 		$this->helper = $helper;
-		$this->ideas = $ideas;
 		$this->language = $language;
 		$this->link_helper = $link_helper;
 		$this->pagination = $pagination;
@@ -90,6 +87,16 @@ abstract class base
 		$this->php_ext = $php_ext;
 
 		$this->language->add_lang('common', 'phpbb/ideas');
+	}
+
+	/**
+	 * Set the Ideas entity
+	 *
+	 * @param string $entity
+	 */
+	public function get_entity($entity)
+	{
+		$this->ideas = $entity;
 	}
 
 	/**

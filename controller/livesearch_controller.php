@@ -24,7 +24,7 @@ class livesearch_controller extends base
 	{
 		$title_chars = $this->request->variable('duplicateeditinput', '', true);
 
-		$matches = $this->ideas->ideas_title_livesearch($title_chars, 10);
+		$matches = $this->ideas->livesearch($title_chars, 10);
 
 		return new \Symfony\Component\HttpFoundation\JsonResponse([
 			'keyword' => $title_chars,
