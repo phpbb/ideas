@@ -13,11 +13,6 @@ namespace phpbb\ideas\factory;
 class permission_helper
 {
 	/**
-	 * @var \phpbb\config\config
-	 */
-	protected $config;
-
-	/**
 	 * @var \phpbb\db\driver\driver_interface
 	 */
 	protected $db;
@@ -35,15 +30,13 @@ class permission_helper
 	/**
 	 * Constructor
 	 *
-	 * @param \phpbb\config\config              $config          Config object
 	 * @param \phpbb\db\driver\driver_interface $db              Database object
 	 * @param string                            $phpbb_root_path phpBB root path
 	 * @param string                            $php_ext         php_ext
 	 * @access public
 	 */
-	public function __construct(\phpbb\config\config $config, \phpbb\db\driver\driver_interface $db, $phpbb_root_path, $php_ext)
+	public function __construct(\phpbb\db\driver\driver_interface $db, $phpbb_root_path, $php_ext)
 	{
-		$this->config = $config;
 		$this->db = $db;
 		$this->phpbb_root_path = $phpbb_root_path;
 		$this->php_ext = $php_ext;
