@@ -13,7 +13,6 @@ namespace phpbb\ideas\factory;
 use phpbb\auth\auth;
 use phpbb\config\config;
 use phpbb\db\driver\driver_interface;
-use phpbb\ideas\ext;
 use phpbb\language\language;
 use phpbb\user;
 
