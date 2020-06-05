@@ -31,8 +31,8 @@ class get_title_test extends \phpbb\ideas\tests\ideas\ideas_base
 	 */
 	public function test_get_title($id, $expected)
 	{
-		$ideas = $this->get_ideas_object();
+		$object = $this->get_idea_object();
 
-		$this->assertSame($expected, $ideas->get_title($id));
+		$this->assertSame($expected, $object->get_title($id));
 	}
 }

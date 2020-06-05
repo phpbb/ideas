@@ -32,8 +32,12 @@ class index_controller_test extends controller_base
 	public function test_controller($status_code, $page_content)
 	{
 		/** @var \phpbb\ideas\controller\index_controller $controller */
-		$controller = $this->get_controller('index_controller');
+		$controller = $this->get_controller('index_controller', 'ideas');
 		$this->assertInstanceOf('phpbb\ideas\controller\index_controller', $controller);
+
+		$this->entity->expects($this->atMost(3))
+			->method('get_ideas')
+			->willReturn([[]]);
 
 		$response = $controller->index();
 		$this->assertInstanceOf('\Symfony\Component\HttpFoundation\Response', $response);
@@ -65,7 +69,7 @@ class index_controller_test extends controller_base
 		$this->config['ideas_forum_id'] = $forum;
 
 		/** @var \phpbb\ideas\controller\index_controller $controller */
-		$controller = $this->get_controller('index_controller');
+		$controller = $this->get_controller('index_controller', 'ideas');
 		$this->assertInstanceOf('phpbb\ideas\controller\index_controller', $controller);
 
 		$controller->index();

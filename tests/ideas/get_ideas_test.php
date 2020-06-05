@@ -44,10 +44,10 @@ class get_ideas_test extends ideas_base
 		extract($this->default_values);
 
 		// Instantiate the ideas class
-		$ideas = $this->get_ideas_object();
+		$object = $this->get_ideas_object();
 
 		// Call get_ideas() with the test data
-		$results = $ideas->get_ideas($number, $sort, $sort_direction, $status, $start);
+		$results = $object->get_ideas($number, $sort, $sort_direction, $status, $start);
 
 		// Get an array of the ideas IDs returned
 		$ideas_ids = array();
@@ -271,9 +271,9 @@ class get_ideas_test extends ideas_base
 			->with('m_', $this->config['ideas_forum_id'])
 			->willReturn($is_mod);
 
-		$ideas = $this->get_ideas_object();
+		$object = $this->get_ideas_object();
 
-		$this->assertCount($expected, $ideas->get_ideas());
+		$this->assertCount($expected, $object->get_ideas());
 	}
 
 	/**

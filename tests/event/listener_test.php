@@ -10,6 +10,8 @@
 
 namespace phpbb\ideas\event;
 
+use phpbb\ideas\ext;
+
 class listener_test extends \phpbb_test_case
 {
 	/** @var \PHPUnit_Framework_MockObject_MockObject|\phpbb\auth\auth */
@@ -21,8 +23,8 @@ class listener_test extends \phpbb_test_case
 	/** @var \PHPUnit_Framework_MockObject_MockObject|\phpbb\controller\helper */
 	protected $helper;
 
-	/** @var \PHPUnit_Framework_MockObject_MockObject|\phpbb\ideas\factory\ideas */
-	protected $ideas;
+	/** @var \PHPUnit_Framework_MockObject_MockObject|\phpbb\ideas\factory\idea */
+	protected $idea;
 
 	/** @var \phpbb\language\language */
 	protected $lang;
@@ -56,7 +58,7 @@ class listener_test extends \phpbb_test_case
 		$this->helper = $this->getMockBuilder('\phpbb\controller\helper')
 			->disableOriginalConstructor()
 			->getMock();
-		$this->ideas = $this->getMockBuilder('\phpbb\ideas\factory\ideas')
+		$this->idea = $this->getMockBuilder('\phpbb\ideas\factory\idea')
 			->disableOriginalConstructor()
 			->getMock();
 		$lang_loader = new \phpbb\language\language_file_loader($phpbb_root_path, $phpEx);
@@ -81,7 +83,7 @@ class listener_test extends \phpbb_test_case
 			$this->auth,
 			$this->config,
 			$this->helper,
-			$this->ideas,
+			$this->idea,
 			$this->lang,
 			$this->link_helper,
 			$this->template,
@@ -113,6 +115,80 @@ class listener_test extends \phpbb_test_case
 			'core.posting_modify_submit_post_before',
 			'core.posting_modify_submit_post_after',
 		), array_keys(\phpbb\ideas\event\listener::getSubscribedEvents()));
+	}
+
+	public function show_idea_data()
+	{
+		return [
+			[2, 10, true, true, true],
+			[2, 10, false, true, true],
+			[2, 10, false, false, true],
+			[0, 10, false, false, false],
+			[2, 0, false, false, false],
+		];
+	}
+
+	/**
+	 * @dataProvider show_idea_data
+	 */
+	public function test_show_idea($forum_id, $topic_id, $has_votes, $mod_auth, $expected)
+	{
+		$listener = $this->get_listener();
+
+		$event = new \phpbb\event\data([
+			'forum_id'		=> $forum_id,
+			'topic_data'	=> ['topic_id' => $topic_id],
+		]);
+
+		// Assert that get_idea_by_topic_id() is called when the forum_id is correct
+		// Also will return idea data if topic_id is valid, otherwise false
+		$this->idea->expects($forum_id ? $this->once() : $this->never())
+			->method('get_idea_by_topic_id')
+			->with($topic_id)
+			->willReturnMap([
+				[0, false],
+				[10, [
+					 'topic_id' => $topic_id,
+					 'idea_id' => 1,
+					 'idea_author' => 0,
+					 'idea_title' => '',
+					 'idea_date' => 0,
+					 'idea_votes_up' => (int) $has_votes,
+					 'idea_votes_down' => (int) $has_votes,
+					 'idea_status' => 0,
+					 'duplicate_id' => 0,
+					 'ticket_id' => 0,
+					 'rfc_link' => '',
+					 'implemented_version' => '',
+				 ]],
+			]);
+
+		// Assert that get_voters() gets called if the idea being shown has votes
+		$this->idea->expects($has_votes ? $this->once() : $this->never())
+			->method('get_voters')
+			->willReturn([[
+				'user_id' => 2,
+				'user' => 'admin',
+				'vote_value' => (int) $has_votes,
+			]]);
+
+		// We need to stub the acl_get, returns true when the user is a moderator
+		$this->auth->method('acl_get')
+			->with($this->stringContains('_'), $this->anything())
+			->willReturnMap([
+				['m_', $forum_id, $mod_auth],
+			]);
+
+		// Assert that moderator template vars are assigned when user is a moderator
+		$this->template->expects($mod_auth ? $this->once() : $this->never())
+			->method('assign_var')
+			->with('STATUS_ARY', ext::$statuses);
+
+		// Assert that the main idea template vars are called when we have an idea to show
+		$this->template->expects($expected ? $this->once() : $this->never())
+			->method('assign_vars');
+
+		$listener->show_idea($event);
 	}
 
 	/**
@@ -431,12 +507,12 @@ class listener_test extends \phpbb_test_case
 
 		$event = new \phpbb\event\data($data);
 
-		$this->ideas->expects($this->$expected())
+		$this->idea->expects($this->$expected())
 			->method('get_idea_by_topic_id')
 			->with($event['topic_id'])
 			->willReturn(array('idea_id' => $event['topic_id']));
 
-		$this->ideas->expects($this->$expected())
+		$this->idea->expects($this->$expected())
 			->method('set_title')
 			->with($event['topic_id'], $event['post_data']['post_subject']);
 
@@ -558,7 +634,7 @@ class listener_test extends \phpbb_test_case
 			->method('acl_get')
 			->willReturn($approved);
 
-		$this->ideas->expects($success ? $this->once() : $this->never())
+		$this->idea->expects($success ? $this->once() : $this->never())
 			->method('submit')
 			->with($data)
 			->willReturn($this->greaterThan(0));

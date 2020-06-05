@@ -52,13 +52,13 @@ class submit_idea_test extends \phpbb\ideas\tests\ideas\ideas_base
 			'topic_id'		=> 100,
 		];
 
-		$ideas = $this->get_ideas_object();
+		$object = $this->get_idea_object();
 
-		$idea_id = $ideas->submit($data);
+		$idea_id = $object->submit($data);
 
 		$this->assertGreaterThan(7, $idea_id);
 
-		$idea = $ideas->get_idea($idea_id);
+		$idea = $object->get_idea($idea_id);
 
 		$this->assertEquals($title, $idea['idea_title']);
 		$this->assertEquals($user_id, $idea['idea_author']);

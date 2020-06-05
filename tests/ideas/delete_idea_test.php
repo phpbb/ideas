@@ -32,13 +32,13 @@ class delete_idea_test extends \phpbb\ideas\tests\ideas\ideas_base
 	 */
 	public function test_delete($idea_id)
 	{
-		$ideas = $this->get_ideas_object();
+		$object = $this->get_idea_object();
 
 		// delete idea
-		$this->assertTrue($ideas->delete($idea_id));
+		$this->assertTrue($object->delete($idea_id));
 
 		// check idea no longer exists
-		$this->assertFalse($ideas->get_idea($idea_id));
+		$this->assertFalse($object->get_idea($idea_id));
 
 		// check that all votes are removed
 		$sql = 'SELECT * FROM phpbb_ideas_votes WHERE idea_id = ' . $idea_id;
@@ -70,9 +70,9 @@ class delete_idea_test extends \phpbb\ideas\tests\ideas\ideas_base
 	 */
 	public function test_delete_fails($idea_id)
 	{
-		$ideas = $this->get_ideas_object();
+		$object = $this->get_idea_object();
 
-		$this->assertFalse($ideas->delete($idea_id));
+		$this->assertFalse($object->delete($idea_id));
 	}
 }
 

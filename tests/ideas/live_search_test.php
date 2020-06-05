@@ -35,9 +35,9 @@ class live_search_test extends \phpbb\ideas\tests\ideas\ideas_base
 	 */
 	public function test_live_search($input, $expected)
 	{
-		$ideas = $this->get_ideas_object();
+		$object = $this->get_livesearch_object();
 
-		$results = $ideas->ideas_title_livesearch($input);
+		$results = $object->title_search($input);
 
 		if (empty($expected))
 		{

@@ -21,8 +21,8 @@ class controller_base extends \phpbb_test_case
 	/** @var \PHPUnit_Framework_MockObject_MockObject|\phpbb\controller\helper */
 	protected $controller_helper;
 
-	/** @var \PHPUnit_Framework_MockObject_MockObject|\phpbb\ideas\factory\ideas */
-	protected $ideas;
+	/** @var \PHPUnit_Framework_MockObject_MockObject|\phpbb\ideas\factory\base */
+	protected $entity;
 
 	/** @var \phpbb\language\language */
 	protected $lang;
@@ -69,12 +69,6 @@ class controller_base extends \phpbb_test_case
 			->willReturnCallback(function ($template_file, $page_title = '', $status_code = 200, $display_online_list = false) {
 				return new \Symfony\Component\HttpFoundation\Response($template_file, $status_code);
 			});
-		$this->ideas = $this->getMockBuilder('\phpbb\ideas\factory\ideas')
-			->disableOriginalConstructor()
-			->getMock();
-		$this->ideas->expects($this->atMost(3))
-			->method('get_ideas')
-			->willReturn(array(array()));
 		$lang_loader = new \phpbb\language\language_file_loader($phpbb_root_path, $phpEx);
 		$this->lang = new \phpbb\language\language($lang_loader);
 		$this->link_helper = $this->getMockBuilder('\phpbb\ideas\factory\linkhelper')
@@ -98,14 +92,13 @@ class controller_base extends \phpbb_test_case
 		$this->php_ext = $phpEx;
 	}
 
-	public function get_controller($name)
+	public function get_controller($name, $entity = null)
 	{
 		$controller = "\\phpbb\\ideas\\controller\\$name";
-		return new $controller(
+		$controller = new $controller(
 			$this->auth,
 			$this->config,
 			$this->controller_helper,
-			$this->ideas,
 			$this->lang,
 			$this->link_helper,
 			$this->pagination,
@@ -115,5 +108,16 @@ class controller_base extends \phpbb_test_case
 			$this->root_path,
 			$this->php_ext
 		);
+
+		if ($entity !== null)
+		{
+			$this->entity = $this->getMockBuilder("\\phpbb\\ideas\\factory\\$entity")
+				->disableOriginalConstructor()
+				->getMock();
+
+			$controller->get_entity($this->entity);
+		}
+
+		return $controller;
 	}
 }

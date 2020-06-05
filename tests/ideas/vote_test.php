@@ -88,11 +88,11 @@ class vote_test extends ideas_base
 	 */
 	public function test_vote($idea_id, $user_id, $vote, $expected)
 	{
-		$ideas = $this->get_ideas_object();
+		$object = $this->get_idea_object();
 
-		$idea = $ideas->get_idea($idea_id);
+		$idea = $object->get_idea($idea_id);
 
-		$result = $ideas->vote($idea, $user_id, $vote);
+		$result = $object->vote($idea, $user_id, $vote);
 
 		$this->assertEquals($expected['message'], $result['message'], 'Message did not match');
 		$this->assertEquals($expected['votes_up'], $result['votes_up'], 'Up vote values did not match');
@@ -122,11 +122,11 @@ class vote_test extends ideas_base
 	 */
 	public function test_vote_fails($vote)
 	{
-		$ideas = $this->get_ideas_object();
+		$object = $this->get_idea_object();
 
 		$idea = array(); // mock an empty idea
 
-		$result = $ideas->vote($idea, 2, $vote);
+		$result = $object->vote($idea, 2, $vote);
 
 		$this->assertEquals('INVALID_VOTE', $result);
 	}
@@ -177,11 +177,11 @@ class vote_test extends ideas_base
 	 */
 	public function test_remove_vote($idea_id, $user_id, $expected)
 	{
-		$ideas = $this->get_ideas_object();
+		$object = $this->get_idea_object();
 
-		$idea = $ideas->get_idea($idea_id);
+		$idea = $object->get_idea($idea_id);
 
-		$result = $ideas->remove_vote($idea, $user_id);
+		$result = $object->remove_vote($idea, $user_id);
 
 		$this->assertEquals($expected['message'], $result['message'], 'Message did not match');
 		$this->assertEquals($expected['votes_up'], $result['votes_up'], 'Up vote values did not match');

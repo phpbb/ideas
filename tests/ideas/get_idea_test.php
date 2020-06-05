@@ -49,9 +49,9 @@ class get_idea_test extends ideas_base
 	 */
 	public function test_get_idea($idea_id, $expected)
 	{
-		$ideas = $this->get_ideas_object();
+		$object = $this->get_idea_object();
 
-		$rows = $ideas->get_idea($idea_id);
+		$rows = $object->get_idea($idea_id);
 
 		$this->assertNotFalse(strpos($rows['idea_title'], $expected));
 	}
@@ -63,9 +63,9 @@ class get_idea_test extends ideas_base
 	 */
 	public function test_get_idea_fails($idea_id)
 	{
-		$ideas = $this->get_ideas_object();
+		$object = $this->get_idea_object();
 
-		$this->assertFalse($ideas->get_idea($idea_id));
+		$this->assertFalse($object->get_idea($idea_id));
 	}
 
 	/**
@@ -75,9 +75,9 @@ class get_idea_test extends ideas_base
 	 */
 	public function test_get_idea_by_topic_id($topic_id, $expected)
 	{
-		$ideas = $this->get_ideas_object();
+		$object = $this->get_idea_object();
 
-		$rows = $ideas->get_idea_by_topic_id($topic_id);
+		$rows = $object->get_idea_by_topic_id($topic_id);
 
 		$this->assertNotFalse(strpos($rows['idea_title'], $expected));
 	}
@@ -89,8 +89,8 @@ class get_idea_test extends ideas_base
 	 */
 	public function test_get_idea_by_topic_id_fails($topic_id)
 	{
-		$ideas = $this->get_ideas_object();
+		$object = $this->get_idea_object();
 
-		$this->assertFalse($ideas->get_idea_by_topic_id($topic_id));
+		$this->assertFalse($object->get_idea_by_topic_id($topic_id));
 	}
 }

@@ -14,6 +14,7 @@ class delete_orphans_test extends \phpbb\ideas\tests\ideas\ideas_base
 {
 	public function test_delete_orphans()
 	{
+		$idea = $this->get_idea_object();
 		$ideas = $this->get_ideas_object();
 
 		// First lets get a count of the good ideas
@@ -21,15 +22,15 @@ class delete_orphans_test extends \phpbb\ideas\tests\ideas\ideas_base
 		$valid_ideas = $ideas->get_idea_count();
 
 		// Check the orphan ideas exists
-		$this->assertNotEmpty($ideas->get_idea(6));
-		$this->assertNotEmpty($ideas->get_idea(7));
+		$this->assertNotEmpty($idea->get_idea(6));
+		$this->assertNotEmpty($idea->get_idea(7));
 
 		// Delete orphans
 		$this->assertEquals(2, $ideas->delete_orphans());
 
 		// Confirm orphan ideas no longer exists
-		$this->assertFalse($ideas->get_idea(6));
-		$this->assertFalse($ideas->get_idea(7));
+		$this->assertFalse($idea->get_idea(6));
+		$this->assertFalse($idea->get_idea(7));
 
 		// Check that all votes from orphan ideas are removed
 		$sql = 'SELECT COUNT(idea_id) as num_ideas FROM phpbb_ideas_votes WHERE idea_id IN(6, 7)';
@@ -41,5 +42,8 @@ class delete_orphans_test extends \phpbb\ideas\tests\ideas\ideas_base
 		// Confirm that only the orphans were deleted
 		$ideas->get_ideas();
 		$this->assertEquals($valid_ideas, $ideas->get_idea_count());
+
+		// Delete orphans again, confirming there's nothing to delete
+		$this->assertEquals(0, $ideas->delete_orphans());
 	}
 }
