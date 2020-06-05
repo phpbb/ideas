@@ -72,7 +72,7 @@ services:
         class: phpbb\ideas\controller\livesearch_controller
         parent: phpbb.ideas.controller.base
         calls:
-            - [get_entity, ['@phpbb.ideas.ideas']]
+            - [get_entity, ['@phpbb.ideas.livesearch']]
 
 # ----- Idea Factory Classes -----
     phpbb.ideas.base:
@@ -94,6 +94,10 @@ services:
 
     phpbb.ideas.idea:
         class: phpbb\ideas\factory\idea
+        parent: phpbb.ideas.base
+
+    phpbb.ideas.livesearch:
+        class: phpbb\ideas\factory\livesearch
         parent: phpbb.ideas.base
 
     phpbb.ideas.linkhelper:
