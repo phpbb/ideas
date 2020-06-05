@@ -198,7 +198,7 @@ class listener implements EventSubscriberInterface
 			'IDEA_VOTES_DOWN'	=> $idea['idea_votes_down'],
 			'IDEA_POINTS'		=> $points,
 			'IDEA_STATUS_ID'	=> $idea['idea_status'],
-			'IDEA_STATUS_NAME'	=> $this->idea->get_status_from_id($idea['idea_status']),
+			'IDEA_STATUS_NAME'	=> $this->language->lang(ext::status_name($idea['idea_status'])),
 
 			'IDEA_DUPLICATE'	=> $idea['duplicate_id'] ? $this->idea->get_title($idea['duplicate_id']) : '',
 			'IDEA_RFC'			=> $idea['rfc_link'],

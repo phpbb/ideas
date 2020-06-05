@@ -78,18 +78,6 @@ class base
 	}
 
 	/**
-	 * Returns the status name from the status ID specified.
-	 *
-	 * @param int $id ID of the status.
-	 *
-	 * @return string|bool The status name if it exists, false otherwise.
-	 */
-	public function get_status_from_id($id)
-	{
-		return $this->language->lang(array_search($id, ext::$statuses));
-	}
-
-	/**
 	 * Helper method for inserting new idea data
 	 *
 	 * @param array  $data  The array of data to insert

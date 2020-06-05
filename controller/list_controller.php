@@ -56,7 +56,7 @@ class list_controller extends base
 		}
 
 		// Set the name for displaying in the template
-		$status_name = 'LIST_' . strtoupper($status > 0 ? array_search($status, ext::$statuses) : $sort);
+		$status_name = 'LIST_' . ($status > 0 ? ext::status_name($status) : strtoupper($sort));
 		$status_name = $this->language->is_set($status_name) ? $this->language->lang($status_name) : '';
 
 		// For special case where we want to request ALL ideas,

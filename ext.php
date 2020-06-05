@@ -41,6 +41,20 @@ class ext extends \phpbb\extension\base
 	);
 
 	/**
+	 * Return the status name from the status ID.
+	 *
+	 * @param int $id ID of the status.
+	 *
+	 * @return string The status name.
+	 * @static
+	 * @access public
+	 */
+	public static function status_name($id)
+	{
+		return array_flip(self::$statuses)[$id];
+	}
+
+	/**
 	 * Check whether or not the extension can be enabled.
 	 *
 	 * Requires phpBB >= 3.2.1 due to use of $event->update_subarray()
