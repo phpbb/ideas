@@ -15,6 +15,9 @@ use phpbb\ideas\ext;
 
 class list_controller extends base
 {
+	/* @var \phpbb\ideas\factory\ideas */
+	protected $ideas;
+
 	/**
 	 * Controller for /list/{sort}
 	 *

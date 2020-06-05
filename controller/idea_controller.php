@@ -20,6 +20,9 @@ class idea_controller extends base
 	/** @var array of idea data */
 	protected $data;
 
+	/* @var \phpbb\ideas\factory\idea */
+	protected $ideas;
+
 	/**
 	 * Controller for /idea/{idea_id}
 	 *

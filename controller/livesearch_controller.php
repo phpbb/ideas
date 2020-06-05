@@ -15,6 +15,9 @@ namespace phpbb\ideas\controller;
  */
 class livesearch_controller extends base
 {
+	/* @var \phpbb\ideas\factory\ideas */
+	protected $ideas;
+
 	/**
 	 * Title search handler
 	 *
