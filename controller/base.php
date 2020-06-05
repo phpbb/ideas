@@ -32,8 +32,8 @@ abstract class base
 	/* @var helper */
 	protected $helper;
 
-	/* @var \phpbb\ideas\factory\ideas|\phpbb\ideas\factory\idea */
-	protected $ideas;
+	/* @var \phpbb\ideas\factory\base */
+	protected $entity;
 
 	/** @var language  */
 	protected $language;
@@ -92,11 +92,11 @@ abstract class base
 	/**
 	 * Set the Ideas entity
 	 *
-	 * @param \phpbb\ideas\factory\ideas|\phpbb\ideas\factory\idea $entity
+	 * @param \phpbb\ideas\factory\base $entity
 	 */
 	public function get_entity($entity)
 	{
-		$this->ideas = $entity;
+		$this->entity = $entity;
 	}
 
 	/**

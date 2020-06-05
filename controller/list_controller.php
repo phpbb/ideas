@@ -16,7 +16,7 @@ use phpbb\ideas\ext;
 class list_controller extends base
 {
 	/* @var \phpbb\ideas\factory\ideas */
-	protected $ideas;
+	protected $entity;
 
 	/**
 	 * Controller for /list/{sort}
@@ -68,14 +68,14 @@ class list_controller extends base
 		}
 
 		// Generate ideas
-		$ideas = $this->ideas->get_ideas($this->config['posts_per_page'], $sort, $sort_direction, $status, $start);
+		$ideas = $this->entity->get_ideas($this->config['posts_per_page'], $sort, $sort_direction, $status, $start);
 		$this->assign_template_block_vars('ideas', $ideas);
 
 		// Build list page template output
 		$this->template->assign_vars(array(
 			'U_LIST_ACTION'		=> $this->helper->route('phpbb_ideas_list_controller'),
 			'U_POST_ACTION'		=> $this->helper->route('phpbb_ideas_post_controller'),
-			'IDEAS_COUNT'       => $this->ideas->get_idea_count(),
+			'IDEAS_COUNT'       => $this->entity->get_idea_count(),
 			'STATUS_NAME'       => $status_name ?: $this->language->lang('OPEN_IDEAS'),
 			'STATUS_ARY'		=> ext::$statuses,
 			'STATUS'			=> $u_status,
@@ -110,7 +110,7 @@ class list_controller extends base
 			$this->helper->route('phpbb_ideas_list_controller', $params),
 			'pagination',
 			'start',
-			$this->ideas->get_idea_count(),
+			$this->entity->get_idea_count(),
 			$this->config['posts_per_page'],
 			$start
 		);

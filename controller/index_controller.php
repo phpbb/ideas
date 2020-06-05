@@ -16,7 +16,7 @@ use phpbb\ideas\ext;
 class index_controller extends base
 {
 	/* @var \phpbb\ideas\factory\ideas */
-	protected $ideas;
+	protected $entity;
 
 	/**
 	 * Controller for /ideas
@@ -32,15 +32,15 @@ class index_controller extends base
 		}
 
 		// Generate latest ideas
-		$ideas = $this->ideas->get_ideas(ext::NUM_IDEAS, ext::SORT_DATE, 'DESC');
+		$ideas = $this->entity->get_ideas(ext::NUM_IDEAS, ext::SORT_DATE, 'DESC');
 		$this->assign_template_block_vars('latest_ideas', $ideas);
 
 		// Generate top ideas
-		$ideas = $this->ideas->get_ideas(ext::NUM_IDEAS, ext::SORT_TOP, 'DESC');
+		$ideas = $this->entity->get_ideas(ext::NUM_IDEAS, ext::SORT_TOP, 'DESC');
 		$this->assign_template_block_vars('top_ideas', $ideas);
 
 		// Generate recently implemented
-		$ideas = $this->ideas->get_ideas(ext::NUM_IDEAS, ext::SORT_DATE, 'DESC', ext::$statuses['IMPLEMENTED']);
+		$ideas = $this->entity->get_ideas(ext::NUM_IDEAS, ext::SORT_DATE, 'DESC', ext::$statuses['IMPLEMENTED']);
 		$this->assign_template_block_vars('implemented_ideas', $ideas);
 
 		$this->template->assign_vars(array(
