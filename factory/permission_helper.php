@@ -59,8 +59,9 @@ class permission_helper
 		$sql = 'SELECT group_id
 			FROM ' . GROUPS_TABLE . "
 			WHERE group_name = '" . $this->db->sql_escape('REGISTERED') . "'";
-		$this->db->sql_query($sql);
+		$result = $this->db->sql_query($sql);
 		$group_id = (int) $this->db->sql_fetchfield('group_id');
+		$this->db->sql_freeresult($result);
 
 		// Get 'f_' local REGISTERED users group permissions array for the ideas forum
 		// Default undefined permissions to ACL_NO

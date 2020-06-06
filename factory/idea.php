@@ -286,12 +286,7 @@ class idea extends base
 		}
 
 		// Check whether user has already voted - update if they have
-		$sql = 'SELECT idea_id, vote_value
-			FROM ' . $this->table_votes . '
-			WHERE idea_id = ' . (int) $idea['idea_id'] . '
-				AND user_id = ' . (int) $user_id;
-		$this->db->sql_query_limit($sql, 1);
-		if ($row = $this->db->sql_fetchrow())
+		if ($row = $this->get_users_vote($idea['idea_id'], $user_id))
 		{
 			if ($row['vote_value'] != $value)
 			{
@@ -370,12 +365,7 @@ class idea extends base
 	public function remove_vote(&$idea, $user_id)
 	{
 		// Only change something if user has already voted
-		$sql = 'SELECT idea_id, vote_value
-			FROM ' . $this->table_votes . '
-			WHERE idea_id = ' . (int) $idea['idea_id'] . '
-				AND user_id = ' . (int) $user_id;
-		$this->db->sql_query_limit($sql, 1);
-		if ($row = $this->db->sql_fetchrow())
+		if ($row = $this->get_users_vote($idea['idea_id'], $user_id))
 		{
 			$sql = 'DELETE FROM ' . $this->table_votes . '
 				WHERE idea_id = ' . (int) $idea['idea_id'] . '
@@ -429,5 +419,25 @@ class idea extends base
 		}
 
 		return $rows;
+	}
+
+	/**
+	 * Get a user's stored vote value for a given idea
+	 *
+	 * @param int $idea_id The idea id
+	 * @param int $user_id The user id
+	 * @return mixed Array with the row data, false if the row does not exist
+	 */
+	protected function get_users_vote($idea_id, $user_id)
+	{
+		$sql = 'SELECT idea_id, vote_value
+			FROM ' . $this->table_votes . '
+			WHERE idea_id = ' . (int) $idea_id . '
+				AND user_id = ' . (int) $user_id;
+		$result = $this->db->sql_query_limit($sql, 1);
+		$row = $this->db->sql_fetchrow();
+		$this->db->sql_freeresult($result);
+
+		return $row;
 	}
 }
