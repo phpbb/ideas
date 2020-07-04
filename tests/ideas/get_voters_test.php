@@ -35,9 +35,9 @@ class get_voters_test extends ideas_base
 	 */
 	public function test_get_voters($idea_id, $expected)
 	{
-		$ideas = $this->get_ideas_object();
+		$object = $this->get_idea_object();
 
-		$voters = $ideas->get_voters($idea_id);
+		$voters = $object->get_voters($idea_id);
 
 		$users = array();
 		foreach ($voters as $voter)

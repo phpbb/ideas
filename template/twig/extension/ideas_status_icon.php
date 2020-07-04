@@ -10,6 +10,8 @@
 
 namespace phpbb\ideas\template\twig\extension;
 
+use phpbb\ideas\ext;
+
 class ideas_status_icon extends \Twig_Extension
 {
 	/**
@@ -43,11 +45,11 @@ class ideas_status_icon extends \Twig_Extension
 		$args = func_get_args();
 
 		$icons = [
-			\phpbb\ideas\factory\ideas::$statuses['NEW']         => 'fa-lightbulb-o',
-			\phpbb\ideas\factory\ideas::$statuses['IN_PROGRESS'] => 'fa-code-fork',
-			\phpbb\ideas\factory\ideas::$statuses['IMPLEMENTED'] => 'fa-check',
-			\phpbb\ideas\factory\ideas::$statuses['DUPLICATE']   => 'fa-files-o',
-			\phpbb\ideas\factory\ideas::$statuses['INVALID']     => 'fa-ban',
+			ext::$statuses['NEW']         => 'fa-lightbulb-o',
+			ext::$statuses['IN_PROGRESS'] => 'fa-code-fork',
+			ext::$statuses['IMPLEMENTED'] => 'fa-check',
+			ext::$statuses['DUPLICATE']   => 'fa-files-o',
+			ext::$statuses['INVALID']     => 'fa-ban',
 		];
 
 		return isset($icons[$args[0]]) ? $icons[$args[0]] : '';

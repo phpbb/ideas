@@ -26,11 +26,11 @@ class list_controller_test extends controller_base
 				200,
 				'list_body.html',
 				array(
-					'sort' => \phpbb\ideas\factory\ideas::SORT_TOP,
+					'sort' => \phpbb\ideas\ext::SORT_TOP,
 					'status' => 0,
 				),
 				array(
-					'sort' => \phpbb\ideas\factory\ideas::SORT_TOP,
+					'sort' => \phpbb\ideas\ext::SORT_TOP,
 					'status' => 0,
 				),
 			),
@@ -52,12 +52,12 @@ class list_controller_test extends controller_base
 				200,
 				'list_body.html',
 				array(
-					'sort' => \phpbb\ideas\factory\ideas::SORT_DATE,
-					'status' => \phpbb\ideas\factory\ideas::$statuses['IMPLEMENTED'],
+					'sort' => \phpbb\ideas\ext::SORT_DATE,
+					'status' => \phpbb\ideas\ext::$statuses['IMPLEMENTED'],
 				),
 				array(
-					'sort' => \phpbb\ideas\factory\ideas::SORT_DATE,
-					'status' => \phpbb\ideas\factory\ideas::$statuses['IMPLEMENTED'],
+					'sort' => \phpbb\ideas\ext::SORT_DATE,
+					'status' => \phpbb\ideas\ext::$statuses['IMPLEMENTED'],
 				),
 			),
 
@@ -67,12 +67,12 @@ class list_controller_test extends controller_base
 				200,
 				'list_body.html',
 				array(
-					'sort' => \phpbb\ideas\factory\ideas::SORT_NEW,
-					'status' => \phpbb\ideas\factory\ideas::$statuses['NEW'],
+					'sort' => \phpbb\ideas\ext::SORT_NEW,
+					'status' => \phpbb\ideas\ext::$statuses['NEW'],
 				),
 				array(
-					'sort' => \phpbb\ideas\factory\ideas::SORT_DATE,
-					'status' => \phpbb\ideas\factory\ideas::$statuses['NEW'],
+					'sort' => \phpbb\ideas\ext::SORT_DATE,
+					'status' => \phpbb\ideas\ext::$statuses['NEW'],
 				),
 			),
 			// In progress ideas sorted by score
@@ -80,12 +80,12 @@ class list_controller_test extends controller_base
 				200,
 				'list_body.html',
 				array(
-					'sort' => \phpbb\ideas\factory\ideas::SORT_SCORE,
-					'status' => \phpbb\ideas\factory\ideas::$statuses['IN_PROGRESS'],
+					'sort' => \phpbb\ideas\ext::SORT_SCORE,
+					'status' => \phpbb\ideas\ext::$statuses['IN_PROGRESS'],
 				),
 				array(
-					'sort' => \phpbb\ideas\factory\ideas::SORT_SCORE,
-					'status' => \phpbb\ideas\factory\ideas::$statuses['IN_PROGRESS'],
+					'sort' => \phpbb\ideas\ext::SORT_SCORE,
+					'status' => \phpbb\ideas\ext::$statuses['IN_PROGRESS'],
 				),
 			),
 			// Duplicate ideas sorted by author
@@ -93,12 +93,12 @@ class list_controller_test extends controller_base
 				200,
 				'list_body.html',
 				array(
-					'sort' => \phpbb\ideas\factory\ideas::SORT_AUTHOR,
-					'status' => \phpbb\ideas\factory\ideas::$statuses['DUPLICATE'],
+					'sort' => \phpbb\ideas\ext::SORT_AUTHOR,
+					'status' => \phpbb\ideas\ext::$statuses['DUPLICATE'],
 				),
 				array(
-					'sort' => \phpbb\ideas\factory\ideas::SORT_AUTHOR,
-					'status' => \phpbb\ideas\factory\ideas::$statuses['DUPLICATE'],
+					'sort' => \phpbb\ideas\ext::SORT_AUTHOR,
+					'status' => \phpbb\ideas\ext::$statuses['DUPLICATE'],
 				),
 			),
 			// Invalid ideas sorted by date
@@ -106,12 +106,12 @@ class list_controller_test extends controller_base
 				200,
 				'list_body.html',
 				array(
-					'sort' => \phpbb\ideas\factory\ideas::SORT_DATE,
-					'status' => \phpbb\ideas\factory\ideas::$statuses['INVALID'],
+					'sort' => \phpbb\ideas\ext::SORT_DATE,
+					'status' => \phpbb\ideas\ext::$statuses['INVALID'],
 				),
 				array(
-					'sort' => \phpbb\ideas\factory\ideas::SORT_DATE,
-					'status' => \phpbb\ideas\factory\ideas::$statuses['INVALID'],
+					'sort' => \phpbb\ideas\ext::SORT_DATE,
+					'status' => \phpbb\ideas\ext::$statuses['INVALID'],
 				),
 			),
 			// Implemented ideas sorted by top
@@ -119,12 +119,12 @@ class list_controller_test extends controller_base
 				200,
 				'list_body.html',
 				array(
-					'sort' => \phpbb\ideas\factory\ideas::SORT_TOP,
-					'status' => \phpbb\ideas\factory\ideas::$statuses['IMPLEMENTED'],
+					'sort' => \phpbb\ideas\ext::SORT_TOP,
+					'status' => \phpbb\ideas\ext::$statuses['IMPLEMENTED'],
 				),
 				array(
-					'sort' => \phpbb\ideas\factory\ideas::SORT_TOP,
-					'status' => \phpbb\ideas\factory\ideas::$statuses['IMPLEMENTED'],
+					'sort' => \phpbb\ideas\ext::SORT_TOP,
+					'status' => \phpbb\ideas\ext::$statuses['IMPLEMENTED'],
 				),
 			),
 			// All ideas sorted by date
@@ -132,12 +132,12 @@ class list_controller_test extends controller_base
 				200,
 				'list_body.html',
 				array(
-					'sort' => \phpbb\ideas\factory\ideas::SORT_NEW,
+					'sort' => \phpbb\ideas\ext::SORT_NEW,
 					'status' => -1,
 				),
 				array(
-					'sort' => \phpbb\ideas\factory\ideas::SORT_DATE,
-					'status' => \phpbb\ideas\factory\ideas::$statuses,
+					'sort' => \phpbb\ideas\ext::SORT_DATE,
+					'status' => \phpbb\ideas\ext::$statuses,
 				),
 			),
 			// My ideas list
@@ -145,12 +145,12 @@ class list_controller_test extends controller_base
 				200,
 				'list_body.html',
 				array(
-					'sort' => \phpbb\ideas\factory\ideas::SORT_MYIDEAS,
+					'sort' => \phpbb\ideas\ext::SORT_MYIDEAS,
 					'status' => -1,
 				),
 				array(
-					'sort' => \phpbb\ideas\factory\ideas::SORT_MYIDEAS,
-					'status' => \phpbb\ideas\factory\ideas::$statuses,
+					'sort' => \phpbb\ideas\ext::SORT_MYIDEAS,
+					'status' => \phpbb\ideas\ext::$statuses,
 				),
 			),
 		);
@@ -163,21 +163,22 @@ class list_controller_test extends controller_base
 	 */
 	public function test_controller($status_code, $page_content, $params, $expected)
 	{
+		/** @var \phpbb\ideas\controller\list_controller $controller */
+		$controller = $this->get_controller('list_controller', 'ideas');
+		$this->assertInstanceOf('phpbb\ideas\controller\list_controller', $controller);
+
 		$this->request->expects($this->atMost(3))
 			->method('variable')
 			->willReturnMap(array(
-				array('sd', 'd', false, \phpbb\request\request_interface::REQUEST, ''),
+				array('sd', 'd', false, \phpbb\request\request_interface::REQUEST, 'd'),
 				array('status', 0, false, \phpbb\request\request_interface::REQUEST, $params['status']),
 				array('start', 0, false, \phpbb\request\request_interface::REQUEST, 0),
 			));
 
-		$this->ideas->expects($this->once())
+		$this->entity->expects($this->once())
 			->method('get_ideas')
-			->with('', $expected['sort'], 'ASC', $expected['status'], 0);
-
-		/** @var \phpbb\ideas\controller\list_controller $controller */
-		$controller = $this->get_controller('list_controller');
-		$this->assertInstanceOf('phpbb\ideas\controller\list_controller', $controller);
+			->with('', $expected['sort'], 'DESC', $expected['status'], 0)
+			->willReturn([[]]);
 
 		$response = $controller->ideas_list($params['sort']);
 		$this->assertInstanceOf('\Symfony\Component\HttpFoundation\Response', $response);
@@ -209,7 +210,7 @@ class list_controller_test extends controller_base
 		$this->config['ideas_forum_id'] = $forum;
 
 		/** @var \phpbb\ideas\controller\list_controller $controller */
-		$controller = $this->get_controller('list_controller');
+		$controller = $this->get_controller('list_controller', 'ideas');
 		$this->assertInstanceOf('phpbb\ideas\controller\list_controller', $controller);
 
 		$controller->ideas_list('');

@@ -13,11 +13,6 @@ namespace phpbb\ideas\factory;
 class permission_helper
 {
 	/**
-	 * @var \phpbb\config\config
-	 */
-	protected $config;
-
-	/**
 	 * @var \phpbb\db\driver\driver_interface
 	 */
 	protected $db;
@@ -35,15 +30,13 @@ class permission_helper
 	/**
 	 * Constructor
 	 *
-	 * @param \phpbb\config\config              $config          Config object
 	 * @param \phpbb\db\driver\driver_interface $db              Database object
 	 * @param string                            $phpbb_root_path phpBB root path
 	 * @param string                            $php_ext         php_ext
 	 * @access public
 	 */
-	public function __construct(\phpbb\config\config $config, \phpbb\db\driver\driver_interface $db, $phpbb_root_path, $php_ext)
+	public function __construct(\phpbb\db\driver\driver_interface $db, $phpbb_root_path, $php_ext)
 	{
-		$this->config = $config;
 		$this->db = $db;
 		$this->phpbb_root_path = $phpbb_root_path;
 		$this->php_ext = $php_ext;
@@ -66,8 +59,9 @@ class permission_helper
 		$sql = 'SELECT group_id
 			FROM ' . GROUPS_TABLE . "
 			WHERE group_name = '" . $this->db->sql_escape('REGISTERED') . "'";
-		$this->db->sql_query($sql);
+		$result = $this->db->sql_query($sql);
 		$group_id = (int) $this->db->sql_fetchfield('group_id');
+		$this->db->sql_freeresult($result);
 
 		// Get 'f_' local REGISTERED users group permissions array for the ideas forum
 		// Default undefined permissions to ACL_NO

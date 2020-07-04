@@ -11,10 +11,13 @@
 namespace phpbb\ideas\controller;
 
 use phpbb\exception\http_exception;
-use phpbb\ideas\factory\ideas;
+use phpbb\ideas\ext;
 
 class list_controller extends base
 {
+	/* @var \phpbb\ideas\factory\ideas */
+	protected $entity;
+
 	/**
 	 * Controller for /list/{sort}
 	 *
@@ -31,7 +34,7 @@ class list_controller extends base
 
 		// Overwrite the $sort parameter if the url contains a sort query.
 		// This is needed with the sort by options form at the footer of the list.
-		$sort = $this->request->is_set('sort') ? $this->request->variable('sort', ideas::SORT_NEW) : $sort;
+		$sort = $this->request->is_set('sort') ? $this->request->variable('sort', ext::SORT_NEW) : $sort;
 
 		// Get additional query values the url may contain
 		$sort_direction = $this->request->variable('sd', 'd');
@@ -47,36 +50,36 @@ class list_controller extends base
 		$sort_direction = ($sort_direction === 'd') ? 'DESC' : 'ASC';
 
 		// If sort by "new" we really use date
-		if ($sort === ideas::SORT_NEW)
+		if ($sort === ext::SORT_NEW)
 		{
-			$sort = ideas::SORT_DATE;
+			$sort = ext::SORT_DATE;
 		}
 
 		// Set the name for displaying in the template
-		$status_name = 'LIST_' . strtoupper($status > 0 ? array_search($status, ideas::$statuses) : $sort);
+		$status_name = 'LIST_' . ($status > 0 ? ext::status_name($status) : strtoupper($sort));
 		$status_name = $this->language->is_set($status_name) ? $this->language->lang($status_name) : '';
 
 		// For special case where we want to request ALL ideas,
 		// including the statuses normally hidden from lists.
 		if ($status === -1)
 		{
-			$status = ideas::$statuses;
+			$status = ext::$statuses;
 			$status_name = $status_name ?: $this->language->lang('ALL_IDEAS');
 		}
 
 		// Generate ideas
-		$ideas = $this->ideas->get_ideas($this->config['posts_per_page'], $sort, $sort_direction, $status, $start);
+		$ideas = $this->entity->get_ideas($this->config['posts_per_page'], $sort, $sort_direction, $status, $start);
 		$this->assign_template_block_vars('ideas', $ideas);
 
 		// Build list page template output
 		$this->template->assign_vars(array(
 			'U_LIST_ACTION'		=> $this->helper->route('phpbb_ideas_list_controller'),
 			'U_POST_ACTION'		=> $this->helper->route('phpbb_ideas_post_controller'),
-			'IDEAS_COUNT'       => $this->ideas->get_idea_count(),
+			'IDEAS_COUNT'       => $this->entity->get_idea_count(),
 			'STATUS_NAME'       => $status_name ?: $this->language->lang('OPEN_IDEAS'),
-			'STATUS_ARY'		=> ideas::$statuses,
+			'STATUS_ARY'		=> ext::$statuses,
 			'STATUS'			=> $u_status,
-			'SORT_ARY'			=> array(ideas::SORT_AUTHOR, ideas::SORT_DATE, ideas::SORT_SCORE, ideas::SORT_TITLE, ideas::SORT_TOP, ideas::SORT_VOTES),
+			'SORT_ARY'			=> array(ext::SORT_AUTHOR, ext::SORT_DATE, ext::SORT_SCORE, ext::SORT_TITLE, ext::SORT_TOP, ext::SORT_VOTES),
 			'SORT'				=> $sort,
 			'SORT_DIRECTION'	=> $sort_direction,
 			'U_MCP' 			=> ($this->auth->acl_get('m_', $this->config['ideas_forum_id'])) ? append_sid("{$this->root_path}mcp.{$this->php_ext}", "f={$this->config['ideas_forum_id']}&amp;i=main&amp;mode=forum_view", true, $this->user->session_id) : '',
@@ -107,7 +110,7 @@ class list_controller extends base
 			$this->helper->route('phpbb_ideas_list_controller', $params),
 			'pagination',
 			'start',
-			$this->ideas->get_idea_count(),
+			$this->entity->get_idea_count(),
 			$this->config['posts_per_page'],
 			$start
 		);

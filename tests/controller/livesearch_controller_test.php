@@ -32,19 +32,19 @@ class livesearch_controller_test extends controller_base
 	 */
 	public function test_controller($status_code, $content)
 	{
+		/** @var \phpbb\ideas\controller\livesearch_controller $controller */
+		$controller = $this->get_controller('livesearch_controller', 'livesearch');
+		$this->assertInstanceOf('phpbb\ideas\controller\livesearch_controller', $controller);
+
 		$this->request->expects($this->once())
 			->method('variable')
 			->with('duplicateeditinput', '', true)
 			->willReturn($content['keyword']);
 
-		$this->ideas->expects($this->once())
-			->method('ideas_title_livesearch')
+		$this->entity->expects($this->once())
+			->method('title_search')
 			->with($content['keyword'], 10)
 			->willReturn($content['results']);
-
-		/** @var \phpbb\ideas\controller\livesearch_controller $controller */
-		$controller = $this->get_controller('livesearch_controller');
-		$this->assertInstanceOf('phpbb\ideas\controller\livesearch_controller', $controller);
 
 		$response = $controller->title_search();
 		$this->assertInstanceOf('\Symfony\Component\HttpFoundation\JsonResponse', $response);

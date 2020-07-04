@@ -50,7 +50,7 @@ class permissions_helper_test extends \phpbb_database_test_case
 	{
 		global $phpbb_root_path, $phpEx;
 
-		$permission_helper = new \phpbb\ideas\factory\permission_helper($this->config, $this->db, $phpbb_root_path, $phpEx);
+		$permission_helper = new \phpbb\ideas\factory\permission_helper($this->db, $phpbb_root_path, $phpEx);
 
 		$permission_helper->set_ideas_forum_permissions($this->config['ideas_forum_id']);
 

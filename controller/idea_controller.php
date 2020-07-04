@@ -11,7 +11,7 @@
 namespace phpbb\ideas\controller;
 
 use phpbb\exception\http_exception;
-use phpbb\ideas\factory\ideas;
+use phpbb\ideas\ext;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
@@ -19,6 +19,9 @@ class idea_controller extends base
 {
 	/** @var array of idea data */
 	protected $data;
+
+	/* @var \phpbb\ideas\factory\idea */
+	protected $entity;
 
 	/**
 	 * Controller for /idea/{idea_id}
@@ -34,7 +37,7 @@ class idea_controller extends base
 			throw new http_exception(404, 'IDEAS_NOT_AVAILABLE');
 		}
 
-		$this->data = $this->ideas->get_idea($idea_id);
+		$this->data = $this->entity->get_idea($idea_id);
 		if (!$this->data)
 		{
 			throw new http_exception(404, 'IDEA_NOT_FOUND');
@@ -80,7 +83,7 @@ class idea_controller extends base
 		if (confirm_box(true))
 		{
 			include $this->root_path . 'includes/functions_admin.' . $this->php_ext;
-			$this->ideas->delete($this->data['idea_id'], $this->data['topic_id']);
+			$this->entity->delete($this->data['idea_id'], $this->data['topic_id']);
 
 			$redirect = $this->helper->route('phpbb_ideas_index_controller');
 			$message = $this->language->lang('IDEA_DELETED') . '<br /><br />' . $this->language->lang('RETURN_IDEAS', '<a href="' . $redirect . '">', '</a>');
@@ -119,7 +122,7 @@ class idea_controller extends base
 		if ($this->is_mod() && check_link_hash($this->get_hash(), "duplicate_{$this->data['idea_id']}"))
 		{
 			$duplicate = $this->request->variable('duplicate', 0);
-			return $this->ideas->set_duplicate($this->data['idea_id'], $duplicate);
+			return $this->entity->set_duplicate($this->data['idea_id'], $duplicate);
 		}
 
 		return false;
@@ -133,14 +136,14 @@ class idea_controller extends base
 	 */
 	public function removevote()
 	{
-		if ($this->data['idea_status'] === ideas::$statuses['IMPLEMENTED'] || $this->data['idea_status'] === ideas::$statuses['DUPLICATE'] || !check_link_hash($this->get_hash(), "removevote_{$this->data['idea_id']}"))
+		if ($this->data['idea_status'] === ext::$statuses['IMPLEMENTED'] || $this->data['idea_status'] === ext::$statuses['DUPLICATE'] || !check_link_hash($this->get_hash(), "removevote_{$this->data['idea_id']}"))
 		{
 			return false;
 		}
 
 		if ($this->auth->acl_get('f_vote', (int) $this->config['ideas_forum_id']))
 		{
-			$result = $this->ideas->remove_vote($this->data, $this->user->data['user_id']);
+			$result = $this->entity->remove_vote($this->data, $this->user->data['user_id']);
 		}
 		else
 		{
@@ -161,7 +164,7 @@ class idea_controller extends base
 		if (($this->is_own() || $this->is_mod()) && check_link_hash($this->get_hash(), "rfc_{$this->data['idea_id']}"))
 		{
 			$rfc = $this->request->variable('rfc', '');
-			return $this->ideas->set_rfc($this->data['idea_id'], $rfc);
+			return $this->entity->set_rfc($this->data['idea_id'], $rfc);
 		}
 
 		return false;
@@ -179,7 +182,7 @@ class idea_controller extends base
 
 		if ($status && $this->is_mod() && check_link_hash($this->get_hash(), "status_{$this->data['idea_id']}"))
 		{
-			$this->ideas->change_status($this->data['idea_id'], $status);
+			$this->entity->set_status($this->data['idea_id'], $status);
 			return true;
 		}
 
@@ -197,7 +200,7 @@ class idea_controller extends base
 		if (($this->is_own() || $this->is_mod()) && check_link_hash($this->get_hash(), "ticket_{$this->data['idea_id']}"))
 		{
 			$ticket = $this->request->variable('ticket', 0);
-			return $this->ideas->set_ticket($this->data['idea_id'], $ticket);
+			return $this->entity->set_ticket($this->data['idea_id'], $ticket);
 		}
 
 		return false;
@@ -214,26 +217,7 @@ class idea_controller extends base
 		if ($this->is_mod() && check_link_hash($this->get_hash(), "implemented_{$this->data['idea_id']}"))
 		{
 			$version = $this->request->variable('implemented', '');
-			return $this->ideas->set_implemented($this->data['idea_id'], $version);
-		}
-
-		return false;
-	}
-
-	/**
-	 * Title action (sets an idea's title)
-	 *
-	 * @return bool True if set, false if not
-	 * @access public
-	 *
-	 * @deprecated 2.1.0 (No longer used, may be removed one day)
-	 */
-	public function title()
-	{
-		if (($this->is_own() || $this->is_mod()) && check_link_hash($this->get_hash(), "title_{$this->data['idea_id']}"))
-		{
-			$title = $this->request->variable('title', '', true);
-			return $this->ideas->set_title($this->data['idea_id'], $title);
+			return $this->entity->set_implemented($this->data['idea_id'], $version);
 		}
 
 		return false;
@@ -249,14 +233,14 @@ class idea_controller extends base
 	{
 		$vote = $this->request->variable('v', 1);
 
-		if ($this->data['idea_status'] === ideas::$statuses['IMPLEMENTED'] || $this->data['idea_status'] === ideas::$statuses['DUPLICATE'] || !check_link_hash($this->get_hash(), "vote_{$this->data['idea_id']}"))
+		if ($this->data['idea_status'] === ext::$statuses['IMPLEMENTED'] || $this->data['idea_status'] === ext::$statuses['DUPLICATE'] || !check_link_hash($this->get_hash(), "vote_{$this->data['idea_id']}"))
 		{
 			return false;
 		}
 
 		if ($this->auth->acl_get('f_vote', (int) $this->config['ideas_forum_id']))
 		{
-			$result = $this->ideas->vote($this->data, $this->user->data['user_id'], $vote);
+			$result = $this->entity->vote($this->data, $this->user->data['user_id'], $vote);
 		}
 		else
 		{

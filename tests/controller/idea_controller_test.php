@@ -29,20 +29,18 @@ class idea_controller_test extends \phpbb\ideas\tests\controller\controller_base
 			array(3, 'duplicate', 'set_duplicate', true, true, 'true', 200), // ajax set duplicate success
 			array(3, 'duplicate', '', true, false, 'false', 200), // ajax set duplicate fail
 			array(4, 'removevote', 'remove_vote', true, true, 'true', 200), // ajax remove vote success
-			array(4, 'removevote', 'remove_vote', true, true, 'false', 200, ['idea_status' => \phpbb\ideas\factory\ideas::$statuses['DUPLICATE']]), // ajax remove vote not allowed
-			array(4, 'removevote', 'remove_vote', true, true, 'false', 200, ['idea_status' => \phpbb\ideas\factory\ideas::$statuses['IMPLEMENTED']]), // ajax remove vote not allowed
+			array(4, 'removevote', 'remove_vote', true, true, 'false', 200, ['idea_status' => \phpbb\ideas\ext::$statuses['DUPLICATE']]), // ajax remove vote not allowed
+			array(4, 'removevote', 'remove_vote', true, true, 'false', 200, ['idea_status' => \phpbb\ideas\ext::$statuses['IMPLEMENTED']]), // ajax remove vote not allowed
 			array(4, 'removevote', '', true, false, '"You do not have the necessary permissions to complete this operation."', 200), // ajax remove vote fail
 			array(5, 'rfc', 'set_rfc', true, true, 'true', 200), // ajax set rfc success
 			array(5, 'rfc', '', true, false, 'false', 200), // ajax set rfc fail
-			array(6, 'status', 'change_status', true, true, 'true', 200), // ajax set status success
+			array(6, 'status', 'set_status', true, true, 'true', 200), // ajax set status success
 			array(6, 'status', '', true, false, 'false', 200), // ajax set status fail
 			array(7, 'ticket', 'set_ticket', true, true, 'true', 200), // ajax set ticket success
 			array(7, 'ticket', '', true, false, 'false', 200), // ajax set ticket fail
-			array(8, 'title', 'set_title', true, true, 'true', 200), // ajax set title success
-			array(8, 'title', '', true, false, 'false', 200), // ajax set title fail
 			array(9, 'vote', 'vote', true, true, 'true', 200), // ajax vote success
-			array(9, 'vote', 'vote', true, true, 'false', 200, ['idea_status' => \phpbb\ideas\factory\ideas::$statuses['DUPLICATE']]), // ajax vote not allowed
-			array(9, 'vote', 'vote', true, true, 'false', 200, ['idea_status' => \phpbb\ideas\factory\ideas::$statuses['IMPLEMENTED']]), // ajax vote not allowed
+			array(9, 'vote', 'vote', true, true, 'false', 200, ['idea_status' => \phpbb\ideas\ext::$statuses['DUPLICATE']]), // ajax vote not allowed
+			array(9, 'vote', 'vote', true, true, 'false', 200, ['idea_status' => \phpbb\ideas\ext::$statuses['IMPLEMENTED']]), // ajax vote not allowed
 			array(9, 'vote', '', true, false, '"You do not have the necessary permissions to complete this operation."', 200), // ajax vote fail
 			array(10, 'implemented', 'set_implemented', true, true, 'true', 200), // ajax set implemented success
 			array(10, 'implemented', '', true, false, 'false', 200), // ajax set implemented fail
@@ -56,20 +54,24 @@ class idea_controller_test extends \phpbb\ideas\tests\controller\controller_base
 	 */
 	public function test_controller($idea_id, $mode, $callback, $is_ajax, $authorised, $expected, $status_code, $additional_data = [])
 	{
+		/** @var \phpbb\ideas\controller\idea_controller $controller */
+		$controller = $this->get_controller('idea_controller', 'idea');
+		$this->assertInstanceOf('phpbb\ideas\controller\idea_controller', $controller);
+
 		// mock some basic idea data
-		$this->ideas->expects($this->once())
+		$this->entity->expects($this->once())
 			->method('get_idea')
 			->willReturn(array_merge(array(
 					'idea_id'     => $idea_id,
 					'idea_author' => 2,
-					'idea_status' => \phpbb\ideas\factory\ideas::$statuses['NEW']
+					'idea_status' => \phpbb\ideas\ext::$statuses['NEW']
 				), $additional_data)
 			);
 
 		// mock a result from each method called by the idea controller
 		if ($expected === 'true')
 		{
-			$this->ideas->expects($this->once())
+			$this->entity->expects($this->once())
 				->method(($callback))
 				->willReturn($authorised);
 		}
@@ -112,10 +114,6 @@ class idea_controller_test extends \phpbb\ideas\tests\controller\controller_base
 			$this->expectExceptionMessage('NO_AUTH_OPERATION');
 		}
 
-		/** @var \phpbb\ideas\controller\idea_controller $controller */
-		$controller = $this->get_controller('idea_controller');
-		$this->assertInstanceOf('phpbb\ideas\controller\idea_controller', $controller);
-
 		$response = $controller->idea($idea_id);
 
 		if ($is_ajax)
@@ -155,7 +153,7 @@ class idea_controller_test extends \phpbb\ideas\tests\controller\controller_base
 		$this->config['ideas_forum_id'] = $forum;
 
 		/** @var \phpbb\ideas\controller\idea_controller $controller */
-		$controller = $this->get_controller('idea_controller');
+		$controller = $this->get_controller('idea_controller', 'idea');
 		$this->assertInstanceOf('phpbb\ideas\controller\idea_controller', $controller);
 
 		try

@@ -168,7 +168,7 @@ class admin_controller
 
 			$forum_id = (int) $this->config['ideas_forum_id'];
 
-			$permission_helper = new \phpbb\ideas\factory\permission_helper($this->config, $this->db, $this->phpbb_root_path, $this->php_ext);
+			$permission_helper = new \phpbb\ideas\factory\permission_helper($this->db, $this->phpbb_root_path, $this->php_ext);
 			$permission_helper->set_ideas_forum_permissions($forum_id);
 
 			// Disable auto-pruning for ideas forum

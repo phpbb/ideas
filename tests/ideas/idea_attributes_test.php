@@ -36,17 +36,15 @@ class idea_attributes_test extends ideas_base
 	 */
 	public function test_get_status_from_id($id, $expected)
 	{
-		$ideas = $this->get_ideas_object();
-
-		$this->assertEquals($expected, $ideas->get_status_from_id($id));
+		$this->assertEquals($expected, \phpbb\ideas\ext::status_name($id));
 	}
 
 	/**
-	 * Test change_status() data
+	 * Test set_status() data
 	 *
 	 * @return array
 	 */
-	public function change_status_test_data()
+	public function set_status_test_data()
 	{
 		return array(
 			array(1, 1),
@@ -58,17 +56,17 @@ class idea_attributes_test extends ideas_base
 	}
 
 	/**
-	 * Test change_status()
+	 * Test set_status()
 	 *
-	 * @dataProvider change_status_test_data
+	 * @dataProvider set_status_test_data
 	 */
-	public function test_change_status($idea_id, $status)
+	public function test_set_status($idea_id, $status)
 	{
-		$ideas = $this->get_ideas_object();
+		$object = $this->get_idea_object();
 
-		$ideas->change_status($idea_id, $status);
+		$object->set_status($idea_id, $status);
 
-		$idea = $ideas->get_idea($idea_id);
+		$idea = $object->get_idea($idea_id);
 
 		$this->assertEquals($status, $idea['idea_status']);
 	}
@@ -195,15 +193,15 @@ class idea_attributes_test extends ideas_base
 	 */
 	public function set_attribute_test($call, $attribute, $data, $expected)
 	{
-		$ideas = $this->get_ideas_object();
+		$object = $this->get_idea_object();
 
-		$result = $ideas->$call($data['idea_id'], $data[$attribute]);
+		$result = $object->$call($data['idea_id'], $data[$attribute]);
 
 		$this->assertEquals($expected, $result);
 
 		if ($result)
 		{
-			$idea = $ideas->get_idea($data['idea_id']);
+			$idea = $object->get_idea($data['idea_id']);
 
 			$this->assertEquals($data[$attribute], $idea[$attribute]);
 

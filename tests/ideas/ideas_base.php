@@ -57,12 +57,7 @@ class ideas_base extends \phpbb_database_test_case
 		$phpbb_dispatcher = new \phpbb_mock_event_dispatcher();
 		$lang_loader = new \phpbb\language\language_file_loader($phpbb_root_path, $phpEx);
 		$this->lang = new \phpbb\language\language($lang_loader);
-		$this->user = $this->getMockBuilder('\phpbb\user')
-			->setConstructorArgs(array(
-				$this->lang,
-				'\phpbb\datetime'
-			))
-			->getMock();
+		$this->user = new \phpbb\user($this->lang, '\phpbb\datetime');
 		$this->php_ext = $phpEx;
 		$request = $this->getMockBuilder('\phpbb\request\request')
 			->disableOriginalConstructor()
@@ -76,7 +71,33 @@ class ideas_base extends \phpbb_database_test_case
 	 */
 	protected function get_ideas_object()
 	{
-		return new \phpbb\ideas\factory\ideas(
+		return $this->get_factory('ideas');
+	}
+
+	/**
+	 * Get an instance of the idea object
+	 *
+	 * @return \phpbb\ideas\factory\idea
+	 */
+	protected function get_idea_object()
+	{
+		return $this->get_factory('idea');
+	}
+
+	/**
+	 * Get an instance of the livesearch object
+	 *
+	 * @return \phpbb\ideas\factory\livesearch
+	 */
+	protected function get_livesearch_object()
+	{
+		return $this->get_factory('livesearch');
+	}
+
+	protected function get_factory($name)
+	{
+		$object = "\\phpbb\\ideas\\factory\\$name";
+		return new $object(
 			$this->auth,
 			$this->config,
 			$this->db,

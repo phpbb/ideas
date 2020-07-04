@@ -20,6 +20,40 @@ namespace phpbb\ideas;
 */
 class ext extends \phpbb\extension\base
 {
+	public const SORT_AUTHOR = 'author';
+	public const SORT_DATE = 'date';
+	public const SORT_NEW = 'new';
+	public const SORT_SCORE = 'score';
+	public const SORT_TITLE = 'title';
+	public const SORT_TOP = 'top';
+	public const SORT_VOTES = 'votes';
+	public const SORT_MYIDEAS = 'egosearch';
+	public const SUBJECT_LENGTH = 120;
+	public const NUM_IDEAS = 5;
+
+	/** @var array Idea status names and IDs */
+	public static $statuses = array(
+		'NEW'			=> 1,
+		'IN_PROGRESS'	=> 2,
+		'IMPLEMENTED'	=> 3,
+		'DUPLICATE'		=> 4,
+		'INVALID'		=> 5,
+	);
+
+	/**
+	 * Return the status name from the status ID.
+	 *
+	 * @param int $id ID of the status.
+	 *
+	 * @return string The status name.
+	 * @static
+	 * @access public
+	 */
+	public static function status_name($id)
+	{
+		return array_flip(self::$statuses)[$id];
+	}
+
 	/**
 	 * Check whether or not the extension can be enabled.
 	 *

@@ -8,7 +8,7 @@ services:
             - '@auth'
             - '@config'
             - '@controller.helper'
-            - '@phpbb.ideas.ideas'
+            - '@phpbb.ideas.idea'
             - '@language'
             - '@phpbb.ideas.linkhelper'
             - '@template'
@@ -17,6 +17,7 @@ services:
         tags:
             - { name: event.listener }
 
+# ----- Controllers -----
     phpbb.ideas.admin.controller:
         class: phpbb\ideas\controller\admin_controller
         arguments:
@@ -36,7 +37,6 @@ services:
             - '@auth'
             - '@config'
             - '@controller.helper'
-            - '@phpbb.ideas.ideas'
             - '@language'
             - '@phpbb.ideas.linkhelper'
             - '@pagination'
@@ -49,10 +49,14 @@ services:
     phpbb.ideas.index_controller:
         class: phpbb\ideas\controller\index_controller
         parent: phpbb.ideas.controller.base
+        calls:
+            - [get_entity, ['@phpbb.ideas.ideas']]
 
     phpbb.ideas.list_controller:
         class: phpbb\ideas\controller\list_controller
         parent: phpbb.ideas.controller.base
+        calls:
+            - [get_entity, ['@phpbb.ideas.ideas']]
 
     phpbb.ideas.post_controller:
         class: phpbb\ideas\controller\post_controller
@@ -61,12 +65,17 @@ services:
     phpbb.ideas.idea_controller:
         class: phpbb\ideas\controller\idea_controller
         parent: phpbb.ideas.controller.base
+        calls:
+            - [get_entity, ['@phpbb.ideas.idea']]
 
     phpbb.ideas.livesearch_controller:
         class: phpbb\ideas\controller\livesearch_controller
         parent: phpbb.ideas.controller.base
+        calls:
+            - [get_entity, ['@phpbb.ideas.livesearch']]
 
-    phpbb.ideas.ideas:
+# ----- Idea Factory Classes -----
+    phpbb.ideas.base:
         class: phpbb\ideas\factory\ideas
         arguments:
             - '@auth'
@@ -79,12 +88,25 @@ services:
             - '%tables.topics%'
             - '%core.php_ext%'
 
+    phpbb.ideas.ideas:
+        class: phpbb\ideas\factory\ideas
+        parent: phpbb.ideas.base
+
+    phpbb.ideas.idea:
+        class: phpbb\ideas\factory\idea
+        parent: phpbb.ideas.base
+
+    phpbb.ideas.livesearch:
+        class: phpbb\ideas\factory\livesearch
+        parent: phpbb.ideas.base
+
     phpbb.ideas.linkhelper:
         class: phpbb\ideas\factory\linkhelper
         arguments:
             - '@controller.helper'
             - '@user_loader'
 
+# ----- Twig extensions -----
     phpbb.ideas.twig.extension.ideas_status_icon:
         class: phpbb\ideas\template\twig\extension\ideas_status_icon
         tags:

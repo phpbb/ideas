@@ -13,7 +13,8 @@ namespace phpbb\ideas\event;
 use phpbb\auth\auth;
 use phpbb\config\config;
 use phpbb\controller\helper;
-use phpbb\ideas\factory\ideas;
+use phpbb\ideas\ext;
+use phpbb\ideas\factory\idea;
 use phpbb\ideas\factory\linkhelper;
 use phpbb\language\language;
 use phpbb\template\template;
@@ -31,8 +32,8 @@ class listener implements EventSubscriberInterface
 	/* @var helper */
 	protected $helper;
 
-	/* @var ideas */
-	protected $ideas;
+	/* @var idea */
+	protected $idea;
 
 	/** @var language */
 	protected $language;
@@ -53,19 +54,19 @@ class listener implements EventSubscriberInterface
 	 * @param \phpbb\auth\auth                $auth
 	 * @param \phpbb\config\config            $config
 	 * @param \phpbb\controller\helper        $helper
-	 * @param \phpbb\ideas\factory\ideas      $ideas
+	 * @param \phpbb\ideas\factory\idea       $idea
 	 * @param \phpbb\language\language        $language
 	 * @param \phpbb\ideas\factory\linkhelper $link_helper
 	 * @param \phpbb\template\template        $template
 	 * @param \phpbb\user                     $user
 	 * @param string                          $php_ext
 	 */
-	public function __construct(auth $auth, config $config, helper $helper, ideas $ideas, language $language, linkhelper $link_helper, template $template, user $user, $php_ext)
+	public function __construct(auth $auth, config $config, helper $helper, idea $idea, language $language, linkhelper $link_helper, template $template, user $user, $php_ext)
 	{
 		$this->auth = $auth;
 		$this->config = $config;
 		$this->helper = $helper;
-		$this->ideas = $ideas;
+		$this->idea = $idea;
 		$this->language = $language;
 		$this->link_helper = $link_helper;
 		$this->template = $template;
@@ -142,7 +143,7 @@ class listener implements EventSubscriberInterface
 			return;
 		}
 
-		$idea = $this->ideas->get_idea_by_topic_id($event['topic_data']['topic_id']);
+		$idea = $this->idea->get_idea_by_topic_id($event['topic_data']['topic_id']);
 
 		if (!$idea)
 		{
@@ -154,7 +155,7 @@ class listener implements EventSubscriberInterface
 
 		if ($mod)
 		{
-			$this->template->assign_var('STATUS_ARY', ideas::$statuses);
+			$this->template->assign_var('STATUS_ARY', ext::$statuses);
 
 			// Add quick mod option for deleting an idea
 			$this->template->alter_block_array('quickmod', array(
@@ -165,15 +166,15 @@ class listener implements EventSubscriberInterface
 		}
 
 		$points = $idea['idea_votes_up'] - $idea['idea_votes_down'];
-		$can_vote = (bool) ($idea['idea_status'] != ideas::$statuses['IMPLEMENTED'] &&
-			$idea['idea_status'] != ideas::$statuses['DUPLICATE'] &&
+		$can_vote = (bool) ($idea['idea_status'] != ext::$statuses['IMPLEMENTED'] &&
+			$idea['idea_status'] != ext::$statuses['DUPLICATE'] &&
 			$this->auth->acl_get('f_vote', (int) $this->config['ideas_forum_id']) &&
 			$event['topic_data']['topic_status'] != ITEM_LOCKED);
 
 		$s_voted_up = $s_voted_down = false;
 		if ($idea['idea_votes_up'] || $idea['idea_votes_down'])
 		{
-			$votes = $this->ideas->get_voters($idea['idea_id']);
+			$votes = $this->idea->get_voters($idea['idea_id']);
 
 			foreach ($votes as $vote)
 			{
@@ -197,9 +198,9 @@ class listener implements EventSubscriberInterface
 			'IDEA_VOTES_DOWN'	=> $idea['idea_votes_down'],
 			'IDEA_POINTS'		=> $points,
 			'IDEA_STATUS_ID'	=> $idea['idea_status'],
-			'IDEA_STATUS_NAME'	=> $this->ideas->get_status_from_id($idea['idea_status']),
+			'IDEA_STATUS_NAME'	=> $this->language->lang(ext::status_name($idea['idea_status'])),
 
-			'IDEA_DUPLICATE'	=> $idea['duplicate_id'] ? $this->ideas->get_title($idea['duplicate_id']) : '',
+			'IDEA_DUPLICATE'	=> $idea['duplicate_id'] ? $this->idea->get_title($idea['duplicate_id']) : '',
 			'IDEA_RFC'			=> $idea['rfc_link'],
 			'IDEA_TICKET'		=> $idea['ticket_id'],
 			'IDEA_IMPLEMENTED'	=> $idea['implemented_version'],
@@ -222,7 +223,7 @@ class listener implements EventSubscriberInterface
 			'U_IDEA_VOTE'		=> $this->link_helper->get_idea_link($idea['idea_id'], 'vote', true),
 			'U_IDEA_DUPLICATE'	=> $this->link_helper->get_idea_link($idea['duplicate_id']),
 			'U_IDEA_STATUS_LINK'=> $this->helper->route('phpbb_ideas_list_controller', ['status' => $idea['idea_status']]),
-			'U_SEARCH_MY_IDEAS' => $this->helper->route('phpbb_ideas_list_controller', ['sort' => ideas::SORT_MYIDEAS, 'status' => '-1']),
+			'U_SEARCH_MY_IDEAS' => $this->helper->route('phpbb_ideas_list_controller', ['sort' => ext::SORT_MYIDEAS, 'status' => '-1']),
 			'U_TITLE_LIVESEARCH'=> $this->helper->route('phpbb_ideas_livesearch_controller'),
 		));
 
@@ -340,7 +341,7 @@ class listener implements EventSubscriberInterface
 			return;
 		}
 
-		$this->ideas->submit($event['data']);
+		$this->idea->submit($event['data']);
 
 		// Show users who's posts need approval a special message
 		if (!$this->auth->acl_get('f_noapprove', $event['data']['forum_id']))
@@ -369,8 +370,8 @@ class listener implements EventSubscriberInterface
 			return;
 		}
 
-		$idea = $this->ideas->get_idea_by_topic_id($event['topic_id']);
-		$this->ideas->set_title($idea['idea_id'], $event['post_data']['post_subject']);
+		$idea = $this->idea->get_idea_by_topic_id($event['topic_id']);
+		$this->idea->set_title($idea['idea_id'], $event['post_data']['post_subject']);
 	}
 
 	/**
