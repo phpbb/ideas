@@ -159,6 +159,13 @@ dd.topics {
 	display: inline-block;
 }
 
+.votes:active,
+.votes:hover,
+.votes:link,
+.votes:visited {
+	text-decoration: none;
+}
+
 .successvoted {
 	display: none;
 }
@@ -178,6 +185,32 @@ dd.topics {
 
 .voteslist ul li:not(:first-child) {
 	border-top: dashed 1px #b9b9b9;
+}
+
+.voteslist ul li {
+	margin-left: 16px;
+}
+
+.voteslist ul li i {
+	margin-left: -16px;
+}
+
+.rtl .voteslist ul li {
+	margin-right: 16px;
+	margin-left: 0;
+}
+
+.rtl .voteslist ul li i {
+	margin-right: -16px;
+	margin-left: 0;
+}
+
+.voteslist .fa-thumbs-up {
+	color: #00a9e2;
+}
+
+.voteslist .fa-thumbs-down {
+	color: #f76c5e;
 }
 
 .vote-disabled {
