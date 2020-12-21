@@ -46,7 +46,7 @@ class live_search_test extends \phpbb\ideas\tests\ideas\ideas_base
 
 		foreach ($results as $result)
 		{
-			self::assertStringContainsString($result['clean_title'], $expected);
+			self::assertContains($result['clean_title'], $expected);
 		}
 	}
 }
