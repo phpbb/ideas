@@ -31,7 +31,7 @@ class linkhelper_test extends \phpbb_database_test_case
 		return $this->createXMLDataSet(__DIR__ . '/../fixtures/ideas.xml');
 	}
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		parent::setUp();
 
@@ -41,7 +41,7 @@ class linkhelper_test extends \phpbb_database_test_case
 		$this->helper = $this->getMockBuilder('\phpbb\controller\helper')
 			->disableOriginalConstructor()
 			->getMock();
-		$this->helper->expects($this->atMost(3))
+		$this->helper->expects(self::atMost(3))
 			->method('route')
 			->willReturnCallback(function ($route, array $params = array()) {
 				return $route . '#' . json_encode($params);
@@ -54,7 +54,7 @@ class linkhelper_test extends \phpbb_database_test_case
 			->getMock();
 		$auth
 			->method('acl_get')
-			->with($this->stringContains('_'), $this->anything())
+			->with(self::stringContains('_'), self::anything())
 			->willReturnMap(array(
 				array('u_viewprofile', true),
 			));
@@ -82,7 +82,7 @@ class linkhelper_test extends \phpbb_database_test_case
 	{
 		$linkhelper = $this->get_linkhelper();
 
-		$this->assertEquals($expected, $linkhelper->get_idea_link($idea_id, $mode, $hash));
+		self::assertEquals($expected, $linkhelper->get_idea_link($idea_id, $mode, $hash));
 	}
 
 	public function get_user_link_test_data()
@@ -101,6 +101,6 @@ class linkhelper_test extends \phpbb_database_test_case
 	{
 		$linkhelper = $this->get_linkhelper();
 
-		$this->assertEquals($expected, $linkhelper->get_user_link($user));
+		self::assertEquals($expected, $linkhelper->get_user_link($user));
 	}
 }

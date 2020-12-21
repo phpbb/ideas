@@ -31,7 +31,7 @@ class permissions_helper_test extends \phpbb_database_test_case
 		return $this->createXMLDataSet(__DIR__ . '/../fixtures/permissions.xml');
 	}
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		parent::setUp();
 

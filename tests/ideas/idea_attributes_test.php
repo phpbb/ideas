@@ -36,7 +36,7 @@ class idea_attributes_test extends ideas_base
 	 */
 	public function test_get_status_from_id($id, $expected)
 	{
-		$this->assertEquals($expected, \phpbb\ideas\ext::status_name($id));
+		self::assertEquals($expected, \phpbb\ideas\ext::status_name($id));
 	}
 
 	/**
@@ -68,7 +68,7 @@ class idea_attributes_test extends ideas_base
 
 		$idea = $object->get_idea($idea_id);
 
-		$this->assertEquals($status, $idea['idea_status']);
+		self::assertEquals($status, $idea['idea_status']);
 	}
 
 	/**
@@ -197,13 +197,13 @@ class idea_attributes_test extends ideas_base
 
 		$result = $object->$call($data['idea_id'], $data[$attribute]);
 
-		$this->assertEquals($expected, $result);
+		self::assertEquals($expected, $result);
 
 		if ($result)
 		{
 			$idea = $object->get_idea($data['idea_id']);
 
-			$this->assertEquals($data[$attribute], $idea[$attribute]);
+			self::assertEquals($data[$attribute], $idea[$attribute]);
 
 			return $idea;
 		}

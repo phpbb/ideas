@@ -39,7 +39,7 @@ class post_controller_test extends controller_base
 
 		/** @var \phpbb\ideas\controller\post_controller $controller */
 		$controller = $this->get_controller('post_controller');
-		$this->assertInstanceOf('phpbb\ideas\controller\post_controller', $controller);
+		self::assertInstanceOf('phpbb\ideas\controller\post_controller', $controller);
 
 		try
 		{
@@ -47,15 +47,15 @@ class post_controller_test extends controller_base
 
 			if (!$response)
 			{
-				$this->fail('The expected \phpbb\exception\http_exception was not thrown');
+				self::fail('The expected \phpbb\exception\http_exception was not thrown');
 			}
 
-			$this->assertInstanceOf('\Symfony\Component\HttpFoundation\RedirectResponse', $response);
+			self::assertInstanceOf('\Symfony\Component\HttpFoundation\RedirectResponse', $response);
 		}
 		catch (\phpbb\exception\http_exception $exception)
 		{
-			$this->assertEquals($status_code, $exception->getStatusCode());
-			$this->assertEquals($message, $exception->getMessage());
+			self::assertEquals($status_code, $exception->getStatusCode());
+			self::assertEquals($message, $exception->getMessage());
 		}
 	}
 }

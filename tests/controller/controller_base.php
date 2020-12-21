@@ -48,7 +48,7 @@ class controller_base extends \phpbb_test_case
 	/** @var string */
 	protected $php_ext;
 
-	public function setUp()
+	protected function setUp(): void
 	{
 		parent::setUp();
 
@@ -64,7 +64,7 @@ class controller_base extends \phpbb_test_case
 		$this->controller_helper = $this->getMockBuilder('\phpbb\controller\helper')
 			->disableOriginalConstructor()
 			->getMock();
-		$this->controller_helper->expects($this->atMost(1))
+		$this->controller_helper->expects(self::atMost(1))
 			->method('render')
 			->willReturnCallback(function ($template_file, $page_title = '', $status_code = 200, $display_online_list = false) {
 				return new \Symfony\Component\HttpFoundation\Response($template_file, $status_code);

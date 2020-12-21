@@ -94,9 +94,9 @@ class vote_test extends ideas_base
 
 		$result = $object->vote($idea, $user_id, $vote);
 
-		$this->assertEquals($expected['message'], $result['message'], 'Message did not match');
-		$this->assertEquals($expected['votes_up'], $result['votes_up'], 'Up vote values did not match');
-		$this->assertEquals($expected['votes_down'], $result['votes_down'], 'Down vote values did not match');
+		self::assertEquals($expected['message'], $result['message'], 'Message did not match');
+		self::assertEquals($expected['votes_up'], $result['votes_up'], 'Up vote values did not match');
+		self::assertEquals($expected['votes_down'], $result['votes_down'], 'Down vote values did not match');
 	}
 
 	/**
@@ -128,7 +128,7 @@ class vote_test extends ideas_base
 
 		$result = $object->vote($idea, 2, $vote);
 
-		$this->assertEquals('INVALID_VOTE', $result);
+		self::assertEquals('INVALID_VOTE', $result);
 	}
 
 	/**
@@ -183,8 +183,8 @@ class vote_test extends ideas_base
 
 		$result = $object->remove_vote($idea, $user_id);
 
-		$this->assertEquals($expected['message'], $result['message'], 'Message did not match');
-		$this->assertEquals($expected['votes_up'], $result['votes_up'], 'Up vote values did not match');
-		$this->assertEquals($expected['votes_down'], $result['votes_down'], 'Down vote values did not match');
+		self::assertEquals($expected['message'], $result['message'], 'Message did not match');
+		self::assertEquals($expected['votes_up'], $result['votes_up'], 'Up vote values did not match');
+		self::assertEquals($expected['votes_down'], $result['votes_down'], 'Down vote values did not match');
 	}
 }

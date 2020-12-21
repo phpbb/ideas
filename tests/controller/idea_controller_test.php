@@ -56,10 +56,10 @@ class idea_controller_test extends \phpbb\ideas\tests\controller\controller_base
 	{
 		/** @var \phpbb\ideas\controller\idea_controller $controller */
 		$controller = $this->get_controller('idea_controller', 'idea');
-		$this->assertInstanceOf('phpbb\ideas\controller\idea_controller', $controller);
+		self::assertInstanceOf('phpbb\ideas\controller\idea_controller', $controller);
 
 		// mock some basic idea data
-		$this->entity->expects($this->once())
+		$this->entity->expects(self::once())
 			->method('get_idea')
 			->willReturn(array_merge(array(
 					'idea_id'     => $idea_id,
@@ -71,20 +71,20 @@ class idea_controller_test extends \phpbb\ideas\tests\controller\controller_base
 		// mock a result from each method called by the idea controller
 		if ($expected === 'true')
 		{
-			$this->entity->expects($this->once())
+			$this->entity->expects(self::once())
 				->method(($callback))
 				->willReturn($authorised);
 		}
 
 		// set if using ajax or not
-		$this->request->expects($is_ajax ? $this->once() : $this->never())
+		$this->request->expects($is_ajax ? self::once() : self::never())
 			->method('is_ajax')
 			->willReturn($is_ajax);
 
 		// mock some useful variables requested by the idea controller
-		$this->request->expects($this->atLeastOnce())
+		$this->request->expects(self::atLeastOnce())
 			->method('variable')
-			->with($this->anything())
+			->with(self::anything())
 			->willReturnMap(array(
 				array('mode', '', false, \phpbb\request\request_interface::REQUEST, $mode),
 				array('hash', '', false, \phpbb\request\request_interface::REQUEST, generate_link_hash("{$mode}_{$idea_id}")),
@@ -95,7 +95,7 @@ class idea_controller_test extends \phpbb\ideas\tests\controller\controller_base
 		// mock some user permissions during testing
 		$this->auth
 			->method('acl_get')
-			->with($this->stringContains('_'), $this->anything())
+			->with(self::stringContains('_'), self::anything())
 			->willReturnMap(array(
 				array('m_', 2, $authorised),
 				array('f_vote', 2, $authorised),
@@ -118,15 +118,15 @@ class idea_controller_test extends \phpbb\ideas\tests\controller\controller_base
 
 		if ($is_ajax)
 		{
-			$this->assertInstanceOf('\Symfony\Component\HttpFoundation\JsonResponse', $response);
-			$this->assertEquals($expected, $response->getContent());
+			self::assertInstanceOf('\Symfony\Component\HttpFoundation\JsonResponse', $response);
+			self::assertEquals($expected, $response->getContent());
 		}
 		else
 		{
-			$this->assertInstanceOf('\Symfony\Component\HttpFoundation\RedirectResponse', $response);
+			self::assertInstanceOf('\Symfony\Component\HttpFoundation\RedirectResponse', $response);
 		}
 
-		$this->assertEquals($status_code, $response->getStatusCode());
+		self::assertEquals($status_code, $response->getStatusCode());
 	}
 
 	/**
@@ -154,17 +154,17 @@ class idea_controller_test extends \phpbb\ideas\tests\controller\controller_base
 
 		/** @var \phpbb\ideas\controller\idea_controller $controller */
 		$controller = $this->get_controller('idea_controller', 'idea');
-		$this->assertInstanceOf('phpbb\ideas\controller\idea_controller', $controller);
+		self::assertInstanceOf('phpbb\ideas\controller\idea_controller', $controller);
 
 		try
 		{
 			$controller->idea($idea_id);
-			$this->fail('The expected \phpbb\exception\http_exception was not thrown');
+			self::fail('The expected \phpbb\exception\http_exception was not thrown');
 		}
 		catch (\phpbb\exception\http_exception $exception)
 		{
-			$this->assertEquals($status_code, $exception->getStatusCode());
-			$this->assertEquals($page_content, $exception->getMessage());
+			self::assertEquals($status_code, $exception->getStatusCode());
+			self::assertEquals($page_content, $exception->getMessage());
 		}
 	}
 }

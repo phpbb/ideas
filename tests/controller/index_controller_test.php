@@ -33,16 +33,16 @@ class index_controller_test extends controller_base
 	{
 		/** @var \phpbb\ideas\controller\index_controller $controller */
 		$controller = $this->get_controller('index_controller', 'ideas');
-		$this->assertInstanceOf('phpbb\ideas\controller\index_controller', $controller);
+		self::assertInstanceOf('phpbb\ideas\controller\index_controller', $controller);
 
-		$this->entity->expects($this->atMost(3))
+		$this->entity->expects(self::atMost(3))
 			->method('get_ideas')
 			->willReturn([[]]);
 
 		$response = $controller->index();
-		$this->assertInstanceOf('\Symfony\Component\HttpFoundation\Response', $response);
-		$this->assertEquals($status_code, $response->getStatusCode());
-		$this->assertEquals($page_content, $response->getContent());
+		self::assertInstanceOf('\Symfony\Component\HttpFoundation\Response', $response);
+		self::assertEquals($status_code, $response->getStatusCode());
+		self::assertEquals($page_content, $response->getContent());
 	}
 
 	/**
@@ -70,7 +70,7 @@ class index_controller_test extends controller_base
 
 		/** @var \phpbb\ideas\controller\index_controller $controller */
 		$controller = $this->get_controller('index_controller', 'ideas');
-		$this->assertInstanceOf('phpbb\ideas\controller\index_controller', $controller);
+		self::assertInstanceOf('phpbb\ideas\controller\index_controller', $controller);
 
 		$controller->index();
 	}

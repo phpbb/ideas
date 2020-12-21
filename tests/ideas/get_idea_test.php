@@ -53,7 +53,7 @@ class get_idea_test extends ideas_base
 
 		$rows = $object->get_idea($idea_id);
 
-		$this->assertNotFalse(strpos($rows['idea_title'], $expected));
+		self::assertNotFalse(strpos($rows['idea_title'], $expected));
 	}
 
 	/**
@@ -65,7 +65,7 @@ class get_idea_test extends ideas_base
 	{
 		$object = $this->get_idea_object();
 
-		$this->assertFalse($object->get_idea($idea_id));
+		self::assertFalse($object->get_idea($idea_id));
 	}
 
 	/**
@@ -79,7 +79,7 @@ class get_idea_test extends ideas_base
 
 		$rows = $object->get_idea_by_topic_id($topic_id);
 
-		$this->assertNotFalse(strpos($rows['idea_title'], $expected));
+		self::assertNotFalse(strpos($rows['idea_title'], $expected));
 	}
 
 	/**
@@ -91,6 +91,6 @@ class get_idea_test extends ideas_base
 	{
 		$object = $this->get_idea_object();
 
-		$this->assertFalse($object->get_idea_by_topic_id($topic_id));
+		self::assertFalse($object->get_idea_by_topic_id($topic_id));
 	}
 }

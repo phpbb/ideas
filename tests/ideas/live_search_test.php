@@ -41,12 +41,12 @@ class live_search_test extends \phpbb\ideas\tests\ideas\ideas_base
 
 		if (empty($expected))
 		{
-			$this->assertEmpty($results);
+			self::assertEmpty($results);
 		}
 
 		foreach ($results as $result)
 		{
-			$this->assertContains($result['clean_title'], $expected);
+			self::assertStringContainsString($result['clean_title'], $expected);
 		}
 	}
 }

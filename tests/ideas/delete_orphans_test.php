@@ -22,28 +22,28 @@ class delete_orphans_test extends \phpbb\ideas\tests\ideas\ideas_base
 		$valid_ideas = $ideas->get_idea_count();
 
 		// Check the orphan ideas exists
-		$this->assertNotEmpty($idea->get_idea(6));
-		$this->assertNotEmpty($idea->get_idea(7));
+		self::assertNotEmpty($idea->get_idea(6));
+		self::assertNotEmpty($idea->get_idea(7));
 
 		// Delete orphans
-		$this->assertEquals(2, $ideas->delete_orphans());
+		self::assertEquals(2, $ideas->delete_orphans());
 
 		// Confirm orphan ideas no longer exists
-		$this->assertFalse($idea->get_idea(6));
-		$this->assertFalse($idea->get_idea(7));
+		self::assertFalse($idea->get_idea(6));
+		self::assertFalse($idea->get_idea(7));
 
 		// Check that all votes from orphan ideas are removed
 		$sql = 'SELECT COUNT(idea_id) as num_ideas FROM phpbb_ideas_votes WHERE idea_id IN(6, 7)';
 		$result = $this->db->sql_query($sql);
 		$num_ideas = (int) $this->db->sql_fetchfield('num_ideas');
 		$this->db->sql_freeresult($result);
-		$this->assertEquals(0, $num_ideas);
+		self::assertEquals(0, $num_ideas);
 
 		// Confirm that only the orphans were deleted
 		$ideas->get_ideas();
-		$this->assertEquals($valid_ideas, $ideas->get_idea_count());
+		self::assertEquals($valid_ideas, $ideas->get_idea_count());
 
 		// Delete orphans again, confirming there's nothing to delete
-		$this->assertEquals(0, $ideas->delete_orphans());
+		self::assertEquals(0, $ideas->delete_orphans());
 	}
 }

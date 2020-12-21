@@ -165,9 +165,9 @@ class list_controller_test extends controller_base
 	{
 		/** @var \phpbb\ideas\controller\list_controller $controller */
 		$controller = $this->get_controller('list_controller', 'ideas');
-		$this->assertInstanceOf('phpbb\ideas\controller\list_controller', $controller);
+		self::assertInstanceOf('phpbb\ideas\controller\list_controller', $controller);
 
-		$this->request->expects($this->atMost(3))
+		$this->request->expects(self::atMost(3))
 			->method('variable')
 			->willReturnMap(array(
 				array('sd', 'd', false, \phpbb\request\request_interface::REQUEST, 'd'),
@@ -175,15 +175,15 @@ class list_controller_test extends controller_base
 				array('start', 0, false, \phpbb\request\request_interface::REQUEST, 0),
 			));
 
-		$this->entity->expects($this->once())
+		$this->entity->expects(self::once())
 			->method('get_ideas')
 			->with('', $expected['sort'], 'DESC', $expected['status'], 0)
 			->willReturn([[]]);
 
 		$response = $controller->ideas_list($params['sort']);
-		$this->assertInstanceOf('\Symfony\Component\HttpFoundation\Response', $response);
-		$this->assertEquals($status_code, $response->getStatusCode());
-		$this->assertEquals($page_content, $response->getContent());
+		self::assertInstanceOf('\Symfony\Component\HttpFoundation\Response', $response);
+		self::assertEquals($status_code, $response->getStatusCode());
+		self::assertEquals($page_content, $response->getContent());
 	}
 
 	/**
@@ -211,7 +211,7 @@ class list_controller_test extends controller_base
 
 		/** @var \phpbb\ideas\controller\list_controller $controller */
 		$controller = $this->get_controller('list_controller', 'ideas');
-		$this->assertInstanceOf('phpbb\ideas\controller\list_controller', $controller);
+		self::assertInstanceOf('phpbb\ideas\controller\list_controller', $controller);
 
 		$controller->ideas_list('');
 	}

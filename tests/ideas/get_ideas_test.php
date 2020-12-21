@@ -57,7 +57,7 @@ class get_ideas_test extends ideas_base
 		}
 
 		// Assert the expected ideas were returned
-		$this->assertEquals($expected, $ideas_ids);
+		self::assertEquals($expected, $ideas_ids);
 	}
 
 	/**
@@ -273,7 +273,7 @@ class get_ideas_test extends ideas_base
 
 		$object = $this->get_ideas_object();
 
-		$this->assertCount($expected, $object->get_ideas());
+		self::assertCount($expected, $object->get_ideas());
 	}
 
 	/**
