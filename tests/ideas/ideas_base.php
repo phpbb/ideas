@@ -44,7 +44,7 @@ class ideas_base extends \phpbb_database_test_case
 	{
 		parent::setUp();
 
-		global $auth, $config, $db, $phpbb_dispatcher, $phpbb_root_path, $phpEx, $request;
+		global $auth, $config, $db, $user, $phpbb_dispatcher, $phpbb_root_path, $phpEx, $request;
 
 		$this->auth = $auth = $this->getMockBuilder('\phpbb\auth\auth')
 			->disableOriginalConstructor()
@@ -57,7 +57,17 @@ class ideas_base extends \phpbb_database_test_case
 		$phpbb_dispatcher = new \phpbb_mock_event_dispatcher();
 		$lang_loader = new \phpbb\language\language_file_loader($phpbb_root_path, $phpEx);
 		$this->lang = new \phpbb\language\language($lang_loader);
-		$this->user = new \phpbb\user($this->lang, '\phpbb\datetime');
+		$this->user = $user = new \phpbb\user($this->lang, '\phpbb\datetime');
+		$user->data['user_form_salt'] = $user->browser = $user->referer = $user->forwarded_for = $user->host = $user->page = '';
+		$user->data = $this->user->data = [
+			'user_id'		=> 2,
+			'username'		=> 'user-name',
+			'is_registered'	=> true,
+			'user_colour'	=> '',
+			'user_lastmark'	=> 0,
+			'user_form_salt'=> '',
+		];
+
 		$this->php_ext = $phpEx;
 		$request = $this->getMockBuilder('\phpbb\request\request')
 			->disableOriginalConstructor()

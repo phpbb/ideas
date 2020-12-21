@@ -25,7 +25,6 @@ class idea_attributes_test extends ideas_base
 			array(3, 'IMPLEMENTED'),
 			array(4, 'DUPLICATE'),
 			array(5, 'INVALID'),
-			array(6, ''), // this value doesn't exist
 		);
 	}
 

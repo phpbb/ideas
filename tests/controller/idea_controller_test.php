@@ -59,14 +59,18 @@ class idea_controller_test extends \phpbb\ideas\tests\controller\controller_base
 		self::assertInstanceOf('phpbb\ideas\controller\idea_controller', $controller);
 
 		// mock some basic idea data
+		$author_user_id = 2;
 		$this->entity->expects(self::once())
 			->method('get_idea')
 			->willReturn(array_merge(array(
 					'idea_id'     => $idea_id,
-					'idea_author' => 2,
-					'idea_status' => \phpbb\ideas\ext::$statuses['NEW']
+					'idea_author' => $author_user_id,
+					'idea_status' => \phpbb\ideas\ext::$statuses['NEW'],
+					'topic_id'    => $idea_id * 10,
 				), $additional_data)
 			);
+
+		$this->user->data['user_id'] = $authorised ? $author_user_id : ++$author_user_id;
 
 		// mock a result from each method called by the idea controller
 		if ($expected === 'true')
@@ -97,8 +101,8 @@ class idea_controller_test extends \phpbb\ideas\tests\controller\controller_base
 			->method('acl_get')
 			->with(self::stringContains('_'), self::anything())
 			->willReturnMap(array(
-				array('m_', 2, $authorised),
-				array('f_vote', 2, $authorised),
+				array('m_', $author_user_id, $authorised),
+				array('f_vote', $author_user_id, $authorised),
 			));
 
 		// special case, expect trigger_error when a confirm_box return true

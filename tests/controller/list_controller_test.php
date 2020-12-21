@@ -178,7 +178,7 @@ class list_controller_test extends controller_base
 		$this->entity->expects(self::once())
 			->method('get_ideas')
 			->with('', $expected['sort'], 'DESC', $expected['status'], 0)
-			->willReturn([[]]);
+			->willReturn([$this->initialized_idea_array()]);
 
 		$response = $controller->ideas_list($params['sort']);
 		self::assertInstanceOf('\Symfony\Component\HttpFoundation\Response', $response);

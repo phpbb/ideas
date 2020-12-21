@@ -58,7 +58,18 @@ class linkhelper_test extends \phpbb_database_test_case
 			->willReturnMap(array(
 				array('u_viewprofile', true),
 			));
+
+		$this->set_global_user();
+	}
+
+	public function set_global_user()
+	{
+		global $user;
+		$user = $this->getMockBuilder('\phpbb\user')
+			->disableOriginalConstructor()
+			->getMock();
 		$user->data['user_id'] = ANONYMOUS;
+		$user->data['user_form_salt'] = '';
 	}
 
 	public function get_linkhelper()
@@ -68,6 +79,8 @@ class linkhelper_test extends \phpbb_database_test_case
 
 	public function get_idea_link_test_data()
 	{
+		$this->set_global_user();
+
 		return array(
 			array(1, '', false, 'phpbb_ideas_idea_controller#{"idea_id":1}'),
 			array(2, 'vote', false, 'phpbb_ideas_idea_controller#{"idea_id":2,"mode":"vote"}'),

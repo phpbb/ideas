@@ -133,6 +133,8 @@ class listener_test extends \phpbb_test_case
 	 */
 	public function test_show_idea($forum_id, $topic_id, $has_votes, $mod_auth, $expected)
 	{
+		$this->user->data['user_id'] = 2;
+
 		$listener = $this->get_listener();
 
 		$event = new \phpbb\event\data([
@@ -155,7 +157,7 @@ class listener_test extends \phpbb_test_case
 					 'idea_date' => 0,
 					 'idea_votes_up' => (int) $has_votes,
 					 'idea_votes_down' => (int) $has_votes,
-					 'idea_status' => 0,
+					 'idea_status' => 1,
 					 'duplicate_id' => 0,
 					 'ticket_id' => 0,
 					 'rfc_link' => '',

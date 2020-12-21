@@ -37,7 +37,7 @@ class index_controller_test extends controller_base
 
 		$this->entity->expects(self::atMost(3))
 			->method('get_ideas')
-			->willReturn([[]]);
+			->willReturn([$this->initialized_idea_array()]);
 
 		$response = $controller->index();
 		self::assertInstanceOf('\Symfony\Component\HttpFoundation\Response', $response);

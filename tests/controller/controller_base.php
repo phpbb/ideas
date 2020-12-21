@@ -53,14 +53,14 @@ class controller_base extends \phpbb_test_case
 		parent::setUp();
 
 		// Globals required during execution
-		global $phpbb_dispatcher, $request, $phpbb_root_path, $phpEx;
+		global $config, $phpbb_dispatcher, $request, $user, $phpbb_root_path, $phpEx;
 		$phpbb_dispatcher = new \phpbb_mock_event_dispatcher();
 
 		// Constructor arguments
 		$this->auth = $this->getMockBuilder('\phpbb\auth\auth')
 			->disableOriginalConstructor()
 			->getMock();
-		$this->config = new \phpbb\config\config(array('ideas_forum_id' => 2));
+		$this->config = $config = new \phpbb\config\config(array('ideas_forum_id' => 2));
 		$this->controller_helper = $this->getMockBuilder('\phpbb\controller\helper')
 			->disableOriginalConstructor()
 			->getMock();
@@ -82,12 +82,13 @@ class controller_base extends \phpbb_test_case
 			->getMock();
 		$this->template = $this->getMockBuilder('\phpbb\template\template')
 			->getMock();
-		$this->user = $this->getMockBuilder('\phpbb\user')
+		$this->user = $user = $this->getMockBuilder('\phpbb\user')
 			->setConstructorArgs(array(
 				$this->lang,
 				'\phpbb\datetime'
 			))
 			->getMock();
+		$user->data['user_form_salt'] = $user->browser = $user->referer = $user->forwarded_for = $user->host = $user->page = '';
 		$this->root_path = $phpbb_root_path;
 		$this->php_ext = $phpEx;
 	}
@@ -119,5 +120,29 @@ class controller_base extends \phpbb_test_case
 		}
 
 		return $controller;
+	}
+
+	/**
+	 * Return an initialized area of idea data
+	 *
+	 * @return array
+	 */
+	public function initialized_idea_array()
+	{
+		return [
+			'idea_id' => 0,
+			'idea_title' => '',
+			'idea_author' => '',
+			'idea_date' => 0,
+			'idea_votes_up' => 0,
+			'idea_votes_down' => 0,
+			'idea_status' => 0,
+			'u_voted' => 0,
+			'topic_id' => 0,
+			'topic_status' => 0,
+			'topic_visibility' => 0,
+			'read' => 0,
+		];
+
 	}
 }

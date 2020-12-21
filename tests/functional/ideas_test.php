@@ -21,11 +21,11 @@ class ideas_test extends ideas_functional_base
 	public function test_view_ideas()
 	{
 		// Access /ideas directly
-		$crawler = self::request('GET', "app.php/ideas?sid={$this->sid}");
+		$crawler = self::request('GET', "app.php/ideas");
 		$this->assertContainsLang('IDEAS_TITLE', $crawler->filter('h2')->text());
 
 		// Test forum redirect to /ideas from /viewforum.php
-		$crawler = self::request('GET', "viewforum.php?f=2sid={$this->sid}");
+		$crawler = self::request('GET', "viewforum.php?f=2");
 		$this->assertContainsLang('IDEAS_TITLE', $crawler->filter('h2')->text());
 	}
 
