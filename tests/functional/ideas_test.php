@@ -21,11 +21,11 @@ class ideas_test extends ideas_functional_base
 	public function test_view_ideas()
 	{
 		// Access /ideas directly
-		$crawler = self::request('GET', "app.php/ideas?sid={$this->sid}");
+		$crawler = self::request('GET', "app.php/ideas");
 		$this->assertContainsLang('IDEAS_TITLE', $crawler->filter('h2')->text());
 
 		// Test forum redirect to /ideas from /viewforum.php
-		$crawler = self::request('GET', "viewforum.php?f=2sid={$this->sid}");
+		$crawler = self::request('GET', "viewforum.php?f=2");
 		$this->assertContainsLang('IDEAS_TITLE', $crawler->filter('h2')->text());
 	}
 
@@ -41,11 +41,11 @@ class ideas_test extends ideas_functional_base
 
 		// Visit the new idea page and verify data
 		$crawler = self::request('GET', "app.php/idea/{$idea['idea_id']}?sid={$this->sid}");
-		$this->assertContains($this->lang('IDEAS'), $crawler->filter('#nav-breadcrumbs')->text());
-		$this->assertContains($idea['subject'], $crawler->filter('h2')->text());
-		$this->assertContains($idea['message'], $crawler->filter('.content')->text());
-		$this->assertStringContainsString('1', $crawler->filter('.rating > .vote-up')->text());
-		$this->assertStringContainsString('0', $crawler->filter('.rating > .vote-down')->text());
+		$this->assertContainsLang('IDEAS', $crawler->filter('#nav-breadcrumbs')->text());
+		self::assertStringContainsString($idea['subject'], $crawler->filter('h2')->text());
+		self::assertStringContainsString($idea['message'], $crawler->filter('.content')->text());
+		self::assertStringContainsString('1', $crawler->filter('.rating > .vote-up')->text());
+		self::assertStringContainsString('0', $crawler->filter('.rating > .vote-down')->text());
 	}
 
 	/**
@@ -144,7 +144,7 @@ class ideas_test extends ideas_functional_base
 
 		// Submit and verify success
 		$crawler = self::submit($form);
-		$this->assertStringContainsString($data['subject'], $crawler->filter('h2')->text());
+		self::assertStringContainsString($data['subject'], $crawler->filter('h2')->text());
 
 		// Get the new idea's ID and add it to the data array
 		$url = $crawler->selectLink($this->lang('REMOVE_VOTE'))->link()->getUri();

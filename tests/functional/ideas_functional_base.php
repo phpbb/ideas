@@ -25,7 +25,7 @@ class ideas_functional_base extends \phpbb_functional_test_case
 		return array('phpbb/ideas');
 	}
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		parent::setUp();
 		$this->enable_ideas();

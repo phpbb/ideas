@@ -31,7 +31,7 @@ class linkhelper_test extends \phpbb_database_test_case
 		return $this->createXMLDataSet(__DIR__ . '/../fixtures/ideas.xml');
 	}
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		parent::setUp();
 
@@ -41,7 +41,7 @@ class linkhelper_test extends \phpbb_database_test_case
 		$this->helper = $this->getMockBuilder('\phpbb\controller\helper')
 			->disableOriginalConstructor()
 			->getMock();
-		$this->helper->expects($this->atMost(3))
+		$this->helper->expects(self::atMost(3))
 			->method('route')
 			->willReturnCallback(function ($route, array $params = array()) {
 				return $route . '#' . json_encode($params);
@@ -54,11 +54,22 @@ class linkhelper_test extends \phpbb_database_test_case
 			->getMock();
 		$auth
 			->method('acl_get')
-			->with($this->stringContains('_'), $this->anything())
+			->with(self::stringContains('_'), self::anything())
 			->willReturnMap(array(
 				array('u_viewprofile', true),
 			));
+
+		$this->set_global_user();
+	}
+
+	public function set_global_user()
+	{
+		global $user;
+		$user = $this->getMockBuilder('\phpbb\user')
+			->disableOriginalConstructor()
+			->getMock();
 		$user->data['user_id'] = ANONYMOUS;
+		$user->data['user_form_salt'] = '';
 	}
 
 	public function get_linkhelper()
@@ -68,6 +79,8 @@ class linkhelper_test extends \phpbb_database_test_case
 
 	public function get_idea_link_test_data()
 	{
+		$this->set_global_user();
+
 		return array(
 			array(1, '', false, 'phpbb_ideas_idea_controller#{"idea_id":1}'),
 			array(2, 'vote', false, 'phpbb_ideas_idea_controller#{"idea_id":2,"mode":"vote"}'),
@@ -82,7 +95,7 @@ class linkhelper_test extends \phpbb_database_test_case
 	{
 		$linkhelper = $this->get_linkhelper();
 
-		$this->assertEquals($expected, $linkhelper->get_idea_link($idea_id, $mode, $hash));
+		self::assertEquals($expected, $linkhelper->get_idea_link($idea_id, $mode, $hash));
 	}
 
 	public function get_user_link_test_data()
@@ -101,6 +114,6 @@ class linkhelper_test extends \phpbb_database_test_case
 	{
 		$linkhelper = $this->get_linkhelper();
 
-		$this->assertEquals($expected, $linkhelper->get_user_link($user));
+		self::assertEquals($expected, $linkhelper->get_user_link($user));
 	}
 }

@@ -45,6 +45,6 @@ class get_voters_test extends ideas_base
 			$users[] = $voter['username'];
 		}
 
-		$this->assertEquals($expected, $users);
+		self::assertEquals($expected, $users);
 	}
 }

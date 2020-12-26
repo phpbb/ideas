@@ -93,6 +93,13 @@
 			<value>1</value>
 			<value>0</value>
 		</row>
+		<row>
+			<value>8</value>
+			<value>f_</value>
+			<value>1</value>
+			<value>1</value>
+			<value>0</value>
+		</row>
 	</table>
 	<table name="phpbb_acl_groups">
 		<column>auth_option_id</column>

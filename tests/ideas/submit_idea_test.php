@@ -12,7 +12,7 @@ namespace phpbb\ideas\tests\ideas;
 
 class submit_idea_test extends \phpbb\ideas\tests\ideas\ideas_base
 {
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		parent::setUp();
 
@@ -56,12 +56,12 @@ class submit_idea_test extends \phpbb\ideas\tests\ideas\ideas_base
 
 		$idea_id = $object->submit($data);
 
-		$this->assertGreaterThan(7, $idea_id);
+		self::assertGreaterThan(7, $idea_id);
 
 		$idea = $object->get_idea($idea_id);
 
-		$this->assertEquals($title, $idea['idea_title']);
-		$this->assertEquals($user_id, $idea['idea_author']);
-		$this->assertEquals(1, $idea['idea_votes_up']);
+		self::assertEquals($title, $idea['idea_title']);
+		self::assertEquals($user_id, $idea['idea_author']);
+		self::assertEquals(1, $idea['idea_votes_up']);
 	}
 }

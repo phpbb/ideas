@@ -253,7 +253,7 @@ class idea extends base
 		if (!$topic_id)
 		{
 			$idea = $this->get_idea($id);
-			$topic_id = $idea['topic_id'];
+			$topic_id = $idea ? $idea['topic_id'] : 0;
 		}
 
 		// Delete topic

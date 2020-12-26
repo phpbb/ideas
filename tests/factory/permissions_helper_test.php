@@ -31,7 +31,7 @@ class permissions_helper_test extends \phpbb_database_test_case
 		return $this->createXMLDataSet(__DIR__ . '/../fixtures/permissions.xml');
 	}
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		parent::setUp();
 
@@ -41,7 +41,6 @@ class permissions_helper_test extends \phpbb_database_test_case
 		$cache->method('get')->willReturn(false);
 		$phpbb_dispatcher = new \phpbb_mock_event_dispatcher();
 
-		$this->auth = new \phpbb\auth\auth;
 		$this->config = new \phpbb\config\config(['ideas_forum_id' => 2]);
 		$this->db = $db = $this->new_dbal();
 	}
@@ -88,6 +87,10 @@ class permissions_helper_test extends \phpbb_database_test_case
 			[
 				'auth_setting' => ACL_NEVER,
 				'auth_option'  => 'f_user_lock',
+			],
+			[
+				'auth_setting' => ACL_YES,
+				'auth_option'  => 'f_', // This ID (the any-flag) is set if one or more permissions are true...
 			],
 		];
 

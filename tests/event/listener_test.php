@@ -44,7 +44,7 @@ class listener_test extends \phpbb_test_case
 	/**
 	 * Setup test environment
 	 */
-	public function setUp()
+	protected function setUp(): void
 	{
 		parent::setUp();
 
@@ -97,7 +97,7 @@ class listener_test extends \phpbb_test_case
 	 */
 	public function test_construct()
 	{
-		$this->assertInstanceOf('\Symfony\Component\EventDispatcher\EventSubscriberInterface', $this->get_listener());
+		self::assertInstanceOf('\Symfony\Component\EventDispatcher\EventSubscriberInterface', $this->get_listener());
 	}
 
 	/**
@@ -105,7 +105,7 @@ class listener_test extends \phpbb_test_case
 	 */
 	public function test_getSubscribedEvents()
 	{
-		$this->assertEquals(array(
+		self::assertEquals(array(
 			'core.viewforum_get_topic_data',
 			'core.viewtopic_modify_post_row',
 			'core.viewtopic_modify_page_title',
@@ -133,6 +133,8 @@ class listener_test extends \phpbb_test_case
 	 */
 	public function test_show_idea($forum_id, $topic_id, $has_votes, $mod_auth, $expected)
 	{
+		$this->user->data['user_id'] = 2;
+
 		$listener = $this->get_listener();
 
 		$event = new \phpbb\event\data([
@@ -142,7 +144,7 @@ class listener_test extends \phpbb_test_case
 
 		// Assert that get_idea_by_topic_id() is called when the forum_id is correct
 		// Also will return idea data if topic_id is valid, otherwise false
-		$this->idea->expects($forum_id ? $this->once() : $this->never())
+		$this->idea->expects($forum_id ? self::once() : self::never())
 			->method('get_idea_by_topic_id')
 			->with($topic_id)
 			->willReturnMap([
@@ -155,7 +157,7 @@ class listener_test extends \phpbb_test_case
 					 'idea_date' => 0,
 					 'idea_votes_up' => (int) $has_votes,
 					 'idea_votes_down' => (int) $has_votes,
-					 'idea_status' => 0,
+					 'idea_status' => 1,
 					 'duplicate_id' => 0,
 					 'ticket_id' => 0,
 					 'rfc_link' => '',
@@ -164,7 +166,7 @@ class listener_test extends \phpbb_test_case
 			]);
 
 		// Assert that get_voters() gets called if the idea being shown has votes
-		$this->idea->expects($has_votes ? $this->once() : $this->never())
+		$this->idea->expects($has_votes ? self::once() : self::never())
 			->method('get_voters')
 			->willReturn([[
 				'user_id' => 2,
@@ -174,18 +176,18 @@ class listener_test extends \phpbb_test_case
 
 		// We need to stub the acl_get, returns true when the user is a moderator
 		$this->auth->method('acl_get')
-			->with($this->stringContains('_'), $this->anything())
+			->with(self::stringContains('_'), self::anything())
 			->willReturnMap([
 				['m_', $forum_id, $mod_auth],
 			]);
 
 		// Assert that moderator template vars are assigned when user is a moderator
-		$this->template->expects($mod_auth ? $this->once() : $this->never())
+		$this->template->expects($mod_auth ? self::once() : self::never())
 			->method('assign_var')
 			->with('STATUS_ARY', ext::$statuses);
 
 		// Assert that the main idea template vars are called when we have an idea to show
-		$this->template->expects($expected ? $this->once() : $this->never())
+		$this->template->expects($expected ? self::once() : self::never())
 			->method('assign_vars');
 
 		$listener->show_idea($event);
@@ -234,14 +236,14 @@ class listener_test extends \phpbb_test_case
 
 		$listener->show_post_buttons($event);
 
-		$this->assertEquals($expected, $event['post_row']['U_DELETE']);
-		$this->assertEquals($expected, $event['post_row']['U_WARN']);
+		self::assertEquals($expected, $event['post_row']['U_DELETE']);
+		self::assertEquals($expected, $event['post_row']['U_WARN']);
 
 		// These should always be true since we're not changing them
-		$this->assertTrue($event['post_row']['U_QUOTE']);
-		$this->assertTrue($event['post_row']['U_EDIT']);
-		$this->assertTrue($event['post_row']['U_REPORT']);
-		$this->assertTrue($event['post_row']['U_INFO']);
+		self::assertTrue($event['post_row']['U_QUOTE']);
+		self::assertTrue($event['post_row']['U_EDIT']);
+		self::assertTrue($event['post_row']['U_REPORT']);
+		self::assertTrue($event['post_row']['U_INFO']);
 	}
 
 	/**
@@ -289,21 +291,21 @@ class listener_test extends \phpbb_test_case
 
 		$listener->adjust_quickmod_tools($event);
 
-		$this->assertEquals($expected, $event['quickmod_array']['delete_topic'][1]);
-		$this->assertEquals($expected, $event['quickmod_array']['restore_topic'][1]);
-		$this->assertEquals($expected, $event['quickmod_array']['make_normal'][1]);
-		$this->assertEquals($expected, $event['quickmod_array']['make_sticky'][1]);
-		$this->assertEquals($expected, $event['quickmod_array']['make_announce'][1]);
-		$this->assertEquals($expected, $event['quickmod_array']['make_global'][1]);
+		self::assertEquals($expected, $event['quickmod_array']['delete_topic'][1]);
+		self::assertEquals($expected, $event['quickmod_array']['restore_topic'][1]);
+		self::assertEquals($expected, $event['quickmod_array']['make_normal'][1]);
+		self::assertEquals($expected, $event['quickmod_array']['make_sticky'][1]);
+		self::assertEquals($expected, $event['quickmod_array']['make_announce'][1]);
+		self::assertEquals($expected, $event['quickmod_array']['make_global'][1]);
 
 		// These should always be true since we're not changing them
-		$this->assertTrue($event['quickmod_array']['lock'][1]);
-		$this->assertTrue($event['quickmod_array']['unlock'][1]);
-		$this->assertTrue($event['quickmod_array']['move'][1]);
-		$this->assertTrue($event['quickmod_array']['split'][1]);
-		$this->assertTrue($event['quickmod_array']['merge'][1]);
-		$this->assertTrue($event['quickmod_array']['merge_topic'][1]);
-		$this->assertTrue($event['quickmod_array']['fork'][1]);
+		self::assertTrue($event['quickmod_array']['lock'][1]);
+		self::assertTrue($event['quickmod_array']['unlock'][1]);
+		self::assertTrue($event['quickmod_array']['move'][1]);
+		self::assertTrue($event['quickmod_array']['split'][1]);
+		self::assertTrue($event['quickmod_array']['merge'][1]);
+		self::assertTrue($event['quickmod_array']['merge_topic'][1]);
+		self::assertTrue($event['quickmod_array']['fork'][1]);
 	}
 
 	/**
@@ -389,7 +391,7 @@ class listener_test extends \phpbb_test_case
 	 */
 	public function test_viewonline($on_page, $row, $location_url, $location, $expected_location_url, $expected_location)
 	{
-		$this->helper->expects($this->atMost(1))
+		$this->helper->expects(self::atMost(1))
 			->method('route')
 			->willReturnCallback(function ($route, array $params = array()) {
 				return $route . '#' . serialize($params);
@@ -407,12 +409,12 @@ class listener_test extends \phpbb_test_case
 		$event_data_after = $event->get_data_filtered($event_data);
 		foreach ($event_data as $expected)
 		{
-			$this->assertArrayHasKey($expected, $event_data_after);
+			self::assertArrayHasKey($expected, $event_data_after);
 		}
 		extract($event_data_after);
 
-		$this->assertEquals($expected_location_url, $location_url);
-		$this->assertEquals($expected_location, $location);
+		self::assertEquals($expected_location_url, $location_url);
+		self::assertEquals($expected_location, $location);
 	}
 
 	/**
@@ -541,7 +543,7 @@ class listener_test extends \phpbb_test_case
 		{
 			$this->setExpectedTriggerError(E_USER_NOTICE, "Redirected to $url");
 		}
-		$this->helper->expects($expected ? $this->once() : $this->never())
+		$this->helper->expects($expected ? self::once() : self::never())
 			->method('route')
 			->willReturn($url);
 
@@ -599,28 +601,28 @@ class listener_test extends \phpbb_test_case
 
 		if ($mode === 'post' && $forum_id === 2)
 		{
-			$this->assertStringContainsString('POST_IDEA', $event['page_title']);
-			$this->assertSame('phpbb_ideas_index_controller', $event['page_data']['U_VIEW_FORUM']);
-			$this->assertSame('POST_IDEA', $event['page_data']['L_POST_A']);
+			self::assertStringContainsString('POST_IDEA', $event['page_title']);
+			self::assertSame('phpbb_ideas_index_controller', $event['page_data']['U_VIEW_FORUM']);
+			self::assertSame('POST_IDEA', $event['page_data']['L_POST_A']);
 		}
 		else
 		{
-			$this->assertStringContainsString('NEW_POST', $event['page_title']);
-			$this->assertEmpty($event['page_data']['U_VIEW_FORUM']);
-			$this->assertEmpty($event['page_data']['L_POST_A']);
+			self::assertStringContainsString('NEW_POST', $event['page_title']);
+			self::assertEmpty($event['page_data']['U_VIEW_FORUM']);
+			self::assertEmpty($event['page_data']['L_POST_A']);
 		}
 
 		// Test submit_idea_before()
 		$listener->submit_idea_before($event);
 		if ($success)
 		{
-			$this->assertArrayHasKey('post_time', $event['data']);
-			$this->assertGreaterThan(0, $event['data']['post_time']);
+			self::assertArrayHasKey('post_time', $event['data']);
+			self::assertGreaterThan(0, $event['data']['post_time']);
 			$topic_id++;
 		}
 		else
 		{
-			$this->assertArrayNotHasKey('post_time', $event['data']);
+			self::assertArrayNotHasKey('post_time', $event['data']);
 			$topic_id = 0;
 		}
 
@@ -630,14 +632,14 @@ class listener_test extends \phpbb_test_case
 		$event['data'] = $data;
 
 		// Test submit_idea_after()
-		$this->auth->expects($success ? $this->once() : $this->never())
+		$this->auth->expects($success ? self::once() : self::never())
 			->method('acl_get')
 			->willReturn($approved);
 
-		$this->idea->expects($success ? $this->once() : $this->never())
+		$this->idea->expects($success ? self::once() : self::never())
 			->method('submit')
 			->with($data)
-			->willReturn($this->greaterThan(0));
+			->willReturn(self::greaterThan(0));
 
 		if (!$approved)
 		{
