@@ -51,15 +51,15 @@ class listener implements EventSubscriberInterface
 	protected $php_ext;
 
 	/**
-	 * @param \phpbb\auth\auth                $auth
-	 * @param \phpbb\config\config            $config
-	 * @param \phpbb\controller\helper        $helper
-	 * @param \phpbb\ideas\factory\idea       $idea
-	 * @param \phpbb\language\language        $language
-	 * @param \phpbb\ideas\factory\linkhelper $link_helper
-	 * @param \phpbb\template\template        $template
-	 * @param \phpbb\user                     $user
-	 * @param string                          $php_ext
+	 * @param auth       $auth
+	 * @param config     $config
+	 * @param helper     $helper
+	 * @param idea       $idea
+	 * @param language   $language
+	 * @param linkhelper $link_helper
+	 * @param template   $template
+	 * @param user       $user
+	 * @param string     $php_ext
 	 */
 	public function __construct(auth $auth, config $config, helper $helper, idea $idea, language $language, linkhelper $link_helper, template $template, user $user, $php_ext)
 	{

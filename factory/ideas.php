@@ -172,7 +172,7 @@ class ideas extends base
 	 * @param int $start  Start value for pagination
 	 *
 	 * @return mixed      Nested array if the query had rows, false otherwise
-	 * @throws \phpbb\exception\runtime_exception
+	 * @throws runtime_exception
 	 */
 	protected function query_get($number, $start)
 	{
@@ -198,7 +198,7 @@ class ideas extends base
 	 * Run a query using the $sql property to get a count of ideas.
 	 *
 	 * @return int The number of ideas
-	 * @throws \phpbb\exception\runtime_exception
+	 * @throws runtime_exception
 	 */
 	protected function query_count()
 	{
