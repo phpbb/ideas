@@ -25,8 +25,8 @@ class linkhelper
 	protected $user_loader;
 
 	/**
-	 * @param \phpbb\controller\helper $helper
-	 * @param \phpbb\user_loader       $user_loader
+	 * @param helper      $helper
+	 * @param user_loader $user_loader
 	 */
 	public function __construct(helper $helper, user_loader $user_loader)
 	{

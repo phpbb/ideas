@@ -20,7 +20,7 @@ class post_controller extends base
 	 * Redirects to the idea forum's posting page.
 	 *
 	 * @throws http_exception
-	 * @return \Symfony\Component\HttpFoundation\RedirectResponse A Symfony Response object
+	 * @return RedirectResponse A Symfony Response object
 	 */
 	public function post()
 	{
