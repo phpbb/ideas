@@ -22,7 +22,7 @@ class m2_initial_data extends \phpbb\db\migration\migration
 		return $row !== false;
 	}
 
-	static public function depends_on()
+	public static function depends_on()
 	{
 		return array('\phpbb\ideas\migrations\m1_initial_schema');
 	}

@@ -17,7 +17,7 @@ class m9_remove_idea_bot extends \phpbb\db\migration\migration
 		return !$this->config->offsetExists('ideas_poster_id');
 	}
 
-	static public function depends_on()
+	public static function depends_on()
 	{
 		return [
 			'\phpbb\ideas\migrations\m1_initial_schema',
@@ -109,7 +109,7 @@ class m9_remove_idea_bot extends \phpbb\db\migration\migration
 			// Update first post's poster id if it's the Ideas Bot
 			$sql = 'UPDATE ' . $this->table_prefix . 'posts' . '
 				SET poster_id = ' . (int) $data['topic_poster_id'] . '
-				WHERE post_id = ' . (int) $data['topic_first_post_id'] . ' 
+				WHERE post_id = ' . (int) $data['topic_first_post_id'] . '
 					AND poster_id = ' . (int) $this->config->offsetGet('ideas_poster_id');
 			$this->db->sql_query($sql);
 		}

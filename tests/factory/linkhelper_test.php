@@ -20,7 +20,7 @@ class linkhelper_test extends \phpbb_database_test_case
 	/** @var \phpbb\db\driver\driver_interface */
 	protected $db;
 
-	/** @var \PHPUnit_Framework_MockObject_MockObject|\phpbb\controller\helper */
+	/** @var \PHPUnit\Framework\MockObject\MockObject|\phpbb\controller\helper */
 	protected $helper;
 
 	/** @var \phpbb\user_loader */

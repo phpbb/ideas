@@ -139,10 +139,8 @@ class admin_controller
 					continue;
 				}
 
-				if ($submit)
-				{
-					$this->config->set($config_name, $this->cfg_array[$config_name]);
-				}
+				$this->config->set($config_name, $this->cfg_array[$config_name]);
+
 			}
 			$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'ACP_PHPBB_IDEAS_SETTINGS_LOG');
 			trigger_error($this->language->lang('ACP_IDEAS_SETTINGS_UPDATED') . adm_back_link($this->u_action));

@@ -12,31 +12,31 @@ namespace phpbb\ideas\tests\controller;
 
 class controller_base extends \phpbb_test_case
 {
-	/** @var \PHPUnit_Framework_MockObject_MockObject|\phpbb\auth\auth */
+	/** @var \PHPUnit\Framework\MockObject\MockObject|\phpbb\auth\auth */
 	protected $auth;
 
 	/** @var \phpbb\config\config */
 	protected $config;
 
-	/** @var \PHPUnit_Framework_MockObject_MockObject|\phpbb\controller\helper */
+	/** @var \PHPUnit\Framework\MockObject\MockObject|\phpbb\controller\helper */
 	protected $controller_helper;
 
-	/** @var \PHPUnit_Framework_MockObject_MockObject|\phpbb\ideas\factory\base */
+	/** @var \PHPUnit\Framework\MockObject\MockObject|\phpbb\ideas\factory\base */
 	protected $entity;
 
 	/** @var \phpbb\language\language */
 	protected $lang;
 
-	/** @var \PHPUnit_Framework_MockObject_MockObject|\phpbb\ideas\factory\linkhelper */
+	/** @var \PHPUnit\Framework\MockObject\MockObject|\phpbb\ideas\factory\linkhelper */
 	protected $link_helper;
 
-	/** @var \PHPUnit_Framework_MockObject_MockObject|\phpbb\pagination */
+	/** @var \PHPUnit\Framework\MockObject\MockObject|\phpbb\pagination */
 	protected $pagination;
 
-	/** @var \PHPUnit_Framework_MockObject_MockObject|\phpbb\request\request */
+	/** @var \PHPUnit\Framework\MockObject\MockObject|\phpbb\request\request */
 	protected $request;
 
-	/** @var \PHPUnit_Framework_MockObject_MockObject|\phpbb\template\template */
+	/** @var \PHPUnit\Framework\MockObject\MockObject|\phpbb\template\template */
 	protected $template;
 
 	/** @var \phpbb\user */

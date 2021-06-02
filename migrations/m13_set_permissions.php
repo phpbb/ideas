@@ -29,7 +29,7 @@ class m13_set_permissions extends \phpbb\db\migration\migration
 	 */
 	public function effectively_installed()
 	{
-		return $this->config['ideas_forum_id'] === 0;
+		return (int) $this->config['ideas_forum_id'] === 0;
 	}
 
 	/**
