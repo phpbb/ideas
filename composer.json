@@ -40,7 +40,7 @@
 	"extra": {
 		"display-name": "phpBB Ideas",
 		"soft-require": {
-			"phpbb/phpbb": ">=3.2.1"
+			"phpbb/phpbb": ">=3.2.3"
 		}
 	}
 }
