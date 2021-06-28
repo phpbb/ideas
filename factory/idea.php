@@ -155,7 +155,7 @@ class idea extends base
 	 */
 	public function set_implemented($idea_id, $version)
 	{
-		$match = '/^\d\.\d\.\d+(\-\w+)?$/';
+		$match = '/^\d\.\d\.\d+(-\w+)?$/';
 		if ($version && !preg_match($match, $version))
 		{
 			return false;

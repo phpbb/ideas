@@ -14,25 +14,25 @@ use phpbb\ideas\ext;
 
 class listener_test extends \phpbb_test_case
 {
-	/** @var \PHPUnit_Framework_MockObject_MockObject|\phpbb\auth\auth */
+	/** @var \PHPUnit\Framework\MockObject\MockObject|\phpbb\auth\auth */
 	protected $auth;
 
 	/** @var \phpbb\config\config */
 	protected $config;
 
-	/** @var \PHPUnit_Framework_MockObject_MockObject|\phpbb\controller\helper */
+	/** @var \PHPUnit\Framework\MockObject\MockObject|\phpbb\controller\helper */
 	protected $helper;
 
-	/** @var \PHPUnit_Framework_MockObject_MockObject|\phpbb\ideas\factory\idea */
+	/** @var \PHPUnit\Framework\MockObject\MockObject|\phpbb\ideas\factory\idea */
 	protected $idea;
 
 	/** @var \phpbb\language\language */
 	protected $lang;
 
-	/** @var \PHPUnit_Framework_MockObject_MockObject|\phpbb\ideas\factory\linkhelper */
+	/** @var \PHPUnit\Framework\MockObject\MockObject|\phpbb\ideas\factory\linkhelper */
 	protected $link_helper;
 
-	/** @var \PHPUnit_Framework_MockObject_MockObject|\phpbb\template\template */
+	/** @var \PHPUnit\Framework\MockObject\MockObject|\phpbb\template\template */
 	protected $template;
 
 	/** @var \phpbb\user */
@@ -399,19 +399,12 @@ class listener_test extends \phpbb_test_case
 
 		$listener = $this->get_listener();
 
-		$dispatcher = new \Symfony\Component\EventDispatcher\EventDispatcher();
+		$dispatcher = new \phpbb\event\dispatcher();
 		$dispatcher->addListener('core.viewonline_overwrite_location', array($listener, 'viewonline_ideas'));
 
 		$event_data = array('on_page', 'row', 'location_url', 'location');
-		$event = new \phpbb\event\data(compact($event_data));
-		$dispatcher->dispatch('core.viewonline_overwrite_location', $event);
-
-		$event_data_after = $event->get_data_filtered($event_data);
-		foreach ($event_data as $expected)
-		{
-			self::assertArrayHasKey($expected, $event_data_after);
-		}
-		extract($event_data_after);
+		$event_data_after = $dispatcher->trigger_event('core.viewonline_overwrite_location', compact($event_data));
+		extract($event_data_after, EXTR_OVERWRITE);
 
 		self::assertEquals($expected_location_url, $location_url);
 		self::assertEquals($expected_location, $location);

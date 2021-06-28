@@ -17,7 +17,7 @@ class m3_acp_data extends \phpbb\db\migration\migration
 		return $this->config->offsetExists('ideas_forum_id') || $this->config->offsetExists('ideas_poster_id');
 	}
 
-	static public function depends_on()
+	public static function depends_on()
 	{
 		return array('\phpbb\ideas\migrations\m1_initial_schema');
 	}

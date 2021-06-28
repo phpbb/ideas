@@ -41,7 +41,7 @@ class get_ideas_test extends ideas_base
 		}
 
 		// Extract get_ideas argument values from the array
-		extract($this->default_values);
+		extract($this->default_values, EXTR_OVERWRITE);
 
 		// Instantiate the ideas class
 		$object = $this->get_ideas_object();

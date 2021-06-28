@@ -15,7 +15,7 @@ class m10_update_idea_schema extends \phpbb\db\migration\migration
 	/**
 	 * {@inheritDoc}
 	 */
-	static public function depends_on()
+	public static function depends_on()
 	{
 		return [
 			'\phpbb\ideas\migrations\m1_initial_schema',

@@ -17,7 +17,7 @@ class ideas_base extends \phpbb_database_test_case
 		return array('phpbb/ideas');
 	}
 
-	/** @var \phpbb\auth\auth|\PHPUnit_Framework_MockObject_MockObject */
+	/** @var \phpbb\auth\auth|\PHPUnit\Framework\MockObject\MockObject */
 	protected $auth;
 
 	/** @var \phpbb\config\config */

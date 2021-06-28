@@ -17,7 +17,7 @@ class m8_cron_data extends \phpbb\db\migration\migration
 		return $this->config->offsetExists('ideas_cron_last_run');
 	}
 
-	static public function depends_on()
+	public static function depends_on()
 	{
 		return array('\phpbb\ideas\migrations\m1_initial_schema');
 	}

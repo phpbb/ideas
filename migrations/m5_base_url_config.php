@@ -17,7 +17,7 @@ class m5_base_url_config extends \phpbb\db\migration\migration
 		return $this->config->offsetExists('ideas_base_url');
 	}
 
-	static public function depends_on()
+	public static function depends_on()
 	{
 		return array('\phpbb\ideas\migrations\m1_initial_schema');
 	}

@@ -35,6 +35,15 @@
 			voteRemove: $('#vote-remove')
 		}, $loadingIndicator;
 
+	/**
+	 * @param {Object} $this
+	 * @param {Object} result
+	 * @param {string} result.message
+	 * @param {string} result.points
+	 * @param {Object} result.voters
+	 * @param {string} result.votes_up
+	 * @param {string} result.votes_down
+	 */
 	function voteSuccess(result, $this) {
 		if (typeof result === 'string') {
 			phpbb.alert($this.attr('data-l-err'), $this.attr('data-l-msg') + ' ' + result);
@@ -78,7 +87,9 @@
 		}
 
 		showLoadingIndicator();
-		$.get(url, {v: vote}, function(data) {
+		$.get(url, {
+			v: vote
+		}, function(data) {
 			voteSuccess(data, $this);
 			resetVoteButtons($this);
 			$obj.voteRemove.show();
@@ -137,7 +148,10 @@
 				$obj.duplicateToggle.toggle(data.status === '4');
 				$obj.implementedToggle.toggle(data.status === '3');
 			}
-		}).always([hideLoadingIndicator, hideStatusDropDown]);
+		}).always([
+			hideLoadingIndicator,
+			hideStatusDropDown
+		]);
 	});
 
 	$obj.rfcEdit.on('click', function(e) {
@@ -163,7 +177,9 @@
 			}
 
 			showLoadingIndicator();
-			$.get(url, {rfc: value}, function(res) {
+			$.get(url, {
+				rfc: value
+			}, function(res) {
 				if (res) {
 					$obj.rfcLink.text(value)
 						.attr('href', value);
@@ -218,7 +234,9 @@
 			}
 
 			showLoadingIndicator();
-			$.get(url, {ticket: value && info[1]}, function(res) {
+			$.get(url, {
+				ticket: value && info[1]
+			}, function(res) {
 				if (res) {
 					$obj.ticketLink.text(value)
 						.attr('href', 'https://tracker.phpbb.com/browse/' + value);
@@ -264,10 +282,10 @@
 	/**
 	 * This performs actions on each result from the live idea title search for duplicate ideas.
 	 *
-	 * @param {jQuery|JQuery} $input		Search input|textarea.
-	 * @param {object}        value			Result object.
-	 * @param {jQuery|JQuery} $row			Result element.
-	 * @param {jQuery|JQuery} $container	jQuery object for the search container.
+	 * @param {jQuery} $input		Search input|textarea.
+	 * @param {object} value		Result object.
+	 * @param {jQuery} $row			Result element.
+	 * @param {jQuery} $container	jQuery object for the search container.
 	 */
 	phpbb.search.setDuplicateOnEvent = function($input, value, $row, $container) {
 		$row.on('click', function() {
@@ -279,8 +297,8 @@
 	/**
 	 * Assign a duplicate idea identifier to a given idea.
 	 *
-	 * @param {jQuery|JQuery} $input	Search input|textarea.
-	 * @param {object}        value		Result object.
+	 * @param {jQuery} $input	Search input|textarea.
+	 * @param {object} value	Result object.
 	 */
 	function setDuplicate($input, value) {
 		if (value.result && isNaN(Number(value.result))) {
@@ -289,7 +307,9 @@
 		}
 		$input.val(value.clean_title);
 		showLoadingIndicator();
-		$.get($obj.duplicateEdit.attr('href'), {duplicate: Number(value.result)}, function(res) {
+		$.get($obj.duplicateEdit.attr('href'), {
+			duplicate: Number(value.result)
+		}, function(res) {
 			if (res) {
 				if (value.result) {
 					$obj.duplicateLink
@@ -315,20 +335,20 @@
 	$obj.duplicateEditInput.on('keydown.duplicate', function(e) {
 		var $this = $(this),
 			key = e.keyCode || e.which;
-		switch (key) {
-			case keymap.ESC:
-				$this.val('').hide();
-				$obj.duplicateEdit.show();
-				$obj.duplicateLink.toggle($obj.duplicateLink.html().length !== 0);
-			break;
-			case keymap.ENTER:
-				if ($this.val().length === 0) {
-					setDuplicate($this, {'result': '', 'clean_title': ''});
-				} else {
-					e.stopPropagation();
-					phpbb.alert($this.attr('data-l-err'), $this.attr('data-l-msg'));
-				}
-			break;
+		if (key === keymap.ESC) {
+			$this.val('').hide();
+			$obj.duplicateEdit.show();
+			$obj.duplicateLink.toggle($obj.duplicateLink.html().length !== 0);
+		} else if (key === keymap.ENTER) {
+			if ($this.val().length === 0) {
+				setDuplicate($this, {
+					'result': '',
+					'clean_title': ''
+				});
+			} else {
+				e.stopPropagation();
+				phpbb.alert($this.attr('data-l-err'), $this.attr('data-l-msg'));
+			}
 		}
 	});
 
@@ -355,7 +375,9 @@
 			}
 
 			showLoadingIndicator();
-			$.get(url, {implemented: value}, function(res) {
+			$.get(url, {
+				implemented: value
+			}, function(res) {
 				if (res) {
 					$obj.implementedVersion.text(value);
 
@@ -392,6 +414,12 @@
 		$('.status-dropdown').hide();
 	}
 
+	/**
+	 * @param {Object} data
+	 * @param {number} data.length
+	 * @param {string} data.user
+	 * @param {string} data.vote_value
+	 */
 	function displayVoters(data) {
 
 		var upVoters = [],

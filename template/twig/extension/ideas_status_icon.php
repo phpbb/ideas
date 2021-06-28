@@ -12,7 +12,7 @@ namespace phpbb\ideas\template\twig\extension;
 
 use phpbb\ideas\ext;
 
-class ideas_status_icon extends \Twig_Extension
+class ideas_status_icon extends \Twig\Extension\AbstractExtension
 {
 	/**
 	 * Get the name of this extension
@@ -30,7 +30,7 @@ class ideas_status_icon extends \Twig_Extension
 	public function getFunctions()
 	{
 		return [
-			new \Twig_SimpleFunction('ideas_status_icon', [$this, 'get_status_icon']),
+			new \Twig\TwigFunction('ideas_status_icon', [$this, 'get_status_icon']),
 		];
 	}
 
