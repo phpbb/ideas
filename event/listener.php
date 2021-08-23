@@ -89,7 +89,7 @@ class listener implements EventSubscriberInterface
 			'core.viewonline_overwrite_location'		=> 'viewonline_ideas',
 			'core.posting_modify_template_vars'			=> 'submit_idea_template',
 			'core.posting_modify_submit_post_before'	=> 'submit_idea_before',
-			'core.posting_modify_submit_post_after'		=> ['submit_idea_after', 'edit_idea_title'],
+			'core.posting_modify_submit_post_after'		=> [['submit_idea_after'], ['edit_idea_title']],
 		);
 	}
 
