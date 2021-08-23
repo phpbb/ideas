@@ -46,7 +46,10 @@ class linkhelper_test extends \phpbb_database_test_case
 			->willReturnCallback(function ($route, array $params = array()) {
 				return $route . '#' . json_encode($params);
 			});
-		$this->user_loader = new \phpbb\user_loader($this->db, $phpbb_root_path, $phpEx, 'phpbb_users');
+		$avatar_helper = $this->getMockBuilder('\phpbb\avatar\helper')
+			->disableOriginalConstructor()
+			->getMock();
+		$this->user_loader = new \phpbb\user_loader($avatar_helper, $this->db, $phpbb_root_path, $phpEx, 'phpbb_users');
 
 		$phpbb_dispatcher = new \phpbb_mock_event_dispatcher();
 		$auth = $this->getMockBuilder('\phpbb\auth\auth')

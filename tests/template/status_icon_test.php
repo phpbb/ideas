@@ -33,7 +33,6 @@ class status_icon_test extends \phpbb_template_template_test_case
 			new \phpbb\symfony_request(
 				new \phpbb_mock_request()
 			),
-			$filesystem,
 			$this->createMock('\phpbb\request\request'),
 			$phpbb_root_path,
 			$phpEx
@@ -43,7 +42,7 @@ class status_icon_test extends \phpbb_template_template_test_case
 
 		$cache_path = $phpbb_root_path . 'cache/twig';
 		$context = new \phpbb\template\context();
-		$loader = new \phpbb\template\twig\loader(new \phpbb\filesystem\filesystem(), '');
+		$loader = new \phpbb\template\twig\loader();
 		$twig = new \phpbb\template\twig\environment(
 			$config,
 			$filesystem,
