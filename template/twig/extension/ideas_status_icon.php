@@ -45,11 +45,11 @@ class ideas_status_icon extends \Twig\Extension\AbstractExtension
 		$args = func_get_args();
 
 		$icons = [
-			ext::$statuses['NEW']         => 'fa-lightbulb-o',
-			ext::$statuses['IN_PROGRESS'] => 'fa-code-fork',
-			ext::$statuses['IMPLEMENTED'] => 'fa-check',
-			ext::$statuses['DUPLICATE']   => 'fa-files-o',
-			ext::$statuses['INVALID']     => 'fa-ban',
+			ext::$statuses['NEW']         => 'fa:lightbulb-o',
+			ext::$statuses['IN_PROGRESS'] => 'fa:code-fork',
+			ext::$statuses['IMPLEMENTED'] => 'fa:check',
+			ext::$statuses['DUPLICATE']   => 'fa:files-o',
+			ext::$statuses['INVALID']     => 'fa:ban',
 		];
 
 		return isset($icons[$args[0]]) ? $icons[$args[0]] : '';

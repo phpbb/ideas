@@ -10,7 +10,7 @@
 <div class="flex-box flex-align-end flex-justify">
 	<h2>{{ lang('TOP_IDEAS') }}</h2>
 	{% if top_ideas %}
-		<a class="button view-all" href="{{ U_VIEW_TOP }}"><i class="icon fa-fw fa-line-chart"></i> <span>{{ lang('VIEW_TOP') }}</span></a>
+		<a class="button view-all" href="{{ U_VIEW_TOP }}">{{ Icon('iconify', 'fa:line-chart', lang('VIEW_TOP'), false, 'c-button-icon') }}</a>
 	{% endif %}
 </div>
 <div class="forumbg">
@@ -32,7 +32,7 @@
 <div class="flex-box flex-align-end flex-justify">
 	<h2>{{ lang('LATEST_IDEAS') }}</h2>
 	{% if latest_ideas %}
-		<a class="button view-all" href="{{ U_VIEW_LATEST }}"><i class="icon fa-fw fa-lightbulb-o"></i> <span>{{ lang('VIEW_LATEST') }}</span></a>
+		<a class="button view-all" href="{{ U_VIEW_LATEST }}">{{ Icon('iconify', 'fa-regular:lightbulb', lang('VIEW_LATEST'), false, 'c-button-icon') }}</a>
 	{% endif %}
 </div>
 <div class="forumbg">
@@ -54,7 +54,7 @@
 <div class="flex-box flex-align-end flex-justify">
 	<h2>{{ lang('IMPLEMENTED_IDEAS') }}</h2>
 	{% if implemented_ideas %}
-		<a class="button view-all" href="{{ U_VIEW_IMPLEMENTED }}"><i class="icon fa-fw fa-code-fork fa-flip-vertical"></i> <span>{{ lang('VIEW_IMPLEMENTED') }}</span></a>
+		<a class="button view-all" href="{{ U_VIEW_IMPLEMENTED }}">{{ Icon('iconify', 'fa:code-fork', lang('VIEW_IMPLEMENTED'), false, 'c-button-icon') }}</a>
 	{% endif %}
 </div>
 <div class="forumbg">

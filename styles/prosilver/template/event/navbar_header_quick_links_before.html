@@ -1,7 +1,7 @@
 {% if S_REGISTERED_USER and U_SEARCH_MY_IDEAS %}
 	<li>
 		<a href="{{ U_SEARCH_MY_IDEAS }}" role="menuitem">
-			<i class="icon fa-lightbulb-o fa-fw icon-gray" aria-hidden="true"></i><span>{{ lang('LIST_EGOSEARCH') }}</span>
+			{{ Icon('iconify', 'mdi:lightbulb-outline', lang('LIST_EGOSEARCH'), false, 'icon-gray') }}
 		</a>
 	</li>
 {% endif %}

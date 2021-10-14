@@ -1,14 +1,20 @@
 <ul class="topiclist forums">
 	{% for idea in ideas %}
 		<li class="row">
-			<dl class="row-item topic_{{ not idea.READ ? 'un' }}read{{ idea.LOCKED ? '_locked' }}">
-				<dt title="{{ lang(idea.READ ? 'NO_UNREAD_POSTS' : 'UNREAD_POSTS') }}">
-					{% if not idea.READ and not S_IS_BOT %}<a href="{{ idea.LINK }}?view=unread" class="row-item-link"></a>{% endif %}
+
+			<dl class="row-item">
+				<dt>
+					<a class="row-item-link{% if not idea.READ %} unread{% else %} read{% endif %}" href="{{ idea.LINK }}?view=unread">
+						{{ Icon('iconify', {
+							'mdi:lock' : idea.LOCKED,
+							'mdi:file-document-outline' : true,
+						}, '', true, 'c-forum-row-icon') }}
+					</a>
 					<div class="list-inner">
 						<a href="{{ idea.LINK }}" class="forumtitle">{{ idea.TITLE }}</a>
 						{% if idea.U_UNAPPROVED_IDEA %}
 							<a href="{{ idea.U_UNAPPROVED_IDEA }}" title="{{ lang('TOPIC_UNAPPROVED') }}">
-								<i class="icon fa-question fa-fw icon-blue" aria-hidden="true"></i><span class="sr-only">{{ lang('TOPIC_UNAPPROVED') }}</span>
+								{{ Icon('iconify', 'fa:question', lang('TOPIC_UNAPPROVED'), false, 'icon-blue') }}
 							</a>
 						{% endif %}
 						<br />
@@ -18,10 +24,10 @@
 
 				<dd class="topics"{% if idea.USER_VOTED !== '' %} title="{{ lang('USER_ALREADY_VOTED', idea.USER_VOTED) }}"{% endif %}>
 					<div class="minivote vote-up vote-disabled">
-						<i class="icon fa-thumbs-up"></i><span class="vote-count">{{ idea.VOTES_UP }}</span>{% if idea.USER_VOTED === 1 %}<i class="icon fa-check-circle user-voted" aria-hidden="true"></i>{% endif %}
+						{{ Icon('iconify', 'fa:thumbs-up', '', true) }}<span class="vote-count">{{ idea.VOTES_UP }}</span>{% if idea.USER_VOTED === 1 %}{{ Icon('iconify', 'fa:check-circle', '', true, 'user-voted') }}{% endif %}
 					</div>
 					<div class="minivote vote-down vote-disabled">
-						<i class="icon fa-thumbs-down"></i><span class="vote-count">{{ idea.VOTES_DOWN }}</span>{% if idea.USER_VOTED === 0 %}<i class="icon fa-check-circle user-voted" aria-hidden="true"></i>{% endif %}
+						{{ Icon('iconify', 'fa:thumbs-down', '', true) }}<span class="vote-count">{{ idea.VOTES_DOWN }}</span>{% if idea.USER_VOTED === 0 %}{{ Icon('iconify', 'fa:check-circle', '', true, 'user-voted') }}{% endif %}
 					</div>
 				</dd>
 			</dl>

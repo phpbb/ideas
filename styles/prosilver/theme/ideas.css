@@ -35,10 +35,6 @@ dd.topics {
 	padding-right: 10px !important;
 }
 
-.fa-lightbulb-o {
-	font-weight: 400 !important;
-}
-
 /* Vote buttons */
 .minivote {
 	line-height: normal;
@@ -205,11 +201,11 @@ dd.topics {
 	margin-left: 0;
 }
 
-.voteslist .fa-thumbs-up {
+.voteslist .thumbs-up {
 	color: #00a9e2;
 }
 
-.voteslist .fa-thumbs-down {
+.voteslist .thumbs-down {
 	color: #f76c5e;
 }
 
@@ -281,4 +277,9 @@ dd.topics {
 
 .status-5 {
 	background-color: #b22222;
+}
+
+.icon-fix {
+	padding: 0;
+	vertical-align: bottom !important;
 }
