@@ -172,6 +172,7 @@ dd.topics {
 	margin-top: 6px;
 	padding: 6px;
 	list-style-type: none;
+	font-size: 10px;
 }
 
 .voteslist ul,
