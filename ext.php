@@ -12,7 +12,7 @@ namespace phpbb\ideas;
 
 /**
 * This ext class is optional and can be omitted if left empty.
-* However you can add special (un)installation commands in the
+* However, you can add special (un)installation commands in the
 * methods enable_step(), disable_step() and purge_step(). As it is,
 * these methods are defined in \phpbb\extension\base, which this
 * class extends, but you can overwrite them to give special
@@ -55,7 +55,7 @@ class ext extends \phpbb\extension\base
 	}
 
 	/**
-	 * Check whether or not the extension can be enabled.
+	 * Check whether the extension can be enabled.
 	 *
 	 * Requires phpBB >= 3.2.3 due to removal of deprecated Twig functions (ie Twig_SimpleFunction)
 	 * Also incompatible with SQLite which does not support SQRT in SQL queries
