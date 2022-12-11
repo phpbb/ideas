@@ -118,6 +118,6 @@ class list_controller extends base
 		// Display common ideas template vars
 		$this->display_common_vars();
 
-		return $this->helper->render('list_body.html', $this->language->lang('IDEA_LIST'));
+		return $this->helper->render('@phpbb_ideas/list_body.html', $this->language->lang('IDEA_LIST'));
 	}
 }
