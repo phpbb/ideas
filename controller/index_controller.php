@@ -61,6 +61,6 @@ class index_controller extends base
 		// Display common ideas template vars
 		$this->display_common_vars();
 
-		return $this->helper->render('index_body.html', $this->language->lang('IDEAS_TITLE'));
+		return $this->helper->render('@phpbb_ideas/index_body.html', $this->language->lang('IDEAS_TITLE'));
 	}
 }
