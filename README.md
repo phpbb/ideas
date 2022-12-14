@@ -7,7 +7,7 @@ The official Ideas Centre used at [phpBB.com](https://www.phpbb.com/ideas/). Thi
 
 ## Contribute
 
-We welcome contributions to help make this Ideas extension even better. Please fork this repository, install it to a local development copy of phpBB, and send us a pull request with your bug fixes or feature improvements.
+We welcome contributions to help make this extension even better. Please fork this repository, install it to a local development copy of phpBB, and send us a pull request with your bug fixes or feature improvements.
 
 ## Bugs and Support
 

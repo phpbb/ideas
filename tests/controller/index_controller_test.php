@@ -20,7 +20,7 @@ class index_controller_test extends controller_base
 	public function controller_test_data()
 	{
 		return array(
-			array(200, 'index_body.html'),
+			array(200, '@phpbb_ideas/index_body.html'),
 		);
 	}
 
