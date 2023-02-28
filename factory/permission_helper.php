@@ -43,7 +43,7 @@ class permission_helper
 	}
 
 	/**
-	 * Set the the best permissions for an Ideas forum.
+	 * Set the best permissions for an Ideas forum.
 	 *
 	 * @param int $forum_id A forum id
 	 */

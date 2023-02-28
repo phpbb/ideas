@@ -28,7 +28,7 @@ class viewonline_test extends ideas_functional_base
 	/**
 	* Test viewonline page for admin
 	*
-	* We use a second function here, so we get a new session and can login
+	* We use a second function here, so we get a new session and can log in
 	* without having to log out "admin" first.
 	*
 	* @depends test_viewonline_visit_ideas

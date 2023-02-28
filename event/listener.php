@@ -343,7 +343,7 @@ class listener implements EventSubscriberInterface
 
 		$this->idea->submit($event['data']);
 
-		// Show users who's posts need approval a special message
+		// Show users whose posts need approval a special message
 		if (!$this->auth->acl_get('f_noapprove', $event['data']['forum_id']))
 		{
 			// Using refresh and trigger error because we can't throw http_exceptions from posting.php

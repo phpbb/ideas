@@ -103,7 +103,7 @@ abstract class base
 	 * Check if Ideas is properly configured after installation
 	 * Ideas is available only after forum settings have been set in ACP
 	 *
-	 * @return bool Depending on whether or not the extension is properly configured
+	 * @return bool Depending on whether the extension is properly configured
 	 */
 	public function is_available()
 	{

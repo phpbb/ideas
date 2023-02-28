@@ -156,7 +156,7 @@ class admin_controller
 	public function set_ideas_forum_options()
 	{
 		// Check if Ideas forum is selected and apply relevant settings if it is
-		// But display the confirm box first
+		// But display the confirmation box first
 		if (confirm_box(true))
 		{
 			if (empty($this->config['ideas_forum_id']))

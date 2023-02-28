@@ -329,7 +329,7 @@
 
 	/**
 	 * Handling of the duplicate idea input field.
-	 * ENTER: When the input field is empty clear any existing duplicate entry. Otherwise just show an alert message.
+	 * ENTER: When the input field is empty clear any existing duplicate entry. Otherwise, just show an alert message.
 	 * ESC: Will clear and close the input field (if it isn't cleared, live search may unexpectedly run).
 	 */
 	$obj.duplicateEditInput.on('keydown.duplicate', function(e) {
