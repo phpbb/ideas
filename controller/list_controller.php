@@ -34,7 +34,7 @@ class list_controller extends base
 
 		// Overwrite the $sort parameter if the url contains a sort query.
 		// This is needed with the sort by options form at the footer of the list.
-		$sort = $this->request->is_set('sort') ? $this->request->variable('sort', ext::SORT_NEW) : $sort;
+		$sort = $this->request->is_set('sort') ? (string) $this->request->variable('sort', ext::SORT_NEW) : $sort;
 
 		// Get additional query values the url may contain
 		$sort_direction = $this->request->variable('sd', 'd');
@@ -82,7 +82,7 @@ class list_controller extends base
 			'SORT_ARY'			=> array(ext::SORT_AUTHOR, ext::SORT_DATE, ext::SORT_SCORE, ext::SORT_TITLE, ext::SORT_TOP, ext::SORT_VOTES),
 			'SORT'				=> $sort,
 			'SORT_DIRECTION'	=> $sort_direction,
-			'U_MCP' 			=> ($this->auth->acl_get('m_', $this->config['ideas_forum_id'])) ? append_sid("{$this->root_path}mcp.{$this->php_ext}", "f={$this->config['ideas_forum_id']}&amp;i=main&amp;mode=forum_view", true, $this->user->session_id) : '',
+			'U_MCP' 			=> ($this->auth->acl_get('m_', $this->config['ideas_forum_id'])) ? append_sid("{$this->root_path}mcp.$this->php_ext", "f={$this->config['ideas_forum_id']}&amp;i=main&amp;mode=forum_view", true, $this->user->session_id) : '',
 
 		));
 

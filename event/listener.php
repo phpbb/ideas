@@ -166,7 +166,7 @@ class listener implements EventSubscriberInterface
 		}
 
 		$points = $idea['idea_votes_up'] - $idea['idea_votes_down'];
-		$can_vote = (bool) ($idea['idea_status'] != ext::$statuses['IMPLEMENTED'] &&
+		$can_vote = ($idea['idea_status'] != ext::$statuses['IMPLEMENTED'] &&
 			$idea['idea_status'] != ext::$statuses['DUPLICATE'] &&
 			$this->auth->acl_get('f_vote', (int) $this->config['ideas_forum_id']) &&
 			$event['topic_data']['topic_status'] != ITEM_LOCKED);

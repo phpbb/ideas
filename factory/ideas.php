@@ -80,8 +80,8 @@ class ideas extends base
 		$this->sql = [];
 
 		$this->sql['SELECT'][] = 't.topic_last_post_time, t.topic_status, t.topic_visibility, i.*';
-		$this->sql['FROM'] = "{$this->table_ideas} i";
-		$this->sql['JOIN'] = "{$this->table_topics} t ON i.topic_id = t.topic_id";
+		$this->sql['FROM'] = "$this->table_ideas i";
+		$this->sql['JOIN'] = "$this->table_topics t ON i.topic_id = t.topic_id";
 		$this->sql['WHERE'][] = 't.forum_id = ' . (int) $this->config['ideas_forum_id'];
 
 		// Only get approved topics for regular users, Moderators will see unapproved topics
@@ -293,6 +293,6 @@ class ideas extends base
 	 */
 	public function get_idea_count()
 	{
-		return isset($this->idea_count) ? $this->idea_count : 0;
+		return $this->idea_count ?? 0;
 	}
 }

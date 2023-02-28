@@ -40,7 +40,7 @@ class ideas_test extends ideas_functional_base
 		$idea = $this->create_idea('Test Idea #1', 'This is an idea posted by the test framework.');
 
 		// Visit the new idea page and verify data
-		$crawler = self::request('GET', "app.php/idea/{$idea['idea_id']}?sid={$this->sid}");
+		$crawler = self::request('GET', "app.php/idea/{$idea['idea_id']}?sid=$this->sid");
 		$this->assertContainsLang('IDEAS', $crawler->filter('#nav-breadcrumbs')->text());
 		self::assertStringContainsString($idea['subject'], $crawler->filter('h2')->text());
 		self::assertStringContainsString($idea['message'], $crawler->filter('.content')->text());
@@ -54,34 +54,34 @@ class ideas_test extends ideas_functional_base
 	public function test_view_ideas_lists()
 	{
 		// Test new ideas list
-		$crawler = self::request('GET', "app.php/ideas/list?sid={$this->sid}");
+		$crawler = self::request('GET', "app.php/ideas/list?sid=$this->sid");
 		$this->assertContainsLang('OPEN_IDEAS', $crawler->filter('h2')->text());
 		$this->assertNotContainsLang('NO_IDEAS_DISPLAY', $crawler->filter('.topiclist.forums')->text());
 
 		// Test top ideas list
-		$crawler = self::request('GET', "app.php/ideas/list/top?sid={$this->sid}");
+		$crawler = self::request('GET', "app.php/ideas/list/top?sid=$this->sid");
 		$this->assertContainsLang('LIST_TOP', $crawler->filter('h2')->text());
 		$this->assertNotContainsLang('NO_IDEAS_DISPLAY', $crawler->filter('.topiclist.forums')->text());
 
 		// Test all ideas list
-		$crawler = self::request('GET', "app.php/ideas/list/date?status=-1&sid={$this->sid}");
+		$crawler = self::request('GET', "app.php/ideas/list/date?status=-1&sid=$this->sid");
 		$this->assertContainsLang('ALL_IDEAS', $crawler->filter('h2')->text());
 		$this->assertNotContainsLang('NO_IDEAS_DISPLAY', $crawler->filter('.topiclist.forums')->text());
 
 		// Test implemented ideas list (should be empty list)
-		$crawler = self::request('GET', "app.php/ideas/list/date?status=3&sid={$this->sid}");
+		$crawler = self::request('GET', "app.php/ideas/list/date?status=3&sid=$this->sid");
 		$this->assertContainsLang('LIST_IMPLEMENTED', $crawler->filter('h2')->text());
 		$this->assertContainsLang('NO_IDEAS_DISPLAY', $crawler->filter('.topiclist.forums')->text());
 
 		// Test my ideas list is empty when logged out
-		$crawler = self::request('GET', "app.php/ideas/list/egosearch?status=-1&sid={$this->sid}");
+		$crawler = self::request('GET', "app.php/ideas/list/egosearch?status=-1&sid=$this->sid");
 		$this->assertNotContainsLang('LIST_EGOSEARCH', $crawler->filter('#quick-links')->text());
 		$this->assertContainsLang('LIST_EGOSEARCH', $crawler->filter('h2')->text());
 		$this->assertContainsLang('NO_IDEAS_DISPLAY', $crawler->filter('.topiclist.forums')->text());
 
 		// Test my ideas list works when logged in
 		$this->login();
-		$crawler = self::request('GET', "app.php/ideas/list/egosearch?status=-1&sid={$this->sid}");
+		$crawler = self::request('GET', "app.php/ideas/list/egosearch?status=-1&sid=$this->sid");
 		$this->assertContainsLang('LIST_EGOSEARCH', $crawler->filter('#quick-links')->text());
 		$this->assertContainsLang('LIST_EGOSEARCH', $crawler->filter('h2')->text());
 		$this->assertNotContainsLang('NO_IDEAS_DISPLAY', $crawler->filter('.topiclist.forums')->text());
@@ -93,17 +93,17 @@ class ideas_test extends ideas_functional_base
 	public function test_idea_errors()
 	{
 		// Visit an idea that does not exist
-		$this->error_check("app.php/idea/0?sid={$this->sid}", 'IDEA_NOT_FOUND');
+		$this->error_check("app.php/idea/0?sid=$this->sid", 'IDEA_NOT_FOUND');
 
 		// Try to post new idea when not logged in
-		$this->error_check("app.php/ideas/post?sid={$this->sid}", 'LOGGED_OUT');
+		$this->error_check("app.php/ideas/post?sid=$this->sid", 'LOGGED_OUT');
 
 		// Verify ideas controllers are no longer accessible when Ideas is unavailable
 		$this->disable_ideas();
-		$this->error_check("app.php/ideas?sid={$this->sid}", 'IDEAS_NOT_AVAILABLE');
-		$this->error_check("app.php/idea/1?sid={$this->sid}", 'IDEAS_NOT_AVAILABLE');
-		$this->error_check("app.php/ideas/list?sid={$this->sid}", 'IDEAS_NOT_AVAILABLE');
-		$this->error_check("app.php/ideas/post?sid={$this->sid}", 'IDEAS_NOT_AVAILABLE');
+		$this->error_check("app.php/ideas?sid=$this->sid", 'IDEAS_NOT_AVAILABLE');
+		$this->error_check("app.php/idea/1?sid=$this->sid", 'IDEAS_NOT_AVAILABLE');
+		$this->error_check("app.php/ideas/list?sid=$this->sid", 'IDEAS_NOT_AVAILABLE');
+		$this->error_check("app.php/ideas/post?sid=$this->sid", 'IDEAS_NOT_AVAILABLE');
 	}
 
 	/**
@@ -132,7 +132,7 @@ class ideas_test extends ideas_functional_base
 	public function create_idea($subject, $message)
 	{
 		// Visit Ideas post controller
-		$crawler = self::request('GET', "app.php/ideas/post?sid={$this->sid}");
+		$crawler = self::request('GET', "app.php/ideas/post?sid=$this->sid");
 
 		// Set the form field data
 		$form = $crawler->selectButton($this->lang('SUBMIT'))->form();

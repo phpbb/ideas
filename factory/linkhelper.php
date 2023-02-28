@@ -47,7 +47,7 @@ class linkhelper
 	{
 		$params = array('idea_id' => $idea_id);
 		$params = $mode ? array_merge($params, array('mode' => $mode)) : $params;
-		$params = $hash ? array_merge($params, array('hash' => generate_link_hash("{$mode}_{$idea_id}"))) : $params;
+		$params = $hash ? array_merge($params, array('hash' => generate_link_hash("{$mode}_$idea_id"))) : $params;
 
 		return $this->helper->route('phpbb_ideas_idea_controller', $params);
 	}

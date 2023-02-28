@@ -412,7 +412,7 @@ class idea extends base
 
 		// Process the username for the template now, so it is
 		// ready to use in AJAX responses and DOM injections.
-		$profile_url = append_sid(generate_board_url() . "/memberlist.{$this->php_ext}", array('mode' => 'viewprofile'));
+		$profile_url = append_sid(generate_board_url() . "/memberlist.$this->php_ext", array('mode' => 'viewprofile'));
 		foreach ($rows as &$row)
 		{
 			$row['user'] = get_username_string('full', $row['user_id'], $row['username'], $row['user_colour'], false, $profile_url);
