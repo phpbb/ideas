@@ -42,16 +42,13 @@ class admin_controller
 	/** @var string */
 	protected $php_ext;
 
-	/** @var array */
-	protected $cfg_array = array();
-
 	/** @var string */
 	public $u_action;
 
 	/**
 	 * Constructor
 	 *
-	 * @param \phpbb\config\config              $config               Config object
+	 * @param \phpbb\config\config                $config               Config object
 	 * @param \phpbb\db\driver\driver_interface $db                   Database object
 	 * @param \phpbb\language\language          $language             Language object
 	 * @param \phpbb\log\log                    $log                  Log object
@@ -101,11 +98,6 @@ class admin_controller
 	{
 		$errors = array();
 
-		// This method is called on submit, so set flag to true initially
-		$submit = true;
-
-		$this->cfg_array = $this->request->variable('config', array('' => ''), true);
-
 		// Check the form for validity
 		if (!check_form_key('acp_phpbb_ideas_settings'))
 		{
@@ -115,36 +107,34 @@ class admin_controller
 		// Don't save settings if errors have occurred
 		if (count($errors))
 		{
-			$submit = false;
-
 			$this->template->assign_vars(array(
 				'S_ERROR'	=> true,
 				'ERROR_MSG'	=> implode('<br />', $errors),
 			));
+
+			return;
 		}
 
-		if ($submit)
+		$cfg_array = $this->request->variable('config', array('' => ''));
+
+		// Configuration options to list through
+		$display_vars = array(
+			'ideas_forum_id',
+		);
+
+		// We go through the display_vars to make sure no one is trying to set variables he/she is not allowed to
+		foreach ($display_vars as $config_name)
 		{
-			// Configuration options to list through
-			$display_vars = array(
-				'ideas_forum_id',
-				'ideas_forum_setup',
-			);
-
-			// We go through the display_vars to make sure no one is trying to set variables he/she is not allowed to
-			foreach ($display_vars as $config_name)
+			if (!isset($cfg_array[$config_name]))
 			{
-				if (!isset($this->cfg_array[$config_name]))
-				{
-					continue;
-				}
-
-				$this->config->set($config_name, $this->cfg_array[$config_name]);
-
+				continue;
 			}
-			$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'ACP_PHPBB_IDEAS_SETTINGS_LOG');
-			trigger_error($this->language->lang('ACP_IDEAS_SETTINGS_UPDATED') . adm_back_link($this->u_action));
+
+			$this->config->set($config_name, $cfg_array[$config_name]);
 		}
+
+		$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'ACP_PHPBB_IDEAS_SETTINGS_LOG');
+		trigger_error($this->language->lang('ACP_IDEAS_SETTINGS_UPDATED') . adm_back_link($this->u_action));
 	}
 
 	/**

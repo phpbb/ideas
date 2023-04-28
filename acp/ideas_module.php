@@ -41,6 +41,7 @@ class ideas_module
 		$request = $phpbb_container->get('request');
 
 		// Get an instance of the admin controller
+		/** @var \phpbb\ideas\controller\admin_controller $admin_controller */
 		$admin_controller = $phpbb_container->get('phpbb.ideas.admin.controller');
 
 		// Add the phpBB Ideas ACP lang file
@@ -58,7 +59,7 @@ class ideas_module
 			$admin_controller->set_config_options();
 		}
 
-		// Set Ideas forum  options and registered usergroup forum permissions
+		// Set Ideas forum  options and registered user group forum permissions
 		if ($request->is_set_post('ideas_forum_setup'))
 		{
 			$admin_controller->set_ideas_forum_options();
