@@ -52,6 +52,6 @@ class ideas_status_icon extends \Twig\Extension\AbstractExtension
 			ext::$statuses['INVALID']     => 'fa-ban',
 		];
 
-		return isset($icons[$args[0]]) ? $icons[$args[0]] : '';
+		return $icons[$args[0]] ?? '';
 	}
 }

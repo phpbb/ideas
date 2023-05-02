@@ -103,7 +103,7 @@ abstract class base
 	 * Check if Ideas is properly configured after installation
 	 * Ideas is available only after forum settings have been set in ACP
 	 *
-	 * @return bool Depending on whether or not the extension is properly configured
+	 * @return bool Depending on whether the extension is properly configured
 	 */
 	public function is_available()
 	{
@@ -135,7 +135,7 @@ abstract class base
 				'POINTS'     => $row['idea_votes_up'] - $row['idea_votes_down'], // (not currently implemented)
 				'STATUS'     => $row['idea_status'], // for status icons (not currently implemented)
 				'LOCKED'     => $row['topic_status'] == ITEM_LOCKED,
-				'U_UNAPPROVED_IDEA'	=> (($row['topic_visibility'] == ITEM_UNAPPROVED || $row['topic_visibility'] == ITEM_REAPPROVE) && $this->auth->acl_get('m_approve', $this->config['ideas_forum_id'])) ? append_sid("{$this->root_path}mcp.{$this->php_ext}", 'i=queue&amp;mode=approve_details&amp;t=' . $row['topic_id'], true, $this->user->session_id) : '',
+				'U_UNAPPROVED_IDEA'	=> (($row['topic_visibility'] == ITEM_UNAPPROVED || $row['topic_visibility'] == ITEM_REAPPROVE) && $this->auth->acl_get('m_approve', $this->config['ideas_forum_id'])) ? append_sid("{$this->root_path}mcp.$this->php_ext", 'i=queue&amp;mode=approve_details&amp;t=' . $row['topic_id'], true, $this->user->session_id) : '',
 			));
 		}
 	}
@@ -148,8 +148,8 @@ abstract class base
 	protected function display_common_vars()
 	{
 		$this->template->assign_vars([
-			'S_DISPLAY_SEARCHBOX'	=> (bool) $this->auth->acl_get('u_search') && $this->auth->acl_get('f_search', $this->config['ideas_forum_id']) && $this->config['load_search'],
-			'S_SEARCHBOX_ACTION'	=> append_sid("{$this->root_path}search.{$this->php_ext}"),
+			'S_DISPLAY_SEARCHBOX'	=> $this->auth->acl_get('u_search') && $this->auth->acl_get('f_search', $this->config['ideas_forum_id']) && $this->config['load_search'],
+			'S_SEARCHBOX_ACTION'	=> append_sid("{$this->root_path}search.$this->php_ext"),
 			'S_SEARCH_IDEAS_HIDDEN_FIELDS'	=> build_hidden_fields(['fid' => [$this->config['ideas_forum_id']]]),
 
 			'U_SEARCH_MY_IDEAS' 	=> $this->helper->route('phpbb_ideas_list_controller', ['sort' => ext::SORT_MYIDEAS, 'status' => '-1']),

@@ -58,6 +58,8 @@ class ext extends \phpbb\extension\base
 	 * Check whether the extension can be enabled.
 	 *
 	 * Requires phpBB >= 3.2.3 due to removal of deprecated Twig functions (ie Twig_SimpleFunction)
+	 * Requires phpBB >= 3.3.0 due to use of PHP 7 features
+	 * Requires PHP >= 7.1.0
 	 * Also incompatible with SQLite which does not support SQRT in SQL queries
 	 *
 	 * @return bool
@@ -65,7 +67,7 @@ class ext extends \phpbb\extension\base
 	 */
 	public function is_enableable()
 	{
-		if (phpbb_version_compare(PHPBB_VERSION, '3.2.3', '<'))
+		if (PHP_VERSION_ID < 70100 || phpbb_version_compare(PHPBB_VERSION, '3.3.0', '<'))
 		{
 			return false;
 		}

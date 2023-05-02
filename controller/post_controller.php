@@ -39,7 +39,7 @@ class post_controller extends base
 			'f'		=> $this->config['ideas_forum_id'],
 		];
 
-		$url = append_sid(generate_board_url() . "/posting.{$this->php_ext}", $params, false);
+		$url = append_sid(generate_board_url() . "/posting.$this->php_ext", $params, false);
 
 		return new RedirectResponse($url);
 	}

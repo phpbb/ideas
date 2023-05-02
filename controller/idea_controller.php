@@ -61,7 +61,7 @@ class idea_controller extends base
 			$params = array_merge($params, array('view' => 'unread'));
 		}
 
-		$url = append_sid(generate_board_url() . "/viewtopic.{$this->php_ext}", $params, false) . ($unread ? '#unread' : '');
+		$url = append_sid(generate_board_url() . "/viewtopic.$this->php_ext", $params, false) . ($unread ? '#unread' : '');
 
 		return new RedirectResponse($url);
 	}
@@ -131,7 +131,7 @@ class idea_controller extends base
 	/**
 	 * Remove vote action (remove a user's vote from an idea)
 	 *
-	 * @return mixed Array of vote data, an error message, or false if failed
+	 * @return array|false|string Array of vote data, an error message, or false if failed
 	 * @access public
 	 */
 	public function removevote()
@@ -226,7 +226,7 @@ class idea_controller extends base
 	/**
 	 * Vote action (sets an idea's vote)
 	 *
-	 * @return mixed Array of vote data, an error message, or false if failed
+	 * @return array|false|string Array of vote data, an error message, or false if failed
 	 * @access public
 	 */
 	public function vote()
