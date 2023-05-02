@@ -2,7 +2,7 @@
 <noscript>
 	<div class="rules">
 		<div class="inner">
-			<strong>{{ lang('JS_DISABLED') }}:</strong><br />{{ lang('ENABLE_JS') }}
+			<strong>{{ lang('JS_DISABLED') }}:</strong><br>{{ lang('ENABLE_JS') }}
 		</div>
 	</div>
 </noscript>
@@ -43,27 +43,27 @@
 				{% if IDEA_RFC %}
 					<div class="status-item flex-box flex-align-end">
 						{{ lang('RFC') ~ lang('COLON') }}
-						<a id="rfclink" href="{{ IDEA_RFC }}" style="{% if not IDEA_RFC %}display:none;{% endif %}overflow:hidden;text-overflow:ellipsis;white-space:nowrap;{% if S_CAN_EDIT %}max-width:75%;{% endif %}">{{ lang('RFC_LINK_TEXT') }}</a>
+						<label for="rfceditinput"><a id="rfclink" href="{{ IDEA_RFC }}" style="{% if not IDEA_RFC %}display:none;{% endif %}overflow:hidden;text-overflow:ellipsis;white-space:nowrap;{% if S_CAN_EDIT %}max-width:75%;{% endif %}">{{ lang('RFC_LINK_TEXT') }}</a></label>
 						{% if S_CAN_EDIT %}
 							<a href="{{ U_EDIT_RFC }}" id="rfcedit""><span class="icon-edit{{ not IDEA_RFC ? ' hidden' }}">{{ Icon('iconify', 'fa:pencil', lang('EDIT'), false, 'icon-fix') }}</span><span class="icon-add{{ IDEA_RFC ? ' hidden' }}">{{ Icon('iconify', 'fa:plus-circle', lang('ADD'), false, 'icon-fix') }}</span></a>
-							<input type="text" id="rfceditinput" class="ideainput" value="{{ IDEA_RFC }}" data-l-err="{{ lang('ERROR') }}" data-l-msg="{{ lang('RFC_ERROR') }}" />
+							<input type="text" id="rfceditinput" class="ideainput" value="{{ IDEA_RFC }}" data-l-err="{{ lang('ERROR') }}" data-l-msg="{{ lang('RFC_ERROR') }}">
 						{% endif %}
 					</div>
 				{% endif %}
 				{% if IDEA_TICKET or S_CAN_EDIT %}
 					<div class="status-item flex-box flex-align-end">
 						{{ lang('TICKET') ~ lang('COLON') }}
-						<a id="ticketlink" {% if IDEA_TICKET %}href="https://tracker.phpbb.com/browse/PHPBB3-{{ IDEA_TICKET }}">PHPBB3-{{ IDEA_TICKET }}{% else %}style="display:none">{% endif %}</a>
+						<label for="ticketeditinput"><a id="ticketlink" {% if IDEA_TICKET %}href="https://tracker.phpbb.com/browse/PHPBB3-{{ IDEA_TICKET }}">PHPBB3-{{ IDEA_TICKET }}{% else %}style="display:none">{% endif %}</a></label>
 						{% if S_CAN_EDIT %}
 						<a href="{{ U_EDIT_TICKET }}" id="ticketedit""><span class="icon-edit{{ not IDEA_TICKET ? ' hidden' }}">{{ Icon('iconify', 'fa:pencil', lang('EDIT'), false, 'icon-fix') }}</span><span class="icon-add{{ IDEA_TICKET ? ' hidden' }}">{{ Icon('iconify', 'fa:plus-circle', lang('ADD'), false, 'icon-fix') }}</span></a>
-							<input type="text" id="ticketeditinput" class="ideainput"{% if IDEA_TICKET %} value="PHPBB3-{{ IDEA_TICKET }}"{% endif %} placeholder="PHPBB3-#####" data-l-err="{{ lang('ERROR') }}" data-l-msg="{{ lang('TICKET_ERROR') }}" />
+							<input type="text" id="ticketeditinput" class="ideainput"{% if IDEA_TICKET %} value="PHPBB3-{{ IDEA_TICKET }}"{% endif %} placeholder="PHPBB3-#####" data-l-err="{{ lang('ERROR') }}" data-l-msg="{{ lang('TICKET_ERROR') }}">
 						{% endif %}
 					</div>
 				{% endif %}
 				{% if IDEA_DUPLICATE or S_IS_MOD %}
 					<div class="status-item flex-box flex-align-end duplicatetoggle" {% if IDEA_STATUS_ID != STATUS_ARY.DUPLICATE %}style="display:none"{% endif %}>
 						{{ lang('DUPLICATE') ~ lang('COLON') }}
-						<a id="duplicatelink" data-link="{{ U_IDEA_DUPLICATE }}" {% if IDEA_DUPLICATE %}href="{{ U_IDEA_DUPLICATE }}">{{ IDEA_DUPLICATE }}{% else %}style="display:none">{% endif %}</a>
+						<label for="duplicateeditinput"><a id="duplicatelink" data-link="{{ U_IDEA_DUPLICATE }}" {% if IDEA_DUPLICATE %}href="{{ U_IDEA_DUPLICATE }}">{{ IDEA_DUPLICATE }}{% else %}style="display:none">{% endif %}</a></label>
 						{% if S_IS_MOD %}
 							<a href="{{ U_EDIT_DUPLICATE }}" id="duplicateedit""><span class="icon-edit{{ not IDEA_DUPLICATE ? ' hidden' }}">{{ Icon('iconify', 'fa:pencil', lang('EDIT'), false, 'icon-fix') }}</span><span class="icon-add{{ IDEA_DUPLICATE ? ' hidden' }}">{{ Icon('iconify', 'fa:plus-circle', lang('ADD'), false, 'icon-fix') }}</span></a>
 							<div class="dropdown-container dropdown-{{ S_CONTENT_FLOW_END }}">
@@ -96,10 +96,10 @@
 				{% if IDEA_IMPLEMENTED or S_IS_MOD %}
 					<div class="status-item flex-box flex-align-end implementedtoggle" {% if IDEA_STATUS_ID != STATUS_ARY.IMPLEMENTED %}style="display:none"{% endif %}>
 						{{ lang('IMPLEMENTED_VERSION') ~ lang('COLON') }}
-						<span id="implementedversion"{% if not IDEA_IMPLEMENTED %} style="display:none;"{% endif %}>{{ IDEA_IMPLEMENTED }}</span>
+						<label for="implementededitinput"><span id="implementedversion"{% if not IDEA_IMPLEMENTED %} style="display:none;"{% endif %}>{{ IDEA_IMPLEMENTED }}</span></label>
 						{% if S_IS_MOD %}
 							<a href="{{ U_EDIT_IMPLEMENTED }}" id="implementededit""><span class="icon-edit{{ not IDEA_IMPLEMENTED ? ' hidden' }}">{{ Icon('iconify', 'fa:pencil', lang('EDIT'), false, 'icon-fix') }}</span><span class="icon-add{{ IDEA_IMPLEMENTED ? ' hidden' }}">{{ Icon('iconify', 'fa:plus-circle', lang('ADD'), false, 'icon-fix') }}</span></a>
-							<input type="text" id="implementededitinput" class="ideainput"{% if IDEA_IMPLEMENTED %} value="{{ IDEA_IMPLEMENTED }}"{% endif %} placeholder="3.x.x" data-l-err="{{ lang('ERROR') }}" data-l-msg="{{ lang('IMPLEMENTED_ERROR') }}" />
+							<input type="text" id="implementededitinput" class="ideainput"{% if IDEA_IMPLEMENTED %} value="{{ IDEA_IMPLEMENTED }}"{% endif %} placeholder="3.x.x" data-l-err="{{ lang('ERROR') }}" data-l-msg="{{ lang('IMPLEMENTED_ERROR') }}">
 						{% endif %}
 					</div>
 				{% endif %}

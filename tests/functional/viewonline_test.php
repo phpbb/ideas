@@ -21,14 +21,14 @@ class viewonline_test extends ideas_functional_base
 	public function test_viewonline_visit_ideas()
 	{
 		$this->login();
-		$crawler = self::request('GET', "app.php/ideas?sid={$this->sid}");
+		$crawler = self::request('GET', "app.php/ideas?sid=$this->sid");
 		$this->assertContainsLang('IDEAS_TITLE', $crawler->filter('h2')->text());
 	}
 
 	/**
 	* Test viewonline page for admin
 	*
-	* We use a second function here, so we get a new session and can login
+	* We use a second function here, so we get a new session and can log in
 	* without having to log out "admin" first.
 	*
 	* @depends test_viewonline_visit_ideas
@@ -38,7 +38,7 @@ class viewonline_test extends ideas_functional_base
 		// Create user1 and send them to the Viewonline
 		$this->create_user('user1');
 		$this->login('user1');
-		$crawler = self::request('GET', "viewonline.php?sid={$this->sid}");
+		$crawler = self::request('GET', "viewonline.php?sid=$this->sid");
 
 		// Is admin still viewing Ideas page
 		self::assertStringContainsString('admin', $crawler->filter('#page-body table.table1')->text());

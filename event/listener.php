@@ -166,7 +166,7 @@ class listener implements EventSubscriberInterface
 		}
 
 		$points = $idea['idea_votes_up'] - $idea['idea_votes_down'];
-		$can_vote = (bool) ($idea['idea_status'] != ext::$statuses['IMPLEMENTED'] &&
+		$can_vote = ($idea['idea_status'] != ext::$statuses['IMPLEMENTED'] &&
 			$idea['idea_status'] != ext::$statuses['DUPLICATE'] &&
 			$this->auth->acl_get('f_vote', (int) $this->config['ideas_forum_id']) &&
 			$event['topic_data']['topic_status'] != ITEM_LOCKED);
@@ -343,7 +343,7 @@ class listener implements EventSubscriberInterface
 
 		$this->idea->submit($event['data']);
 
-		// Show users who's posts need approval a special message
+		// Show users whose posts need approval a special message
 		if (!$this->auth->acl_get('f_noapprove', $event['data']['forum_id']))
 		{
 			// Using refresh and trigger error because we can't throw http_exceptions from posting.php

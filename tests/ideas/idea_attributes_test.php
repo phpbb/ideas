@@ -82,7 +82,7 @@ class idea_attributes_test extends ideas_base
 				array(
 					'idea_id'		=> 1,
 					'duplicate_id'	=> 2,
-					'rfc_link'		=> 'http://area51.phpbb.com/phpBB/viewtopic.php?foo&bar',
+					'rfc_link'		=> 'https://area51.phpbb.com/phpBB/viewtopic.php?foo&bar',
 					'implemented_version' => '3.1.0',
 					'ticket_id'		=> 1111,
 					'idea_title'	=> 'Foo Idea 1',
@@ -188,7 +188,7 @@ class idea_attributes_test extends ideas_base
 	 * @param string $attribute The name of the attribute
 	 * @param array  $data      The test data array
 	 * @param bool   $expected  The expected result returned by method
-	 * @return mixed The idea data array, or false if error
+	 * @return array|false The idea data array, or false if error
 	 */
 	public function set_attribute_test($call, $attribute, $data, $expected)
 	{

@@ -107,7 +107,7 @@ class clean_old_ideas extends \phpbb\textreparser\row_based_plugin
 			"<br/>\n<br/>\nPosted by "
 		], ['', '', ''], $text);
 
-		// Save the new text if it has changed and it's not a dry run
+		// Save the new text if it has changed, and it's not a dry run
 		if ($text !== $record['text'] && $this->save_changes)
 		{
 			$record['text'] = $text;

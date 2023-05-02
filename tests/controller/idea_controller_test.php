@@ -91,7 +91,7 @@ class idea_controller_test extends \phpbb\ideas\tests\controller\controller_base
 			->with(self::anything())
 			->willReturnMap(array(
 				array('mode', '', false, \phpbb\request\request_interface::REQUEST, $mode),
-				array('hash', '', false, \phpbb\request\request_interface::REQUEST, generate_link_hash("{$mode}_{$idea_id}")),
+				array('hash', '', false, \phpbb\request\request_interface::REQUEST, generate_link_hash("{$mode}_$idea_id")),
 				array('status', 0, false, \phpbb\request\request_interface::REQUEST, 1),
 				array('v', 1, false, \phpbb\request\request_interface::REQUEST, 1),
 			));
