@@ -1,7 +1,7 @@
 <div class="action-bar bar-top">
 	{% if not S_IS_BOT %}
 		<a href="{{ U_POST_ACTION }}" class="button" title="{{ lang('NEW_IDEA') }}">
-			<span>{{ lang('NEW_IDEA') }}</span>{{ Icon('iconify', 'fa-regular:lightbulb', '', true, 'c-button-icon') }}
+			<span>{{ lang('NEW_IDEA') }}</span>{{ Icon('font', 'lightbulb', '', true, 'far c-button-icon') }}
 		</a>
 	{% endif %}
 
@@ -11,10 +11,10 @@
 				<fieldset>
 					<input class="inputbox search tiny" type="search" name="keywords" id="search_keywords" size="20" placeholder="{{ lang('SEARCH_IDEAS') }}">
 					<button class="button button-search" type="submit" title="{{ lang('SEARCH') }}">
-						{{ Icon('iconify', 'fa:search', lang('SEARCH'), true, 'c-button-icon') }}
+						{{ Icon('font', 'search', lang('SEARCH'), true, 'c-button-icon') }}
 					</button>
 					<a href="{{ U_SEARCH }}" class="button button-search-end" title="{{ lang('SEARCH_ADV') }}">
-						{{ Icon('iconify', 'fa:cog', lang('SEARCH_ADV'), true, 'c-button-icon') }}
+						{{ Icon('font', 'gear', lang('SEARCH_ADV'), true, 'c-button-icon') }}
 					</a>
 					{{ S_SEARCH_IDEAS_HIDDEN_FIELDS }}
 				</fieldset>

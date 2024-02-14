@@ -78,11 +78,11 @@ class status_icon_test extends \phpbb_template_template_test_case
 	{
 		return [
 			[0, ''],
-			[1, 'fa:lightbulb-o'],
-			[2, 'fa:code-fork'],
-			[3, 'fa:check'],
-			[4, 'fa:files-o'],
-			[5, 'fa:ban'],
+			[1, 'lightbulb'],
+			[2, 'code-fork'],
+			[3, 'check'],
+			[4, 'copy'],
+			[5, 'ban'],
 		];
 	}
 
