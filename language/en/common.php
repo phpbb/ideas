@@ -84,9 +84,9 @@ $lang = array_merge($lang, array(
 	'STATUS'				=> 'Status',
 
 	'TICKET'				=> 'Ticket',
-	'TICKET_ERROR'			=> 'Ticket ID must be of the format “PHPBB3-#####”.',
+	'TICKET_ERROR'			=> 'Ticket ID must be of the format “PHPBB-#####” or “PHPBB3-#####”.',
 	'TICKET_ERROR_DUP'		=> 'You must click on an idea title from the live search results. To delete the duplicate, clear the field and press ENTER. To exit this field press ESC.',
-	'TOP'                   => 'Top',
+	'TOP'					=> 'Top',
 	'TOP_IDEAS'				=> 'Top Ideas',
 	'TOTAL_IDEAS'			=> [
 		1	=> '%d idea',

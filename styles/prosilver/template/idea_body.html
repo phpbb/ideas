@@ -53,10 +53,10 @@
 				{% if IDEA_TICKET or S_CAN_EDIT %}
 					<div class="status-item flex-box flex-align-end">
 						{{ lang('TICKET') ~ lang('COLON') }}
-						<label for="ticketeditinput"><a id="ticketlink" {% if IDEA_TICKET %}href="https://tracker.phpbb.com/browse/PHPBB3-{{ IDEA_TICKET }}">PHPBB3-{{ IDEA_TICKET }}{% else %}style="display:none">{% endif %}</a></label>
+						<label for="ticketeditinput"><a id="ticketlink" {% if IDEA_TICKET %}href="https://tracker.phpbb.com/browse/PHPBB-{{ IDEA_TICKET }}">PHPBB-{{ IDEA_TICKET }}{% else %}style="display:none">{% endif %}</a></label>
 						{% if S_CAN_EDIT %}
 							<a href="{{ U_EDIT_TICKET }}" id="ticketedit" data-l-add="{{ lang('ADD') }}" data-l-edit="{{ lang('EDIT') }}">{% if IDEA_TICKET %}<i class="icon fa-fw fa-pencil"></i>{{ lang('EDIT') }}{% else %}<i class="icon fa-fw fa-plus-circle"></i>{{ lang('ADD') }}{% endif %}</a>
-							<input type="text" id="ticketeditinput" class="ideainput"{% if IDEA_TICKET %} value="PHPBB3-{{ IDEA_TICKET }}"{% endif %} placeholder="PHPBB3-#####" data-l-err="{{ lang('ERROR') }}" data-l-msg="{{ lang('TICKET_ERROR') }}">
+							<input type="text" id="ticketeditinput" class="ideainput"{% if IDEA_TICKET %} value="PHPBB-{{ IDEA_TICKET }}"{% endif %} placeholder="PHPBB-#####" data-l-err="{{ lang('ERROR') }}" data-l-msg="{{ lang('TICKET_ERROR') }}">
 						{% endif %}
 					</div>
 				{% endif %}
