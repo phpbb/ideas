@@ -224,13 +224,13 @@
 				value = $this.val(),
 				info;
 
-			if (value && !(info = /^PHPBB3-(\d{1,6})$/.exec(value))) {
+			if (value && !(info = /^PHPBB3?-(\d{1,6})$/.exec(value))) {
 				phpbb.alert($this.attr('data-l-err'), $this.attr('data-l-msg'));
 				return;
 			}
 
 			if (value) {
-				value = 'PHPBB3-' + info[1];
+				value = 'PHPBB-' + info[1];
 			}
 
 			showLoadingIndicator();
