@@ -67,7 +67,7 @@ class ext extends \phpbb\extension\base
 	 */
 	public function is_enableable()
 	{
-		if (PHP_VERSION_ID < 70100 || phpbb_version_compare(PHPBB_VERSION, '3.3.0', '<'))
+		if (PHP_VERSION_ID < 70100 || phpbb_version_compare(PHPBB_VERSION, '3.3.0', '<') || phpbb_version_compare(PHPBB_VERSION, '4.0.0-dev', '>='))
 		{
 			return false;
 		}
