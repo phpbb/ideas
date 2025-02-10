@@ -54,7 +54,7 @@ $lang = array_merge($lang, array(
 
 	'LATEST_IDEAS'			=> 'Latest Ideas',
 	'LIST_DUPLICATE'		=> 'Duplicate ideas',
-	'LIST_EGOSEARCH'		=> 'Your ideas',
+	'LIST_EGOSEARCH'		=> 'My ideas',
 	'LIST_IMPLEMENTED'		=> 'Implemented ideas',
 	'LIST_IN_PROGRESS'		=> 'In Progress ideas',
 	'LIST_INVALID'			=> 'Invalid ideas',
