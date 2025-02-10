@@ -90,7 +90,7 @@ class clean_old_ideas extends \phpbb\textreparser\row_based_plugin
 	/**
 	 * {@inheritdoc}
 	 */
-	protected function reparse_record(array $record)
+	protected function reparse_record(array $record, bool $force_bbcode_reparsing = false)
 	{
 		$text = $record['text'];
 
