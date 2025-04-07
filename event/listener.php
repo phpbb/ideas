@@ -82,6 +82,7 @@ class listener implements EventSubscriberInterface
 	public static function getSubscribedEvents()
 	{
 		return array(
+			'core.page_header'							=> 'global_template_vars',
 			'core.viewforum_get_topic_data'				=> 'ideas_forum_redirect',
 			'core.viewtopic_modify_post_row'			=> 'show_post_buttons',
 			'core.viewtopic_modify_page_title'			=> 'show_idea',
@@ -91,6 +92,22 @@ class listener implements EventSubscriberInterface
 			'core.posting_modify_submit_post_before'	=> 'submit_idea_before',
 			'core.posting_modify_submit_post_after'		=> [['submit_idea_after'], ['edit_idea_title']],
 		);
+	}
+
+	/**
+	 * Assign global template variables
+	 *
+	 * @return void
+	 */
+	public function global_template_vars()
+	{
+		if ($this->user->data['is_registered'] && !$this->user->data['is_bot'])
+		{
+			$this->template->assign_var(
+				'U_SEARCH_MY_IDEAS',
+				$this->helper->route('phpbb_ideas_list_controller', ['sort' => ext::SORT_MYIDEAS, 'status' => '-1'])
+			);
+		}
 	}
 
 	/**
@@ -223,7 +240,6 @@ class listener implements EventSubscriberInterface
 			'U_IDEA_VOTE'		=> $this->link_helper->get_idea_link($idea['idea_id'], 'vote', true),
 			'U_IDEA_DUPLICATE'	=> $this->link_helper->get_idea_link($idea['duplicate_id']),
 			'U_IDEA_STATUS_LINK'=> $this->helper->route('phpbb_ideas_list_controller', ['status' => $idea['idea_status']]),
-			'U_SEARCH_MY_IDEAS' => $this->helper->route('phpbb_ideas_list_controller', ['sort' => ext::SORT_MYIDEAS, 'status' => '-1']),
 			'U_TITLE_LIVESEARCH'=> $this->helper->route('phpbb_ideas_livesearch_controller'),
 		));
 

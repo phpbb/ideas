@@ -106,6 +106,7 @@ class listener_test extends \phpbb_test_case
 	public function test_getSubscribedEvents()
 	{
 		self::assertEquals(array(
+			'core.page_header',
 			'core.viewforum_get_topic_data',
 			'core.viewtopic_modify_post_row',
 			'core.viewtopic_modify_page_title',
@@ -115,6 +116,36 @@ class listener_test extends \phpbb_test_case
 			'core.posting_modify_submit_post_before',
 			'core.posting_modify_submit_post_after',
 		), array_keys(\phpbb\ideas\event\listener::getSubscribedEvents()));
+	}
+
+	public function global_template_vars_data()
+	{
+		return [
+			'registered user' => [true, false, true],
+			'unregistered user' => [false, false, false],
+			'is bot user' => [true, true, false],
+			'is bot guest' => [false, true, false],
+		];
+	}
+
+	/**
+	 * @dataProvider global_template_vars_data
+	 */
+	public function test_global_template_vars($is_registered, $is_bot, $expected)
+	{
+		$this->user->data['is_registered'] = $is_registered;
+		$this->user->data['is_bot'] = $is_bot;
+
+		$this->helper->expects($expected ? $this->once() : $this->never())
+			->method('route')
+			->willReturn('phpbb_ideas_list_controller');
+
+		$this->template->expects($expected ? $this->once() : $this->never())
+			->method('assign_var')
+			->with('U_SEARCH_MY_IDEAS', 'phpbb_ideas_list_controller');
+
+		$listener = $this->get_listener();
+		$listener->global_template_vars();
 	}
 
 	public function show_idea_data()

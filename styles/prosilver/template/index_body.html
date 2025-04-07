@@ -23,8 +23,7 @@
 				</dl>
 			</li>
 		</ul>
-		{% set ideas = top_ideas %}
-		{% include '@phpbb_ideas/index_list.html' %}
+		{% include '@phpbb_ideas/index_list.html' with {ideas: top_ideas} %}
 	</div>
 </div>
 
@@ -45,8 +44,7 @@
 				</dl>
 			</li>
 		</ul>
-		{% set ideas = latest_ideas %}
-		{% include '@phpbb_ideas/index_list.html' %}
+		{% include '@phpbb_ideas/index_list.html' with {ideas: latest_ideas} %}
 	</div>
 </div>
 
@@ -67,8 +65,7 @@
 				</dl>
 			</li>
 		</ul>
-		{% set ideas = implemented_ideas %}
-		{% include '@phpbb_ideas/index_list.html' %}
+		{% include '@phpbb_ideas/index_list.html' with {ideas: implemented_ideas} %}
 	</div>
 </div>
 
