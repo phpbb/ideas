@@ -122,11 +122,13 @@ class acp_module_test extends \phpbb_test_case
 			->disableOriginalConstructor()
 			->getMock();
 
+		$form_helper = $this->createMock(\phpbb\form\form_helper::class);
+
 		$phpbb_container
-			->expects(self::exactly(3))
+			->expects(self::exactly(4))
 			->method('get')
-			->withConsecutive(['language'], ['request'], ['phpbb.ideas.admin.controller'])
-			->willReturnOnConsecutiveCalls($language, $request, $admin_controller);
+			->withConsecutive(['language'], ['request'], ['phpbb.ideas.admin.controller'], ['form_helper'])
+			->willReturnOnConsecutiveCalls($language, $request, $admin_controller, $form_helper);
 
 		// Add the phpBB Ideas ACP lang file
 		$language->expects(self::once())

@@ -19,8 +19,8 @@ class ext_test extends \phpbb_test_case
 			->disableOriginalConstructor()
 			->getMock();
 
-		/** @var \PHPUnit\Framework\MockObject\MockObject|\phpbb\finder $extension_finder */
-		$extension_finder = $this->getMockBuilder('\phpbb\finder')
+		/** @var \PHPUnit\Framework\MockObject\MockObject|\phpbb\finder\finder $extension_finder */
+		$extension_finder = $this->getMockBuilder('\phpbb\finder\finder')
 			->disableOriginalConstructor()
 			->getMock();
 
