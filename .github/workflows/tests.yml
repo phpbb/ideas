@@ -227,7 +227,7 @@ jobs:
               run: |
                   if [ $COVERAGE == '1' ]
                   then
-                      phpBB/vendor/bin/phpunit --configuration phpBB/ext/$EXTNAME/.github/phpunit-$DB-github.xml --bootstrap ./tests/bootstrap.php --coverage-clover build/logs/clover.xml --testsuite 'phpBB Test Suite'
+                      phpBB/vendor/bin/phpunit --configuration phpBB/ext/$EXTNAME/.github/phpunit-$DB-github.xml --bootstrap ./tests/bootstrap.php --coverage-clover build/logs/clover.xml
                   else
                       phpBB/vendor/bin/phpunit --configuration phpBB/ext/$EXTNAME/.github/phpunit-$DB-github.xml --bootstrap ./tests/bootstrap.php
                   fi
@@ -362,8 +362,8 @@ jobs:
         strategy:
             matrix:
                 include:
-#                    - php: '7.2'
-#                      db: "sqlite3"
+                    - php: '7.2'
+                      db: "sqlite3"
                     - php: '7.2'
                       db: "mcr.microsoft.com/mssql/server:2019-CU27-ubuntu-20.04"
                       db_alias: 'MSSQL 2019'
