@@ -134,8 +134,9 @@ class ideas extends base
 		else
 		{
 			// https://www.evanmiller.org/how-not-to-sort-by-average-rating.html
+			// switched SQRT(x) to POWER(x, 0.5) for SQLITE3 support
 			$this->sql['SELECT'][] = '((i.idea_votes_up + 1.9208) / (i.idea_votes_up + i.idea_votes_down) -
-				1.96 * SQRT((i.idea_votes_up * i.idea_votes_down) / (i.idea_votes_up + i.idea_votes_down) + 0.9604) /
+				1.96 * POWER((i.idea_votes_up * i.idea_votes_down) / (i.idea_votes_up + i.idea_votes_down) + 0.9604, 0.5) /
 				(i.idea_votes_up + i.idea_votes_down)) / (1 + 3.8416 / (i.idea_votes_up + i.idea_votes_down))
 				AS ci_lower_bound';
 
