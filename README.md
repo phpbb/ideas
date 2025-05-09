@@ -2,7 +2,8 @@
 
 The official Ideas Centre used at [phpBB.com](https://www.phpbb.com/ideas/). This phpBB extension lets phpBB.com community members propose and vote on ideas to improve and enhance phpBB software.
 
-[![Build Status](https://github.com/phpbb/ideas/workflows/Tests/badge.svg)](https://github.com/phpbb/ideas/actions)
+[![Build Status](https://github.com/phpbb/ideas/actions/workflows/tests.yml/badge.svg)](https://github.com/phpbb/ideas/actions)
+[![codecov](https://codecov.io/gh/phpbb/ideas/graph/badge.svg?token=74AITS9CPZ)](https://codecov.io/gh/phpbb/ideas)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/phpbb/ideas/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/phpbb/ideas/?branch=master)
 
 ## Contribute

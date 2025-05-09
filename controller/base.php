@@ -13,7 +13,6 @@ namespace phpbb\ideas\controller;
 use phpbb\auth\auth;
 use phpbb\config\config;
 use phpbb\controller\helper;
-use phpbb\ideas\ext;
 use phpbb\ideas\factory\linkhelper;
 use phpbb\language\language;
 use phpbb\pagination;
@@ -151,8 +150,6 @@ abstract class base
 			'S_DISPLAY_SEARCHBOX'	=> $this->auth->acl_get('u_search') && $this->auth->acl_get('f_search', $this->config['ideas_forum_id']) && $this->config['load_search'],
 			'S_SEARCHBOX_ACTION'	=> append_sid("{$this->root_path}search.$this->php_ext"),
 			'S_SEARCH_IDEAS_HIDDEN_FIELDS'	=> build_hidden_fields(['fid' => [$this->config['ideas_forum_id']]]),
-
-			'U_SEARCH_MY_IDEAS' 	=> $this->helper->route('phpbb_ideas_list_controller', ['sort' => ext::SORT_MYIDEAS, 'status' => '-1']),
 		]);
 	}
 }

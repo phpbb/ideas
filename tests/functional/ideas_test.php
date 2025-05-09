@@ -75,14 +75,14 @@ class ideas_test extends ideas_functional_base
 
 		// Test my ideas list is empty when logged out
 		$crawler = self::request('GET', "app.php/ideas/list/egosearch?status=-1&sid=$this->sid");
-		$this->assertNotContainsLang('LIST_EGOSEARCH', $crawler->filter('#quick-links')->text());
+		$this->assertNotContainsLang('LIST_EGOSEARCH', $crawler->filter('#nav-main')->text());
 		$this->assertContainsLang('LIST_EGOSEARCH', $crawler->filter('h2')->text());
 		$this->assertContainsLang('NO_IDEAS_DISPLAY', $crawler->filter('.topiclist.forums')->text());
 
 		// Test my ideas list works when logged in
 		$this->login();
 		$crawler = self::request('GET', "app.php/ideas/list/egosearch?status=-1&sid=$this->sid");
-		$this->assertContainsLang('LIST_EGOSEARCH', $crawler->filter('#quick-links')->text());
+		$this->assertContainsLang('LIST_EGOSEARCH', $crawler->filter('#nav-main')->text());
 		$this->assertContainsLang('LIST_EGOSEARCH', $crawler->filter('h2')->text());
 		$this->assertNotContainsLang('NO_IDEAS_DISPLAY', $crawler->filter('.topiclist.forums')->text());
 	}

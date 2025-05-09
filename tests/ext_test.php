@@ -29,11 +29,6 @@ class ext_test extends \phpbb_test_case
 			->disableOriginalConstructor()
 			->getMock();
 
-		$container->expects(self::once())
-			->method('get')
-			->with('dbal.conn')
-			->willReturn($this->createMock('\phpbb\db\driver\driver_interface'));
-
 		$ext = new \phpbb\ideas\ext(
 			$container,
 			$extension_finder,
