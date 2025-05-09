@@ -60,19 +60,14 @@ class ext extends \phpbb\extension\base
 	 * Requires phpBB >= 3.2.3 due to removal of deprecated Twig functions (ie Twig_SimpleFunction)
 	 * Requires phpBB >= 3.3.0 due to use of PHP 7 features
 	 * Requires PHP >= 7.1.0
-	 * Also incompatible with SQLite which does not support SQRT in SQL queries
 	 *
 	 * @return bool
 	 * @access public
 	 */
 	public function is_enableable()
 	{
-		if (PHP_VERSION_ID < 70100 || phpbb_version_compare(PHPBB_VERSION, '3.3.0', '<') || phpbb_version_compare(PHPBB_VERSION, '4.0.0-dev', '>='))
-		{
-			return false;
-		}
-
-		$db = $this->container->get('dbal.conn');
-		return ($db->get_sql_layer() !== 'sqlite3');
+		return !(PHP_VERSION_ID < 70100 ||
+			phpbb_version_compare(PHPBB_VERSION, '3.3.0', '<') ||
+			phpbb_version_compare(PHPBB_VERSION, '4.0.0-dev', '>='));
 	}
 }
