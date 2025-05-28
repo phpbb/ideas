@@ -86,7 +86,7 @@ class idea_controller extends base
 			$this->entity->delete($this->data['idea_id'], $this->data['topic_id']);
 
 			$redirect = $this->helper->route('phpbb_ideas_index_controller');
-			$message = $this->language->lang('IDEA_DELETED') . '<br /><br />' . $this->language->lang('RETURN_IDEAS', '<a href="' . $redirect . '">', '</a>');
+			$message = $this->language->lang('IDEA_DELETED') . '<br><br>' . $this->language->lang('RETURN_IDEAS', '<a href="' . $redirect . '">', '</a>');
 			meta_refresh(3, $redirect);
 			trigger_error($message); // trigger error needed for data-ajax
 		}

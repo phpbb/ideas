@@ -17,13 +17,13 @@
 	<fieldset>
 		<legend>{{ lang('ACP_PHPBB_IDEAS_SETTINGS') }}</legend>
 		<dl>
-			<dt><label for="ideas_forum_id">{{ lang('ACP_IDEAS_FORUM_ID') ~ lang('COLON') }}</label><br /><span>{{ lang('ACP_IDEAS_FORUM_ID_EXPLAIN') }}</span></dt>
+			<dt><label for="ideas_forum_id">{{ lang('ACP_IDEAS_FORUM_ID') ~ lang('COLON') }}</label><br><span>{{ lang('ACP_IDEAS_FORUM_ID_EXPLAIN') }}</span></dt>
 			<dd>{{ S_FORUM_SELECT_BOX }}</dd>
 		</dl>
 
 		<fieldset class="submit-buttons">
-			<input class="button1" type="submit" id="submit" name="submit" value="{{ lang('SUBMIT') }}" />&nbsp;
-			<input class="button2" type="reset" id="reset" name="reset" value="{{ lang('RESET') }}" />
+			<input class="button1" type="submit" id="submit" name="submit" value="{{ lang('SUBMIT') }}">&nbsp;
+			<input class="button2" type="reset" id="reset" name="reset" value="{{ lang('RESET') }}">
 			{{ S_FORM_TOKEN }}
 		</fieldset>
 	</fieldset>
@@ -33,9 +33,9 @@
 	<fieldset>
 		<legend>{{ lang('ACP_IDEAS_UTILITIES') }}</legend>
 		<dl>
-			<dt><label for="ideas_forum_setup">{{ lang('ACP_IDEAS_FORUM_SETUP') ~ lang('COLON') }}</label><br /><span>{{ lang('ACP_IDEAS_FORUM_SETUP_EXPLAIN') }}</span></dt>
+			<dt><label for="ideas_forum_setup">{{ lang('ACP_IDEAS_FORUM_SETUP') ~ lang('COLON') }}</label><br><span>{{ lang('ACP_IDEAS_FORUM_SETUP_EXPLAIN') }}</span></dt>
 			<dd>
-				<input class="button2" type="submit" id="ideas_forum_setup" name="ideas_forum_setup" value="{{ lang('RUN') }}" {{ not S_IDEAS_FORUM_ID ? 'disabled' }} />
+				<input class="button2" type="submit" id="ideas_forum_setup" name="ideas_forum_setup" value="{{ lang('RUN') }}" {{ not S_IDEAS_FORUM_ID ? 'disabled' }}>
 			</dd>
 		</dl>
 	</fieldset>

@@ -109,7 +109,7 @@ class admin_controller
 		{
 			$this->template->assign_vars(array(
 				'S_ERROR'	=> true,
-				'ERROR_MSG'	=> implode('<br />', $errors),
+				'ERROR_MSG'	=> implode('<br>', $errors),
 			));
 
 			return;
