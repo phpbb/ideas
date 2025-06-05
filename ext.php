@@ -57,9 +57,8 @@ class ext extends \phpbb\extension\base
 	/**
 	 * Check whether the extension can be enabled.
 	 *
-	 * Requires phpBB >= 4.0.0 due to use of Icon())
+	 * Requires phpBB >= 4.0.0 due to use of Icon()
 	 * Requires PHP >= 8.1
-	 * Also incompatible with SQLite which does not support SQRT in SQL queries
 	 *
 	 * @return bool
 	 * @access public
