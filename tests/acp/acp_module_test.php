@@ -124,11 +124,16 @@ class acp_module_test extends \phpbb_test_case
 
 		$form_helper = $this->createMock(\phpbb\form\form_helper::class);
 
+		$services = ['language', 'request', 'phpbb.ideas.admin.controller', 'form_helper'];
+		$returns = [$language, $request, $admin_controller, $form_helper];
+		$callCount = 0;
 		$phpbb_container
 			->expects(self::exactly(4))
 			->method('get')
-			->withConsecutive(['language'], ['request'], ['phpbb.ideas.admin.controller'], ['form_helper'])
-			->willReturnOnConsecutiveCalls($language, $request, $admin_controller, $form_helper);
+			->willReturnCallback(function($service) use ($services, $returns, &$callCount) {
+				$this->assertEquals($services[$callCount], $service);
+				return $returns[$callCount++];
+			});
 
 		// Add the phpBB Ideas ACP lang file
 		$language->expects(self::once())
@@ -152,8 +157,15 @@ class acp_module_test extends \phpbb_test_case
 		{
 			$request->expects(self::exactly(2))
 				->method('is_set_post')
-				->withConsecutive(['submit'], ['ideas_forum_setup'])
-				->willReturnOnConsecutiveCalls(false, true);
+				->willReturnCallback(function($arg) {
+					if ($arg === 'submit') {
+						return false;
+					}
+					if ($arg === 'ideas_forum_setup') {
+						return true;
+					}
+					return 'Test assertions failed';
+				});
 		}
 
 		// Apply Ideas configuration settings
