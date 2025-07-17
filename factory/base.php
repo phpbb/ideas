@@ -90,7 +90,7 @@ class base
 		' . $this->db->sql_build_array('INSERT', $data);
 		$this->db->sql_query($sql);
 
-		return (int) $this->db->sql_nextid();
+		return (int) $this->db->sql_last_inserted_id();
 	}
 
 	/**
