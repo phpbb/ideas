@@ -132,5 +132,6 @@ services:
         calls:
             - [set_controller_helper, ['@controller.helper']]
             - [set_idea_factory, ['@phpbb.ideas.idea']]
+            - [set_config, ['@config']]
         tags:
             - { name: notification.type }

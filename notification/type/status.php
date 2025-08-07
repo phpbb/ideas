@@ -17,6 +17,9 @@ use phpbb\ideas\ext;
  */
 class status extends \phpbb\notification\type\base
 {
+	/** @var \phpbb\config\config */
+	protected $config;
+
 	/** @var \phpbb\controller\helper */
 	protected $helper;
 
@@ -48,6 +51,18 @@ class status extends \phpbb\notification\type\base
 	}
 
 	/**
+	 * Set the config object
+	 *
+	 * @param \phpbb\config\config $config
+	 *
+	 * @return void
+	 */
+	public function set_config(\phpbb\config\config $config)
+	{
+		$this->config = $config;
+	}
+
+	/**
 	 * Get notification type name
 	 *
 	 * @return string
@@ -74,7 +89,7 @@ class status extends \phpbb\notification\type\base
 	 */
 	public function is_available()
 	{
-		return true; //(bool) $this->config['ideas_forum_id'];
+		return (bool) $this->auth->acl_get('f_', $this->config['ideas_forum_id']);
 	}
 
 	/**
