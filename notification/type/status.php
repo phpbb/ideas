@@ -1,9 +1,9 @@
 <?php
 /**
  *
- * ideas. An extension for the phpBB Forum Software package.
+ * Ideas extension for the phpBB Forum Software package.
  *
- * @copyright (c) 2025
+ * @copyright (c) phpBB Limited <https://www.phpbb.com>
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
  */
@@ -39,7 +39,7 @@ class status extends \phpbb\notification\type\base
 	}
 
 	/**
-	 * Set the Idea helper
+	 * Set the Idea object
 	 *
 	 * @param \phpbb\ideas\factory\idea $idea
 	 *
@@ -97,7 +97,7 @@ class status extends \phpbb\notification\type\base
 	 *
 	 * @param array $type_data The type-specific data
 	 *
-	 * @return int Id of the notification
+	 * @return int ID of the notification
 	 */
 	public static function get_item_id($type_data)
 	{
@@ -109,7 +109,7 @@ class status extends \phpbb\notification\type\base
 	 *
 	 * @param array $type_data The type-specific data
 	 *
-	 * @return int Id of the parent
+	 * @return int ID of the parent
 	 */
 	public static function get_item_parent_id($type_data)
 	{
@@ -202,6 +202,17 @@ class status extends \phpbb\notification\type\base
 		return [];
 	}
 
+	/**
+	 * Pre create insert array function
+	 * This allows you to perform certain actions, like run a query
+	 * and load data, before create_insert_array() is run. The data
+	 * returned from this function will be sent to create_insert_array().
+	 *
+	 * @param array $type_data The type-specific data
+	 * @param array $notify_users Notify users list
+	 * 		Formatted from find_users_for_notification()
+	 * @return array Whatever you want to send to create_insert_array().
+	 */
 	public function pre_create_insert_array($type_data, $notify_users)
 	{
 		$pre_create_data = [];

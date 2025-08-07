@@ -1,9 +1,9 @@
 <?php
 /**
  *
- * ideas. An extension for the phpBB Forum Software package.
+ * Ideas extension for the phpBB Forum Software package.
  *
- * @copyright (c) 2025
+ * @copyright (c) phpBB Limited <https://www.phpbb.com>
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
  */
