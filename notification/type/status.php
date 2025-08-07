@@ -86,7 +86,7 @@ class status extends \phpbb\notification\type\base
 	 */
 	public static function get_item_id($type_data)
 	{
-		return $type_data['idea_id'];
+		return $type_data['status'];
 	}
 
 	/**
@@ -98,8 +98,7 @@ class status extends \phpbb\notification\type\base
 	 */
 	public static function get_item_parent_id($type_data)
 	{
-		// No parent
-		return 0;
+		return $type_data['idea_id'];
 	}
 
 	/**
