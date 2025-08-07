@@ -70,4 +70,61 @@ class ext extends \phpbb\extension\base
 			phpbb_version_compare(PHPBB_VERSION, '3.3.0', '<') ||
 			phpbb_version_compare(PHPBB_VERSION, '4.0.0-dev', '>='));
 	}
+
+	/**
+	 * Enable notifications for the extension
+	 *
+	 * @param mixed $old_state
+	 * @return bool|string
+	 */
+	public function enable_step($old_state)
+	{
+		if ($old_state === false)
+		{
+			$this->container->get('notification_manager')
+				->enable_notifications('phpbb.ideas.notification.type.status');
+
+			return 'notification';
+		}
+
+		return parent::enable_step($old_state);
+	}
+
+	/**
+	 * Disable notifications for the extension
+	 *
+	 * @param mixed $old_state
+	 * @return bool|string
+	 */
+	public function disable_step($old_state)
+	{
+		if ($old_state === false)
+		{
+			$this->container->get('notification_manager')
+				->disable_notifications('phpbb.ideas.notification.type.status');
+
+			return 'notification';
+		}
+
+		return parent::disable_step($old_state);
+	}
+
+	/**
+	 * Purge notifications for the extension
+	 *
+	 * @param mixed	$old_state
+	 * @return bool|string
+	 */
+	public function purge_step($old_state)
+	{
+		if ($old_state === false)
+		{
+			$this->container->get('notification_manager')
+				->purge_notifications('phpbb.ideas.notification.type.status');
+
+			return 'notification';
+		}
+
+		return parent::purge_step($old_state);
+	}
 }

@@ -69,6 +69,8 @@ $lang = array_merge($lang, array(
 
 	'OPEN_IDEAS'			=> 'Open ideas',
 
+	'PHPBB_IDEAS_NOTIFICATION'	=> 'The status of your idea <strong>“%1$s”</strong> has been changed to:',
+
 	'POST_IDEA'				=> 'Post a new idea',
 	'POSTING_NEW_IDEA'		=> 'Posting a new idea',
 

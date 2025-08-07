@@ -82,6 +82,7 @@ services:
             - '@config'
             - '@dbal.conn'
             - '@language'
+            - '@notification_manager'
             - '@user'
             - '%tables.ideas_ideas%'
             - '%tables.ideas_votes%'
@@ -122,3 +123,14 @@ services:
             - [set_name, [cron.task.prune_orphaned_ideas]]
         tags:
             - { name: cron.task }
+
+# ----- Notifications -----
+    phpbb.ideas.notification.type.status:
+        class: phpbb\ideas\notification\type\status
+        parent: notification.type.base
+        shared: false
+        calls:
+            - [set_controller_helper, ['@controller.helper']]
+            - [set_idea_factory, ['@phpbb.ideas.idea']]
+        tags:
+            - { name: notification.type }

@@ -70,6 +70,11 @@ class idea extends base
 		);
 
 		$this->update_idea_data($sql_ary, $idea_id, $this->table_ideas);
+
+		$this->notification_manager->add_notifications('phpbb.ideas.notification.type.status', [
+			'idea_id' => $idea_id,
+			'status'  => $status,
+		]);
 	}
 
 	/**
