@@ -26,6 +26,9 @@ class status extends \phpbb\notification\type\base
 	/** @var \phpbb\ideas\factory\idea */
 	protected $idea;
 
+	/** @var \phpbb\user_loader */
+	protected $user_loader;
+
 	/**
 	 * Set the controller helper
 	 *
@@ -60,6 +63,11 @@ class status extends \phpbb\notification\type\base
 	public function set_config(\phpbb\config\config $config)
 	{
 		$this->config = $config;
+	}
+
+	public function set_user_loader(\phpbb\user_loader $user_loader)
+	{
+		$this->user_loader = $user_loader;
 	}
 
 	/**
@@ -138,6 +146,15 @@ class status extends \phpbb\notification\type\base
 		}
 
 		return $users;
+	}
+
+	/**
+	 * Get the user's avatar
+	 */
+	public function get_avatar()
+	{
+		$author = (int) $this->get_data('idea_author');
+		return $author ? $this->user_loader->get_avatar($author, true) : '';
 	}
 
 	/**
@@ -221,6 +238,7 @@ class status extends \phpbb\notification\type\base
 		if ($idea !== false)
 		{
 			$pre_create_data['idea_title'] = $idea['idea_title'];
+			$pre_create_data['idea_author'] = $idea['idea_author'];
 		}
 
 		return $pre_create_data;
@@ -238,6 +256,7 @@ class status extends \phpbb\notification\type\base
 		$this->set_data('idea_id', $type_data['idea_id']);
 		$this->set_data('status', $type_data['status']);
 		$this->set_data('idea_title', $pre_create_data['idea_title']);
+		$this->set_data('idea_author', $pre_create_data['idea_author']);
 
 		parent::create_insert_array($type_data, $pre_create_data);
 	}

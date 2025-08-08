@@ -133,5 +133,6 @@ services:
             - [set_controller_helper, ['@controller.helper']]
             - [set_idea_factory, ['@phpbb.ideas.idea']]
             - [set_config, ['@config']]
+            - [set_user_loader, ['@user_loader']]
         tags:
             - { name: notification.type }
