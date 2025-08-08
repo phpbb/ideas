@@ -71,7 +71,11 @@ class idea extends base
 
 		$this->update_idea_data($sql_ary, $idea_id, $this->table_ideas);
 
+		// Send a notification
+		// Increment our notifications sent counter
+		$this->config->increment('ideas_status_notifications_id', 1);
 		$this->notification_manager->add_notifications('phpbb.ideas.notification.type.status', [
+			'item_id' => $this->config['ideas_status_notifications_id'],
 			'idea_id' => (int) $idea_id,
 			'status'  => (int) $status,
 		]);
