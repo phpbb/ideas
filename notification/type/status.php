@@ -210,7 +210,7 @@ class status extends \phpbb\notification\type\base
 	 */
 	public function get_email_template()
 	{
-		return false;
+		return '@phpbb_ideas/status_notification';
 	}
 
 	/**
@@ -220,7 +220,11 @@ class status extends \phpbb\notification\type\base
 	 */
 	public function get_email_template_variables()
 	{
-		return [];
+		return [
+			'IDEA_TITLE'	=> html_entity_decode(censor_text($this->get_data('idea_title')), ENT_COMPAT),
+			'STATUS'		=> html_entity_decode($this->language->lang(ext::status_name($this->get_data('status'))), ENT_COMPAT),
+			'U_VIEW_IDEA'	=> $this->get_url(),
+		];
 	}
 
 	/**
