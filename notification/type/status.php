@@ -174,6 +174,10 @@ class status extends \phpbb\notification\type\base
 	 */
 	public function get_title()
 	{
+		if (!$this->language->is_set('PHPBB_IDEAS_NOTIFICATION'))
+		{
+			$this->language->add_lang('common', 'phpbb/ideas');
+		}
 		return $this->language->lang('PHPBB_IDEAS_NOTIFICATION', $this->get_data('idea_title'));
 	}
 
