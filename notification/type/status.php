@@ -11,6 +11,7 @@
 namespace phpbb\ideas\notification\type;
 
 use phpbb\ideas\ext;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * Ideas status change notification class.
@@ -208,13 +209,14 @@ class status extends \phpbb\notification\type\base
 	/**
 	 * Get the url to this item
 	 *
+	 * @param int $reference_type The type of reference to be generated (one of the constants)
 	 * @return string URL
 	 */
-	public function get_url()
+	public function get_url($reference_type = UrlGeneratorInterface::ABSOLUTE_PATH)
 	{
 		$params = ['idea_id' => $this->get_data('idea_id')];
 
-		return $this->helper->route('phpbb_ideas_idea_controller', $params);
+		return $this->helper->route('phpbb_ideas_idea_controller', $params, true, false, $reference_type);
 	}
 
 	/**
@@ -237,7 +239,7 @@ class status extends \phpbb\notification\type\base
 		return [
 			'IDEA_TITLE'	=> html_entity_decode(censor_text($this->get_data('idea_title')), ENT_COMPAT),
 			'STATUS'		=> html_entity_decode($this->language->lang(ext::status_name($this->get_data('status'))), ENT_COMPAT),
-			'U_VIEW_IDEA'	=> $this->get_url(),
+			'U_VIEW_IDEA'	=> $this->get_url(UrlGeneratorInterface::ABSOLUTE_URL),
 		];
 	}
 
