@@ -98,7 +98,7 @@ class status_test extends \phpbb_test_case
 
 		$this->auth->expects($this->once())
 			->method('acl_get')
-			->with('f_', 5)
+			->with('f_read', 5)
 			->willReturn(true);
 
 		$this->assertTrue($this->notification_type->is_available());
@@ -113,7 +113,7 @@ class status_test extends \phpbb_test_case
 
 		$this->auth->expects($this->once())
 			->method('acl_get')
-			->with('f_', 5)
+			->with('f_read', 5)
 			->willReturn(false);
 
 		$this->assertFalse($this->notification_type->is_available());

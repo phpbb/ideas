@@ -81,6 +81,20 @@ class status extends \phpbb\notification\type\base
 	}
 
 	/**
+	 * Email template to use to send notifications
+	 *
+	 * @var string
+	 */
+	public $email_template = '@phpbb_ideas/status_notification';
+
+	/**
+	 * Language key used to output the text
+	 *
+	 * @var string
+	 */
+	protected $language_key = 'IDEA_STATUS_CHANGE';
+
+	/**
 	 * Notification option data (for outputting to the user)
 	 *
 	 * @var bool|array False if the service should use its default data
@@ -88,6 +102,7 @@ class status extends \phpbb\notification\type\base
 	 */
 	public static $notification_option = [
 		'lang'	=> 'NOTIFICATION_TYPE_IDEAS',
+		'group'	=> 'NOTIFICATION_GROUP_MISCELLANEOUS',
 	];
 
 	/**
@@ -97,7 +112,7 @@ class status extends \phpbb\notification\type\base
 	 */
 	public function is_available()
 	{
-		return (bool) $this->auth->acl_get('f_', $this->config['ideas_forum_id']);
+		return (bool) $this->auth->acl_get('f_read', (int) $this->config['ideas_forum_id']);
 	}
 
 	/**
@@ -173,11 +188,11 @@ class status extends \phpbb\notification\type\base
 	 */
 	public function get_title()
 	{
-		if (!$this->language->is_set('IDEA_STATUS_CHANGE'))
+		if (!$this->language->is_set($this->language_key))
 		{
 			$this->language->add_lang('common', 'phpbb/ideas');
 		}
-		return $this->language->lang('IDEA_STATUS_CHANGE', $this->get_data('idea_title'));
+		return $this->language->lang($this->language_key, $this->get_data('idea_title'));
 	}
 
 	/**
@@ -209,7 +224,7 @@ class status extends \phpbb\notification\type\base
 	 */
 	public function get_email_template()
 	{
-		return '@phpbb_ideas/status_notification';
+		return $this->email_template;
 	}
 
 	/**
