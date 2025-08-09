@@ -136,16 +136,15 @@ class status extends \phpbb\notification\type\base
 	 */
 	public function find_users_for_notification($type_data, $options = [])
 	{
-		$users = [];
+		$options = array_merge([
+			'ignore_users'		=> [],
+		], $options);
 
 		$idea = $this->idea->get_idea($type_data['idea_id']);
 
-		if ($idea !== false)
-		{
-			$users[$idea['idea_author']] = $this->notification_manager->get_default_methods();
-		}
+		$users = $idea ? [$idea['idea_author']] : [];
 
-		return $users;
+		return $this->check_user_notification_options($users, $options);
 	}
 
 	/**
