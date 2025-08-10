@@ -96,4 +96,72 @@ class ext_test extends \phpbb_test_case
 			'purge step'   => ['purge_notifications', 'purge_step']
 		];
 	}
+
+	/**
+	 * @dataProvider parent_step_provider
+	 */
+	public function test_parent_steps(string $step, $expected_result): void
+	{
+		$this->setup_parent_step_expectations($step, $expected_result);
+
+		$state = $this->ext->$step('notification');
+		$this->assertEquals($expected_result, $state);
+	}
+
+	private function setup_parent_step_expectations(string $step, $expected_result): void
+	{
+		if ($step === 'enable_step')
+		{
+			$this->extracted();
+
+			$this->migrator->expects($this->once())
+				->method('update');
+
+			$this->migrator->expects($this->once())
+				->method('finished')
+				->willReturn(!$expected_result);
+		}
+		else if ($step === 'purge_step')
+		{
+			$this->extracted();
+		}
+	}
+
+	public function parent_step_provider(): array
+	{
+		return [
+			'enable parent step' => ['enable_step', false],
+			'disable parent step' => ['disable_step', false],
+			'purge parent step' => ['purge_step', false]
+		];
+	}
+
+	/**
+	 * @return void
+	 */
+	private function extracted(): void
+	{
+		$this->extension_finder->expects($this->once())
+			->method('extension_directory')
+			->with('/migrations')
+			->willReturnSelf();
+
+		$this->extension_finder->expects($this->once())
+			->method('find_from_extension')
+			->with('phpbb/ideas', '')
+			->willReturn([]);
+
+		$this->extension_finder->expects($this->once())
+			->method('get_classes_from_files')
+			->with([])
+			->willReturn([]);
+
+		$this->migrator->expects($this->once())
+			->method('set_migrations')
+			->with([]);
+
+		$this->migrator->expects($this->once())
+			->method('get_migrations')
+			->willReturn([]);
+	}
 }
