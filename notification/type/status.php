@@ -10,7 +10,11 @@
 
 namespace phpbb\ideas\notification\type;
 
+use phpbb\config\config;
+use phpbb\controller\helper;
 use phpbb\ideas\ext;
+use phpbb\ideas\factory\idea;
+use phpbb\user_loader;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
@@ -18,70 +22,36 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  */
 class status extends \phpbb\notification\type\base
 {
-	/** @var \phpbb\config\config */
+	/** @var config */
 	protected $config;
 
-	/** @var \phpbb\controller\helper */
+	/** @var helper */
 	protected $helper;
 
-	/** @var \phpbb\ideas\factory\idea */
+	/** @var idea */
 	protected $idea;
 
-	/** @var \phpbb\user_loader */
+	/** @var user_loader */
 	protected $user_loader;
 
 	/** @var int */
 	protected $ideas_forum_id;
 
 	/**
-	 * Set the controller helper
+	 * Set additional services and properties
 	 *
-	 * @param \phpbb\controller\helper $helper
-	 *
+	 * @param config $config
+	 * @param helper $helper
+	 * @param idea $idea
+	 * @param user_loader $user_loader
 	 * @return void
 	 */
-	public function set_controller_helper(\phpbb\controller\helper $helper)
+	public function set_additional_services(config $config, helper $helper, idea $idea, user_loader $user_loader)
 	{
 		$this->helper = $helper;
-	}
-
-	/**
-	 * Set the Idea object
-	 *
-	 * @param \phpbb\ideas\factory\idea $idea
-	 *
-	 * @return void
-	 */
-	public function set_idea_factory(\phpbb\ideas\factory\idea $idea)
-	{
 		$this->idea = $idea;
-	}
-
-	/**
-	 * Set the config object
-	 *
-	 * @param \phpbb\config\config $config
-	 *
-	 * @return void
-	 */
-	public function set_ideas_forum_id(\phpbb\config\config $config)
-	{
-		$this->ideas_forum_id = (int) $config['ideas_forum_id'];
-	}
-
-	public function set_user_loader(\phpbb\user_loader $user_loader)
-	{
 		$this->user_loader = $user_loader;
-	}
-
-	/**
-	 * Get notification type name
-	 *
-	 * @return string
-	 */
-	public function get_type()
-	{
-		return 'phpbb.ideas.notification.type.status';
+		$this->ideas_forum_id = (int) $config['ideas_forum_id'];
 	}
 
 	/**
@@ -89,7 +59,7 @@ class status extends \phpbb\notification\type\base
 	 *
 	 * @var string
 	 */
-	public $email_template = '@phpbb_ideas/status_notification';
+	protected $email_template = '@phpbb_ideas/status_notification';
 
 	/**
 	 * Language key used to output the text
@@ -99,10 +69,7 @@ class status extends \phpbb\notification\type\base
 	protected $language_key = 'IDEA_STATUS_CHANGE';
 
 	/**
-	 * Notification option data (for outputting to the user)
-	 *
-	 * @var bool|array False if the service should use its default data
-	 * 					Array of data (including keys 'id', 'lang', and 'group')
+	 * {@inheritDoc}
 	 */
 	public static $notification_option = [
 		'lang'	=> 'NOTIFICATION_TYPE_IDEAS',
@@ -110,21 +77,15 @@ class status extends \phpbb\notification\type\base
 	];
 
 	/**
-	 * Is this type available to the current user (defines whether it will be shown in the UCP Edit notification options)
-	 *
-	 * @return bool True/False whether this is available to the user
+	 * {@inheritDoc}
 	 */
-	public function is_available()
+	public function get_type()
 	{
-		return (bool) $this->auth->acl_get('f_read', $this->ideas_forum_id);
+		return 'phpbb.ideas.notification.type.status';
 	}
 
 	/**
-	 * Get the id of the notification
-	 *
-	 * @param array $type_data The type-specific data
-	 *
-	 * @return int ID of the notification
+	 * {@inheritDoc}
 	 */
 	public static function get_item_id($type_data)
 	{
@@ -132,11 +93,7 @@ class status extends \phpbb\notification\type\base
 	}
 
 	/**
-	 * Get the id of the parent
-	 *
-	 * @param array $type_data The type-specific data
-	 *
-	 * @return int ID of the parent
+	 * {@inheritDoc}
 	 */
 	public static function get_item_parent_id($type_data)
 	{
@@ -144,14 +101,15 @@ class status extends \phpbb\notification\type\base
 	}
 
 	/**
-	 * Find the users who want to receive notifications
-	 *
-	 * @param array $type_data The type-specific data
-	 * @param array $options Options for finding users for notification
-	 * 		ignore_users => array of users and user types that should not receive notifications from this type because they've already been notified
-	 * 						e.g.: [2 => [''], 3 => ['', 'email'], ...]
-	 *
-	 * @return array
+	 * {@inheritDoc}
+	 */
+	public function is_available()
+	{
+		return (bool) $this->auth->acl_get('f_read', $this->ideas_forum_id);
+	}
+
+	/**
+	 * {@inheritDoc}
 	 */
 	public function find_users_for_notification($type_data, $options = [])
 	{
@@ -167,17 +125,7 @@ class status extends \phpbb\notification\type\base
 	}
 
 	/**
-	 * Get the user's avatar
-	 */
-	public function get_avatar()
-	{
-		return $this->user_loader->get_avatar($this->get_data('idea_author'), false, true);
-	}
-
-	/**
-	 * Users needed to query before this notification can be displayed
-	 *
-	 * @return array Array of user_ids
+	 * {@inheritDoc}
 	 */
 	public function users_to_query()
 	{
@@ -185,9 +133,7 @@ class status extends \phpbb\notification\type\base
 	}
 
 	/**
-	 * Get the HTML-formatted title of this notification
-	 *
-	 * @return string
+	 * {@inheritDoc}
 	 */
 	public function get_title()
 	{
@@ -199,9 +145,7 @@ class status extends \phpbb\notification\type\base
 	}
 
 	/**
-	 * Get the HTML-formatted reference of the notification
-	 *
-	 * @return string
+	 * {@inheritDoc}
 	 */
 	public function get_reference()
 	{
@@ -209,10 +153,7 @@ class status extends \phpbb\notification\type\base
 	}
 
 	/**
-	 * Get the url to this item
-	 *
-	 * @param int $reference_type The type of reference to be generated (one of the constants)
-	 * @return string URL
+	 * {@inheritDoc}
 	 */
 	public function get_url($reference_type = UrlGeneratorInterface::ABSOLUTE_PATH)
 	{
@@ -222,9 +163,15 @@ class status extends \phpbb\notification\type\base
 	}
 
 	/**
-	 * Get email template
-	 *
-	 * @return string|bool
+	 * {@inheritDoc}
+	 */
+	public function get_avatar()
+	{
+		return $this->user_loader->get_avatar($this->get_data('idea_author'), false, true);
+	}
+
+	/**
+	 * {@inheritDoc}
 	 */
 	public function get_email_template()
 	{
@@ -232,9 +179,7 @@ class status extends \phpbb\notification\type\base
 	}
 
 	/**
-	 * Get email template variables
-	 *
-	 * @return array
+	 * {@inheritDoc}
 	 */
 	public function get_email_template_variables()
 	{
@@ -246,15 +191,7 @@ class status extends \phpbb\notification\type\base
 	}
 
 	/**
-	 * Pre create insert array function
-	 * This allows you to perform certain actions, like run a query
-	 * and load data, before create_insert_array() is run. The data
-	 * returned from this function will be sent to create_insert_array().
-	 *
-	 * @param array $type_data The type-specific data
-	 * @param array $notify_users Notify users list
-	 * 		Formatted from find_users_for_notification()
-	 * @return array Whatever you want to send to create_insert_array().
+	 * {@inheritDoc}
 	 */
 	public function pre_create_insert_array($type_data, $notify_users)
 	{
@@ -271,11 +208,7 @@ class status extends \phpbb\notification\type\base
 	}
 
 	/**
-	 * Function for preparing the data for insertion in an SQL query
-	 * (The service handles insertion)
-	 *
-	 * @param array $type_data The type-specific data
-	 * @param array $pre_create_data Data from pre_create_insert_array()
+	 * {@inheritDoc}
 	 */
 	public function create_insert_array($type_data, $pre_create_data = [])
 	{

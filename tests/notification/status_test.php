@@ -63,10 +63,7 @@ class status_test extends \phpbb_test_case
 			->willReturn($this->forum_id);
 
 		$this->notification_type = new status($db, $this->language, $user, $this->auth, $phpbb_root_path, $phpEx, 'phpbb_user_notifications');
-		$this->notification_type->set_ideas_forum_id($this->config);
-		$this->notification_type->set_controller_helper($this->helper);
-		$this->notification_type->set_idea_factory($this->idea_factory);
-		$this->notification_type->set_user_loader($this->user_loader);
+		$this->notification_type->set_additional_services($this->config, $this->helper, $this->idea_factory, $this->user_loader);
 
 		// Set protected properties using reflection
 		$reflection = new \ReflectionClass($this->notification_type);

@@ -130,9 +130,6 @@ services:
         parent: notification.type.base
         shared: false
         calls:
-            - [set_controller_helper, ['@controller.helper']]
-            - [set_idea_factory, ['@phpbb.ideas.idea']]
-            - [set_ideas_forum_id, ['@config']]
-            - [set_user_loader, ['@user_loader']]
+            - [set_additional_services, ['@config', '@controller.helper', '@phpbb.ideas.idea', '@user_loader']]
         tags:
             - { name: notification.type }
