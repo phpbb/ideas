@@ -89,7 +89,7 @@ class status extends \phpbb\notification\type\base
 	 */
 	public static function get_item_id($type_data)
 	{
-		return (int) $type_data['item_id'];
+		return (int) $type_data['idea_id'];
 	}
 
 	/**
@@ -193,29 +193,14 @@ class status extends \phpbb\notification\type\base
 	/**
 	 * {@inheritDoc}
 	 */
-	public function pre_create_insert_array($type_data, $notify_users)
-	{
-		$pre_create_data = [];
-
-		$idea = $this->idea->get_idea($type_data['idea_id']);
-		if ($idea !== false)
-		{
-			$pre_create_data['idea_title'] = $idea['idea_title'];
-			$pre_create_data['idea_author'] = $idea['idea_author'];
-		}
-
-		return $pre_create_data;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
 	public function create_insert_array($type_data, $pre_create_data = [])
 	{
+		$idea = $this->idea->get_idea($type_data['idea_id']);
+
 		$this->set_data('idea_id', $type_data['idea_id']);
 		$this->set_data('status', $type_data['status']);
-		$this->set_data('idea_title', $pre_create_data['idea_title']);
-		$this->set_data('idea_author', $pre_create_data['idea_author']);
+		$this->set_data('idea_title', $idea['idea_title']);
+		$this->set_data('idea_author', $idea['idea_author']);
 
 		parent::create_insert_array($type_data, $pre_create_data);
 	}

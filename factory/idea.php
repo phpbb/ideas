@@ -72,10 +72,8 @@ class idea extends base
 		$this->update_idea_data($sql_ary, $idea_id, $this->table_ideas);
 
 		// Send a notification
-		// Increment our notifications sent counter
-		$this->config->increment('ideas_status_notifications_id', 1);
-		$this->notification_manager->add_notifications('phpbb.ideas.notification.type.status', [
-			'item_id' => (int) $this->config['ideas_status_notifications_id'],
+		$method = $this->notification_exists($idea_id) ? 'update_notifications' : 'add_notifications';
+		$this->notification_manager->$method('phpbb.ideas.notification.type.status', [
 			'idea_id' => (int) $idea_id,
 			'status'  => (int) $status,
 		]);
@@ -271,8 +269,14 @@ class idea extends base
 		// Delete idea
 		$deleted = $this->delete_idea_data($id, $this->table_ideas);
 
-		// Delete votes
-		$this->delete_idea_data($id, $this->table_votes);
+		if ($deleted)
+		{
+			// Delete votes
+			$this->delete_idea_data($id, $this->table_votes);
+
+			// Delete notifications
+			$this->notification_manager->delete_notifications('phpbb.ideas.notification.type.status', $id);
+		}
 
 		return $deleted;
 	}
@@ -448,5 +452,25 @@ class idea extends base
 		$this->db->sql_freeresult($result);
 
 		return $row;
+	}
+
+	/**
+	 * Check if a notification already exists
+	 *
+	 * @param int $item_id The item identifier for the notification
+	 * @return bool
+	 */
+	protected function notification_exists($item_id)
+	{
+		$sql = 'SELECT notification_id
+			FROM ' . NOTIFICATIONS_TABLE . '
+			WHERE item_id = ' . (int) $item_id . '
+				AND notification_type_id = ' . $this->notification_manager->get_notification_type_id('phpbb.ideas.notification.type.status');
+
+		$result = $this->db->sql_query_limit($sql, 1);
+		$row = $this->db->sql_fetchrow($result);
+		$this->db->sql_freeresult($result);
+
+		return $row !== false;
 	}
 }

@@ -114,7 +114,7 @@ class status_test extends \phpbb_test_case
 
 	public function test_get_item_id()
 	{
-		$type_data = ['item_id' => 123];
+		$type_data = ['idea_id' => 123];
 		$this->assertEquals(123, status::get_item_id($type_data));
 	}
 
@@ -284,10 +284,12 @@ class status_test extends \phpbb_test_case
 		$this->assertEquals($expected, $result);
 	}
 
-	public function test_pre_create_insert_array()
+	public function test_create_insert_array()
 	{
-		$type_data = ['idea_id' => 5];
-		$notify_users = [];
+		$type_data = [
+			'idea_id' => 7,
+			'status' => 4
+		];
 		$idea_data = [
 			'idea_title' => 'Sample Idea',
 			'idea_author' => 3
@@ -295,51 +297,15 @@ class status_test extends \phpbb_test_case
 
 		$this->idea_factory->expects($this->once())
 			->method('get_idea')
-			->with(5)
+			->with(7)
 			->willReturn($idea_data);
-
-		$result = $this->notification_type->pre_create_insert_array($type_data, $notify_users);
-
-		$expected = [
-			'idea_title' => 'Sample Idea',
-			'idea_author' => 3
-		];
-
-		$this->assertEquals($expected, $result);
-	}
-
-	public function test_pre_create_insert_array_idea_not_found()
-	{
-		$type_data = ['idea_id' => 999];
-		$notify_users = [];
-
-		$this->idea_factory->expects($this->once())
-			->method('get_idea')
-			->with(999)
-			->willReturn(false);
-
-		$result = $this->notification_type->pre_create_insert_array($type_data, $notify_users);
-		$this->assertEquals([], $result);
-	}
-
-	public function test_create_insert_array()
-	{
-		$type_data = [
-			'item_id' => 1,
-			'idea_id' => 7,
-			'status' => 4
-		];
-		$pre_create_data = [
-			'idea_title' => 'Another Idea',
-			'idea_author' => 8
-		];
 
 		// Use reflection to access set_data calls
 		$reflection = new \ReflectionClass($this->notification_type);
 		$set_data_method = $reflection->getMethod('set_data');
 		$set_data_method->setAccessible(true);
 
-		$this->notification_type->create_insert_array($type_data, $pre_create_data);
+		$this->notification_type->create_insert_array($type_data);
 
 		// Verify data was set by checking get_data
 		$get_data_method = $reflection->getMethod('get_data');
@@ -347,7 +313,7 @@ class status_test extends \phpbb_test_case
 
 		$this->assertEquals(7, $get_data_method->invoke($this->notification_type, 'idea_id'));
 		$this->assertEquals(4, $get_data_method->invoke($this->notification_type, 'status'));
-		$this->assertEquals('Another Idea', $get_data_method->invoke($this->notification_type, 'idea_title'));
-		$this->assertEquals(8, $get_data_method->invoke($this->notification_type, 'idea_author'));
+		$this->assertEquals('Sample Idea', $get_data_method->invoke($this->notification_type, 'idea_title'));
+		$this->assertEquals(3, $get_data_method->invoke($this->notification_type, 'idea_author'));
 	}
 }

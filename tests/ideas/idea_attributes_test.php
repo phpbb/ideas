@@ -61,6 +61,11 @@ class idea_attributes_test extends ideas_base
 	 */
 	public function test_set_status($idea_id, $status)
 	{
+		$this->notification_manager->expects($this->once())
+			->method('get_notification_type_id')
+			->with('phpbb.ideas.notification.type.status')
+			->willReturn(1);
+
 		$object = $this->get_idea_object();
 
 		$object->set_status($idea_id, $status);
