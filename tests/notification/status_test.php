@@ -56,8 +56,14 @@ class status_test extends \phpbb_test_case
 		$user->data['user_options'] = 230271;
 		$cache = new \phpbb_mock_cache();
 
+		$this->forum_id = 5;
+		$this->config->expects($this->once())
+			->method('offsetGet')
+			->with('ideas_forum_id')
+			->willReturn($this->forum_id);
+
 		$this->notification_type = new status($db, $this->language, $user, $this->auth, $phpbb_root_path, $phpEx, 'phpbb_user_notifications');
-		$this->notification_type->set_config($this->config);
+		$this->notification_type->set_ideas_forum_id($this->config);
 		$this->notification_type->set_controller_helper($this->helper);
 		$this->notification_type->set_idea_factory($this->idea_factory);
 		$this->notification_type->set_user_loader($this->user_loader);
@@ -91,14 +97,9 @@ class status_test extends \phpbb_test_case
 
 	public function test_is_available_with_permission()
 	{
-		$this->config->expects($this->once())
-			->method('offsetGet')
-			->with('ideas_forum_id')
-			->willReturn(5);
-
 		$this->auth->expects($this->once())
 			->method('acl_get')
-			->with('f_read', 5)
+			->with('f_read', $this->forum_id)
 			->willReturn(true);
 
 		$this->assertTrue($this->notification_type->is_available());
@@ -106,14 +107,9 @@ class status_test extends \phpbb_test_case
 
 	public function test_is_available_without_permission()
 	{
-		$this->config->expects($this->once())
-			->method('offsetGet')
-			->with('ideas_forum_id')
-			->willReturn(5);
-
 		$this->auth->expects($this->once())
 			->method('acl_get')
-			->with('f_read', 5)
+			->with('f_read', $this->forum_id)
 			->willReturn(false);
 
 		$this->assertFalse($this->notification_type->is_available());
@@ -133,13 +129,21 @@ class status_test extends \phpbb_test_case
 
 	public function test_find_users_for_notification()
 	{
-		$type_data = ['idea_id' => 1];
-		$idea_data = ['idea_author' => 2];
+		$idea_id = 1;
+		$idea_author = 2;
+
+		$type_data = ['idea_id' => $idea_id];
+		$idea_data = ['idea_author' => $idea_author];
 		$default_methods = ['board', 'email'];
+
+		$this->auth->expects($this->once())
+			->method('acl_get_list')
+			->with([$idea_author], 'f_read', $this->forum_id)
+			->willReturn([$this->forum_id => ['f_read' => [$idea_author]]]);
 
 		$this->idea_factory->expects($this->once())
 			->method('get_idea')
-			->with(1)
+			->with($idea_id)
 			->willReturn($idea_data);
 
 		$this->notification_manager->expects($this->once())
@@ -147,7 +151,7 @@ class status_test extends \phpbb_test_case
 			->willReturn($default_methods);
 
 		$result = $this->notification_type->find_users_for_notification($type_data);
-		$this->assertEquals([2 => $default_methods], $result);
+		$this->assertEquals([$idea_author => $default_methods], $result);
 	}
 
 	public function test_find_users_for_notification_idea_not_found()

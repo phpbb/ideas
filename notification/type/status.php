@@ -30,6 +30,9 @@ class status extends \phpbb\notification\type\base
 	/** @var \phpbb\user_loader */
 	protected $user_loader;
 
+	/** @var int */
+	protected $ideas_forum_id;
+
 	/**
 	 * Set the controller helper
 	 *
@@ -61,9 +64,9 @@ class status extends \phpbb\notification\type\base
 	 *
 	 * @return void
 	 */
-	public function set_config(\phpbb\config\config $config)
+	public function set_ideas_forum_id(\phpbb\config\config $config)
 	{
-		$this->config = $config;
+		$this->ideas_forum_id = (int) $config['ideas_forum_id'];
 	}
 
 	public function set_user_loader(\phpbb\user_loader $user_loader)
@@ -113,7 +116,7 @@ class status extends \phpbb\notification\type\base
 	 */
 	public function is_available()
 	{
-		return (bool) $this->auth->acl_get('f_read', (int) $this->config['ideas_forum_id']);
+		return (bool) $this->auth->acl_get('f_read', $this->ideas_forum_id);
 	}
 
 	/**
@@ -160,7 +163,7 @@ class status extends \phpbb\notification\type\base
 
 		$users = $idea ? [$idea['idea_author']] : [];
 
-		return $this->check_user_notification_options($users, $options);
+		return $this->get_authorised_recipients($users, $this->ideas_forum_id, $options);
 	}
 
 	/**
