@@ -171,8 +171,7 @@ class status extends \phpbb\notification\type\base
 	 */
 	public function get_avatar()
 	{
-		$author = (int) $this->get_data('idea_author');
-		return $author ? $this->user_loader->get_avatar($author, true) : '';
+		return $this->user_loader->get_avatar($this->get_data('idea_author'), false, true);
 	}
 
 	/**
@@ -182,7 +181,7 @@ class status extends \phpbb\notification\type\base
 	 */
 	public function users_to_query()
 	{
-		return [];
+		return [$this->get_data('idea_author')];
 	}
 
 	/**

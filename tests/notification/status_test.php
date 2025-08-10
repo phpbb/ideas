@@ -173,7 +173,7 @@ class status_test extends \phpbb_test_case
 
 		$this->user_loader->expects($this->once())
 			->method('get_avatar')
-			->with(5, true)
+			->with(5, false, true)
 			->willReturn('<img src="avatar.png">');
 
 		$this->assertEquals('<img src="avatar.png">', $this->notification_type->get_avatar());
@@ -187,7 +187,8 @@ class status_test extends \phpbb_test_case
 
 	public function test_users_to_query()
 	{
-		$this->assertEquals([], $this->notification_type->users_to_query());
+		$this->setNotificationData(['idea_author' => 0]);
+		$this->assertEquals([0], $this->notification_type->users_to_query());
 	}
 
 	public function test_get_title()
