@@ -37,6 +37,9 @@ class status extends \phpbb\notification\type\base
 	/** @var int */
 	protected $ideas_forum_id;
 
+	/** @var array */
+	protected $idea_cache = [];
+
 	/**
 	 * Set additional services and properties
 	 *
@@ -117,7 +120,7 @@ class status extends \phpbb\notification\type\base
 			'ignore_users'		=> [],
 		], $options);
 
-		$idea = $this->idea->get_idea($type_data['idea_id']);
+		$idea = $this->load_idea($type_data['idea_id']);
 
 		$users = $idea ? [$idea['idea_author']] : [];
 
@@ -195,13 +198,31 @@ class status extends \phpbb\notification\type\base
 	 */
 	public function create_insert_array($type_data, $pre_create_data = [])
 	{
-		$idea = $this->idea->get_idea($type_data['idea_id']);
+		$idea = $this->load_idea($type_data['idea_id']);
 
-		$this->set_data('idea_id', $type_data['idea_id']);
-		$this->set_data('status', $type_data['status']);
-		$this->set_data('idea_title', $idea['idea_title']);
-		$this->set_data('idea_author', $idea['idea_author']);
+		$this->set_data('idea_id', (int) $type_data['idea_id']);
+		$this->set_data('status', (int) $type_data['status']);
+		$this->set_data('idea_title', $idea ? $idea['idea_title'] : '');
+		$this->set_data('idea_author', $idea ? (int) $idea['idea_author'] : 0);
 
 		parent::create_insert_array($type_data, $pre_create_data);
+	}
+
+	/**
+	 * Load and cache an idea by id
+	 *
+	 * @param int $idea_id
+	 * @return array|false
+	 */
+	protected function load_idea($idea_id)
+	{
+		$idea_id = (int) $idea_id;
+
+		if (!array_key_exists($idea_id, $this->idea_cache))
+		{
+			$this->idea_cache[$idea_id] = $this->idea->get_idea($idea_id) ?: false;
+		}
+
+		return $this->idea_cache[$idea_id];
 	}
 }
