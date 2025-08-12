@@ -84,7 +84,7 @@ class status extends \phpbb\notification\type\base
 	 */
 	public function get_type()
 	{
-		return 'phpbb.ideas.notification.type.status';
+		return ext::NOTIFICATION_TYPE_STATUS;
 	}
 
 	/**

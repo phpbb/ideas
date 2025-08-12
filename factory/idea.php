@@ -73,7 +73,7 @@ class idea extends base
 
 		// Send a notification
 		$method = $this->notification_exists($idea_id) ? 'update_notifications' : 'add_notifications';
-		$this->notification_manager->$method('phpbb.ideas.notification.type.status', [
+		$this->notification_manager->$method(ext::NOTIFICATION_TYPE_STATUS, [
 			'idea_id' => (int) $idea_id,
 			'status'  => (int) $status,
 		]);
@@ -275,7 +275,7 @@ class idea extends base
 			$this->delete_idea_data($id, $this->table_votes);
 
 			// Delete notifications
-			$this->notification_manager->delete_notifications('phpbb.ideas.notification.type.status', $id);
+			$this->notification_manager->delete_notifications(ext::NOTIFICATION_TYPE_STATUS, $id);
 		}
 
 		return $deleted;
@@ -465,7 +465,7 @@ class idea extends base
 		$sql = 'SELECT notification_id
 			FROM ' . NOTIFICATIONS_TABLE . '
 			WHERE item_id = ' . (int) $item_id . '
-				AND notification_type_id = ' . $this->notification_manager->get_notification_type_id('phpbb.ideas.notification.type.status');
+				AND notification_type_id = ' . $this->notification_manager->get_notification_type_id(ext::NOTIFICATION_TYPE_STATUS);
 
 		$result = $this->db->sql_query_limit($sql, 1);
 		$row = $this->db->sql_fetchrow($result);

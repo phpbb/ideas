@@ -69,7 +69,7 @@ class ext_test extends \phpbb_test_case
 
 		$this->notification_manager->expects($this->once())
 			->method($method)
-			->with('phpbb.ideas.notification.type.status');
+			->with(ext::NOTIFICATION_TYPE_STATUS);
 	}
 
 	public function test_is_enableable(): void

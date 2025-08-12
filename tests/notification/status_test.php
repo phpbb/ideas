@@ -10,6 +10,7 @@
 
 namespace phpbb\ideas\tests\notification\type;
 
+use phpbb\ideas\ext;
 use phpbb\ideas\notification\type\status;
 
 class status_test extends \phpbb_test_case
@@ -89,7 +90,7 @@ class status_test extends \phpbb_test_case
 
 	public function test_get_type()
 	{
-		$this->assertEquals('phpbb.ideas.notification.type.status', $this->notification_type->get_type());
+		$this->assertEquals(ext::NOTIFICATION_TYPE_STATUS, $this->notification_type->get_type());
 	}
 
 	public function test_is_available_with_permission()

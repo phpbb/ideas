@@ -10,6 +10,8 @@
 
 namespace phpbb\ideas\tests\ideas;
 
+use phpbb\ideas\ext;
+
 class idea_attributes_test extends ideas_base
 {
 	/**
@@ -63,7 +65,7 @@ class idea_attributes_test extends ideas_base
 	{
 		$this->notification_manager->expects($this->once())
 			->method('get_notification_type_id')
-			->with('phpbb.ideas.notification.type.status')
+			->with(ext::NOTIFICATION_TYPE_STATUS)
 			->willReturn(1);
 
 		$object = $this->get_idea_object();
