@@ -76,6 +76,7 @@ class idea extends base
 		$this->notification_manager->$method(ext::NOTIFICATION_TYPE_STATUS, [
 			'idea_id' => (int) $idea_id,
 			'status'  => (int) $status,
+			'user_id' => (int) $this->user->data['user_id'],
 		]);
 	}
 

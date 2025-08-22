@@ -132,7 +132,7 @@ class status extends \phpbb\notification\type\base
 	 */
 	public function users_to_query()
 	{
-		return [$this->get_data('idea_author')];
+		return [$this->get_data('updater_id')];
 	}
 
 	/**
@@ -144,7 +144,11 @@ class status extends \phpbb\notification\type\base
 		{
 			$this->language->add_lang('common', 'phpbb/ideas');
 		}
-		return $this->language->lang($this->language_key, $this->get_data('idea_title'));
+
+		$status = $this->language->lang(ext::status_name($this->get_data('status')));
+		$username = $this->user_loader->get_username($this->get_data('updater_id'), 'no_profile');
+
+		return $this->language->lang($this->language_key, $username, $status);
 	}
 
 	/**
@@ -152,7 +156,10 @@ class status extends \phpbb\notification\type\base
 	 */
 	public function get_reference()
 	{
-		return  $this->language->lang(ext::status_name($this->get_data('status')));
+		return $this->language->lang(
+			'NOTIFICATION_REFERENCE',
+			censor_text($this->get_data('idea_title'))
+		);
 	}
 
 	/**
@@ -170,7 +177,7 @@ class status extends \phpbb\notification\type\base
 	 */
 	public function get_avatar()
 	{
-		return $this->user_loader->get_avatar($this->get_data('idea_author'), false, true);
+		return $this->user_loader->get_avatar($this->get_data('updater_id'), false, true);
 	}
 
 	/**
@@ -189,6 +196,7 @@ class status extends \phpbb\notification\type\base
 		return [
 			'IDEA_TITLE'	=> html_entity_decode(censor_text($this->get_data('idea_title')), ENT_COMPAT),
 			'STATUS'		=> html_entity_decode($this->language->lang(ext::status_name($this->get_data('status'))), ENT_COMPAT),
+			'UPDATED_BY'	=> html_entity_decode($this->user_loader->get_username($this->get_data('updater_id'), 'username'), ENT_COMPAT),
 			'U_VIEW_IDEA'	=> $this->get_url(UrlGeneratorInterface::ABSOLUTE_URL),
 		];
 	}
@@ -202,8 +210,8 @@ class status extends \phpbb\notification\type\base
 
 		$this->set_data('idea_id', (int) $type_data['idea_id']);
 		$this->set_data('status', (int) $type_data['status']);
+		$this->set_data('updater_id', (int) $type_data['user_id']);
 		$this->set_data('idea_title', $idea ? $idea['idea_title'] : '');
-		$this->set_data('idea_author', $idea ? (int) $idea['idea_author'] : 0);
 
 		parent::create_insert_array($type_data, $pre_create_data);
 	}
