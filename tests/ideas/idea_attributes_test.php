@@ -63,11 +63,6 @@ class idea_attributes_test extends ideas_base
 	 */
 	public function test_set_status($idea_id, $status)
 	{
-		$this->notification_manager->expects($this->once())
-			->method('get_notification_type_id')
-			->with(ext::NOTIFICATION_TYPE_STATUS)
-			->willReturn(1);
-
 		$object = $this->get_idea_object();
 
 		$object->set_status($idea_id, $status);
@@ -75,6 +70,34 @@ class idea_attributes_test extends ideas_base
 		$idea = $object->get_idea($idea_id);
 
 		self::assertEquals($status, $idea['idea_status']);
+	}
+
+	public function test_set_status_notification_data()
+	{
+		return [
+			[1, 1, [], 'add_notifications'],
+			[1, 2, [2], 'update_notifications'],
+			[2, 3, [], 'add_notifications'],
+			[2, 4, [3], 'update_notifications'],
+		];
+	}
+
+	/**
+	 * @dataProvider test_set_status_notification_data
+	 */
+	public function test_set_status_notification($idea_id, $status, $notified_users, $expected)
+	{
+		$this->notification_manager->expects($this->once())
+			->method('get_notified_users')
+			->with(ext::NOTIFICATION_TYPE_STATUS, ['item_id' => $idea_id])
+			->willReturn($notified_users);
+
+		$this->notification_manager->expects($this->once())
+			->method($expected);
+
+		$object = $this->get_idea_object();
+
+		$object->set_status($idea_id, $status);
 	}
 
 	/**

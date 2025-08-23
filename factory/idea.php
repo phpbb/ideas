@@ -72,12 +72,15 @@ class idea extends base
 		$this->update_idea_data($sql_ary, $idea_id, $this->table_ideas);
 
 		// Send a notification
-		$method = $this->notification_exists($idea_id) ? 'update_notifications' : 'add_notifications';
-		$this->notification_manager->$method(ext::NOTIFICATION_TYPE_STATUS, [
-			'idea_id' => (int) $idea_id,
-			'status'  => (int) $status,
-			'user_id' => (int) $this->user->data['user_id'],
-		]);
+		$notifications = $this->notification_manager->get_notified_users(ext::NOTIFICATION_TYPE_STATUS, ['item_id' => (int) $idea_id]);
+		$this->notification_manager->{empty($notifications) ? 'add_notifications' : 'update_notifications'}(
+			ext::NOTIFICATION_TYPE_STATUS,
+			[
+				'idea_id' => (int) $idea_id,
+				'status'  => (int) $status,
+				'user_id' => (int) $this->user->data['user_id'],
+			]
+		);
 	}
 
 	/**
@@ -453,25 +456,5 @@ class idea extends base
 		$this->db->sql_freeresult($result);
 
 		return $row;
-	}
-
-	/**
-	 * Check if a notification already exists
-	 *
-	 * @param int $item_id The item identifier for the notification
-	 * @return bool
-	 */
-	protected function notification_exists($item_id)
-	{
-		$sql = 'SELECT notification_id
-			FROM ' . NOTIFICATIONS_TABLE . '
-			WHERE item_id = ' . (int) $item_id . '
-				AND notification_type_id = ' . $this->notification_manager->get_notification_type_id(ext::NOTIFICATION_TYPE_STATUS);
-
-		$result = $this->db->sql_query_limit($sql, 1);
-		$row = $this->db->sql_fetchrow($result);
-		$this->db->sql_freeresult($result);
-
-		return $row !== false;
 	}
 }
