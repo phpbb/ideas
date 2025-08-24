@@ -130,6 +130,6 @@ services:
         parent: notification.type.base
         shared: false
         calls:
-            - [set_additional_services, ['@config', '@controller.helper', '@phpbb.ideas.idea', '@user_loader']]
+            - [set_additional_services, ['@config', '@controller.helper', '@user_loader']]
         tags:
             - { name: notification.type }

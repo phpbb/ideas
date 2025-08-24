@@ -24,9 +24,6 @@ class status_test extends \phpbb_test_case
 	/** @var \phpbb\controller\helper|\PHPUnit\Framework\MockObject\MockObject */
 	protected $helper;
 
-	/** @var \phpbb\ideas\factory\idea|\PHPUnit\Framework\MockObject\MockObject */
-	protected $idea_factory;
-
 	/** @var \phpbb\user_loader|\PHPUnit\Framework\MockObject\MockObject */
 	protected $user_loader;
 
@@ -47,7 +44,6 @@ class status_test extends \phpbb_test_case
 
 		$this->config = $this->createMock(\phpbb\config\config::class);
 		$this->helper = $this->createMock(\phpbb\controller\helper::class);
-		$this->idea_factory = $this->createMock(\phpbb\ideas\factory\idea::class);
 		$this->user_loader = $this->createMock(\phpbb\user_loader::class);
 		$this->auth = $this->createMock(\phpbb\auth\auth::class);
 		$this->language = $this->createMock(\phpbb\language\language::class);
@@ -64,7 +60,7 @@ class status_test extends \phpbb_test_case
 			->willReturn($this->forum_id);
 
 		$this->notification_type = new status($db, $this->language, $user, $this->auth, $phpbb_root_path, $phpEx, 'phpbb_user_notifications');
-		$this->notification_type->set_additional_services($this->config, $this->helper, $this->idea_factory, $this->user_loader);
+		$this->notification_type->set_additional_services($this->config, $this->helper, $this->user_loader);
 
 		// Set protected properties using reflection
 		$reflection = new \ReflectionClass($this->notification_type);
@@ -130,8 +126,7 @@ class status_test extends \phpbb_test_case
 		$idea_id = 1;
 		$idea_author = 2;
 
-		$type_data = ['idea_id' => $idea_id];
-		$idea_data = ['idea_author' => $idea_author];
+		$type_data = ['idea_id' => $idea_id, 'idea_author' => $idea_author];
 		$default_methods = ['board', 'email'];
 
 		$this->auth->expects($this->once())
@@ -139,30 +134,12 @@ class status_test extends \phpbb_test_case
 			->with([$idea_author], 'f_read', $this->forum_id)
 			->willReturn([$this->forum_id => ['f_read' => [$idea_author]]]);
 
-		$this->idea_factory->expects($this->once())
-			->method('get_idea')
-			->with($idea_id)
-			->willReturn($idea_data);
-
 		$this->notification_manager->expects($this->once())
 			->method('get_default_methods')
 			->willReturn($default_methods);
 
 		$result = $this->notification_type->find_users_for_notification($type_data);
 		$this->assertEquals([$idea_author => $default_methods], $result);
-	}
-
-	public function test_find_users_for_notification_idea_not_found()
-	{
-		$type_data = ['idea_id' => 999];
-
-		$this->idea_factory->expects($this->once())
-			->method('get_idea')
-			->with(999)
-			->willReturn(false);
-
-		$result = $this->notification_type->find_users_for_notification($type_data);
-		$this->assertEquals([], $result);
 	}
 
 	public function test_get_avatar_with_author()
@@ -333,16 +310,9 @@ class status_test extends \phpbb_test_case
 		$type_data = [
 			'idea_id' => 7,
 			'status' => 4,
-			'user_id' => 3
-		];
-		$idea_data = [
+			'user_id' => 3,
 			'idea_title' => 'Sample Idea'
 		];
-
-		$this->idea_factory->expects($this->once())
-			->method('get_idea')
-			->with(7)
-			->willReturn($idea_data);
 
 		$this->notification_type->create_insert_array($type_data);
 

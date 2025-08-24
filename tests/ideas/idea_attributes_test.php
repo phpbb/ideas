@@ -72,7 +72,7 @@ class idea_attributes_test extends ideas_base
 		self::assertEquals($status, $idea['idea_status']);
 	}
 
-	public function test_set_status_notification_data()
+	public function set_status_notification_data()
 	{
 		return [
 			[1, 1, [], 'add_notifications'],
@@ -83,7 +83,7 @@ class idea_attributes_test extends ideas_base
 	}
 
 	/**
-	 * @dataProvider test_set_status_notification_data
+	 * @dataProvider set_status_notification_data
 	 */
 	public function test_set_status_notification($idea_id, $status, $notified_users, $expected)
 	{

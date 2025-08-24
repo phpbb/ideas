@@ -13,7 +13,6 @@ namespace phpbb\ideas\notification\type;
 use phpbb\config\config;
 use phpbb\controller\helper;
 use phpbb\ideas\ext;
-use phpbb\ideas\factory\idea;
 use phpbb\user_loader;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
@@ -28,31 +27,23 @@ class status extends \phpbb\notification\type\base
 	/** @var helper */
 	protected $helper;
 
-	/** @var idea */
-	protected $idea;
-
 	/** @var user_loader */
 	protected $user_loader;
 
 	/** @var int */
 	protected $ideas_forum_id;
 
-	/** @var array */
-	protected $idea_cache = [];
-
 	/**
 	 * Set additional services and properties
 	 *
 	 * @param config $config
 	 * @param helper $helper
-	 * @param idea $idea
 	 * @param user_loader $user_loader
 	 * @return void
 	 */
-	public function set_additional_services(config $config, helper $helper, idea $idea, user_loader $user_loader)
+	public function set_additional_services(config $config, helper $helper, user_loader $user_loader)
 	{
 		$this->helper = $helper;
-		$this->idea = $idea;
 		$this->user_loader = $user_loader;
 		$this->ideas_forum_id = (int) $config['ideas_forum_id'];
 	}
@@ -120,9 +111,7 @@ class status extends \phpbb\notification\type\base
 			'ignore_users'		=> [],
 		], $options);
 
-		$idea = $this->load_idea($type_data['idea_id']);
-
-		$users = $idea ? [$idea['idea_author']] : [];
+		$users = [$type_data['idea_author']];
 
 		return $this->get_authorised_recipients($users, $this->ideas_forum_id, $options);
 	}
@@ -206,31 +195,11 @@ class status extends \phpbb\notification\type\base
 	 */
 	public function create_insert_array($type_data, $pre_create_data = [])
 	{
-		$idea = $this->load_idea($type_data['idea_id']);
-
 		$this->set_data('idea_id', (int) $type_data['idea_id']);
 		$this->set_data('status', (int) $type_data['status']);
 		$this->set_data('updater_id', (int) $type_data['user_id']);
-		$this->set_data('idea_title', $idea ? $idea['idea_title'] : '');
+		$this->set_data('idea_title', $type_data['idea_title']);
 
 		parent::create_insert_array($type_data, $pre_create_data);
-	}
-
-	/**
-	 * Load and cache an idea by id
-	 *
-	 * @param int $idea_id
-	 * @return array|false
-	 */
-	protected function load_idea($idea_id)
-	{
-		$idea_id = (int) $idea_id;
-
-		if (!array_key_exists($idea_id, $this->idea_cache))
-		{
-			$this->idea_cache[$idea_id] = $this->idea->get_idea($idea_id) ?: false;
-		}
-
-		return $this->idea_cache[$idea_id];
 	}
 }
