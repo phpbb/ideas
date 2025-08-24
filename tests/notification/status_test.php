@@ -169,8 +169,7 @@ class status_test extends \phpbb_test_case
 	public function test_get_title()
 	{
 		$this->setNotificationData([
-			'updater_id' => 123,
-			'status' => ext::$statuses['IN_PROGRESS']
+			'updater_id' => 123
 		]);
 
 		$this->language->expects($this->once())
@@ -178,19 +177,10 @@ class status_test extends \phpbb_test_case
 			->with('IDEA_STATUS_CHANGE')
 			->willReturn(true);
 
-		$this->language->expects($this->exactly(2))
+		$this->language->expects($this->once())
 			->method('lang')
-			->willReturnCallback(function($key, ...$args) {
-				if ($key === 'IN_PROGRESS')
-				{
-					return 'In Progress';
-				}
-				if ($key === 'IDEA_STATUS_CHANGE' && $args[0] === 'TestUser' && $args[1] === 'In Progress')
-				{
-					return 'TestUser changed status to In Progress';
-				}
-				return '';
-			});
+			->with('IDEA_STATUS_CHANGE', 'TestUser')
+			->willReturn('Idea status changed by TestUser');
 
 		$this->user_loader->expects($this->once())
 			->method('get_username')
@@ -198,14 +188,13 @@ class status_test extends \phpbb_test_case
 			->willReturn('TestUser');
 
 		$result = $this->notification_type->get_title();
-		$this->assertEquals('TestUser changed status to In Progress', $result);
+		$this->assertEquals('Idea status changed by TestUser', $result);
 	}
 
 	public function test_get_title_loads_language()
 	{
 		$this->setNotificationData([
 			'updater_id' => 456,
-			'status' => ext::$statuses['IMPLEMENTED']
 		]);
 
 		$this->language->expects($this->once())
@@ -217,19 +206,10 @@ class status_test extends \phpbb_test_case
 			->method('add_lang')
 			->with('common', 'phpbb/ideas');
 
-		$this->language->expects($this->exactly(2))
+		$this->language->expects($this->once())
 			->method('lang')
-			->willReturnCallback(function($key, ...$args) {
-				if ($key === 'IMPLEMENTED')
-				{
-					return 'Implemented';
-				}
-				if ($key === 'IDEA_STATUS_CHANGE' && $args[0] === 'AdminUser' && $args[1] === 'Implemented')
-				{
-					return 'AdminUser changed status to Implemented';
-				}
-				return '';
-			});
+			->with('IDEA_STATUS_CHANGE', 'AdminUser')
+			->willReturn('Idea status changed by AdminUser');
 
 		$this->user_loader->expects($this->once())
 			->method('get_username')
@@ -237,7 +217,7 @@ class status_test extends \phpbb_test_case
 			->willReturn('AdminUser');
 
 		$result = $this->notification_type->get_title();
-		$this->assertEquals('AdminUser changed status to Implemented', $result);
+		$this->assertEquals('Idea status changed by AdminUser', $result);
 	}
 
 	public function test_get_reference()
@@ -250,6 +230,29 @@ class status_test extends \phpbb_test_case
 			->willReturn('“Test Idea”');
 
 		$this->assertEquals('“Test Idea”', $this->notification_type->get_reference());
+	}
+
+	public function test_get_reason()
+	{
+		$this->setNotificationData([
+			'status' => ext::$statuses['IN_PROGRESS'],
+		]);
+
+		$this->language->expects($this->exactly(2))
+			->method('lang')
+			->willReturnCallback(function($key, ...$args) {
+				if ($key === 'IN_PROGRESS')
+				{
+					return 'In Progress';
+				}
+				if ($key === 'NOTIFICATION_STATUS' && $args[0] === 'In Progress')
+				{
+					return 'Status: In Progress';
+				}
+				return '';
+			});
+
+		$this->assertEquals('Status: In Progress', $this->notification_type->get_reason());
 	}
 
 	public function test_get_url()

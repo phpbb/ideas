@@ -134,10 +134,9 @@ class status extends \phpbb\notification\type\base
 			$this->language->add_lang('common', 'phpbb/ideas');
 		}
 
-		$status = $this->language->lang(ext::status_name($this->get_data('status')));
 		$username = $this->user_loader->get_username($this->get_data('updater_id'), 'no_profile');
 
-		return $this->language->lang($this->language_key, $username, $status);
+		return $this->language->lang($this->language_key, $username);
 	}
 
 	/**
@@ -148,6 +147,17 @@ class status extends \phpbb\notification\type\base
 		return $this->language->lang(
 			'NOTIFICATION_REFERENCE',
 			censor_text($this->get_data('idea_title'))
+		);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function get_reason()
+	{
+		return $this->language->lang(
+			'NOTIFICATION_STATUS',
+			$this->language->lang(ext::status_name($this->get_data('status')))
 		);
 	}
 
