@@ -16,7 +16,7 @@ class status_icon_test extends \phpbb_template_template_test_case
 {
 	protected $test_path = __DIR__;
 
-	protected function setup_engine(array $new_config = array())
+	protected function setup_engine(array $new_config = array(), string $template_path = '')
 	{
 		global $phpbb_root_path, $phpEx;
 
@@ -39,7 +39,7 @@ class status_icon_test extends \phpbb_template_template_test_case
 			$phpEx
 		);
 
-		$this->template_path = $this->test_path . '/templates';
+		$this->template_path = $template_path ?: $this->test_path . '/templates';
 
 		$cache_path = $phpbb_root_path . 'cache/twig';
 		$context = new \phpbb\template\context();
