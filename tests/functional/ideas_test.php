@@ -88,6 +88,17 @@ class ideas_test extends ideas_functional_base
 	}
 
 	/**
+	 * Test for notification options
+	 */
+	public function test_notification_options()
+	{
+		$this->login();
+
+		$crawler = self::request('GET', "/ucp.php?i=ucp_notifications&mode=notification_options");
+		$this->assertContainsLang('NOTIFICATION_TYPE_IDEAS', $crawler->filter('#cp-main')->text());
+	}
+
+	/**
 	 * Test ideas displays expected error messages
 	 */
 	public function test_idea_errors()
@@ -104,6 +115,11 @@ class ideas_test extends ideas_functional_base
 		$this->error_check("app.php/idea/1?sid=$this->sid", 'IDEAS_NOT_AVAILABLE');
 		$this->error_check("app.php/ideas/list?sid=$this->sid", 'IDEAS_NOT_AVAILABLE');
 		$this->error_check("app.php/ideas/post?sid=$this->sid", 'IDEAS_NOT_AVAILABLE');
+
+		// While ideas is disabled, let's check that notifications are no longer available too
+		$this->login();
+		$crawler = self::request('GET', "/ucp.php?i=ucp_notifications&mode=notification_options");
+		$this->assertNotContainsLang('NOTIFICATION_TYPE_IDEAS', $crawler->filter('#cp-main')->text());
 	}
 
 	/**

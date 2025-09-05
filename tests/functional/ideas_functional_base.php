@@ -32,6 +32,7 @@ class ideas_functional_base extends \phpbb_functional_test_case
 		$this->add_lang_ext('phpbb/ideas', array(
 			'common',
 			'info_acp_ideas',
+			'info_ucp_ideas',
 			'phpbb_ideas_acp',
 		));
 	}

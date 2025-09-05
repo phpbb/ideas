@@ -1,0 +1,10 @@
+Subject: Idea status - "{IDEA_TITLE}"
+
+Hello {USERNAME},
+
+The status of your Idea topic "{IDEA_TITLE}" at "{SITENAME}" has been updated by {UPDATED_BY} to {STATUS}.
+
+If you want to view the Idea, click the following link:
+{U_VIEW_IDEA}
+
+{EMAIL_SIG}

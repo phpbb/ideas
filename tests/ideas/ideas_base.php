@@ -29,6 +29,9 @@ class ideas_base extends \phpbb_database_test_case
 	/** @var \phpbb\language\language */
 	protected $lang;
 
+	/** @var \phpbb_mock_notification_manager */
+	protected $notification_manager;
+
 	/** @var \phpbb\user */
 	protected $user;
 
@@ -72,6 +75,9 @@ class ideas_base extends \phpbb_database_test_case
 		$request = $this->getMockBuilder('\phpbb\request\request')
 			->disableOriginalConstructor()
 			->getMock();
+		$this->notification_manager = $this->getMockBuilder('\phpbb\notification\manager')
+			->disableOriginalConstructor()
+			->getMock();
 	}
 
 	/**
@@ -112,6 +118,7 @@ class ideas_base extends \phpbb_database_test_case
 			$this->config,
 			$this->db,
 			$this->lang,
+			$this->notification_manager,
 			$this->user,
 			'phpbb_ideas_ideas',
 			'phpbb_ideas_votes',
