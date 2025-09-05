@@ -46,6 +46,7 @@ $lang = array_merge($lang, array(
 	'IMPLEMENTED_IDEAS'		=> 'Recently Implemented Ideas',
 	'IMPLEMENTED_VERSION'	=> 'phpBB version',
 	'IN_PROGRESS'           => 'In Progress',
+	'IN_PROGRESS_IDEAS'     => 'Ideas In Progress',
 	'INVALID'				=> 'Invalid',
 	'INVALID_IDEA_QUERY'	=> 'Invalid SQL query. Ideas failed to load.',
 	'INVALID_VOTE'			=> 'Invalid vote; the number you entered was invalid.',
@@ -106,6 +107,7 @@ $lang = array_merge($lang, array(
 
 	'VIEW_IDEA'				=> 'View Idea',
 	'VIEW_IMPLEMENTED'		=> 'View all implemented ideas',
+	'VIEW_IN_PROGRESS'		=> 'View all in progress ideas',
 	'VIEW_LATEST'			=> 'View all open ideas',
 	'VIEW_TOP'				=> 'View all top voted ideas',
 	'VIEWING_IDEAS'			=> 'Viewing Ideas',

@@ -43,13 +43,17 @@ class index_controller extends base
 		$ideas = $this->entity->get_ideas(ext::NUM_IDEAS, ext::SORT_DATE, 'DESC', ext::$statuses['IMPLEMENTED']);
 		$this->assign_template_block_vars('implemented_ideas', $ideas);
 
+		// Generate in progress
+		$ideas = $this->entity->get_ideas(ext::NUM_IDEAS, ext::SORT_DATE, 'DESC', ext::$statuses['IN_PROGRESS']);
+		$this->assign_template_block_vars('in_progress_ideas', $ideas);
+
 		$this->template->assign_vars(array(
 			'U_VIEW_TOP'		=> $this->helper->route('phpbb_ideas_list_controller', ['sort' => ext::SORT_TOP]),
 			'U_VIEW_LATEST'		=> $this->helper->route('phpbb_ideas_list_controller', ['sort' => ext::SORT_NEW]),
 			'U_VIEW_IMPLEMENTED'=> $this->helper->route('phpbb_ideas_list_controller', ['sort' => ext::SORT_DATE, 'status' => ext::$statuses['IMPLEMENTED']]),
+			'U_VIEW_IN_PROGRESS'=> $this->helper->route('phpbb_ideas_list_controller', ['sort' => ext::SORT_DATE, 'status' => ext::$statuses['IN_PROGRESS']]),
 			'U_POST_ACTION'		=> $this->helper->route('phpbb_ideas_post_controller'),
 			'U_MCP' 			=> ($this->auth->acl_get('m_', $this->config['ideas_forum_id'])) ? append_sid("{$this->root_path}mcp.$this->php_ext", "f={$this->config['ideas_forum_id']}&amp;i=main&amp;mode=forum_view", true, $this->user->session_id) : '',
-
 		));
 
 		// Assign breadcrumb template vars
