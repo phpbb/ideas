@@ -14,6 +14,7 @@ use phpbb\auth\auth;
 use phpbb\config\config;
 use phpbb\db\driver\driver_interface;
 use phpbb\language\language;
+use phpbb\notification\manager as notification_manager;
 use phpbb\user;
 
 /**
@@ -33,6 +34,9 @@ class base
 	/** @var language */
 	protected $language;
 
+	/** @var notification_manager */
+	protected $notification_manager;
+
 	/* @var user */
 	protected $user;
 
@@ -51,22 +55,24 @@ class base
 	/**
 	 * Constructor
 	 *
-	 * @param auth             $auth
-	 * @param config           $config
+	 * @param auth $auth
+	 * @param config $config
 	 * @param driver_interface $db
-	 * @param language         $language
-	 * @param user             $user
-	 * @param string           $table_ideas
-	 * @param string           $table_votes
-	 * @param string           $table_topics
-	 * @param string           $phpEx
+	 * @param language $language
+	 * @param notification_manager $notification_manager
+	 * @param user $user
+	 * @param string $table_ideas
+	 * @param string $table_votes
+	 * @param string $table_topics
+	 * @param string $phpEx
 	 */
-	public function __construct(auth $auth, config $config, driver_interface $db, language $language, user $user, $table_ideas, $table_votes, $table_topics, $phpEx)
+	public function __construct(auth $auth, config $config, driver_interface $db, language $language, notification_manager $notification_manager, user $user, $table_ideas, $table_votes, $table_topics, $phpEx)
 	{
 		$this->auth = $auth;
 		$this->config = $config;
 		$this->db = $db;
 		$this->language = $language;
+		$this->notification_manager = $notification_manager;
 		$this->user = $user;
 
 		$this->php_ext = $phpEx;

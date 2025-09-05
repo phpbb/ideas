@@ -70,6 +70,20 @@ class idea extends base
 		);
 
 		$this->update_idea_data($sql_ary, $idea_id, $this->table_ideas);
+
+		// Send a notification
+		$idea = $this->get_idea($idea_id);
+		$notifications = $this->notification_manager->get_notified_users(ext::NOTIFICATION_TYPE_STATUS, ['item_id' => (int) $idea_id]);
+		$this->notification_manager->{empty($notifications) ? 'add_notifications' : 'update_notifications'}(
+			ext::NOTIFICATION_TYPE_STATUS,
+			[
+				'idea_id' => (int) $idea_id,
+				'status'  => (int) $status,
+				'user_id' => (int) $this->user->data['user_id'],
+				'idea_author' => (int) $idea['idea_author'],
+				'idea_title' => $idea['idea_title'],
+			]
+		);
 	}
 
 	/**
@@ -262,8 +276,14 @@ class idea extends base
 		// Delete idea
 		$deleted = $this->delete_idea_data($id, $this->table_ideas);
 
-		// Delete votes
-		$this->delete_idea_data($id, $this->table_votes);
+		if ($deleted)
+		{
+			// Delete votes
+			$this->delete_idea_data($id, $this->table_votes);
+
+			// Delete notifications
+			$this->notification_manager->delete_notifications(ext::NOTIFICATION_TYPE_STATUS, $id);
+		}
 
 		return $deleted;
 	}
