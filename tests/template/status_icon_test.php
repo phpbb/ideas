@@ -97,7 +97,7 @@ class status_icon_test extends phpbb_template_template_test_case
 		$this->template->set_custom_style('tests', $this->template_path);
 	}
 
-	public function data_template_status_icons(): array
+	public static function data_template_status_icons(): array
 	{
 		return [
 			[0, ''],

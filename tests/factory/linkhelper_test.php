@@ -62,15 +62,14 @@ class linkhelper_test extends \phpbb_database_test_case
 				array('u_viewprofile', true),
 			));
 
-		$this->set_global_user();
+		self::set_global_user();
 	}
 
-	public function set_global_user()
+	public static function set_global_user()
 	{
 		global $user;
-		$user = $this->getMockBuilder('\phpbb\user')
-			->disableOriginalConstructor()
-			->getMock();
+		$user = new \stdClass();
+		$user->data = array();
 		$user->data['user_id'] = ANONYMOUS;
 		$user->data['user_form_salt'] = '';
 	}
@@ -80,9 +79,9 @@ class linkhelper_test extends \phpbb_database_test_case
 		return new \phpbb\ideas\factory\linkhelper($this->helper, $this->user_loader);
 	}
 
-	public function get_idea_link_test_data()
+	public static function get_idea_link_test_data()
 	{
-		$this->set_global_user();
+		self::set_global_user();
 
 		return array(
 			array(1, '', false, 'phpbb_ideas_idea_controller#{"idea_id":1}'),
@@ -101,7 +100,7 @@ class linkhelper_test extends \phpbb_database_test_case
 		self::assertEquals($expected, $linkhelper->get_idea_link($idea_id, $mode, $hash));
 	}
 
-	public function get_user_link_test_data()
+	public static function get_user_link_test_data()
 	{
 		return array(
 			array(2, '<a href="phpBB/memberlist.php?mode=viewprofile&amp;u=2" class="username">ideabot</a>'),

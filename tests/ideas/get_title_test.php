@@ -12,7 +12,7 @@ namespace phpbb\ideas\tests\ideas;
 
 class get_title_test extends \phpbb\ideas\tests\ideas\ideas_base
 {
-	public function get_title_data()
+	public static function get_title_data()
 	{
 		return [
 			[1, 'Foo Idea #1 New with 3 up votes'],

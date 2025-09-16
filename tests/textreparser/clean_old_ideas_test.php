@@ -35,7 +35,7 @@ class clean_old_ideas_test extends \phpbb_textreparser_test_row_based_plugin
 		);
 	}
 
-	public function get_reparse_tests()
+	public static function get_reparse_tests()
 	{
 		return [
 			[

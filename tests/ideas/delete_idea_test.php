@@ -17,7 +17,7 @@ class delete_idea_test extends \phpbb\ideas\tests\ideas\ideas_base
 	 *
 	 * @return array
 	 */
-	public function delete_test_data()
+	public static function delete_test_data()
 	{
 		return array(
 			array(1),
@@ -54,7 +54,7 @@ class delete_idea_test extends \phpbb\ideas\tests\ideas\ideas_base
 	 *
 	 * @return array
 	 */
-	public function delete_fails_test_data()
+	public static function delete_fails_test_data()
 	{
 		return array(
 			array(10),

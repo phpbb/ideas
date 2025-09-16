@@ -12,7 +12,7 @@ namespace phpbb\ideas\tests\ideas;
 
 class live_search_test extends \phpbb\ideas\tests\ideas\ideas_base
 {
-	public function live_search_data()
+	public static function live_search_data()
 	{
 		return [
 			['Foo', [

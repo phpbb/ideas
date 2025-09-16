@@ -118,7 +118,7 @@ class listener_test extends \phpbb_test_case
 		), array_keys(\phpbb\ideas\event\listener::getSubscribedEvents()));
 	}
 
-	public function global_template_vars_data()
+	public static function global_template_vars_data()
 	{
 		return [
 			'registered user' => [true, false, true],
@@ -148,7 +148,7 @@ class listener_test extends \phpbb_test_case
 		$listener->global_template_vars();
 	}
 
-	public function show_idea_data()
+	public static function show_idea_data()
 	{
 		return [
 			[2, 10, true, true, true],
@@ -229,7 +229,7 @@ class listener_test extends \phpbb_test_case
 	 *
 	 * @return array Array of test data
 	 */
-	public function show_post_buttons_data()
+	public static function show_post_buttons_data()
 	{
 		$post_row = array(
 			'U_EDIT'   => true,
@@ -282,7 +282,7 @@ class listener_test extends \phpbb_test_case
 	 *
 	 * @return array Array of test data
 	 */
-	public function adjust_quickmod_tools_data()
+	public static function adjust_quickmod_tools_data()
 	{
 		$quickmod_array = [
 			'lock'          => [1 => true],
@@ -344,7 +344,7 @@ class listener_test extends \phpbb_test_case
 	 *
 	 * @return array Array of test data
 	 */
-	public function viewonline_data()
+	public static function viewonline_data()
 	{
 		global $phpEx;
 
@@ -446,7 +446,7 @@ class listener_test extends \phpbb_test_case
 	 *
 	 * @return array Array of test data
 	 */
-	public function edit_idea_title_data()
+	public static function edit_idea_title_data()
 	{
 		return array(
 			array(
@@ -548,7 +548,7 @@ class listener_test extends \phpbb_test_case
 	/**
 	 * Test data for test_ideas_forum_redirect
 	 */
-	public function ideas_forum_redirect_data()
+	public static function ideas_forum_redirect_data()
 	{
 		return [
 			[2, '$url', true],
@@ -580,7 +580,7 @@ class listener_test extends \phpbb_test_case
 		$listener->ideas_forum_redirect($event);
 	}
 
-	public function submit_idea_data()
+	public static function submit_idea_data()
 	{
 		return [
 			['post', 2, 0, true, true], // all good

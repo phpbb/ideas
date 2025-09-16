@@ -17,7 +17,7 @@ class post_controller_test extends controller_base
 	 *
 	 * @return array Array of test data
 	 */
-	public function controller_exception_test_data()
+	public static function controller_exception_test_data()
 	{
 		return [
 			[2, 2, 200, ''], // all good

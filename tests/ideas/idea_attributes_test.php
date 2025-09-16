@@ -17,7 +17,7 @@ class idea_attributes_test extends ideas_base
 	 *
 	 * @return array
 	 */
-	public function get_status_from_id_test_data()
+	public static function get_status_from_id_test_data()
 	{
 		return array(
 			array(1, 'NEW'),
@@ -43,7 +43,7 @@ class idea_attributes_test extends ideas_base
 	 *
 	 * @return array
 	 */
-	public function set_status_test_data()
+	public static function set_status_test_data()
 	{
 		return array(
 			array(1, 1),
@@ -75,7 +75,7 @@ class idea_attributes_test extends ideas_base
 	 *
 	 * @return array
 	 */
-	public function idea_attribute_test_data()
+	public static function idea_attribute_test_data()
 	{
 		return array(
 			array(

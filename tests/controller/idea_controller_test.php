@@ -19,7 +19,7 @@ class idea_controller_test extends \phpbb\ideas\tests\controller\controller_base
 	 *
 	 * @return array Array of test data
 	 */
-	public function controller_test_data()
+	public static function controller_test_data()
 	{
 		return array(
 			array(1, '', '', false, null, null, 302), // non-ajax
@@ -138,7 +138,7 @@ class idea_controller_test extends \phpbb\ideas\tests\controller\controller_base
 	 *
 	 * @return array Array of test data
 	 */
-	public function display_fails_data()
+	public static function display_fails_data()
 	{
 		return array(
 			array(0, 2, 404, 'IDEA_NOT_FOUND'), // no idea data

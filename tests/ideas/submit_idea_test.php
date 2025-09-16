@@ -31,7 +31,7 @@ class submit_idea_test extends \phpbb\ideas\tests\ideas\ideas_base
 	 *
 	 * @return array
 	 */
-	public function submit_test_data()
+	public static function submit_test_data()
 	{
 		return array(
 			array(4, 'New Idea #1'),

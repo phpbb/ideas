@@ -17,7 +17,7 @@ class vote_test extends ideas_base
 	 *
 	 * @return array
 	 */
-	public function vote_test_data()
+	public static function vote_test_data()
 	{
 		// idea 1 has 3 up votes (3 points)
 		// idea 2 has 1 down vote (-1 point)
@@ -104,7 +104,7 @@ class vote_test extends ideas_base
 	 *
 	 * @return array
 	 */
-	public function vote_fails_test_data()
+	public static function vote_fails_test_data()
 	{
 		return array(
 			array(2),
@@ -136,7 +136,7 @@ class vote_test extends ideas_base
 	 *
 	 * @return array
 	 */
-	public function remove_vote_test_data()
+	public static function remove_vote_test_data()
 	{
 		// idea 1 has 3 up votes (3 points)
 		// idea 2 has 1 down vote (-1 point)

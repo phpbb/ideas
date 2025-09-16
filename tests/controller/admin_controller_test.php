@@ -138,7 +138,7 @@ class admin_controller_test extends \phpbb_test_case
 		$admin->display_options();
 	}
 
-	public function set_config_options_data()
+	public static function set_config_options_data()
 	{
 		return [
 			[2, 2, true],
@@ -175,7 +175,7 @@ class admin_controller_test extends \phpbb_test_case
 		$this->assertSame($expected, $this->config['ideas_forum_id']);
 	}
 
-	public function set_config_options_errors_data()
+	public static function set_config_options_errors_data()
 	{
 		return [
 			[2, false],
@@ -212,7 +212,7 @@ class admin_controller_test extends \phpbb_test_case
 		$admin->set_config_options();
 	}
 
-	public function set_ideas_forum_options_data()
+	public static function set_ideas_forum_options_data()
 	{
 		return [
 			[2, true],

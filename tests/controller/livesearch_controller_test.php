@@ -17,7 +17,7 @@ class livesearch_controller_test extends controller_base
 	 *
 	 * @return array Array of test data
 	 */
-	public function controller_test_data()
+	public static function controller_test_data()
 	{
 		return [
 			[200, ['keyword' => 'foo', 'results' => '$matches']],

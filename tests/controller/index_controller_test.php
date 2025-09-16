@@ -17,7 +17,7 @@ class index_controller_test extends controller_base
 	 *
 	 * @return array Array of test data
 	 */
-	public function controller_test_data()
+	public static function controller_test_data()
 	{
 		return array(
 			array(200, '@phpbb_ideas/index_body.html'),
@@ -50,7 +50,7 @@ class index_controller_test extends controller_base
 	 *
 	 * @return array Array of test data
 	 */
-	public function controller_exception_test_data()
+	public static function controller_exception_test_data()
 	{
 		return array(
 			array(0),

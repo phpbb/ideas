@@ -65,7 +65,7 @@ class get_ideas_test extends ideas_base
 	 *
 	 * @return array
 	 */
-	public function get_ideas_data()
+	public static function get_ideas_data()
 	{
 		return array(
 			///////// TEST STATUS /////////
@@ -281,7 +281,7 @@ class get_ideas_test extends ideas_base
 	 *
 	 * @return array
 	 */
-	public function get_ideas_permissions_data()
+	public static function get_ideas_permissions_data()
 	{
 		return array(
 			array(true, 4), // mod should see the unapproved ideas

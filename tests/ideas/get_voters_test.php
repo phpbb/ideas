@@ -17,7 +17,7 @@ class get_voters_test extends ideas_base
 	 *
 	 * @return array
 	 */
-	public function get_voters_test_data()
+	public static function get_voters_test_data()
 	{
 		return array(
 			array(1, array('admin', 'ideabot', 'poster')),

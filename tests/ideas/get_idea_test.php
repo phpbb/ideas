@@ -17,7 +17,7 @@ class get_idea_test extends ideas_base
 	 *
 	 * @return array
 	 */
-	public function get_idea_test_data()
+	public static function get_idea_test_data()
 	{
 		return array(
 			array(1, 'Idea #1'),
@@ -32,7 +32,7 @@ class get_idea_test extends ideas_base
 	 *
 	 * @return array
 	 */
-	public function get_idea_fails_test_data()
+	public static function get_idea_fails_test_data()
 	{
 		return array(
 			array(50),
