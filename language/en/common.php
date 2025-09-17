@@ -38,6 +38,7 @@ $lang = array_merge($lang, array(
 	'IDEA_DELETED'			=> 'Idea successfully deleted.',
 	'IDEA_LIST'				=> 'Idea List',
 	'IDEA_NOT_FOUND'		=> 'Idea not found',
+	'IDEA_STATUS_CHANGE'	=> '<strong>Idea status changed</strong> by %s:',
 	'IDEA_STORED_MOD'		=> 'Your idea has been submitted successfully, but it will need to be approved by a moderator before it is publicly viewable. You will be notified when your idea has been approved.<br><br><a href="%s">Return to Ideas</a>.',
 	'IDEAS_TITLE'			=> 'phpBB Ideas',
 	'IDEAS_NOT_AVAILABLE'	=> 'Ideas is not available at this time.',
@@ -66,6 +67,7 @@ $lang = array_merge($lang, array(
 	'NEW'					=> 'New',
 	'NEW_IDEA'				=> 'New Idea',
 	'NO_IDEAS_DISPLAY'		=> 'There are no ideas to display.',
+	'NOTIFICATION_STATUS'	=> '<em>Status: <strong>%s</strong></em>',
 
 	'OPEN_IDEAS'			=> 'Open ideas',
 

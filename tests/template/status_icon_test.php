@@ -59,7 +59,7 @@ class status_icon_test extends phpbb_template_template_test_case
 			$phpEx
 		);
 
-		$this->template_path = $this->test_path . '/templates';
+		$this->template_path = $template_path ?: $this->test_path . '/templates';
 
 		$cache_path = $phpbb_root_path . 'cache/twig';
 		$context = new context();

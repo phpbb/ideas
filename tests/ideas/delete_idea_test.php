@@ -32,6 +32,9 @@ class delete_idea_test extends \phpbb\ideas\tests\ideas\ideas_base
 	 */
 	public function test_delete($idea_id)
 	{
+		$this->notification_manager->expects($this->once())
+			->method('delete_notifications');
+
 		$object = $this->get_idea_object();
 
 		// delete idea
@@ -70,6 +73,9 @@ class delete_idea_test extends \phpbb\ideas\tests\ideas\ideas_base
 	 */
 	public function test_delete_fails($idea_id)
 	{
+		$this->notification_manager->expects($this->never())
+			->method('delete_notifications');
+
 		$object = $this->get_idea_object();
 
 		self::assertFalse($object->delete($idea_id));
