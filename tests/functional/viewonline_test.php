@@ -60,7 +60,7 @@ class viewonline_test extends ideas_functional_base
 				}
 				catch (\PHPUnit\Framework\AssertionFailedError $e)
 				{
-					$this->addWarning('Expected VIEWING_IDEAS lang string not found: ' . $e->getMessage());
+					$this->markTestIncomplete('Expected VIEWING_IDEAS lang string not found: ' . $e->getMessage());
 				}
 				return;
 			}

@@ -12,7 +12,7 @@ namespace phpbb\ideas\tests;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use phpbb\notification\manager;
-use phpbb\finder;
+use phpbb\finder\finder;
 use phpbb\db\migrator;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use phpbb\ideas\ext;
@@ -88,7 +88,7 @@ class ext_test extends \phpbb_test_case
 		$this->assertEquals('notification', $state);
 	}
 
-	public function notification_step_provider(): array
+	public static function notification_step_provider(): array
 	{
 		return [
 			'enable step'  => ['enable_notifications', 'enable_step'],
@@ -127,7 +127,7 @@ class ext_test extends \phpbb_test_case
 		}
 	}
 
-	public function parent_step_provider(): array
+	public static function parent_step_provider(): array
 	{
 		return [
 			'enable parent step' => ['enable_step', false],

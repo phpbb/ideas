@@ -72,7 +72,7 @@ class idea_attributes_test extends ideas_base
 		self::assertEquals($status, $idea['idea_status']);
 	}
 
-	public function set_status_notification_data()
+	public static function set_status_notification_data()
 	{
 		return [
 			[1, 1, [], 'add_notifications'],
