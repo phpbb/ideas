@@ -36,6 +36,8 @@ class status_test extends \phpbb_test_case
 	/** @var \phpbb\notification\manager|\PHPUnit\Framework\MockObject\MockObject */
 	protected $notification_manager;
 
+	protected int $forum_id;
+
 	protected function setUp(): void
 	{
 		parent::setUp();
@@ -65,7 +67,6 @@ class status_test extends \phpbb_test_case
 		// Set protected properties using reflection
 		$reflection = new \ReflectionClass($this->notification_type);
 		$notification_manager_property = $reflection->getProperty('notification_manager');
-		$notification_manager_property->setAccessible(true);
 		$notification_manager_property->setValue($this->notification_type, $this->notification_manager);
 	}
 
@@ -76,7 +77,6 @@ class status_test extends \phpbb_test_case
 	{
 		$reflection = new \ReflectionClass($this->notification_type);
 		$method = $reflection->getMethod('set_data');
-		$method->setAccessible(true);
 
 		foreach ($data as $key => $value)
 		{
@@ -322,7 +322,6 @@ class status_test extends \phpbb_test_case
 		// Verify data was set by checking get_data
 		$reflection = new \ReflectionClass($this->notification_type);
 		$get_data_method = $reflection->getMethod('get_data');
-		$get_data_method->setAccessible(true);
 
 		$this->assertEquals(7, $get_data_method->invoke($this->notification_type, 'idea_id'));
 		$this->assertEquals(4, $get_data_method->invoke($this->notification_type, 'status'));
