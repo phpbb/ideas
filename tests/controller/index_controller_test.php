@@ -35,7 +35,7 @@ class index_controller_test extends controller_base
 		$controller = $this->get_controller('index_controller', 'ideas');
 		self::assertInstanceOf('phpbb\ideas\controller\index_controller', $controller);
 
-		$this->entity->expects(self::atMost(3))
+		$this->entity->expects(self::atMost(4))
 			->method('get_ideas')
 			->willReturn([$this->initialized_idea_array()]);
 

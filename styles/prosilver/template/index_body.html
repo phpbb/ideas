@@ -1,3 +1,25 @@
+{% macro ideas_section(title, ideas, view_url, icon_class, view_text) %}
+	<div class="flex-box flex-align-end flex-justify">
+		<h2>{{ title }}</h2>
+		{% if ideas %}
+			<a class="button view-all" href="{{ view_url }}"><i class="icon fa-fw {{ icon_class }}"></i> <span>{{ view_text }}</span></a>
+		{% endif %}
+	</div>
+	<div class="forumbg">
+		<div class="inner">
+			<ul class="topiclist">
+				<li class="header">
+					<dl class="row-item">
+						<dt><div class="list-inner">{{ lang('IDEAS') }}</div></dt>
+						<dd class="posts">{{ lang('VOTES') }}</dd>
+					</dl>
+				</li>
+			</ul>
+			{% include '@phpbb_ideas/index_list.html' with {ideas: ideas} %}
+		</div>
+	</div>
+{% endmacro %}
+
 {% INCLUDECSS '@phpbb_ideas/ideas.css' %}
 
 {% include 'overall_header.html' %}
@@ -7,67 +29,16 @@
 {% include '@phpbb_ideas/action_bar_top.html' %}
 
 {# TOP IDEAS #}
-<div class="flex-box flex-align-end flex-justify">
-	<h2>{{ lang('TOP_IDEAS') }}</h2>
-	{% if top_ideas %}
-		<a class="button view-all" href="{{ U_VIEW_TOP }}"><i class="icon fa-fw fa-line-chart"></i> <span>{{ lang('VIEW_TOP') }}</span></a>
-	{% endif %}
-</div>
-<div class="forumbg">
-	<div class="inner">
-		<ul class="topiclist">
-			<li class="header">
-				<dl class="row-item">
-					<dt><div class="list-inner">{{ lang('IDEAS') }}</div></dt>
-					<dd class="posts">{{ lang('VOTES') }}</dd>
-				</dl>
-			</li>
-		</ul>
-		{% include '@phpbb_ideas/index_list.html' with {ideas: top_ideas} %}
-	</div>
-</div>
+{{ _self.ideas_section(lang('TOP_IDEAS'), top_ideas, U_VIEW_TOP, 'fa-line-chart', lang('VIEW_TOP')) }}
 
 {# LATEST IDEAS #}
-<div class="flex-box flex-align-end flex-justify">
-	<h2>{{ lang('LATEST_IDEAS') }}</h2>
-	{% if latest_ideas %}
-		<a class="button view-all" href="{{ U_VIEW_LATEST }}"><i class="icon fa-fw fa-lightbulb-o"></i> <span>{{ lang('VIEW_LATEST') }}</span></a>
-	{% endif %}
-</div>
-<div class="forumbg">
-	<div class="inner">
-		<ul class="topiclist">
-			<li class="header">
-				<dl class="row-item">
-					<dt><div class="list-inner">{{ lang('IDEAS') }}</div></dt>
-					<dd class="posts">{{ lang('VOTES') }}</dd>
-				</dl>
-			</li>
-		</ul>
-		{% include '@phpbb_ideas/index_list.html' with {ideas: latest_ideas} %}
-	</div>
-</div>
+{{ _self.ideas_section(lang('LATEST_IDEAS'), latest_ideas, U_VIEW_LATEST, 'fa-lightbulb-o', lang('VIEW_LATEST')) }}
 
 {# IMPLEMENTED IDEAS #}
-<div class="flex-box flex-align-end flex-justify">
-	<h2>{{ lang('IMPLEMENTED_IDEAS') }}</h2>
-	{% if implemented_ideas %}
-		<a class="button view-all" href="{{ U_VIEW_IMPLEMENTED }}"><i class="icon fa-fw fa-code-fork fa-flip-vertical"></i> <span>{{ lang('VIEW_IMPLEMENTED') }}</span></a>
-	{% endif %}
-</div>
-<div class="forumbg">
-	<div class="inner">
-		<ul class="topiclist">
-			<li class="header">
-				<dl class="row-item">
-					<dt><div class="list-inner">{{ lang('IDEAS') }}</div></dt>
-					<dd class="posts">{{ lang('VOTES') }}</dd>
-				</dl>
-			</li>
-		</ul>
-		{% include '@phpbb_ideas/index_list.html' with {ideas: implemented_ideas} %}
-	</div>
-</div>
+{{ _self.ideas_section(lang('IMPLEMENTED_IDEAS'), implemented_ideas, U_VIEW_IMPLEMENTED, 'fa-code-fork fa-flip-vertical', lang('VIEW_IMPLEMENTED')) }}
+
+{# IN PROGRESS IDEAS #}
+{{ _self.ideas_section(lang('IN_PROGRESS_IDEAS'), in_progress_ideas, U_VIEW_IN_PROGRESS, 'fa-clock-o', lang('VIEW_IN_PROGRESS')) }}
 
 <br><br>
 
