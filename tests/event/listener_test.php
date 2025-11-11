@@ -115,6 +115,7 @@ class listener_test extends \phpbb_test_case
 			'core.posting_modify_template_vars',
 			'core.posting_modify_submit_post_before',
 			'core.posting_modify_submit_post_after',
+			'core.mcp_change_poster_after',
 		), array_keys(\phpbb\ideas\event\listener::getSubscribedEvents()));
 	}
 
@@ -671,6 +672,57 @@ class listener_test extends \phpbb_test_case
 		}
 
 		$listener->submit_idea_after($event);
+	}
+
+	/**
+	 * Data set for change_idea_author
+	 *
+	 * @return array Array of test data
+	 */
+	public function change_idea_author_data()
+	{
+		return [
+			[2, 1, 1, 2, true], // Valid: ideas forum, different authors
+			[1, 1, 1, 2, false], // Invalid: not ideas forum
+			[2, 1, 1, 1, false], // Invalid: same author
+		];
+	}
+
+	/**
+	 * Test the change_idea_author event
+	 *
+	 * @dataProvider change_idea_author_data
+	 */
+	public function test_change_idea_author($forum_id, $topic_id, $old_author_id, $new_author_id, $should_update)
+	{
+		$listener = $this->get_listener();
+
+		$event = new \phpbb\event\data([
+			'post_info' => [
+				'forum_id' => $forum_id,
+				'topic_id' => $topic_id,
+				'poster_id' => $old_author_id,
+			],
+			'userdata' => [
+				'user_id' => $new_author_id,
+			],
+		]);
+
+		$idea_data = [
+			'idea_id' => 1,
+			'idea_author' => $old_author_id,
+		];
+
+		$this->idea->expects($should_update ? self::once() : self::never())
+			->method('get_idea_by_topic_id')
+			->with($topic_id)
+			->willReturn($idea_data);
+
+		$this->idea->expects($should_update ? self::once() : self::never())
+			->method('set_author')
+			->with(1, $new_author_id);
+
+		$listener->change_idea_author($event);
 	}
 }
 
