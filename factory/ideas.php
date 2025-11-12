@@ -296,4 +296,29 @@ class ideas extends base
 	{
 		return $this->idea_count ?? 0;
 	}
+
+	/**
+	 * Get total ideas statistics
+	 *
+	 * @return array
+	 */
+	public function get_statistics()
+	{
+		$sql = 'SELECT idea_status FROM ' . $this->table_ideas;
+		$result = $this->db->sql_query($sql);
+		$rows = $this->db->sql_fetchrowset($result);
+		$this->db->sql_freeresult($result);
+
+		$total = count($rows);
+		$status_counts = $total ? array_count_values(array_column($rows, 'idea_status')) : [];
+
+		return [
+			'total'       => $total,
+			'implemented' => $status_counts[ext::$statuses['IMPLEMENTED']] ?? 0,
+			'in_progress' => $status_counts[ext::$statuses['IN_PROGRESS']] ?? 0,
+			'duplicate'   => $status_counts[ext::$statuses['DUPLICATE']] ?? 0,
+			'invalid'     => $status_counts[ext::$statuses['INVALID']] ?? 0,
+			'new'         => $status_counts[ext::$statuses['NEW']] ?? 0,
+		];
+	}
 }
