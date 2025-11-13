@@ -17,7 +17,7 @@ on:
 jobs:
     call-tests:
         name: Extension tests
-        uses: iMattPro/test-framework/.github/workflows/tests.yml@epv
+        uses: phpbb-extensions/test-framework/.github/workflows/tests.yml@3.3.x
         with:
             EXTNAME: phpbb/ideas # Your extension vendor/package name
             CODECOV: 1           # Run code coverage via codecov? 1 or 0
