@@ -298,27 +298,33 @@ class ideas extends base
 	}
 
 	/**
-	 * Get total ideas statistics
+	 * Get statistics - counts of total ideas and of each status type
 	 *
 	 * @return array
 	 */
 	public function get_statistics()
 	{
-		$sql = 'SELECT idea_status FROM ' . $this->table_ideas;
+		// the CASE/WHEN SQL approach is better for performance than processing in PHP
+		$sql = 'SELECT
+				COUNT(*) as total,
+				SUM(CASE WHEN idea_status = ' . (int) ext::$statuses['IMPLEMENTED'] . ' THEN 1 ELSE 0 END) as implemented,
+				SUM(CASE WHEN idea_status = ' . (int) ext::$statuses['IN_PROGRESS'] . ' THEN 1 ELSE 0 END) as in_progress,
+				SUM(CASE WHEN idea_status = ' . (int) ext::$statuses['DUPLICATE'] . ' THEN 1 ELSE 0 END) as duplicate,
+				SUM(CASE WHEN idea_status = ' . (int) ext::$statuses['INVALID'] . ' THEN 1 ELSE 0 END) as invalid,
+				SUM(CASE WHEN idea_status = ' . (int) ext::$statuses['NEW'] . ' THEN 1 ELSE 0 END) as new
+			FROM ' . $this->table_ideas;
+
 		$result = $this->db->sql_query($sql);
-		$rows = $this->db->sql_fetchrowset($result);
+		$row = $this->db->sql_fetchrow($result);
 		$this->db->sql_freeresult($result);
 
-		$total = count($rows);
-		$status_counts = $total ? array_count_values(array_column($rows, 'idea_status')) : [];
-
 		return [
-			'total'       => $total,
-			'implemented' => $status_counts[ext::$statuses['IMPLEMENTED']] ?? 0,
-			'in_progress' => $status_counts[ext::$statuses['IN_PROGRESS']] ?? 0,
-			'duplicate'   => $status_counts[ext::$statuses['DUPLICATE']] ?? 0,
-			'invalid'     => $status_counts[ext::$statuses['INVALID']] ?? 0,
-			'new'         => $status_counts[ext::$statuses['NEW']] ?? 0,
+			'total'       => (int) $row['total'],
+			'implemented' => (int) $row['implemented'],
+			'in_progress' => (int) $row['in_progress'],
+			'duplicate'   => (int) $row['duplicate'],
+			'invalid'     => (int) $row['invalid'],
+			'new'         => (int) $row['new'],
 		];
 	}
 }
