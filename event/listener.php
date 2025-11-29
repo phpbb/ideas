@@ -91,6 +91,7 @@ class listener implements EventSubscriberInterface
 			'core.posting_modify_template_vars'			=> 'submit_idea_template',
 			'core.posting_modify_submit_post_before'	=> 'submit_idea_before',
 			'core.posting_modify_submit_post_after'		=> [['submit_idea_after'], ['edit_idea_title']],
+			'core.mcp_change_poster_after'				=> 'change_idea_author',
 		);
 	}
 
@@ -388,6 +389,28 @@ class listener implements EventSubscriberInterface
 
 		$idea = $this->idea->get_idea_by_topic_id($event['topic_id']);
 		$this->idea->set_title($idea['idea_id'], $event['post_data']['post_subject']);
+	}
+
+	/**
+	 * Change an idea's author when the post author is changed
+	 *
+	 * @param \phpbb\event\data $event The event object
+	 * @return void
+	 */
+	public function change_idea_author($event)
+	{
+		$forum_id = (int) $event['post_info']['forum_id'];
+		$topic_id = (int) $event['post_info']['topic_id'];
+		$old_author_id = (int) $event['post_info']['poster_id'];
+		$new_author_id = (int) $event['userdata']['user_id'];
+
+		if ($old_author_id === $new_author_id || !$this->is_ideas_forum($forum_id))
+		{
+			return;
+		}
+
+		$idea = $this->idea->get_idea_by_topic_id($topic_id);
+		$this->idea->set_author($idea['idea_id'], $new_author_id);
 	}
 
 	/**
