@@ -40,6 +40,11 @@
 {# IN PROGRESS IDEAS #}
 {{ _self.ideas_section(lang('IN_PROGRESS_IDEAS'), in_progress_ideas, U_VIEW_IN_PROGRESS, 'fa-clock-o', lang('VIEW_IN_PROGRESS')) }}
 
-<br><br>
+<div class="stat-block statistics">
+	<h3>{{ lang('STATISTICS') }}</h3>
+	<p>
+		{{ lang('TOTAL_POSTED_IDEAS') }} <strong>{{ STATISTICS.total }}</strong> &bull; {{ lang('LIST_IMPLEMENTED') }} <strong>{{ STATISTICS.implemented }}</strong> &bull; {{ lang('LIST_IN_PROGRESS') }} <strong>{{ STATISTICS.in_progress }}</strong>
+	</p>
+</div>
 
 {% include 'overall_footer.html' %}
