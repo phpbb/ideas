@@ -54,6 +54,9 @@ class status_test extends \phpbb_test_case
 		$user = new \phpbb\user($this->language, '\phpbb\datetime');
 		$user->data['user_options'] = 230271;
 		$cache = new \phpbb_mock_cache();
+		$avatar_helper = $this->getMockBuilder('\phpbb\avatar\helper')
+			->disableOriginalConstructor()
+			->getMock();
 
 		$this->forum_id = 5;
 		$this->config->expects($this->once())
@@ -61,8 +64,8 @@ class status_test extends \phpbb_test_case
 			->with('ideas_forum_id')
 			->willReturn($this->forum_id);
 
-		$this->notification_type = new status($db, $this->language, $user, $this->auth, $phpbb_root_path, $phpEx, 'phpbb_user_notifications');
-		$this->notification_type->set_additional_services($this->config, $this->helper, $this->user_loader);
+		$this->notification_type = new status($avatar_helper, $this->helper, $db, $this->language, $user, $this->auth, $phpbb_root_path, $phpEx, 'phpbb_user_notifications');
+		$this->notification_type->set_additional_services($this->config, $this->user_loader);
 
 		// Set protected properties using reflection
 		$reflection = new \ReflectionClass($this->notification_type);

@@ -11,7 +11,6 @@
 namespace phpbb\ideas\notification\type;
 
 use phpbb\config\config;
-use phpbb\controller\helper;
 use phpbb\ideas\ext;
 use phpbb\user_loader;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -24,9 +23,6 @@ class status extends \phpbb\notification\type\base
 	/** @var config */
 	protected $config;
 
-	/** @var helper */
-	protected $helper;
-
 	/** @var user_loader */
 	protected $user_loader;
 
@@ -37,13 +33,11 @@ class status extends \phpbb\notification\type\base
 	 * Set additional services and properties
 	 *
 	 * @param config $config
-	 * @param helper $helper
 	 * @param user_loader $user_loader
 	 * @return void
 	 */
-	public function set_additional_services(config $config, helper $helper, user_loader $user_loader)
+	public function set_additional_services(config $config, user_loader $user_loader)
 	{
-		$this->helper = $helper;
 		$this->user_loader = $user_loader;
 		$this->ideas_forum_id = (int) $config['ideas_forum_id'];
 	}
@@ -168,7 +162,7 @@ class status extends \phpbb\notification\type\base
 	{
 		$params = ['idea_id' => $this->get_data('idea_id')];
 
-		return $this->helper->route('phpbb_ideas_idea_controller', $params, true, false, $reference_type);
+		return $this->controller_helper->route('phpbb_ideas_idea_controller', $params, true, false, $reference_type);
 	}
 
 	/**
