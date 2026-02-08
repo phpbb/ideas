@@ -354,7 +354,9 @@ class listener_test extends \phpbb_test_case
 				array(
 					1 => 'index',
 				),
-				array(),
+				array(
+					'session_page' => 'index.' . $phpEx . '/foobar'
+				),
 				'$location_url',
 				'$location',
 				'$location_url',
