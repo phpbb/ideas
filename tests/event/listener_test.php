@@ -360,26 +360,26 @@ class listener_test extends \phpbb_test_case
 				'$location_url',
 				'$location',
 			),
-			// test when on_page is app and session_page is NOT for ideas
+			// test when on_page is index and session_page is NOT for ideas
 			array(
 				array(
-					1 => 'app',
+					1 => 'index',
 				),
 				array(
-					'session_page' => 'app.' . $phpEx . '/foobar'
+					'session_page' => 'index.' . $phpEx . '/foobar'
 				),
 				'$location_url',
 				'$location',
 				'$location_url',
 				'$location',
 			),
-			// test when on_page is app and session_page is for ideas
+			// test when on_page is index and session_page is for ideas
 			array(
 				array(
-					1 => 'app',
+					1 => 'index',
 				),
 				array(
-					'session_page' => 'app.' . $phpEx . '/ideas'
+					'session_page' => 'index.' . $phpEx . '/ideas'
 				),
 				'$location_url',
 				'$location',

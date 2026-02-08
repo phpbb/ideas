@@ -21,7 +21,7 @@ class viewonline_test extends ideas_functional_base
 	public function test_viewonline_visit_ideas()
 	{
 		$this->login();
-		$crawler = self::request('GET', "app.php/ideas?sid=$this->sid");
+		$crawler = self::request('GET', "index.php/ideas?sid=$this->sid");
 		$this->assertContainsLang('IDEAS_TITLE', $crawler->filter('h2')->text());
 	}
 
