@@ -52,7 +52,7 @@ class viewonline_test extends ideas_functional_base
 		{
 			// If we found the admin, we check his page info and leave
 			$subcrawler = $crawler->filter('#page-body table.table1 tr')->eq($i);
-			if (strpos($subcrawler->filter('td')->text(), 'admin') !== false)
+			if (str_contains($subcrawler->filter('td')->text(), 'admin'))
 			{
 				try
 				{
