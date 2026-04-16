@@ -16,31 +16,24 @@ namespace phpbb\ideas\tests\functional;
 class viewonline_test extends ideas_functional_base
 {
 	/**
-	* Visit Ideas as user "admin"
-	*/
-	public function test_viewonline_visit_ideas()
-	{
-		$this->login();
-		$crawler = self::request('GET', "app.php/ideas?sid=$this->sid");
-		$this->assertContainsLang('IDEAS_TITLE', $crawler->filter('h2')->text());
-	}
-
-	/**
 	* Test viewonline page for admin
-	*
-	* We use a second function here, so we get a new session and can log in
-	* without having to log out "admin" first.
-	*
-	* @depends test_viewonline_visit_ideas
 	*/
 	public function test_viewonline_check_viewonline()
 	{
-		// Create user1 and send them to the Viewonline
-		$this->create_user('user1');
-		$this->login('user1');
+		// Visit Ideas as user "admin"
+		$this->login();
+		$crawler = self::request('GET', "app.php/ideas?sid=$this->sid");
+		$this->assertContainsLang('IDEAS_TITLE', $crawler->filter('h2')->text());
+
+		// Create a second user and check who is online from a separate session.
+		self::$client->restart();
+		$this->create_user('ideas-viewonline-user1');
+		$this->login('ideas-viewonline-user1');
+		// PHP goes faster than DBMS, make sure session data got written to the database.
+		sleep(1);
 		$crawler = self::request('GET', "viewonline.php?sid=$this->sid");
 
-		// Is admin still viewing Ideas page
+		// Is admin still viewing Ideas page?
 		self::assertStringContainsString('admin', $crawler->filter('#page-body table.table1')->text());
 
 		$session_entries = $crawler->filter('#page-body table.table1 tr')->count();
