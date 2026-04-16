@@ -111,6 +111,7 @@ class idea_attributes_test extends ideas_base
 			array(
 				array(
 					'idea_id'		=> 1,
+					'idea_author'	=> 2,
 					'duplicate_id'	=> 2,
 					'rfc_link'		=> 'https://area51.phpbb.com/phpBB/viewtopic.php?foo&bar',
 					'implemented_version' => '3.1.0',
@@ -121,6 +122,7 @@ class idea_attributes_test extends ideas_base
 			array(
 				array(
 					'idea_id'		=> 2,
+					'idea_author'	=> 3,
 					'duplicate_id'	=> 1,
 					'rfc_link'		=> 'https://area51.phpbb.com/phpBB/viewtopic.php?bar&foo',
 					'implemented_version' => '3.2.0',
@@ -131,6 +133,7 @@ class idea_attributes_test extends ideas_base
 			array(
 				array(
 					'idea_id'		=> 3,
+					'idea_author'	=> 4,
 					'duplicate_id'	=> '5',
 					'rfc_link'		=> '',
 					'implemented_version' => '',
@@ -141,6 +144,7 @@ class idea_attributes_test extends ideas_base
 			array(
 				array(
 					'idea_id'		=> 4,
+					'idea_author'	=> '',
 					'duplicate_id'	=> 'foo',
 					'rfc_link'		=> 'https://www.phpbb.com/phpBB/viewtopic.php?foo',
 					'implemented_version' => 'foo',
@@ -151,6 +155,7 @@ class idea_attributes_test extends ideas_base
 			array(
 				array(
 					'idea_id'		=> 5,
+					'idea_author'	=> 'foo',
 					'duplicate_id'	=> array(1),
 					'rfc_link'		=> 'foobar',
 					'implemented_version' => '1',
@@ -209,6 +214,16 @@ class idea_attributes_test extends ideas_base
 	public function test_set_title($data, $expected)
 	{
 		$this->set_attribute_test('set_title', 'idea_title', $data, $expected);
+	}
+
+	/**
+	 * Test set_author()
+	 *
+	 * @dataProvider idea_attribute_test_data
+	 */
+	public function test_set_author($data, $expected)
+	{
+		$this->set_attribute_test('set_author', 'idea_author', $data, $expected);
 	}
 
 	/**

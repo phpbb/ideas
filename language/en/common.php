@@ -101,6 +101,7 @@ $lang = array_merge($lang, array(
 		1	=> '%s point.',
 		2	=> '%s points.',
 	],
+	'TOTAL_POSTED_IDEAS'	=> 'Total ideas posted',
 
 	'UPDATED_VOTE'			=> 'Successfully updated vote!',
 

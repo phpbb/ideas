@@ -228,6 +228,29 @@ class idea extends base
 	}
 
 	/**
+	 * Set the author of an idea
+	 *
+	 * @param int $idea_id
+	 * @param int $user_id
+	 * @return bool True if set, false if invalid.
+	 */
+	public function set_author($idea_id, $user_id)
+	{
+		if (!$user_id || !is_numeric($user_id))
+		{
+			return false;
+		}
+
+		$sql_ary = array(
+			'idea_author' => (int) $user_id,
+		);
+
+		$this->update_idea_data($sql_ary, $idea_id, $this->table_ideas);
+
+		return true;
+	}
+
+	/**
 	 * Submit new idea data to the ideas table
 	 *
 	 * @param array $data An array of post data from a newly posted idea

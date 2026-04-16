@@ -54,6 +54,7 @@ class index_controller extends base
 			'U_VIEW_IN_PROGRESS'=> $this->helper->route('phpbb_ideas_list_controller', ['sort' => ext::SORT_DATE, 'status' => ext::$statuses['IN_PROGRESS']]),
 			'U_POST_ACTION'		=> $this->helper->route('phpbb_ideas_post_controller'),
 			'U_MCP' 			=> ($this->auth->acl_get('m_', $this->config['ideas_forum_id'])) ? append_sid("{$this->root_path}mcp.$this->php_ext", "f={$this->config['ideas_forum_id']}&amp;i=main&amp;mode=forum_view", true, $this->user->session_id) : '',
+			'STATISTICS'		=> $this->entity->get_statistics(),
 		));
 
 		// Assign breadcrumb template vars
