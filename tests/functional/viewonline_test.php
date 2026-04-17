@@ -22,7 +22,7 @@ class viewonline_test extends ideas_functional_base
 	{
 		// Visit Ideas as user "admin"
 		$this->login();
-		$crawler = self::request('GET', "app.php/ideas?sid=$this->sid");
+		$crawler = self::request('GET', "index.php/ideas?sid=$this->sid");
 		$this->assertContainsLang('IDEAS_TITLE', $crawler->filter('h2')->text());
 
 		// Create a second user and check who is online from a separate session.

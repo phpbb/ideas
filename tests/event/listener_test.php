@@ -681,7 +681,7 @@ class listener_test extends \phpbb_test_case
 	 *
 	 * @return array Array of test data
 	 */
-	public function change_idea_author_data()
+	public static function change_idea_author_data()
 	{
 		return [
 			[2, 1, 1, 2, true], // Valid: ideas forum, different authors
