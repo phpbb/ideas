@@ -18,10 +18,10 @@ use phpbb\user_loader;
  */
 class linkhelper
 {
-	/* @var helper */
+	/** @var helper */
 	protected $helper;
 
-	/* @var user_loader */
+	/** @var user_loader */
 	protected $user_loader;
 
 	/**
