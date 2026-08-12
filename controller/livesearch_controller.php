@@ -15,7 +15,7 @@ namespace phpbb\ideas\controller;
  */
 class livesearch_controller extends base
 {
-	/* @var \phpbb\ideas\factory\livesearch */
+	/** @var \phpbb\ideas\factory\livesearch */
 	protected $entity;
 
 	/**

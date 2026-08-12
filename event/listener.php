@@ -26,25 +26,25 @@ class listener implements EventSubscriberInterface
 	/** @var auth */
 	protected $auth;
 
-	/* @var config */
+	/** @var config */
 	protected $config;
 
-	/* @var helper */
+	/** @var helper */
 	protected $helper;
 
-	/* @var idea */
+	/** @var idea */
 	protected $idea;
 
 	/** @var language */
 	protected $language;
 
-	/* @var linkhelper */
+	/** @var linkhelper */
 	protected $link_helper;
 
-	/* @var template */
+	/** @var template */
 	protected $template;
 
-	/* @var user */
+	/** @var user */
 	protected $user;
 
 	/** @var string */
