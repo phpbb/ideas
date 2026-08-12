@@ -25,31 +25,31 @@ abstract class base
 	/** @var auth */
 	protected $auth;
 
-	/* @var config */
+	/** @var config */
 	protected $config;
 
-	/* @var helper */
+	/** @var helper */
 	protected $helper;
 
-	/* @var \phpbb\ideas\factory\base */
+	/** @var \phpbb\ideas\factory\base */
 	protected $entity;
 
 	/** @var language  */
 	protected $language;
 
-	/* @var linkhelper */
+	/** @var linkhelper */
 	protected $link_helper;
 
 	/** @var pagination */
 	protected $pagination;
 
-	/* @var request */
+	/** @var request */
 	protected $request;
 
-	/* @var template */
+	/** @var template */
 	protected $template;
 
-	/* @var user */
+	/** @var user */
 	protected $user;
 
 	/** @var string */

@@ -20,7 +20,7 @@ class idea_controller extends base
 	/** @var array of idea data */
 	protected $data;
 
-	/* @var \phpbb\ideas\factory\idea */
+	/** @var \phpbb\ideas\factory\idea */
 	protected $entity;
 
 	/**

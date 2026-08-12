@@ -15,7 +15,7 @@ use phpbb\ideas\ext;
 
 class index_controller extends base
 {
-	/* @var \phpbb\ideas\factory\ideas */
+	/** @var \phpbb\ideas\factory\ideas */
 	protected $entity;
 
 	/**

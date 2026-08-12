@@ -25,10 +25,10 @@ class base
 	/** @var auth */
 	protected $auth;
 
-	/* @var config */
+	/** @var config */
 	protected $config;
 
-	/* @var driver_interface */
+	/** @var driver_interface */
 	protected $db;
 
 	/** @var language */
@@ -37,7 +37,7 @@ class base
 	/** @var notification_manager */
 	protected $notification_manager;
 
-	/* @var user */
+	/** @var user */
 	protected $user;
 
 	/** @var string */
