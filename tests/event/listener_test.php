@@ -80,7 +80,14 @@ class listener_test extends \phpbb_test_case
 		$route_collection->add('phpbb_ideas_post_controller', new \Symfony\Component\Routing\Route('/ideas/post'));
 		$matcher = new \Symfony\Component\Routing\Matcher\UrlMatcher($route_collection, new \Symfony\Component\Routing\RequestContext());
 		$this->router->method('match')
-			->willReturnCallback(array($matcher, 'match'));
+			->willReturnCallback(function ($path) use ($matcher) {
+				if ($path === '/runtime-error')
+				{
+					throw new \RuntimeException('Unable to match route.');
+				}
+
+				return $matcher->match($path);
+			});
 		$this->template = $this->getMockBuilder('\phpbb\template\template')
 			->getMock();
 		$this->user = new \phpbb\user($this->lang, '\phpbb\datetime');
@@ -428,6 +435,19 @@ class listener_test extends \phpbb_test_case
 				'$location',
 				'phpbb_ideas_index_controller#a:0:{}',
 				'VIEWING_IDEAS',
+			),
+			// test a non-routing runtime exception is treated as an unmatched page
+			array(
+				array(
+					1 => 'index',
+				),
+				array(
+					'session_page' => 'index.' . $phpEx . '/runtime-error'
+				),
+				'$location_url',
+				'$location',
+				'$location_url',
+				'$location',
 			),
 			// test when viewing an idea topic (any topic in forum id 2)
 			array(
