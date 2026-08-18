@@ -32,6 +32,9 @@ class listener_test extends \phpbb_test_case
 	/** @var \PHPUnit\Framework\MockObject\MockObject|\phpbb\ideas\factory\linkhelper */
 	protected $link_helper;
 
+	/** @var \PHPUnit\Framework\MockObject\MockObject|\phpbb\routing\router */
+	protected $router;
+
 	/** @var \PHPUnit\Framework\MockObject\MockObject|\phpbb\template\template */
 	protected $template;
 
@@ -66,6 +69,18 @@ class listener_test extends \phpbb_test_case
 		$this->link_helper = $this->getMockBuilder('\phpbb\ideas\factory\linkhelper')
 			->disableOriginalConstructor()
 			->getMock();
+		$this->router = $this->getMockBuilder('\phpbb\routing\router')
+			->disableOriginalConstructor()
+			->getMock();
+
+		$route_collection = new \Symfony\Component\Routing\RouteCollection();
+		$route_collection->add('phpbb_ideas_index_controller', new \Symfony\Component\Routing\Route('/ideas{trailing}', array('trailing' => ''), array('trailing' => '/?')));
+		$route_collection->add('phpbb_ideas_idea_controller', new \Symfony\Component\Routing\Route('/idea/{idea_id}', array(), array('idea_id' => '\\d+')));
+		$route_collection->add('phpbb_ideas_list_controller', new \Symfony\Component\Routing\Route('/ideas/list/{sort}', array('sort' => 'new')));
+		$route_collection->add('phpbb_ideas_post_controller', new \Symfony\Component\Routing\Route('/ideas/post'));
+		$matcher = new \Symfony\Component\Routing\Matcher\UrlMatcher($route_collection, new \Symfony\Component\Routing\RequestContext());
+		$this->router->method('match')
+			->willReturnCallback(array($matcher, 'match'));
 		$this->template = $this->getMockBuilder('\phpbb\template\template')
 			->getMock();
 		$this->user = new \phpbb\user($this->lang, '\phpbb\datetime');
@@ -86,6 +101,7 @@ class listener_test extends \phpbb_test_case
 			$this->idea,
 			$this->lang,
 			$this->link_helper,
+			$this->router,
 			$this->template,
 			$this->user,
 			$this->php_ext
@@ -383,6 +399,32 @@ class listener_test extends \phpbb_test_case
 				),
 				array(
 					'session_page' => 'index.' . $phpEx . '/ideas'
+				),
+				'$location_url',
+				'$location',
+				'phpbb_ideas_index_controller#a:0:{}',
+				'VIEWING_IDEAS',
+			),
+			// test a parameterised Ideas route with the phpBB 4 front controller
+			array(
+				array(
+					1 => 'index',
+				),
+				array(
+					'session_page' => 'index.' . $phpEx . '/ideas/list/popular?start=25'
+				),
+				'$location_url',
+				'$location',
+				'phpbb_ideas_index_controller#a:0:{}',
+				'VIEWING_IDEAS',
+			),
+			// test an Idea route with an arbitrary front-controller name
+			array(
+				array(
+					1 => 'front',
+				),
+				array(
+					'session_page' => 'front.' . $phpEx . '/idea/42'
 				),
 				'$location_url',
 				'$location',
