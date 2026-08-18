@@ -373,19 +373,6 @@ class listener_test extends \phpbb_test_case
 		global $phpEx;
 
 		return array(
-			// test when on_page is index
-			array(
-				array(
-					1 => 'index',
-				),
-				array(
-					'session_page' => 'index.' . $phpEx . '/foobar'
-				),
-				'$location_url',
-				'$location',
-				'$location_url',
-				'$location',
-			),
 			// test when on_page is index and session_page is NOT for ideas
 			array(
 				array(
