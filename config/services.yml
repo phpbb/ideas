@@ -11,6 +11,7 @@ services:
             - '@phpbb.ideas.idea'
             - '@language'
             - '@phpbb.ideas.linkhelper'
+            - '@router'
             - '@template'
             - '@user'
             - '%core.php_ext%'

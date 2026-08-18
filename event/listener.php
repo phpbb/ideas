@@ -17,6 +17,7 @@ use phpbb\ideas\ext;
 use phpbb\ideas\factory\idea;
 use phpbb\ideas\factory\linkhelper;
 use phpbb\language\language;
+use phpbb\routing\router;
 use phpbb\template\template;
 use phpbb\user;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -41,6 +42,9 @@ class listener implements EventSubscriberInterface
 	/** @var linkhelper */
 	protected $link_helper;
 
+	/** @var router */
+	protected $router;
+
 	/** @var template */
 	protected $template;
 
@@ -57,11 +61,12 @@ class listener implements EventSubscriberInterface
 	 * @param idea       $idea
 	 * @param language   $language
 	 * @param linkhelper $link_helper
+	 * @param router     $router
 	 * @param template   $template
 	 * @param user       $user
 	 * @param string     $php_ext
 	 */
-	public function __construct(auth $auth, config $config, helper $helper, idea $idea, language $language, linkhelper $link_helper, template $template, user $user, $php_ext)
+	public function __construct(auth $auth, config $config, helper $helper, idea $idea, language $language, linkhelper $link_helper, router $router, template $template, user $user, $php_ext)
 	{
 		$this->auth = $auth;
 		$this->config = $config;
@@ -69,6 +74,7 @@ class listener implements EventSubscriberInterface
 		$this->idea = $idea;
 		$this->language = $language;
 		$this->link_helper = $link_helper;
+		$this->router = $router;
 		$this->template = $template;
 		$this->user = $user;
 		$this->php_ext = $php_ext;
@@ -295,8 +301,31 @@ class listener implements EventSubscriberInterface
 	 */
 	public function viewonline_ideas($event)
 	{
-		if (($event['on_page'][1] === 'viewtopic' && $event['row']['session_forum_id'] == $this->config['ideas_forum_id']) ||
-			($event['on_page'][1] === 'app' && strrpos($event['row']['session_page'], 'app.' . $this->php_ext . '/ideas') === 0))
+		$in_ideas_forum = $event['on_page'][1] === 'viewtopic' && (int) $event['row']['session_forum_id'] === (int) $this->config['ideas_forum_id'];
+		$in_ideas_pages = false;
+
+		if (!$in_ideas_forum && isset($event['row']['session_page']))
+		{
+			$session_path = parse_url($event['row']['session_page'], PHP_URL_PATH);
+			if (is_string($session_path))
+			{
+				// Session pages include the front controller, whose name differs between
+				// phpBB versions. The router expects only the path that follows it.
+				$session_path = preg_replace('#^.*\.' . preg_quote($this->php_ext, '#') . '(?=/)#', '', $session_path);
+
+				try
+				{
+					$route = $this->router->match($session_path);
+					$in_ideas_pages = strpos($route['_route'], 'phpbb_ideas_') === 0;
+				}
+				catch (\Symfony\Component\Routing\Exception\ExceptionInterface $e)
+				{
+					// Not a routed Ideas page.
+				}
+			}
+		}
+
+		if ($in_ideas_forum || $in_ideas_pages)
 		{
 			$event['location'] = $this->language->lang('VIEWING_IDEAS');
 			$event['location_url'] = $this->helper->route('phpbb_ideas_index_controller');
