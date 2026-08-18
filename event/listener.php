@@ -316,9 +316,9 @@ class listener implements EventSubscriberInterface
 				try
 				{
 					$route = $this->router->match($session_path);
-					$in_ideas_pages = strpos($route['_route'], 'phpbb_ideas_') === 0;
+					$in_ideas_pages = isset($route['_route']) && strpos($route['_route'], 'phpbb_ideas_') === 0;
 				}
-				catch (\Symfony\Component\Routing\Exception\ExceptionInterface $e)
+				catch (\RuntimeException $e)
 				{
 					// Not a routed Ideas page.
 				}
