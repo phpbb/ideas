@@ -16,7 +16,7 @@
 					</div>
 				</dt>
 
-				<dd class="topics"{% if idea.USER_VOTED !== '' %} title="{{ lang('USER_ALREADY_VOTED', idea.USER_VOTED) }}"{% endif %}>
+				<dd class="topics"{% if idea.USER_VOTED !== '' %} title="{{ lang(idea.USER_VOTED === 1 ? 'USER_ALREADY_VOTED_FOR' : 'USER_ALREADY_VOTED_AGAINST') }}"{% endif %}>
 					<div class="minivote vote-up vote-disabled">
 						<i class="icon fa-thumbs-up"></i><span class="vote-count">{{ idea.VOTES_UP }}</span>{% if idea.USER_VOTED === 1 %}<i class="icon fa-check-circle user-voted" aria-hidden="true"></i>{% endif %}
 					</div>
